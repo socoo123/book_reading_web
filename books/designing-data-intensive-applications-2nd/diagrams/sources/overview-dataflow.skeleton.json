@@ -1,0 +1,15 @@
+[
+  {"type":"text","id":"title","x":24,"y":20,"text":"从权威记录到派生视图","fontSize":25,"fontFamily":2,"strokeColor":"#292824"},
+  {"type":"text","id":"subtitle","x":24,"y":62,"text":"箭头表示数据流向；本图不表示一次共同提交。","fontSize":17,"fontFamily":2,"strokeColor":"#66645d"},
+  {"type":"rectangle","id":"input","x":24,"y":132,"width":160,"height":84,"strokeColor":"#386d74","backgroundColor":"#f0ece4","fillStyle":"solid","roughness":1,"label":{"text":"业务输入","fontSize":21,"fontFamily":2,"strokeColor":"#292824"}},
+  {"type":"rectangle","id":"record","x":270,"y":132,"width":200,"height":84,"strokeColor":"#386d74","backgroundColor":"#f0ece4","fillStyle":"solid","roughness":1,"label":{"text":"权威记录系统","fontSize":21,"fontFamily":2,"strokeColor":"#292824"}},
+  {"type":"arrow","id":"write","x":190,"y":174,"width":74,"height":0,"points":[[0,0],[74,0]],"strokeColor":"#386d74","roughness":1,"start":{"id":"input"},"end":{"id":"record"}},
+  {"type":"text","id":"write-label","x":207,"y":141,"text":"写入","fontSize":17,"fontFamily":2,"strokeColor":"#66645d"},
+  {"type":"rectangle","id":"view","x":270,"y":326,"width":200,"height":84,"strokeColor":"#386d74","backgroundColor":"#f0ece4","fillStyle":"solid","roughness":1,"label":{"text":"派生视图","fontSize":21,"fontFamily":2,"strokeColor":"#292824"}},
+  {"type":"arrow","id":"derive","x":370,"y":223,"width":0,"height":96,"points":[[0,0],[0,96]],"strokeStyle":"dashed","strokeColor":"#386d74","roughness":1,"start":{"id":"record"},"end":{"id":"view"}},
+  {"type":"text","id":"derive-label","x":390,"y":262,"text":"提取、转换与更新","fontSize":17,"fontFamily":2,"strokeColor":"#66645d"},
+  {"type":"text","id":"record-note","x":492,"y":145,"text":"先保存权威版本\n再由它生成其他表示","fontSize":17,"fontFamily":2,"strokeColor":"#66645d"},
+  {"type":"text","id":"view-note","x":492,"y":340,"text":"例如搜索索引\n或分析聚合结果","fontSize":17,"fontFamily":2,"strokeColor":"#66645d"},
+  {"type":"text","id":"legend","x":24,"y":449,"text":"实线：业务写入　　虚线：派生更新（可能滞后）","fontSize":17,"fontFamily":2,"strokeColor":"#66645d"},
+  {"type":"text","id":"boundary","x":24,"y":482,"text":"重建前提：所需源数据仍在，转换逻辑与输入条件可恢复。","fontSize":17,"fontFamily":2,"strokeColor":"#66645d"}
+]

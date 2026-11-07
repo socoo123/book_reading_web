@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>第 25 章｜计算即服务 · Software Engineering at Google · 架构提升读书笔记</title>
+  <meta name="description" content="《Software Engineering at Google》第二十五章读书笔记：从 Borg 演进理解可替换实例、任务分块、状态与幂等性、共享容量、配置管理及 serverless 的长期权衡。">
+  <link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+  <script src="../../../assets/theme.js"></script>
+  <script src="../../../assets/reader.js" defer></script>
+  <link rel="stylesheet" href="../../../assets/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header reader-header"><div class="container header-inner">
+    <a class="brand" href="../../../index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5.5C8.5 3.8 5.8 3.6 2.5 4.5v14c3.3-.9 6-.7 9.5 1 3.5-1.7 6.2-1.9 9.5-1v-14c-3.3-.9-6-.7-9.5 1Zm0 0v14"/></svg>书架</a>
+    <a class="reader-book-title" href="../index.html" lang="en">Software Engineering at Google</a>
+    <div class="theme-control" role="group" aria-label="外观" hidden><button type="button" data-theme-value="system" title="跟随系统"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path class="fill" d="M12 4a8 8 0 0 1 0 16Z"/></svg><span class="sr-only">跟随系统</span></button><button type="button" data-theme-value="light" title="浅色"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.6"/><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21M5.6 5.6l1.6 1.6M16.8 16.8l1.6 1.6M5.6 18.4l1.6-1.6M16.8 7.2l1.6-1.6"/></svg><span class="sr-only">浅色</span></button><button type="button" data-theme-value="dark" title="深色"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.5 14.6A7.8 7.8 0 0 1 9.4 4.5a7.8 7.8 0 1 0 10.1 10.1Z"/></svg><span class="sr-only">深色</span></button></div>
+  </div></header>
+  <main id="main" class="container reader-container">
+    <nav class="breadcrumb" aria-label="当前位置"><ol><li><a href="../../../index.html">书架</a></li><li><a href="../index.html">书籍概览</a></li><li aria-current="page">第 25 章</li></ol></nav>
+    <div class="reading-layout">
+      <aside class="toc"><nav aria-label="本页目录"><h2>本页目录</h2><ul>
+        <li><a href="#automation">01　管理共同的运行目标</a></li>
+        <li><a href="#resource-isolation">02　资源共享、隔离与调优</a></li>
+        <li><a href="#replaceable-workers">03　实例重建与工作接续</a></li>
+        <li><a href="#batch-and-serving">04　批处理与在线服务</a></li>
+        <li><a href="#state">05　状态的保存与重建</a></li>
+        <li><a href="#discovery-and-retries">06　服务发现与幂等重试</a></li>
+        <li><a href="#one-off-work">07　让临时分析保持交互性</a></li>
+        <li><a href="#abstraction-and-pids">08　抽象边界与隐含依赖</a></li>
+        <li><a href="#shared-pool">09　共享可回收容量</a></li>
+        <li><a href="#submitted-configuration">10　提交共同运行定义</a></li>
+        <li><a href="#customization-and-lock-in">11　定制、例外与锁定</a></li>
+        <li><a href="#serverless">12　serverless 的收益与约束</a></li>
+        <li><a href="#public-private-and-choice">13　分配长期管理责任</a></li>
+      </ul><p class="toc-note"><a href="../index.html">← 书籍概览</a></p></nav></aside>
+      <article class="article">
+        <header class="article-header">
+          <p class="eyebrow">READING NOTES / CHAPTER 25</p>
+          <h1>第 25 章｜计算即服务</h1>
+          <p class="article-deck"><span lang="en">Compute as a Service</span> · 架构提升读书笔记</p>
+        </header>
+        <p>程序写完以后，总要有地方运行。起初，这个地方可能是一台记得名字的服务器：把文件传上去，装好依赖，启动进程。随着产品、团队和机器一起增长，问题逐渐变成：谁知道哪里还有容量，机器坏了谁来补位，怎样更新整个环境，又怎样让每个团队不必重新学习同一套运维工作。</p>
+        <p>本章的<strong>计算即服务（Compute as a Service，CaaS）</strong>，指为程序提供运行所需计算能力的服务，并不只指某一种容器产品。作者沿 Google 内部 Borg 的演进说明，计算平台既会改变组织管理机器的成本，也会改变软件应当怎样处理状态、失败和依赖。平台把实例变得容易替换，应用则需要让替换真正有用。</p>
+        <details class="mobile-toc"><summary>本页目录 · 13 个小节</summary><nav aria-label="移动端本页目录"><ul>
+          <li><a href="#automation">01　从逐台操作，走向管理共同的运行目标</a></li>
+          <li><a href="#resource-isolation">02　共享资源需要隔离，也需要持续调整资源估计</a></li>
+          <li><a href="#replaceable-workers">03　实例可以重建，工作进度也要能够接续</a></li>
+          <li><a href="#batch-and-serving">04　批处理和在线服务，对中断有不同的承受方式</a></li>
+          <li><a href="#state">05　把持久状态、可重建状态和可丢失状态分开</a></li>
+          <li><a href="#discovery-and-retries">06　地址会变化，写请求还可能重复到达</a></li>
+          <li><a href="#one-off-work">07　临时分析的价值，往往在于今天还能多试几次</a></li>
+          <li><a href="#abstraction-and-pids">08　容器也是时间上的边界，隐含依赖却会穿过去</a></li>
+          <li><a href="#shared-pool">09　统一资源池，让在线余量支持可回收的批处理</a></li>
+          <li><a href="#submitted-configuration">10　把运行定义提交下来，共享操作才有稳定入口</a></li>
+          <li><a href="#customization-and-lock-in">11　例外有实际价值，也会逐渐扩大平台的承诺</a></li>
+          <li><a href="#serverless">12　serverless 进一步交出管理，也进一步约束运行方式</a></li>
+          <li><a href="#public-private-and-choice">13　选择的核心，是把哪些长期责任交给谁</a></li>
+        </ul></nav></details>
+
+        <section id="automation">
+          <h2><span class="section-number">01</span>从逐台操作，走向管理共同的运行目标</h2>
+          <p>原章引用了 Jeff Dean 在 2002 年 Global WorkQueue 设计文档中描述的一项工作：为了运行发布流程中的数据处理任务，工程师要取得五十多台机器的清单，在每台机器上启动进程，再分别观察进度。机器坏了，计算不会自动转到别处；任务之间争用资源，还得靠人维护一份登记文件，协调谁什么时候可以使用机器。</p>
+          <p>这套办法在机器很少时很直接。真正使它难以维持的，是每增加一个副本，就增加一份启动、观察、恢复和协调的工作。工程师原本要处理的是一项数据任务，却被迫持续掌握五十多台机器各自的状态。人数、程序和机器继续增长以后，人工登记也越来越难保持及时与一致。</p>
+          <p>第一层自动化很朴素：脚本并行分发程序并启动，把“进程还活着”“已经处理多少文档”变成可集中查看的指标，再由机器上的代理发现异常。心跳停止或进度长期不变，可以触发重启。这样，人不必不停登录每一台机器，也减少了连错机器、杀错进程的机会。</p>
+          <p>但只会在原地重启的工具，还没有解决机器本身坏掉的问题。下一步需要一个知道可用机器与运行任务的调度服务：接收运行请求，选择有容量的机器，部署程序；发现某台机器失效，就停止向它分配新任务，并在别处重新建立实例。坏硬件仍需维修，应用恢复却不必一直等待维修完成。</p>
+          <p>在这个转变中，工程师开始提交“需要运行多少份这样的程序”，平台负责维持相应的运行状态。监测、调度和恢复因而接成闭环。这里的重新调度，通常是在别处启动一个新进程，旧进程的内存、连接和未保存的结果都不会跟过去；应用能否接着完成工作，是后面几节要解决的问题。</p>
+          <p>自动化的边界也会随规模移动。原书讨论的不只有机器数量，还包括应用种类、每种应用的副本数，以及最大应用需要的资源。后来加入 GPU、TPU，乃至把整个数据中心的启用流程自动化，都是相同方向的延伸：把越来越频繁、越来越难靠人稳定完成的重复工作，交给共同设施。</p>
+          <aside class="key-point"><p class="key-point-label">核心观点</p><p>计算服务把“有人逐台照看机器”转成“系统维持运行目标”。自动恢复要同时具备发现异常、选择替代位置和重建实例的能力，应用还要能够承受重建带来的状态丢失。</p></aside>
+        </section>
+
+        <section id="resource-isolation">
+          <h2><span class="section-number">02</span>共享资源需要隔离，也需要持续调整资源估计</h2>
+          <p>一台机器只跑一种程序，管理起来容易理解，资源却常常用不满。程序的 CPU、内存和磁盘需求各不相同，机器规格又只有有限几种；为最大的任务采购的机器，用来运行较小任务时就会留下空闲。自建机房还要考虑采购周期和未来增长，提前准备的容量在早期往往闲置，旧硬件又不会随着新硬件到来自动消失。</p>
+          <p>让多个任务共同使用一台机器，就是<strong>多租户（multitenancy）</strong>。每个任务申报资源需求，调度器据此把副本装入可用机器，类似把大小不同的物品装进箱子。这里既有计算效率，也有组织效率：使用者不必先找到一台“属于自己”的机器，再想办法把它用满。</p>
+          <p>资源申报本身只是约定。书中举例，一个任务声称每副本只用一个 CPU 和 200 MB 内存，后来却因为缺陷或业务增长超过了它。多用 CPU 会拖慢同机在线服务；耗尽内存可能造成进程被杀，或者因交换到磁盘而使延迟急剧增加。原书脚注说明，Google 很早就决定宁可触发内存不足终止，也不接受交换带来的严重延迟。</p>
+          <p>干扰还包括文件路径、依赖版本、端口和敏感数据。一个程序期待独占临时目录，另一个程序可能正好使用同一路径；两个程序要求不同版本的系统库，也会使统一安装依赖变得困难。因此，调度器之外还要有隔离机制，让资源消耗受到约束，让每个程序看到适合自己的运行环境。</p>
+          <p>虚拟机提供一种隔离边界，但完整客体操作系统的资源与启动开销，对短小批处理尤其明显。原章解释，2003 年设计 Borg 的工程师因此转向更轻量的方案，最终采用容器：资源方面基于 cgroups（后来由 Google 工程师贡献进 Linux 内核），任务环境则通过文件系统相关机制隔开。容器在这里首先是一种支持共享机器的工具，它所提供的隔离仍取决于实际配置与实现。</p>
+          <p>另一个难点是，资源估计会老化。工程师初次上线时填的内存和副本数，可能数月没有更新，代码却持续增长。新版本不断消耗原来留给流量突发和故障的余量，系统在日常负载下看似正常，真正发生突发时才暴露容量不足。</p>
+          <p><strong>资源规格调优（rightsizing）</strong>尝试根据运行情况调整单个实例的资源配置；<strong>自动扩缩容（autoscaling）</strong>则可调整副本等规模，两者都在减少手工估计的负担。作者也坦言，这类自动化出乎意料地难做好：到本书写作时，Borg 才刚做到超过一半的资源使用量由规格调优自动化决定。按配置数量算，覆盖面更大，多数工程师已经不必操心容器规格。先处理常见、规则明确的情况，就能省下大量重复劳动。</p>
+        </section>
+
+        <section id="replaceable-workers">
+          <h2><span class="section-number">03</span>实例可以重建，工作进度也要能够接续</h2>
+          <p>本章最关键的设计变化，是把服务器或容器当作可自动替换的副本。原书借用 <strong>“宠物与牲畜”（pets versus cattle）</strong>的类比：宠物式机器各有历史，坏了要有人了解它、把它救回来；可替换实例则能根据已经保存的定义重新建立，不依赖某位工程师登录后手动补包、改环境变量。</p>
+          <p>类比强调的是可再生性。调度器可能因为内核升级、磁盘异常或重新安排容量而撤走一个实例。应用作者不必为每一种原因编写专门恢复程序，却需要接受“当前这一个实例可能消失”的共同条件。第二十二章把同样思路用于可重新生成的迁移分片；本章把它放回生产运行环境。</p>
+          <p>原书用一百万份文档说明这个问题。若每份处理一秒，单机需要约 11.6 天。理想地分给两百个同速工作进程，每个处理五千份，耗时为 <code>1,000,000 ÷ 200 = 5,000 秒</code>，约 83.3 分钟。原章写的是约一百分钟，没有说明额外开销；这里按所给前提计算，差异见文末纠错。</p>
+          <p>即使工作进程能自动补建，静态分配仍会浪费进度。假如某个进程处理到一半退出，而完成位置只在它的内存里，新进程就要重做这一大份工作。平台恢复了副本数，整批任务的完成时间仍可能被反复失去的进度拖长。</p>
+          <p>原书给出的改法，是把文档拆成一千块，每块一千份。工作进程领取一块，完成并报告结果后再领下一块。未被确认完成的块可以重新交给其他进程。在“一次只处理一块、完成记录可靠”的前提下，一个进程故障造成的重算范围，被限制在当前这一块；按上述速度，一块约需 16.7 分钟，具体块大小还应结合调度开销和可接受重算量决定。</p>
+          <p>下面的图从左向右看正常处理路径，再沿虚线看实例替换。已经确认的结果在持久存储中，不随旧进程消失；新进程重新领取未确认的工作。同一块仍可能执行两次：进程可能已经算完，却在报告结果前失联，所以重复执行也要能被妥善处理。</p>
+          <figure class="concept-figure"><a href="../diagrams/exports/ch25-replaceable-work.svg" target="_blank" rel="noopener"><img src="../diagrams/exports/ch25-replaceable-work.svg" width="720" height="432" alt="任务队列把块分给工作进程，完成结果写入持久存储；旧实例失效后自动补建新实例，新实例重新领取未确认块，已确认进度继续保留。"></a><figcaption>图 25-1：实线表示领取任务和确认结果，虚线表示失效后的实例替换。任务与完成记录独立于工作进程保存，替换一个实例只需接续尚未确认的工作。点击<a href="../diagrams/exports/ch25-replaceable-work.svg" target="_blank" rel="noopener">查看大图</a>。</figcaption></figure>
+          <p>MapReduce，以及原书随后提到的 Flume 数据处理框架，为这样的分块和动态分配提供了共同设施。对应用团队而言，重要收益不只是“并行得更快”，还包括不必为每台机器分别设计恢复流程。工作粒度变小、分配发生在运行期间，才使自动补位转化成持续向前的处理能力。</p>
+          <aside class="key-point"><p class="key-point-label">核心观点</p><p>重建实例只能恢复执行能力。把工作拆成可重新领取的小块，把完成记录保存在实例之外，才能把故障的影响限制在一小段尚未确认的进度里。</p></aside>
+        </section>
+
+        <section id="batch-and-serving">
+          <h2><span class="section-number">04</span>批处理和在线服务，对中断有不同的承受方式</h2>
+          <p><strong>批处理任务（batch job）</strong>以完成一项有限工作为目标，例如日志分析、离线数据加工或模型训练；它通常更关心整个任务的吞吐和完成时间。<strong>在线服务任务（serving job）</strong>持续接收请求，例如搜索查询服务，通常更关心每次请求的延迟与成功率。这是典型划分，原书脚注也承认，有些程序难以归入任何一类，或兼具两边的特征。</p>
+          <p>分块让批处理可以在部分工作进程暂停或被回收时继续推进。在线服务则天然拥有请求这个小单位，负载均衡器不断把请求分给不同副本，看起来已经很适合动态调度。然而，是否能够不中断地替换，还取决于请求以外的状态：只有一个主节点掌握调度进度，或者一百台机器各独占百分之一的数据，都可能使某个副本的丢失影响一整部分功能。</p>
+          <p>对计划内撤离，原书描述的配合方式是：调度器提前通知，实例先停止接收新请求，继续完成已经接收的请求；负载均衡系统理解“这个副本不再接新工作”的状态，把后续流量交给别处。这个过程通常称为<strong>排空（draining）</strong>。新实例也需要完成必要初始化，才能接流量。</p>
+          <p>替换速度因此不能只由平台的资源优化目标决定。一次撤走一半批处理副本，可能只是短暂降低吞吐；一次撤走一半在线副本，却可能使剩余容量立即过载。面向在线服务的平台需要限制同时重调度的数量，给应用完成在途请求的机会，并把流量切换与实例生命周期接在一起。图 25-2 把两类任务并排对照：批处理靠重新领取未确认的块吸收中断，在线服务则要靠提前通知、排空和限速撤离，才能让用户请求尽量不受影响。</p>
+          <figure class="concept-figure"><a href="../diagrams/exports/ch25-batch-serving.svg" target="_blank" rel="noopener"><img src="../diagrams/exports/ch25-batch-serving.svg" width="720" height="448" alt="撤走副本时两类任务的对照：批处理一次被撤走一半副本，未确认的块由其他进程重新领取，只是吞吐短暂下降；在线服务先得到通知并限速撤离，副本排空后流量转给其他副本；缺少这些配合时，剩余在线副本立即过载，在途请求可能失败。"></a><figcaption>图 25-2：每行从左往右依次是撤离方式、任务怎样应对和结果；虚线一行表示在线服务跳过了通知、限速与排空。同样是失去一半副本，批处理只是慢一些，在线服务则需要平台与应用配合才能平稳度过。点击<a href="../diagrams/exports/ch25-batch-serving.svg" target="_blank" rel="noopener">查看大图</a>。</figcaption></figure>
+          <p>这种配合主要改善可预告的维护与调度。机器突然断电时没有排空机会，客户端仍要能够处理失败和重试。由此可以看出本章反复强调的两层可靠性：系统能够自动恢复健康状态，是一层；恢复期间仍尽量保持用户体验，是另一层，两层需要不同设计共同支持。</p>
+        </section>
+
+        <section id="state">
+          <h2><span class="section-number">05</span>把持久状态、可重建状态和可丢失状态分开</h2>
+          <p>一个实例能被轻易替换，首先要求重要信息不只存在于它的内存和本地磁盘中。原书建议把需要跨请求或跨数据块保留的业务状态放到独立的持久存储中。应用实例便可以在任何适合的机器上启动，重新取得需要的数据，不必找回上一台机器才能继续服务。</p>
+          <p>持久存储本身仍由会坏掉的机器构成。它靠复制等机制提供稳定的数据：单个节点消失了，信息仍保存在其他副本上；涉及一致写入时，还需要协调或共识处理。这些很难做对，所以 Google 开发了 GFS、Bigtable、Spanner 等专门的存储设施，大多数应用才得以把自身状态都当作临时的。</p>
+          <p>“本地状态会消失”也没有禁止一切本地存储。缓存、从远端拉取的索引片段、为了加快访问而预热的数据，都可以留在实例附近。它们的共同前提是，副本失效后能够从可靠来源重建，丢失带来的是性能恢复成本，而非唯一业务事实的永久丢失。</p>
+          <p>这里有一项常被低估的容量责任。原书总结 Google 的经验：缓存按延迟目标配置，核心处理路径则要能够承受缓存丢失后回来的总负载。缓存正常时减轻了后端压力，若后端只按长期平均的少量未命中流量配置，缓存层一次大面积失效，就可能把“只是慢一点”变成全系统过载。</p>
+          <p>用笔记的假设举例：商品查询平时每秒一千次，缓存命中九成，后端平时只处理约一百次。若后端最多也只能处理一百次，整层缓存丢失后到来的需求将约为原来的十倍。按总负载预留后端容量，是原书给出的保障，作者也承认这份冗余要花钱；如果团队因成本选择限流或降低服务内容，就要明确恢复期间接受什么结果。</p>
+          <p>还有一类状态可以有意短暂保留后批量写出。例如，监控系统可能容忍少量尚未上传的采样丢失；数据处理任务则可能通过重做当前块重新生成输出。若计算一次需要很久，可以定期把检查点写入持久存储，使恢复从最近检查点继续。先说明哪些信息可以丢、怎样再生，才能合理决定写出频率和本地缓冲大小。</p>
+          <p>这些类别也解释了“无状态服务”的实际含义。它通常仍有连接池、缓存和正在处理的请求，只是不把唯一的长期业务状态绑在某一个实例上。状态没有从系统中消失，而是被放到了拥有相应保存和恢复责任的位置。</p>
+          <aside class="key-point"><p class="key-point-label">核心观点</p><p>持久业务事实要有独立的保存机制；本地缓存要能重建；缓冲中的数据要有明确的丢失或重算约定。这样，实例的短暂生命与数据的长期生命才能分开管理。</p></aside>
+        </section>
+
+        <section id="discovery-and-retries">
+          <h2><span class="section-number">06</span>地址会变化，写请求还可能重复到达</h2>
+          <p>实例可以换机器以后，调用者就不应把某个物理主机名当作服务本身。原书引入<strong>服务发现（service discovery）</strong>：调用者使用跨实例生命周期稳定的逻辑标识，发现系统再把它解析为当前可用后端。调度器安置新实例时更新相应信息，负载均衡帮助调用者摆脱对单个后端的依赖。</p>
+          <p>这层间接关系也有性能设计。若每次业务调用都先访问一次分布式注册表，就会把注册表加入关键请求路径。实际系统可以先解析、建立连接，再在后台跟踪后端变化。调用者因此需要能够更新地址、重新连接，而非只在启动时读一次主机配置，从此假定它永远有效。</p>
+          <p>即便地址发现正确，请求仍可能在后端退出时失去响应。最麻烦的情况是，服务器已经完成修改，响应却没有到达调用者。客户端看到超时，无法仅凭超时判断操作有没有执行；重试可以恢复一次遗漏，也可能重复一次已经完成的业务动作。</p>
+          <p>原书用披萨订单说明<strong>幂等性（idempotency）</strong>：同一个操作重复提交，不应产生重复的业务效果。客户端在首次提交前生成订单标识，后续重试仍使用同一标识。服务器发现该标识已对应一个订单，就当作重复请求返回已有结果，而不再创建第二单；它还可以核对这次请求的地址和商品是否与原订单一致。</p>
+          <p>落到实现上，还有一个笔记补充的关键细节：去重记录应保存在各副本共同可见的持久位置，而且“记录操作身份”与“产生业务结果”要有一致的提交保障。只在某个实例内存里记下订单号，实例一换就失效；先查询不存在、再无保护地创建，也挡不住两个副本同时处理。涉及数据库以外的付款或消息发送，还要为这些外部副作用分别安排去重与协调。图 25-3 按时间顺序画出一次超时重试：响应丢失后，客户端带着同一标识重试，即使请求落到另一个副本，也能在共享的持久记录里查到原订单。</p>
+          <figure class="concept-figure"><a href="../diagrams/exports/ch25-idempotent-retry.svg" target="_blank" rel="noopener"><img src="../diagrams/exports/ch25-idempotent-retry.svg" width="720" height="470" alt="一次超时重试的时间线：客户端首次提交带上订单标识 A17，副本记下 A17 并创建订单；后端退出导致响应丢失，客户端超时后仍带 A17 重试，处理重试的副本在持久订单记录中查到已有订单，返回已有结果，最终只有一个订单。"></a><figcaption>图 25-3：三条竖线从左到右是客户端、任一服务副本和持久订单记录，从上往下按时间读；虚线和叉号表示丢失的响应，A17 是笔记假设的标识。去重之所以有效，是因为标识记在各副本共享的持久位置。点击<a href="../diagrams/exports/ch25-idempotent-retry.svg" target="_blank" rel="noopener">查看大图</a>。</figcaption></figure>
+          <p>重复也可能来自调度。原书记述，平台与某台机器暂时失联后，在别处补建了同名副本；旧机器恢复网络时，两个实例都以为自己是同一个副本。辨别的办法，是以地址解析系统指向的那一个为准，另一个自行退出或被终止；两个副本同时做同一份工作，也是请求重复的一个来源。暂时失联的机器可能仍在工作，应用因此仍要承受重复执行。对关键写入，还需要存储或协调机制拒绝旧实例的写入（笔记补充），只查询“谁是当前实例”并不够。</p>
+          <p>重试也要有范围。原书脚注特别指出退避、抖动和优雅降级应由共同 RPC 设施帮助处理，避免各团队反复手写。退避逐步拉长再次尝试的间隔，抖动让大量客户端不在同一时刻一起重试；配合尝试次数或时间预算，才不至于在服务已经过载时继续放大流量。幂等性处理重复的业务影响，重试策略处理重复带来的负载，两者解决的是不同部分。</p>
+        </section>
+
+        <section id="one-off-work">
+          <h2><span class="section-number">07</span>临时分析的价值，往往在于今天还能多试几次</h2>
+          <p>计算平台还服务于一次性分析、探索原型和临时数据加工。原书设想，检查一天产生的 1 GB 日志，工程师也许在工作站上用一个短脚本就能完成；若范围扩大到一年约 1 TB 的日志，本地等待可能长到失去交互性。</p>
+          <p>分布式平台让工程师临时使用几百个核心，真正改变的常常是工作节奏。上午先验证某种错误是否总在另一条日志之后出现，拿到结果后调整筛选条件，再检查一个新的解释。若每轮都要等到第二天，这几次迭代可能无法发生，问题就长期停留在没有证据的猜测上。</p>
+          <p>作者因此把计算成本与工程时间一起比较。严格审批可能节省一点机器使用，却让人等待、切换任务，或者放弃本来有价值的分析。书中估计，一千核时的费用很难接近一天的工程劳动成本，也说明具体数值取决于组织的计算环境和工资水平；用到自己团队时，可以拿云账单、数据扫描费用和人员成本实际算一算。</p>
+          <p>资源又确实可能被意外放大。脚注记述过负载测试占着约一千台虚拟机直到负责人休假，也记述过工程师在工作站调试主程序，却在后台启动八千个整机工作进程。问题在于普通操作也可能很容易越过人的直觉尺度，不能只靠“大家应该节约”避免它。</p>
+          <p>原章给出的办法包括个人配额，以及向工程师开放大量低优先级批处理额度。后者依赖共享平台已有的可回收空闲容量：临时任务允许被暂停或终止，便能以较低的增量成本利用它。目标是让正常探索顺畅，同时把意外扩张限制在可以承受的范围内。</p>
+        </section>
+
+        <section id="abstraction-and-pids">
+          <h2><span class="section-number">08</span>容器也是时间上的边界，隐含依赖却会穿过去</h2>
+          <p>容器最初帮助不同任务共享机器，后来还成为应用与实际运行环境之间的抽象边界。若机器布局或运行机制变化，平台团队可以尽量在这条边界下方适配，避免每个应用团队都分别修改。其长期收益，来自把共性的变化集中到一个团队处理。</p>
+          <p>文件系统是一个具体例子。外部程序可能固定期待某个辅助工具位于特定路径。缺少应用自己的文件系统视图时，组织要么修改所有机器的布局，要么为它划出一批特殊机器，要么改动外部程序。把需要的文件和依赖预先放进运行环境，可以减少这些全局协调，也让不同程序的依赖版本不必完全依赖宿主机统一安装。</p>
+          <p>命名资源也是抽象的一部分。早期 Borg 没有充分隔离网络端口，应用自己寻找未占用端口，原书记述 <code>PickUnusedPortOrDie</code> 在 C++ 代码中已有两万多处使用。这样的细节进入成千上万份代码后，平台后来补上抽象也需要迁移旧习惯。</p>
+          <p>原书随后用 Docker、Kubernetes 的网络设计作对比，但把 Kubernetes 的 Pod 简称为“容器”，容易误导。准确地说，<strong>Pod 可以包含一个或多个容器，同一 Pod 内的容器共享网络命名空间、IP 和端口空间</strong>。在通常的 Pod 网络模型下，不同 Pod 各有地址，跨 Pod 的端口冲突因此减少；同一 Pod 内仍需协调端口，使用宿主机网络等特殊模式也有自己的约束。</p>
+          <p>更深的例子来自 2011 年的 PID 耗尽问题。某个任务泄漏线程，就可能耗尽机器可用的进程／线程标识，使邻居也无法继续创建工作。原章把当时范围写成约三万二千。扩大上限看似只是一个配置调整，实际却会改变许多用户已经观察到的行为。</p>
+          <p>一些日志系统把 PID 按最多五位数字写进记录名，出现六位 PID 后，记录名就会超过长度限制。Borg 先限制单个容器可以使用的进程／线程数量，防止一个任务拖垮整机；随后利用对线程 PID 的依赖较少这一点，分别处理线程与进程的标识范围，逐步缓解问题。</p>
+          <p>进一步引入 PID 命名空间，又会使同一主机上的不同容器重复使用相同 PID。原先依赖 <code>{主机名, 时间戳, PID}</code> 唯一识别进程的系统因此也要调整。到本书写作时，找出并修复这些依赖、回补相关数据的工作，八年后仍在进行。</p>
+          <p>这正是 Hyrum 定律在运行环境中的表现：文件路径、标识位数、启动方式等可观察细节，即使没有写成正式接口，也会被使用者依赖。共同计算平台的价值，还包括让较多使用者共同暴露这些问题，把经验沉淀到同一套实现中。采用成熟社区维护的系统，也是在分享已经付过的发现与修复成本。</p>
+        </section>
+
+        <section id="shared-pool">
+          <h2><span class="section-number">09</span>统一资源池，让在线余量支持可回收的批处理</h2>
+          <p>早期 WorkQueue 主要处理部分批任务，在线服务则各自管理机器池。Borg 从 2003 年开始把这些分散资源纳入共同计算服务。第一项收益来自维护方式的统一：硬件、内核和数据中心需要变化时，不必先面对每个产品团队独立演变出来的一套机器管理习惯。</p>
+          <p>原书脚注也保留了例外：Google 并非每台机器都由 Borg 管理，也不是每个数据中心都只由一个 Borg cell 覆盖；只是大多数工程师的工作环境里，接触不到非 Borg 机器或非标准 cell。</p>
+          <p>第二项收益来自工作负载互补。在线服务要为流量高峰和部分基础设施故障留余量，所以预留的资源总会多于平时实际用到的量。原书举例，服务申报的资源可能已占满机器，实际只用了三成；这时若再放入一批同样要求稳定容量的在线服务，原来的保障便会被重复承诺。</p>
+          <p>低优先级批处理可以接受不同的约定：平时借用剩下的容量，在线负载升高时交还。CPU 可以通过暂停或减少批处理执行来收回；内存无法仅靠暂停进程释放，必要时需要终止相应批处理实例。由于这些任务已经分块、可补建，失去部分实例通常表现为吞吐下降和少量重算。</p>
+          <p>图 25-4 把容量归一为一百个单位，只展示一种资源。两行中在线服务都预留了一百，柱条画的是实际占用：平时在线用三十、批处理借七十，对应原书的例子；突发时在线增到八十、批处理退到二十，是笔记的假设。真实调度还要分别考虑 CPU、内存等限制。</p>
+          <figure class="concept-figure"><a href="../diagrams/exports/ch25-reclaimable-capacity.svg" target="_blank" rel="noopener"><img src="../diagrams/exports/ch25-reclaimable-capacity.svg" width="720" height="380" alt="同一百单位资源始终为在线服务预留；平时在线实际使用三十，批处理借七十；在线突发到八十时收回五十，批处理只保留二十。"></a><figcaption>图 25-4：柱条宽度表示实际占用，向下箭头表示资源从批处理收回后转供在线服务。批处理拿到的是可撤回的使用机会，在线服务的容量保障没有因此缩小。点击<a href="../diagrams/exports/ch25-reclaimable-capacity.svg" target="_blank" rel="noopener">查看大图</a>。</figcaption></figure>
+          <p>原书据此说，Google 多数时候相当于“免费”运行批处理：这部分机器容量本来就为在线可靠性付了费，批任务用上的是其中空闲的使用机会。这是增量成本意义上的“免费”，电力、干扰控制、调度和工程管理仍有成本；能借出多少，还取决于负载形状和资源回收速度。</p>
+          <p>这也连接了前面的应用设计。批任务若把唯一进度放在本地，就不容易被回收；在线服务若不支持平稳撤离，也不容易与统一调度配合。资源效率既来自调度算法，也来自应用愿意接受、并确实能够兑现的运行约定。</p>
+          <aside class="key-point"><p class="key-point-label">核心观点</p><p>在线服务保留的安全余量，可以借给能够退让的批任务。共享的前提是隔离有效、资源可以及时收回，而且批任务承受得住暂停或实例丢失。</p></aside>
+        </section>
+
+        <section id="submitted-configuration">
+          <h2><span class="section-number">10</span>把运行定义提交下来，共享操作才有稳定入口</h2>
+          <p>一个服务最初也许只需一条启动命令，后来会跨越多个数据中心，分出开发、预发布和生产环境，还会附带缓存等不同类型的任务。若真实配置只存在于某位负责人的命令历史和记忆里，接手者很难知道哪些实例属于同一服务，更难可靠复现它。</p>
+          <p>原书主张把服务定义写成标准化配置语言，并提交到代码库。它不仅列出程序和参数，还应让常见操作有统一表达，例如更新二进制版本时，同时撤下的容量不超过百分之五。</p>
+          <p>可以这样理解：保存定义把运行意图从一次命令执行中取出来，使它可以被评审、比较和复用。脚本也能进入版本控制，但如果每个团队都用独特控制流程搭建相似服务，共同工具仍要分别理解它们。标准定义让部署设施更容易识别“这里要升级的是哪一种组件、应遵守什么滚动策略”。</p>
+          <p>原书用 memcached 说明这种复用的长期效果。各团队引用共同配置，平台以后替换实现或推送安全更新，就有一个可定位、可统一处理的入口；如果到处都是各自复制修改的搭建脚本，同一件事就会变成大量独立调查。它与<a href="ch24.html">第二十四章的持续交付</a>相连：部署自动化需要机器可理解的运行定义，也需要围绕定义建立共同操作。</p>
+        </section>
+
+        <section id="customization-and-lock-in">
+          <h2><span class="section-number">11</span>例外有实际价值，也会逐渐扩大平台的承诺</h2>
+          <p>统一平台能摊薄成本，成长中的组织又会出现越来越不同的需求。原书的第一个例子是 Google Compute Engine：2012 年推出的客户虚拟机也由 Borg 管理，一台客户 VM 运行在一个受 Borg 控制的容器里。但客户可能把 VM 当作需要持续保留的独特机器，平台便不能像普通可替换工作进程那样直接终止它。</p>
+          <p>双方都做了适配。Cloud 一侧建设虚拟机实时迁移能力，把运行中的状态转到另一台机器，尽量减少客户可感知的中断；Borg 一侧提供足够迁移时间，并在调度时降低再次搬迁的机会。原章脚注还说明，并非所有客户 VM 都启用实时迁移：有些工作负载连迁移期间短暂的性能下降也无法接受。</p>
+          <p>第二个例子来自约 2011 年的搜索服务。某类副本把较少访问的网页索引放在多块本地磁盘上，重新填充需要数小时。Borg 当时发现其中一块磁盘坏了，就把整个容器搬到其他机器；硬盘故障与漫长预热结合，使副本频繁退出并长期无法恢复服务能力。</p>
+          <p>解决办法不是简单要求搜索团队更快重启。Borg 允许这类容器自行处理磁盘故障，搜索程序也改为能够在部分本地数据丢失时继续运行。平台保留一个有价值的例外，应用承担相应的故障处理责任，共同减少了默认策略带来的可用性损失。</p>
+          <p>困难发生在例外越来越多以后。文件系统、内存控制、硬件局部性、专用设备和特殊调度选项都扩大了 API 表面。两个分别合理的开关同时打开时，组合行为可能既难测试，也没有清楚的预期。配置复制还会让原本只给少数专家的能力流入普通项目，后来甚至无人知道某个选项是有意采用，还是顺手继承。</p>
+          <p>原书记述，Borg 团队从 2012 年后投入大量精力清理接口，识别已经无人使用的功能，并为部分高级能力设置显式准入，限制其无意扩散。这个例子把“支持定制”还原成持续责任：提供一个选项时，也要决定由谁理解其语义、跟踪使用，以及将来怎样改变或退出。</p>
+          <p>另一个小故事展示了隐含承诺的强度。Borg 曾用 Bash 执行用户启动命令，后来想换成更轻量的 ash 来节省内存。可是，有些团队已经在自己的文件系统覆盖层中，把 Bash 路径替换成一个极小的直接执行程序。平台改用 ash 后，这些团队反而多出 shell 开销，触发告警，最终导致变更回滚。</p>
+          <p>因此，计算平台的锁定不仅来自某个调度 API。日志、监控、调试、告警、配置语言、可视化工具，乃至启动程序的具体路径，都会形成使用生态。选择新平台时，需要一起迁移这些工具与习惯。开源实现可以提供退出路径，却不会自动清除已经积累的依赖。</p>
+        </section>
+
+        <section id="serverless">
+          <h2><span class="section-number">12</span>serverless 进一步交出管理，也进一步约束运行方式</h2>
+          <p>作者提醒，计算抽象并不是从“差”到“好”的单向阶梯。自动重建的 VM 同样可以遵守可替换实例模型，适合需要不同操作系统或已有大量 VM 运维资产的组织；容器通常较轻量，适合在共同底座上共享资源。决定维护成本的一个关键问题，始终是实例能否按定义自动重建，而不只是它叫 VM 还是容器。</p>
+          <p>原书接着用请求处理框架解释 <strong>serverless（无服务器）</strong>。在常驻容器模式下，团队运行框架服务器和自己的处理逻辑，管理它们的副本；更高一层的服务可以接手服务器运行、请求路由与伸缩，让团队主要提交处理请求的代码。服务器仍然存在，只是更多管理责任被平台接走。书中脚注说明，FaaS、PaaS 与 serverless 是相关的概念，三者有差异，但相似之处更多，边界也比较模糊。</p>
+          <p>比较时应选择合适基线。serverless 相比手工照看的 VM，带来自动伸缩和免逐台配置的巨大变化；但成熟的共享容器平台已经提供其中很多能力。进一步获得的收益，常集中在更细粒度的伸缩、低流量应用不必长期保留自身实例，以及团队不用经营完整服务器运行环境。</p>
+          <p>低流量端尤其有吸引力。一批偶尔才被访问的小服务，如果每个都维持常驻副本，会有持续的最低资源开销；能够在空闲时缩到零，便能减轻这项开销。不过，缩到零的只是应用副本，数据库、网络入口和平台本身仍可能收费或占用资源。高流量系统则始终受底层真实容量与扩容速度约束。</p>
+          <p>原章有两处概括，需要按现行官方文档补正。一处是“serverless 要用到的一切都应在请求作用域内建立”：AWS Lambda 官方建议在处理函数之外初始化可复用的连接，并在临时目录缓存静态资源，以利用执行环境复用。准确的约束是，本地状态不能当作可靠的跨请求存储：应用要能承受这些资源随时消失，也不能借此混存不同用户的敏感数据。另一处是“Kubernetes 的副本不能缩到零”：实际上 Deployment 可以设为零副本，只是要在新请求到来时自动唤醒，还需要额外的设施，Knative 就在 Kubernetes 之上提供了这种能力。</p>
+          <p>应用对预热和控制权的需求，也会影响选择。原书记述，Google Code Jam 的前端运行在 App Engine 上，团队会在比赛开始前人工制造流量高峰，提前启动足够实例。作者把它看作人们选择 serverless 时本希望摆脱的手工调整：交出基础设施管理以后，集中爆发的特殊流量仍可能需要应用自己额外配合。</p>
+          <p>Google 当时更偏向继续建设 Borg，因为大量资源已经消耗在高流量服务上，另建一套 serverless 栈所节省的低流量资源相对有限；同时，客户 VM、数据库和长时间预热的服务，并不适合全都纳入原章讨论的短请求处理模型。作者也说明，这一选择不一定适合每个组织。</p>
+          <p>小团队的成本结构可能完全相反。若只为一个服务维护独立集群，管理成本没有多少团队可以分摊；采用托管 serverless，反而是在共享供应商已经建设好的平台。随着需求增长，保留通向更一般运行环境的迁移路径会有价值，但没有必要为了想象中的未来规模，先支付当前用不到的平台成本。</p>
+        </section>
+
+        <section id="public-private-and-choice">
+          <h2><span class="section-number">13</span>选择的核心，是把哪些长期责任交给谁</h2>
+          <p>公有云与私有基础设施，首先是管理责任怎样分配。公有云把一部分硬件、容量和运行管理交给供应商，组织购买的是现成能力与共享专长，可以把更多精力放到自己的产品。自建则保留更多控制，也需要自己承担建设和持续维护的工作，不能只比较机器采购价与云服务单价。</p>
+          <p>对需求尚不稳定的新产品，按需取得资源还减少了提前预测容量的压力。从机房空间、虚拟机到托管容器和 serverless，接手管理责任越多的服务，往往越容易让使用者随需求变化，但也会通过接口、运行时和配额约束能够做的事情。是否划算，还要按自己的负载与合同计算。</p>
+          <p>原书讨论了几种降低迁移风险的方法。采用开放架构，可以为更换供应商留下实现层面的选择；在较低层的云资源上自行运行开源平台，能带走更多自己的上层配置和工具；在多个云上使用相近平台，则可以更早发现对某一家独特行为的依赖。这些路径的共同收益是增加可移动性，代价是自己继续承担一部分集成与运行工作。</p>
+          <p><strong>多云（multicloud）</strong>是同时使用多个云供应商；<strong>混合云（hybrid cloud）</strong>则把私有环境与公有云结合。原书举例，平时在私有环境运行，容量紧张时向公有云溢出一部分任务。这样的迁移或溢出需要兼容接口和可用连接；数据、身份、服务发现与实际延迟也都要能配合（笔记补充），两边都运行 Kubernetes 只是起点。</p>
+          <p>统一平台带来的效率，也不要求所有组织只有一个全球集群。原书结论举的是每个区域一个或少数共享集群：共同的运行约定与工具，可以减少团队间重复维护，同时按实际隔离、容量和故障范围安排边界。关键在于这些边界有明确理由，而非每个团队从零复制一份基础设施。</p>
+          <p>把本章连起来，计算服务是一份平台与应用共同履行的约定。平台提供调度、隔离、发现与恢复，应用提供可重建实例、可接续的工作和可承受重复的接口；共同配置与工具使这套约定能跨团队延续，谨慎管理例外则使它能跨时间演进。选择平台时真正需要比较的，是这些责任由谁持续承担，以及这种分配是否适合当前组织。</p>
+          <aside class="key-point"><p class="key-point-label">核心观点</p><p>合适的计算服务，会让常见工作容易完成，让必要的特殊需求有清楚边界，并把长期维护责任放到能够承担它的位置。规模、现有资产、负载形态和团队能力，比抽象层级的高低更能决定答案。</p></aside>
+        </section>
+
+        <details id="sources" class="source-note">
+          <summary>来源、主题对应与核查说明</summary>
+          <p>依据《Software Engineering at Google》（2020）Abseil 官方公开英文 HTML 版<a href="https://abseil.io/resources/swe-book/html/ch25.html">第 25 章 Compute as a Service</a>，Onufry Wojtaszczyk 撰写、Lisa Carey 编辑；核查日期 2026-11-06。</p>
+          <ul>
+            <li>01：<a href="https://abseil.io/resources/swe-book/html/ch25.html#taming_the_compute_environment">Taming the Compute Environment</a>、<a href="https://abseil.io/resources/swe-book/html/ch25.html#automation_of_toil">Automation of Toil</a>、Simple automations、<a href="https://abseil.io/resources/swe-book/html/ch25.html#automated_scheduling">Automated scheduling</a> 与 Summary。</li>
+            <li>02：<a href="https://abseil.io/resources/swe-book/html/ch25.html#containerization_and_multitenancy">Containerization and Multitenancy</a>、My neighbor’s dog barks in my RAM、<a href="https://abseil.io/resources/swe-book/html/ch25.html#rightsizing_and_autoscaling">Rightsizing and autoscaling</a> 及脚注 3—5。</li>
+            <li>03：<a href="https://abseil.io/resources/swe-book/html/ch25.html#architecting_for_failure">Architecting for Failure</a>、<a href="https://abseil.io/resources/swe-book/html/ch25.html#batch_versus_serving">Batch Versus Serving</a> 及脚注 6—10；“宠物与牲畜”的出处见脚注 7。</li>
+            <li>04：Architecting for Failure、Batch Versus Serving、<a href="https://abseil.io/resources/swe-book/html/ch25.html#multitenancy_for_serving_jobs">Multitenancy for serving jobs</a> 及脚注 8。图 25-2 的对照依据 Multitenancy for serving jobs 中重调度要限速、在线服务要提前通知这两条要求。</li>
+            <li>05：<a href="https://abseil.io/resources/swe-book/html/ch25.html#managing_statetwosixthree">Managing State</a> 与脚注 12、13；商品查询的数字为笔记假设。</li>
+            <li>06：<a href="https://abseil.io/resources/swe-book/html/ch25.html#connecting_to_a_service">Connecting to a Service</a> 与脚注 14。披萨订单是原书例子；跨副本共享去重记录、原子提交和拒绝旧实例写入是笔记的展开。</li>
+            <li>07：<a href="https://abseil.io/resources/swe-book/html/ch25.html#one-off_code">One-Off Code</a> 与脚注 15。</li>
+            <li>08：<a href="https://abseil.io/resources/swe-book/html/ch25.html#containers_as_an_abstraction">Containers as an Abstraction</a>、<a href="https://abseil.io/resources/swe-book/html/ch25.html#containers_and_implicit_dependencies">Containers and implicit dependencies</a>；约三万二千的 PID 上限是原章对当时默认值的近似写法。</li>
+            <li>09：<a href="https://abseil.io/resources/swe-book/html/ch25.html#one_service_to_rule_them_all">One Service to Rule Them All</a>、Multitenancy for serving jobs 与脚注 16。</li>
+            <li>10：<a href="https://abseil.io/resources/swe-book/html/ch25.html#submitted_configuration">Submitted Configuration</a>。</li>
+            <li>11：<a href="https://abseil.io/resources/swe-book/html/ch25.html#choosing_a_compute_service">Choosing a Compute Service</a>、<a href="https://abseil.io/resources/swe-book/html/ch25.html#centralization_versus_customization">Centralization Versus Customization</a>、Need for customization 与脚注 17—22。</li>
+            <li>12：<a href="https://abseil.io/resources/swe-book/html/ch25.html#level_of_abstraction_serverless">Level of Abstraction: Serverless</a>、What is serverless?、Pros and cons、The trade-off 与脚注 23；两处表述修正见下。</li>
+            <li>13：<a href="https://abseil.io/resources/swe-book/html/ch25.html#public_versus_private">Public Versus Private</a>、<a href="https://abseil.io/resources/swe-book/html/ch25.html#conclusion-id00030">Conclusion</a> 与 TL;DRs。</li>
+          </ul>
+          <p>纠错与表述修正：</p>
+          <ul>
+            <li><strong>算例复算。</strong>原章在每份文档一秒、一百万份、两百台机器的前提下写约一百分钟 → 按这些前提，<code>1,000,000 ÷ 200 ÷ 60 ≈ 83.3 分钟</code>，原章没有说明额外开销 → 正文采用 83.3 分钟；单机约 11.6 天（原章写约 12 天），一千份一块约 16.7 分钟。</li>
+            <li><strong>Pod 与容器。</strong>原章把 Kubernetes 的 Pod 简称为容器，并概括为每个应用都能随意监听端口、不必担心冲突 → <a href="https://kubernetes.io/docs/concepts/workloads/pods/#pod-networking">Kubernetes 官方 Pods 文档</a>说明同一 Pod 内的多个容器共享网络命名空间、IP 与端口 → 端口隔离发生在 Pod 之间，同一 Pod 内的容器仍需协调端口。</li>
+            <li><strong>serverless 状态。</strong>原章说要用到的一切都应在请求作用域内建立 → <a href="https://docs.aws.amazon.com/lambda/latest/dg/best-practices.html#function-code">AWS Lambda 官方最佳实践</a>建议利用执行环境复用，在处理函数之外初始化连接，并在临时目录缓存静态资源 → 修正为“本地状态不能当作可靠的跨请求存储”：可以复用，但要承受它随时消失，并隔离不同用户的敏感数据。</li>
+            <li><strong>缩到零。</strong>原章说 Kubernetes 中的副本容器不能缩到零 → <a href="https://kubernetes.io/docs/tasks/run-application/scale-deployment/#scaling-to-zero">Kubernetes 官方手动伸缩文档</a>说明 Deployment 可以设为零副本；<a href="https://knative.dev/docs/serving/autoscaling/scale-to-zero/">Knative 官方 scale-to-zero 文档</a>说明使用 Knative Pod Autoscaler 时可以启用缩零 → 区分“副本数可以为零”与“新请求能从零唤醒”，后者需要 Knative 这类设施。</li>
+            <li><strong>脚注书目。</strong>原章脚注 11 写 Atul Adya 等的 “Auto-sharding for datacenter applications”，OSDI 2019 → <a href="https://www.usenix.org/conference/osdi16/technical-sessions/presentation/adya">USENIX 官方论文页面</a>所列完整标题为 “Slicer: Auto-Sharding for Datacenter Applications”，会议为 OSDI 2016 → 标题与年份应以此为准（仅核对书目与摘要）。</li>
+            <li>脚注 2 的 Borg 论文书目（EuroSys 2015）与 <a href="https://research.google/pubs/large-scale-cluster-management-at-google-with-borg/">Google Research 论文页面</a>一致，其摘要也提到共享、隔离、声明式任务定义与名字服务（仅核对书目与摘要）。</li>
+          </ul>
+          <p>商品查询、订单标识 A17 与容量图中突发时的数字为笔记假设；Google 内部的案例、数字与进度均依据原章叙述，反映成书时的情况。图示为本笔记原创示意图；本文按主题重组原章，而非逐段翻译。</p>
+        </details>
+
+        <nav class="chapter-pagination" aria-label="章节翻页"><a class="page-link prev" href="ch24.html" rel="prev"><span class="page-label">← 上一章 · 第 24 章</span><span class="page-title">持续交付</span></a><a class="page-link next" href="afterword.html" rel="next"><span class="page-label">下一篇 →</span><span class="page-title">后记</span></a><a class="pagination-home" href="../index.html">书籍概览与目录</a></nav>
+      </article>
+    </div>
+  </main>
+  <footer class="site-footer"><div class="container footer-inner"><span>个人书架 / 中文读书笔记</span><a href="#main">回到顶部 ↑</a></div></footer>
+</body>
+</html>

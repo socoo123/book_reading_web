@@ -1,0 +1,221 @@
+[
+  {
+    "type": "text",
+    "id": "title",
+    "x": 24,
+    "y": 18,
+    "text": "兼容方向：先标写者与读者",
+    "fontSize": 25,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "subtitle",
+    "x": 24,
+    "y": 60,
+    "text": "箭头 = 数据流向；版本新旧与箭头朝向分别标明。",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "text",
+    "id": "backward",
+    "x": 24,
+    "y": 108,
+    "text": "向后兼容 backward",
+    "fontSize": 21,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "rectangle",
+    "id": "old-writer",
+    "x": 24,
+    "y": 150,
+    "width": 250,
+    "height": 90,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "旧代码写入\nv1 数据",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "new-reader",
+    "x": 480,
+    "y": 150,
+    "width": 250,
+    "height": 90,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "新代码读取\n理解旧格式",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "old-to-new",
+    "x": 280,
+    "y": 195,
+    "width": 194,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        194,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid",
+    "start": {
+      "id": "old-writer"
+    },
+    "end": {
+      "id": "new-reader"
+    }
+  },
+  {
+    "type": "text",
+    "id": "old-data",
+    "x": 320,
+    "y": 158,
+    "text": "旧数据",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "text",
+    "id": "forward",
+    "x": 24,
+    "y": 282,
+    "text": "向前兼容 forward",
+    "fontSize": 21,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "rectangle",
+    "id": "new-writer",
+    "x": 24,
+    "y": 324,
+    "width": 250,
+    "height": 90,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "新代码写入\nv2 数据",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "old-reader",
+    "x": 480,
+    "y": 324,
+    "width": 250,
+    "height": 90,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "旧代码读取\n容忍新增内容",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "new-to-old",
+    "x": 280,
+    "y": 369,
+    "width": 194,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        194,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid",
+    "start": {
+      "id": "new-writer"
+    },
+    "end": {
+      "id": "old-reader"
+    }
+  },
+  {
+    "type": "text",
+    "id": "new-data",
+    "x": 320,
+    "y": 332,
+    "text": "新数据",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "rectangle",
+    "id": "writeback",
+    "x": 24,
+    "y": 466,
+    "width": 706,
+    "height": 112,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeStyle": "dashed",
+    "label": {
+      "text": "读得懂 ≠ 无损写回\n旧版若重新构造整条记录，未知 photoURL 仍可能丢失",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "text",
+    "id": "api",
+    "x": 24,
+    "y": 614,
+    "text": "旧客户端 → 新服务：请求向后兼容；响应向前兼容。",
+    "fontSize": 19,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  }
+]

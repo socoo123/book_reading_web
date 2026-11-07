@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>第 5 章｜团队领导 · Software Engineering at Google · 架构提升读书笔记</title>
+  <meta name="description" content="《Software Engineering at Google》第五章读书笔记：理解工程经理与技术负责人、方向与授权、服务型领导、诚实反馈、心理安全感，以及不同成员所需要的支持。">
+  <link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+  <script src="../../../assets/theme.js"></script>
+  <script src="../../../assets/reader.js" defer></script>
+  <link rel="stylesheet" href="../../../assets/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header reader-header"><div class="container header-inner">
+    <a class="brand" href="../../../index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5.5C8.5 3.8 5.8 3.6 2.5 4.5v14c3.3-.9 6-.7 9.5 1 3.5-1.7 6.2-1.9 9.5-1v-14c-3.3-.9-6-.7-9.5 1Zm0 0v14"/></svg>书架</a>
+    <a class="reader-book-title" href="../index.html" lang="en">Software Engineering at Google</a>
+    <div class="theme-control" role="group" aria-label="外观" hidden><button type="button" data-theme-value="system" title="跟随系统"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path class="fill" d="M12 4a8 8 0 0 1 0 16Z"/></svg><span class="sr-only">跟随系统</span></button><button type="button" data-theme-value="light" title="浅色"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.6"/><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21M5.6 5.6l1.6 1.6M16.8 16.8l1.6 1.6M5.6 18.4l1.6-1.6M16.8 7.2l1.6-1.6"/></svg><span class="sr-only">浅色</span></button><button type="button" data-theme-value="dark" title="深色"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.5 14.6A7.8 7.8 0 0 1 9.4 4.5a7.8 7.8 0 1 0 10.1 10.1Z"/></svg><span class="sr-only">深色</span></button></div>
+  </div></header>
+  <main id="main" class="container reader-container">
+    <nav class="breadcrumb" aria-label="当前位置"><ol><li><a href="../../../index.html">书架</a></li><li><a href="../index.html">书籍概览</a></li><li aria-current="page">第 5 章</li></ol></nav>
+    <div class="reading-layout">
+      <aside class="toc">
+        <nav aria-label="本页目录"><h2>本页目录</h2><ul>
+          <li><a href="#leadership-roles">01　职责与成果的转变</a></li>
+          <li><a href="#direction-and-delegation">02　方向与授权</a></li>
+          <li><a href="#service-and-influence">03　服务与影响力</a></li>
+          <li><a href="#trust-and-empathy">04　信任与体谅</a></li>
+          <li><a href="#honest-feedback">05　诚实反馈与支持</a></li>
+          <li><a href="#safe-to-learn">06　安全地尝试与学习</a></li>
+          <li><a href="#wellbeing-and-careers">07　工作感受与职业发展</a></li>
+          <li><a href="#individual-support">08　因人提供方向与动力</a></li>
+        </ul><p class="toc-note"><a href="../index.html">← 书籍概览</a></p></nav>
+      </aside>
+      <article class="article">
+        <header class="article-header">
+          <p class="eyebrow">READING NOTES / CHAPTER 05</p>
+          <h1>第 5 章｜团队领导</h1>
+          <p class="article-deck"><span lang="en">How to Lead a Team</span> · 架构提升读书笔记</p>
+        </header>
+        <p>团队里每个人都很忙，产品仍然可能原地打转：有人优化性能，有人扩展功能，有人不断处理临时请求，却没有人确认这些努力是否通向同一个目标。第五章讨论的领导工作，就是为这些分散的能力建立方向、提供条件，并让团队在没有时时请示的情况下继续前进。</p>
+        <p>Brian Fitzpatrick 把第二章的谦逊、尊重和信任带到了领导岗位。职位带来了一些决定权，也放大了个人行为的影响。一个领导怎样回应坏消息、怎样处理分歧、是否愿意把机会交给别人，都会逐渐变成团队的工作方式。本章关心的，是怎样让这种影响帮助其他人做出更好的工作。</p>
+        <details class="mobile-toc"><summary>本页目录 · 8 个小节</summary><nav aria-label="移动端本页目录"><ul>
+          <li><a href="#leadership-roles">01　换一种工作，也换一种衡量成果的方式</a></li>
+          <li><a href="#direction-and-delegation">02　方向越清楚，越能放心把工作交出去</a></li>
+          <li><a href="#service-and-influence">03　把影响力用在别人难以跨过的地方</a></li>
+          <li><a href="#trust-and-empathy">04　把同事当作能够负责的成年人</a></li>
+          <li><a href="#honest-feedback">05　把困难反馈说清楚，也把支持落到实处</a></li>
+          <li><a href="#safe-to-learn">06　让团队有尝试的余地，也有学习的责任</a></li>
+          <li><a href="#wellbeing-and-careers">07　关心工作感受，也帮助人看见下一步</a></li>
+          <li><a href="#individual-support">08　按不同的人，提供不同的方向与动力</a></li>
+        </ul></nav></details>
+
+        <section id="leadership-roles">
+          <h2><span class="section-number">01</span>换一种工作，也换一种衡量成果的方式</h2>
+          <p>原书先区分了 Google 工程团队中的两种领导职责。<strong>工程经理（Engineering Manager）</strong>关注人的表现、生产力和工作感受，同时对团队所负责产品的业务需要负责。人的成长意愿与业务的当前需要有时会冲突，例如一个人希望学习新的方向，产品却仍有必须维护的旧系统。经理需要在这些要求之间作出安排，不能只顾交付，也不能只顾每个人眼下最想做的事情。</p>
+          <p><strong>技术负责人（Tech Lead，TL）</strong>主要负责产品的技术方向，包括技术选择、架构、优先级、推进速度及一般项目管理。他通常与工程经理一起考虑人员配置，让任务与工程师的技能和经验相匹配。很多 TL 自己也写代码，因此会反复遇到一个取舍：自己很快完成，还是交给同事，用较长的时间换取对方的成长。</p>
+          <p>小型或新成立的团队，常由一个人兼任两种职责，称为 <strong>Tech Lead Manager（TLM）</strong>。成熟的大团队则往往由 TL 与工程经理搭档。原书强调，兼任并不只是多参加几场会议；个人贡献、授权和人员管理争夺同一份时间，缺少辅导很容易透支。Google 要求工程经理有工程背景，但也明确指出，真正做好管理，尤其依赖与人相处、培养人和协调工作的能力。</p>
+          <p>从工程师转向领导，最先失去的往往是熟悉的成就感。以前一天结束，可以指着提交、设计文档或关闭的缺陷说明自己做了什么；现在可能花了一天解决分歧、安排任务和消除障碍，却觉得没有产出。作者把这种错位比作已经改种香蕉，还在用每天摘到多少苹果评价自己。脚注还补充，管理投入的回报通常会在更长的时间里显现。</p>
+          <p>这意味着，衡量工作的视角要扩大。一次协调让几名工程师不用继续等待，一次清晰反馈让同事少走几周弯路，一次培养让团队多了一位能够独立负责的人，都是重要成果。它们未必出现在领导自己的代码统计里，却会进入整个团队之后的表现。</p>
+          <p>这也解释了为什么管理不适合被当成优秀工程师唯一的晋升方向。书中反复提醒，有人擅长并热爱个人贡献，有人擅长帮助他人形成成果，两种职业路径都值得保留。把不愿意管理的人推入管理岗位，可能同时失去一位好工程师，并增加一位尚不适任的经理。</p>
+          <aside class="key-point"><p class="key-point-label">核心观点</p><p>领导工作的产物，是团队能够持续完成有价值的事情。评价它时，要把目光从个人完成了多少，移到方向是否清楚、障碍是否减少、成员是否逐渐具备更强的独立工作能力。</p></aside>
+        </section>
+
+        <section id="direction-and-delegation">
+          <h2><span class="section-number">02</span>方向越清楚，越能放心把工作交出去</h2>
+          <p>授权需要一个共同的方向。书中把产品比作一辆大卡车，每个成员都握着一根绳子；如果各自往不同的方向拉，即使人人用力，产品也走不快。领导需要帮助团队说清楚要去哪里、当前什么最重要，以及发生取舍时应优先保护什么。</p>
+          <p>一份简短的团队使命说明，可以把这种方向留下来。它的价值在于让成员遇到局部选择时有依据。假设团队的目标是让用户可靠地完成已有关键流程，那么性能优化、新功能和运维改进就需要放在这个目标下比较，而不能只按各自的技术趣味排序。方向、优先级与取舍原则连在一起，目标才开始参与日常工作。</p>
+          <p>形成方向也需要建立共识。原书把领导比作<strong>催化剂</strong>：帮助相关的人更容易交换信息，推动团队从各说各话走到能够一起行动。有时领导主持整个讨论，有时只需要把迟迟没有相遇的观点带到同一张桌上。团队为了快速推进，也可能共同同意由某个人作最终决定。脚注特别提醒，共识并不要求所有人百分之百赞成；仍有分歧或不确定性时，团队也需要能够决定向前走。</p>
+          <p>共同方向确认之后，具体实现应尽量交给真正从事这项工作的人。他们往往比领导更熟悉细节，也需要通过实际决定形成责任感。领导定期确认方向、提供支持，同时允许成员选择实现路径。这样，授权既保留了产品层面的协调，也使一线工程师的判断能够发挥作用。</p>
+          <figure class="concept-figure"><a href="../diagrams/exports/ch05-delegation.svg" target="_blank" rel="noopener"><img src="../diagrams/exports/ch05-delegation.svg" width="720" height="350" alt="授权从说清目标与优先级开始，成员独立推进，随后通过反馈逐步承担更多责任；领导在整个过程中提供指导并移除障碍。"></a><figcaption>图 5-1：从左向右看一次授权过程，虚线回路表示把这次经验带回下一轮。独立推进与持续支持可以同时存在。点击<a href="../diagrams/exports/ch05-delegation.svg" target="_blank" rel="noopener">查看大图</a>。</figcaption></figure>
+          <p>技术负责人尤其需要克服替别人完成的冲动。书中给出的典型场景是：新人花三个小时处理一件自己二十分钟就能做完的事。眼前看，接手很划算；长期看，如果每次都由熟手收尾，新人始终无法独立，熟手也始终无法离开。导师需要根据对方的理解程度给出恰当帮助，让学习与实际贡献一起发生：信息要给够，讲解过多，对方反而容易听不进去。</p>
+          <p>这种培养还要从招聘与责任分配开始。原书鼓励领导寻找比自己更聪明、将来能接替自己的人，而不是只挑听话、不构成挑战的人。后者会让所有决定持续依赖领导，连休假都可能变得困难。为了赶招聘数量而降低能力标准，也会把短期的空缺变成长期的辅导负担、团队压力和交付损失。</p>
+          <p>成员逐渐成熟后，可以给他们更大的责任，偶尔让他们带领团队，观察谁有能力、也有意愿走向领导岗位。与此同时，领导仍应保留亲手工作的能力。原书建议，接手一支新团队时，可以承担一项没人乐意做的繁杂工作，借此理解实际系统、建立信任。授权与亲自参与的平衡在于：让别人有机会成长，也让自己的判断继续接触真实工作。</p>
+          <aside class="key-point"><p class="key-point-label">核心观点</p><p>清楚的目标降低了逐项指挥的需要；逐步扩大的责任让团队积累能力。一个健康的结果，是领导离开一段时间，团队仍知道该做什么，也有人能够接着推进。</p></aside>
+        </section>
+
+        <section id="service-and-influence">
+          <h2><span class="section-number">03</span>把影响力用在别人难以跨过的地方</h2>
+          <p>原书用<strong>服务型领导（Servant Leadership）</strong>概括一种工作姿态：关注团队的技术健康与协作健康，填补阻碍工作顺畅进行的缝隙。可能是帮助大家达成决定，可能是处理成员无法独自解决的组织障碍，也可能是亲手补上一个繁琐环节。领导的价值，常出现在别人已经知道要做什么，却暂时做不成的时候。</p>
+          <p>书中有一支团队，在法务问题上卡了几个星期，最后才向经理求助。经理知道该找谁讨论，不到两个小时便解决了问题。另一位经理并不精通某段晦涩的 Java 代码，却能把遇到困难的工程师介绍给知道答案的人。这些案例说明，领导不必成为所有专业领域的最终答案；了解谁能提供帮助，并建立有效联系，同样能显著缩短等待。</p>
+          <p>这种影响力也能越过汇报关系。作者创建的 Data Liberation Front 团队，不足六名工程师，却推动五十多个 Google 产品通过 Google Takeout 提供数据导出。当时没有要求所有产品参加 Takeout 的高层统一指令，负责这些产品的工程师也并不都归这个小团队管理。</p>
+          <p>他们的做法包含两个互相配合的部分：先说明这件事为何符合公司的战略需要、使命与已有优先级，再开发工具，让各产品团队能够快速、容易地接入 Takeout。前者帮助别人理解为什么值得投入，后者降低实际参与的成本。团队由此获得了大量工程师的贡献。这个案例展示的“无职权影响力”，既依靠理由，也依靠把合作变得容易的具体工程工作。</p>
+          <p>服务团队还包括处理外部噪声。作者回忆，第一次当经理时，突然发现公司充满不确定性与组织混乱，后来才意识到，这些情况一直存在，只是以前的经理替团队挡住了很多。领导需要分享会影响工作的真实信息，同时过滤极不可能落到团队身上的零散要求。否则，一句尚未成形的外部想法，就可能让整支团队反复切换方向。</p>
+          <p>领导自己的情绪也是一种会被放大的信号。原书用一串相连的齿轮作比喻：层级越高，一次很小的转动，越可能使末端成员忙乱起来。工程副总裁 Bill Coughran 在突发问题面前保持冷静，通过询问事实帮助惊慌的工程师重新集中注意力：先弄清发生了什么，再组织下一步行动。</p>
+          <p>同样，当成员带着困难来寻求建议时，领导可以先帮助他把问题讲清楚、探索已有信息与可能路径，再决定提供多少直接帮助。这样既能推进当前问题，也把解决问题的能力留在成员身上。知道答案、知道谁有答案，以及帮助别人找到答案，都是可用的领导手段。</p>
+        </section>
+
+        <section id="trust-and-empathy">
+          <h2><span class="section-number">04</span>把同事当作能够负责的成年人</h2>
+          <p>信任会改变领导关注的对象。原书主张，把注意力放在需要完成什么，以及成员是否具备完成工作的条件上，给具体的工作方式留下空间。一个人始终坐在桌前，不能直接说明他正在创造价值；相反，成员承担起结果，也不需要靠每一个时刻都被看见来证明。</p>
+          <p>作者的团队曾迎来一位新工程师 Jerry。他上一家公司的经理要求每天九点到五点坐在工位上，否则就认为工作不够。到新团队的第一天，Jerry 因一个无法改期的预约需要提前十五分钟离开，特地紧张地来道歉。作者告诉他，只要把工作完成，并不介意他几点离开。此后 Jerry 一直完成了自己的工作，作者也没有必要继续盯着他是否坐在桌前。</p>
+          <p>书中另一个案例展示了忽视个人处境的代价。Jake 的第一个孩子出生后，几周内大部分时间在家工作。他与同事 Katie 已经合作多年，也熟悉远程协作，工作产出与合作都没有受到影响。身在另一办公室的经理 Pablo 得知后，却坚持要求 Jake 到办公室，理由只是其他人也会生孩子。</p>
+          <p>Jake 解释，在家办公能让自己与妻子的生活更容易安排，也没有损害工作，但这没有改变经理的回应。结果是，这位平常温和的工程师非常愤怒，对经理失去了很多尊重。原书提出，经理本可以先理解情况，暂时接受这种安排，或者协商每周一两天到办公室。解决办法可以讨论，认真对待人的实际处境则是讨论能够成立的基础。</p>
+          <p>这些例子也延伸到日常制度。原书介绍，Google 的办公用品与一些电脑配件允许员工自助领取或按流程自行登记。可能发生的少量滥用，并不是唯一要计算的成本；为了便宜物品反复申请所浪费的时间，以及把所有人都当成需要防范的对象所形成的工作关系，也有成本。信任需要配套责任，但过密的控制本身同样是一种投入。</p>
+          <p>对人的尊重，也包含承认领导岗位改变了关系。一个人从同事变成经理后，即使仍然友善，下属也可能因为对方掌握职业评价而感到必须回报友谊。原书建议，通过一起吃午饭等自然方式保持联系，同时留意这种权力差异。领导可以温和、关心同事，也需要保留作出困难决定和提供诚实反馈的空间。</p>
+          <p>在这样的关系中，谦逊是一项实际能力。成员质疑决定时，领导愿意说明理由；自己不知道时，能够承认不知道；犯错后，认真道歉并修正。职位越容易让人少说真话，这些行为越重要。它们让<a href="ch02.html#three-pillars">第二章的谦逊、尊重和信任</a>进入了有权力差异的日常协作。</p>
+        </section>
+
+        <section id="honest-feedback">
+          <h2><span class="section-number">05</span>把困难反馈说清楚，也把支持落到实处</h2>
+          <p>尊重同事包括及时告诉他，哪些行为正在妨碍工作。原书反对用“夸奖—批评—夸奖”的三明治方式包裹关键反馈：领导以为已经表达了严重问题，对方却可能只记住两头的肯定，不知道必须作出改变。有效的反馈需要同时做到清楚与体谅，让人听见具体问题，也知道自己有机会改善。</p>
+          <p>Tim 的经历说明了这种差别。一位经理认定 Tim 很难共事，说他从不回应批评，总在重复同样的问题。后来接手他的同事先旁听了原经理与 Tim 的几次谈话，发现经理大量使用赞美三明治，重要信息被藏在委婉表达里。</p>
+          <p>Tim 加入新团队后，新的负责人直接说明：他与人交流的方式正在疏远并激怒同事，要有效合作，需要改进沟通能力，而团队愿意帮助他做到。谈话没有用无关赞美冲淡问题，也没有羞辱 Tim。经过几次后续提醒，几周内他的表现就明显改善。案例的重点在于，原本被理解为“不肯改变”的人，可能从未清楚听到过自己需要改变什么。图 5-2 把这前后两段经历并排对照，差别在于批评有没有被清楚听见。</p>
+          <figure class="concept-figure"><a href="../diagrams/exports/ch05-feedback-heard.svg" target="_blank" rel="noopener"><img src="../diagrams/exports/ch05-feedback-heard.svg" width="720" height="410" alt="同样指出 Tim 需要改进的地方：赞美三明治把批评夹在夸奖中间，对方只记住肯定，问题照旧；清楚而体谅的反馈说明问题、需要的改变和可得的帮助，几周内表现明显改善。"></a><figcaption>图 5-2：每一行从左往右读：怎样说、对方听到什么、结果如何；虚线小框表示被夸奖冲淡的批评。同样是指出问题，清楚而体谅的说法让对方听见了必须改变。点击<a href="../diagrams/exports/ch05-feedback-heard.svg" target="_blank" rel="noopener">查看大图</a>。</figcaption></figure>
+          <p>另一个案例中的 Dean，对团队使命和页面小控件都用同样强烈的态度争论，几乎不肯放过任何决定。经理 Ben 用“拦火车”解释这种行为：每项决定都是一列经过的火车，偶尔拦下一列重要的车有价值，拦下每一列则会消耗大量精力，也使其他人难以前进。这个比喻让双方能够讨论争论的频率、事情的重要程度和对同事的影响，避免把谈话变成人格评价。</p>
+          <p>反馈也需要诚实面对信息边界。原书建议，知道但暂时不能分享，可以明确说不能透露；还不知道，就说不知道。为了维持全知形象而编出答案，会让团队以后更难判断哪些信息可信。清楚承认边界，反而能让可分享的信息更可靠。</p>
+          <p>对于持续达不到岗位预期的成员，领导还必须采取行动。原书指出，放着不处理时，其他人会花时间补位，团队也会感到要求不公平。拖得越久，当事人与团队的关系越紧张，领导越沮丧，原本可能有效的辅导就越难开展。及时处理，才更有机会帮助对方提高表现，或<a href="ch04.html#mobility-ratings">找到更适合的岗位</a>。</p>
+          <p>书中给出的辅导方式很具体：例如约定两个月左右的观察与改善时段，把目标拆小、设成逐步递进且可以检查的结果，每周会面，明确下一个里程碑的预期。这样的安排，暂时会比通常的授权更细，但目的在于让人逐步恢复独立工作能力。支持、检查与期待同时明确，双方才容易看清哪些地方在改善、哪些要求仍然达不到。</p>
+          <p>把它接到前面的 Tim 案例，可以看到两项相连的责任：先让人真正理解问题，再给出能够行动和获得帮助的路径。仅有含糊的不满，或仅仅希望事情自行好转，都不能完成这项工作。困难反馈应在私下建设性地进行；做得好的地方则应及时认可，让具体贡献被本人和团队看见。</p>
+          <aside class="key-point"><p class="key-point-label">核心观点</p><p>诚实反馈要使对方知道：哪些行为影响了工作，需要怎样改变，以及可以得到什么帮助。清楚表达与善意支持相互配合，才能把一次不舒服的谈话变成实际改善的起点。</p></aside>
+        </section>
+
+        <section id="safe-to-learn">
+          <h2><span class="section-number">06</span>让团队有尝试的余地，也有学习的责任</h2>
+          <p>原书把<strong>心理安全感（psychological safety）</strong>解释为，成员能够在团队中做自己，不必担心因此受到领导或同事的负面对待。在领导语境下，这也关系到人是否敢于提出不成熟的想法、暴露困难，以及承认一次探索没有奏效。如果失败总被用来定义个人，最容易留下的工作方式就是只选肯定能完成的小事。</p>
+          <p>作者主张，让团队知道失败可以发生，同时把失败转化为学习。越早发现想法行不通，通常越少有投入被绑定在上面。影响客户的生产事故则需要更正式的学习过程，即 Google 的复盘实践：记录通向故障的事件，找出问题核心，形成防止重演的改进，而非借机指责个人或增加无用审批。</p>
+          <p>这里有两个需要同时保留的层次。一方面，团队共同承担结果，不把失败集中变成某个人的羞辱；另一方面，具体的人仍然需要得到适当反馈，改进工作方式。公开认可贡献、私下讨论个人需要改进的地方，可以让集体学习与个人成长并行。这与<a href="ch02.html#learning-from-failure">第二章的无责复盘</a>相衔接：把原因和改变留在系统里，把尊重留在人与人的关系中。</p>
+          <p>领导判断是否允许尝试时，原书给出一个实用依据：<strong>这个决定有多容易撤回。</strong>如果没有紧迫交付压力，一位成员想花一两天试用可能加速工作的工具或库，可以较容易地支持；如果要发布一个今后可能需要维护十年的产品，就应投入更多思考。两种决定都叫尝试，它们形成的持续义务却很不一样。</p>
+          <p>这为日常授权提供了一个尺度。可以这样理解：可逆性较高的探索适合用较小范围、较短周期换取信息；一旦涉及长期兼容、正式用户承诺或难以收回的依赖，就需要在投入前把影响想得更清楚。这样，成员有空间寻找更好的办法，团队也能控制一次试验会留下多大的尾巴。</p>
+          <p>安全感最终来自反复可见的行为。成员第一次报告问题时，领导先帮助理解和解决；一次实验失败后，团队确实讨论学到了什么；一个公开被承认的错误没有演变成人身责备。人们在这些经历里确认，坦诚与尝试在这里是可以继续的。</p>
+        </section>
+
+        <section id="wellbeing-and-careers">
+          <h2><span class="section-number">07</span>关心工作感受，也帮助人看见下一步</h2>
+          <p>作者刚加入 Google 不久，与时任 CEO Eric Schmidt 第一次会面前，准备了许多应对尖锐提问的防御性回答。会面快结束时，对方却问他是否需要什么帮助。他完全没有准备，愣在原地；但下一次再听到这个问题，就已经有需求可以提出。原书用这段经历说明，领导持续提供求助入口，会改变成员怎样准备交流。</p>
+          <p>因此，一对一谈话可以在末尾留出一个稳定的问题：“你需要什么？”第一次未必得到完整答案，反复问，成员便会逐渐知道这些需求值得整理、值得带来。有的领导先讨论技术问题，再了解工作是否顺手、接下来期待什么；有的请成员用一到十分描述自己的感受，借此打开话题。具体形式可以不同，重要的是留出真实了解情况的机会。</p>
+          <p>工作感受往往由很具体的安排决定。书中一位 TLM 用表格列出繁杂、少有人感谢的任务，确保负担在团队中合理分摊；另一位关注工时，通过补休和团队活动避免精疲力竭。及时让贡献获得认可、给人学习与发挥的机会，也都在影响他是否愿意继续投入。</p>
+          <p>这需要承认工作之外的生活。原书明确提醒，不要窥探成员私事，但要对别人正在经历的困难保持敏感。某段时间的表现变化，可能与家庭处境有关；不切实际地假设每个人随时都能延长工时，会损害信任，也会增加耗竭风险。前面 Jake 的经历，正说明在工作仍正常进行时，僵硬要求可能无谓地破坏关系。</p>
+          <p>更长一些的时间尺度上，领导还需要关心职业发展。直接问“五年后想怎样”，人们常常难以回答；但他们可能希望学习某种技能、获得晋升、发布重要产品，或与优秀同事合作。帮助这些愿望从模糊期待变成明确目标，之后讨论任务和机会时，双方就多了一套共同依据。</p>
+          <p>假设一位成员想承担更完整的技术责任，领导安排任务时就可以考虑哪些工作能让他练习设计、协调和交付，而不只是继续把熟悉的零碎事项交给他。这样的安排仍要与团队当前的需要协调，但只有愿望先被说清楚，协调才有机会发生。</p>
+          <p>长期留住一支有能力的团队，依赖的正是这些连贯安排：负担有人留意，贡献有人看见，困难有地方提出，成长能接到真实工作上。关心工作感受由此成为日常领导的一部分，而不只是在离职谈话时追问原因。</p>
+        </section>
+
+        <section id="individual-support">
+          <h2><span class="section-number">08</span>按不同的人，提供不同的方向与动力</h2>
+          <p>本章末尾借作者岳母养育六个不同孩子的经验作比喻：植物需要的水分、阳光与养分不同，全部施以同样照料，看起来一致，却可能没有一株得到真正需要的条件。团队成员也如此，领导要判断每个人需要什么，再提供给他。</p>
+          <p>原书把领导能提供的支持归纳为<strong>方向</strong>与<strong>动力</strong>。方向帮助人知道该做什么、怎样把工作拆成可推进的部分；动力帮助人愿意投入并持续改善。有人做事很积极，却不清楚优先级，需要更明确的方向；有人知道工作怎样完成，却陷入倦怠，需要重新建立投入的理由；还有人两方面都需要支持。已经能够自主推进的人，得到过多指挥或反复鼓动，反而容易感到被干扰。</p>
+          <figure class="concept-figure"><a href="../diagrams/exports/ch05-support.svg" target="_blank" rel="noopener"><img src="../diagrams/exports/ch05-support.svg" width="720" height="356" alt="支持分成方向与动力两条线：方向通过目标、任务拆分和反馈帮助人知道怎样前进；动力通过自主、精进和意义帮助人愿意持续投入。两条线可以同时需要。"></a><figcaption>图 5-3：两条横线分别回答“怎样前进”和“为什么愿意投入”，箭头指向对应的支持方式。两种需要可以同时出现，支持多少要随具体成员与工作阶段调整。点击<a href="../diagrams/exports/ch05-support.svg" target="_blank" rel="noopener">查看大图</a>。</figcaption></figure>
+          <p>讨论动力时，原书借用 Dan Pink 在《Drive》中介绍的框架，区分来自报酬等外部条件的<strong>外在动力</strong>，与来自工作本身的<strong>内在动力</strong>，并强调自主、精进和意义三个方面。脚注明确加了一个前提：报酬已经足以使收入不再成为压力来源。也就是说，自主、精进和意义发挥作用，以报酬合理为基础。</p>
+          <p><strong>自主（autonomy）</strong>，是人在方向明确的前提下，能够对自己的工作作出决定。成员更接近实现细节，也更容易因为参与决定而产生拥有感。它与本章前面的授权相连：让人实际承担判断和责任，才有自主可言。原书同时提醒，这种安排以成员能够承担相应自主性为前提。</p>
+          <p><strong>精进（mastery）</strong>，是有机会改善已有技能、学习新能力。书中把技能比作刀刃，花很大成本招来能力很强的人，随后多年只使用却不磨砺，能力也会逐渐失去锋利。学习机会既帮助个人保持投入，也增加团队未来能够解决的问题范围。它可以通过有辅导的新任务、知识分享和实践逐步发生，而不必只等一次正式培训。</p>
+          <p><strong>意义（purpose）</strong>，是知道自己的努力为何值得。书中一位经理留意用户反馈，只要看到产品怎样帮助了某个人或某项业务，就转给工程团队。这些具体反馈把日常代码改动接到了真实影响上，既能增强动力，也常让成员想到进一步改善产品的方法。即使产品影响范围不大，仍可以让人看见谁在受益、解决了什么实际困难。</p>
+          <p>把全章串起来，领导工作形成了一条很实际的路径：说明方向，让决定尽量靠近了解细节的人；移除障碍，让大家能继续前进；坦诚反馈，让问题有机会改善；支持尝试，让团队能够学习；理解不同的人，让责任、机会与需要逐步匹配。领导自己会完成多少工作依然有价值，而更长久的成果，是团队因此能完成更多、也能不断成长。</p>
+          <aside class="key-point"><p class="key-point-label">核心观点</p><p>共同目标可以一致，支持方式需要因人而异。看清一个人当前缺少的是方向、动力，还是某项具体条件，再给出适量帮助，比对所有人施加同一种管理动作更有效。</p></aside>
+        </section>
+
+        <details id="sources" class="source-note">
+          <summary>来源、主题对应与整理说明</summary>
+          <p>依据《Software Engineering at Google》（2020）Abseil 官方公开英文 HTML 版<a href="https://abseil.io/resources/swe-book/html/ch05.html">第 5 章 <span lang="en">How to Lead a Team</span></a>，Brian Fitzpatrick 撰写、Riona MacNamara 编辑；核查日期 2026-11-06。</p>
+          <ul>
+            <li>01：<a href="https://abseil.io/resources/swe-book/html/ch05.html#managers_and_tech_leads_left_parenthesi">Managers and Tech Leads (and Both)</a>、<a href="https://abseil.io/resources/swe-book/html/ch05.html#moving_from_an_individual_contributor_r">Moving from an Individual Contributor Role to a Leadership Role</a>；管理回报时间与职业路径见脚注 <a href="https://abseil.io/resources/swe-book/html/ch05.html#ch01fn57">1</a>、<a href="https://abseil.io/resources/swe-book/html/ch05.html#ch01fn58">2</a>。</li>
+            <li>02：<a href="https://abseil.io/resources/swe-book/html/ch05.html#set_clear_goals">Set Clear Goals</a>、<a href="https://abseil.io/resources/swe-book/html/ch05.html#be_a_catalyst">Be a Catalyst</a>、<a href="https://abseil.io/resources/swe-book/html/ch05.html#be_a_teacher_and_a_mentor">Be a Teacher and a Mentor</a>、<a href="https://abseil.io/resources/swe-book/html/ch05.html#antipattern_hire_pushovers">Hire Pushovers</a>、<a href="https://abseil.io/resources/swe-book/html/ch05.html#antipattern_compromise_the_hiring_bar">Compromise the Hiring Bar</a>、<a href="https://abseil.io/resources/swe-book/html/ch05.html#other_tips_and_tricks">Other Tips and Tricks</a>；共识的限制见脚注 <a href="https://abseil.io/resources/swe-book/html/ch05.html#ch01fn63">7</a>。</li>
+            <li>03：<a href="https://abseil.io/resources/swe-book/html/ch05.html#servant_leadership">Servant Leadership</a>、<a href="https://abseil.io/resources/swe-book/html/ch05.html#case-study-influencing-without-authority-P1HyfDC6Tk">Influencing Without Authority</a>、<a href="https://abseil.io/resources/swe-book/html/ch05.html#remove_roadblocks">Remove Roadblocks</a>、<a href="https://abseil.io/resources/swe-book/html/ch05.html#be_a_zen_master">Be a Zen Master</a>、<a href="https://abseil.io/resources/swe-book/html/ch05.html#other_tips_and_tricks">Other Tips and Tricks</a>。</li>
+            <li>04：<a href="https://abseil.io/resources/swe-book/html/ch05.html#todayapostrophes_engineering_manager">Today’s Engineering Manager</a>、<a href="https://abseil.io/resources/swe-book/html/ch05.html#antipattern_ignore_human_issues">Ignore Human Issues</a>、<a href="https://abseil.io/resources/swe-book/html/ch05.html#antipattern_be_everyoneapostrophes_frie">Be Everyone’s Friend</a>、<a href="https://abseil.io/resources/swe-book/html/ch05.html#antipattern_treat_your_team_like_childr">Treat Your Team Like Children</a>、<a href="https://abseil.io/resources/swe-book/html/ch05.html#lose_the_ego-id00072">Lose the Ego</a>。</li>
+            <li>05：<a href="https://abseil.io/resources/swe-book/html/ch05.html#be_honest">Be Honest</a>、<a href="https://abseil.io/resources/swe-book/html/ch05.html#antipattern_ignore_low_performers">Ignore Low Performers</a>、<a href="https://abseil.io/resources/swe-book/html/ch05.html#other_tips_and_tricks">Other Tips and Tricks</a>。原书没有交代 Dean 之后的表现变化。</li>
+            <li>06：<a href="https://abseil.io/resources/swe-book/html/ch05.html#failure_is_an_option">Failure Is an Option</a>、<a href="https://abseil.io/resources/swe-book/html/ch05.html#other_tips_and_tricks">Other Tips and Tricks</a>；私下给予个人反馈见脚注 <a href="https://abseil.io/resources/swe-book/html/ch05.html#ch01fn61">5</a>。</li>
+            <li>07：<a href="https://abseil.io/resources/swe-book/html/ch05.html#track_happiness">Track Happiness</a>、<a href="https://abseil.io/resources/swe-book/html/ch05.html#the_unexpected_question">The Unexpected Question</a>。</li>
+            <li>08：<a href="https://abseil.io/resources/swe-book/html/ch05.html#people_are_like_plants">People Are Like Plants</a>、<a href="https://abseil.io/resources/swe-book/html/ch05.html#intrinsic_versus_extrinsic_motivation">Intrinsic Versus Extrinsic Motivation</a>；收入压力与自主性的前提见脚注 <a href="https://abseil.io/resources/swe-book/html/ch05.html#ch01fn67">11</a>、<a href="https://abseil.io/resources/swe-book/html/ch05.html#ch01fn68">12</a>。</li>
+          </ul>
+          <p>书目纠错：原文脚注 <a href="https://abseil.io/resources/swe-book/html/ch05.html#ch01fn70">14</a> 将 Adam M. Grant 的论文 <em>The Significance of Task Significance: Job Performance Effects, Relational Mechanisms, and Boundary Conditions</em> 标为 2018 年 → <a href="https://api.crossref.org/works/10.1037/0021-9010.93.1.108">APA 提交的 Crossref DOI 记录</a>所载出版年为 2008 → 书目年份应为 2008（<a href="https://doi.org/10.1037/0021-9010.93.1.108">DOI 10.1037/0021-9010.93.1.108</a>；仅核对书目）。</p>
+          <p>本文按领导工作的主线重组原章，而非逐段翻译，并压缩了管理史及次要轶事。人物案例均转述自原书；以“可靠完成已有关键流程”为目标的团队和想承担更完整技术责任的成员是笔记假设的情境，可逆探索的范围与周期安排是笔记的解释。图示均为本笔记原创示意图。</p>
+        </details>
+
+        <nav class="chapter-pagination" aria-label="章节翻页"><a class="page-link prev" href="ch04.html" rel="prev"><span class="page-label">← 上一章 · 第 4 章</span><span class="page-title">面向公平的工程实践</span></a><a class="page-link next" href="ch06.html" rel="next"><span class="page-label">下一章 · 第 6 章 →</span><span class="page-title">规模化领导</span></a><a class="pagination-home" href="../index.html">书籍概览与目录</a></nav>
+      </article>
+    </div>
+  </main>
+  <footer class="site-footer"><div class="container footer-inner"><span>个人书架 / 中文读书笔记</span><a href="#main">回到顶部 ↑</a></div></footer>
+</body>
+</html>

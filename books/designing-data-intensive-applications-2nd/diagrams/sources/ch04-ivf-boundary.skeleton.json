@@ -1,0 +1,263 @@
+[
+  {
+    "type": "text",
+    "id": "title",
+    "x": 24,
+    "y": 18,
+    "text": "IVF：最近的中心，不保证包含最近的数据点",
+    "fontSize": 25,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "subtitle",
+    "x": 24,
+    "y": 60,
+    "text": "一维笔记反例；只探查一个簇时，右侧近邻可能没有参加比较。",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "rectangle",
+    "id": "space",
+    "x": 24,
+    "y": 116,
+    "width": 700,
+    "height": 270,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.7,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "text",
+    "id": "left-title",
+    "x": 48,
+    "y": 136,
+    "text": "左簇（本次被探查）",
+    "fontSize": 21,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "right-title",
+    "x": 410,
+    "y": 136,
+    "text": "右簇（本次未探查）",
+    "fontSize": 21,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "line",
+    "id": "axis",
+    "x": 64,
+    "y": 297,
+    "width": 620,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        620,
+        0
+      ]
+    ],
+    "strokeColor": "#66645d",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "line",
+    "id": "boundary",
+    "x": 374,
+    "y": 183,
+    "width": 0,
+    "height": 176,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        176
+      ]
+    ],
+    "strokeColor": "#66645d",
+    "roughness": 0.5,
+    "strokeStyle": "dashed"
+  },
+  {
+    "type": "ellipse",
+    "id": "a",
+    "x": 55,
+    "y": 288,
+    "width": 18,
+    "height": 18,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#386d74",
+    "fillStyle": "solid",
+    "roughness": 0.5
+  },
+  {
+    "type": "ellipse",
+    "id": "q",
+    "x": 355,
+    "y": 288,
+    "width": 18,
+    "height": 18,
+    "strokeColor": "#292824",
+    "backgroundColor": "#292824",
+    "fillStyle": "solid",
+    "roughness": 0.5
+  },
+  {
+    "type": "ellipse",
+    "id": "b",
+    "x": 376,
+    "y": 288,
+    "width": 18,
+    "height": 18,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#386d74",
+    "fillStyle": "solid",
+    "roughness": 0.5
+  },
+  {
+    "type": "ellipse",
+    "id": "center-right",
+    "x": 675,
+    "y": 288,
+    "width": 18,
+    "height": 18,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.5
+  },
+  {
+    "type": "text",
+    "id": "a-label",
+    "x": 45,
+    "y": 327,
+    "text": "A=0\n左中心",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "q-label",
+    "x": 239,
+    "y": 214,
+    "text": "查询 q=4.9",
+    "fontSize": 19,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "line",
+    "id": "q-guide",
+    "x": 329,
+    "y": 246,
+    "width": 35,
+    "height": 35,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        35,
+        35
+      ]
+    ],
+    "strokeColor": "#66645d",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "text",
+    "id": "b-label",
+    "x": 421,
+    "y": 214,
+    "text": "B=5.1",
+    "fontSize": 19,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "line",
+    "id": "b-guide",
+    "x": 443,
+    "y": 245,
+    "width": 58,
+    "height": 36,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        -58,
+        36
+      ]
+    ],
+    "strokeColor": "#66645d",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "text",
+    "id": "c-label",
+    "x": 627,
+    "y": 327,
+    "text": "右中心\n10",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "border-label",
+    "x": 331,
+    "y": 405,
+    "text": "簇边界 5",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "text",
+    "id": "distances",
+    "x": 24,
+    "y": 459,
+    "text": "只搜左簇：返回 A，距离 4.9\n真实最近：B，距离 0.2，却在未探查的右簇",
+    "fontSize": 21,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "legend",
+    "x": 24,
+    "y": 536,
+    "text": "横轴为坐标；虚线为分界。扩大探查范围才能纳入 B。",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  }
+]

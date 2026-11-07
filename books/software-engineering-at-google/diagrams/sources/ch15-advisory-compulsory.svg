@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="464" viewBox="0 0 720 464" role="img" aria-labelledby="title desc">
+  <title id="title">宣布弃用之后，靠什么真正移除旧系统</title>
+  <desc id="desc">三行对比三种弃用安排，每行从左往右是怎样推进、使用者的反应和结果。建议性弃用只发弃用说明和自助工具，新增使用略减，已有调用很少迁走，旧系统仍要维护。强制性弃用只下期限、没有专门迁移人力，使用者视为只为维持原有功能的额外负担，合作变成相互推诿，进展停滞。强制性弃用配齐期限、授权和迁移团队，由专家集中迁移、调用方参与评审，迁移持续到完成，旧系统可以移除。虚线框表示旧系统仍留在原处。</desc>
+  <!-- Original editable hand-written SVG; web export is an identical copy. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 15px; fill: var(--muted); }
+    .label { font-size: 18px; font-weight: 600; text-anchor: middle; }
+    .body { font-size: 16px; fill: var(--muted); text-anchor: middle; }
+    .note { font-size: 14px; fill: var(--muted); text-anchor: middle; }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.3; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .stalled { fill: var(--bg); stroke-dasharray: 6 4; }
+    .flow { fill: none; stroke: var(--line); stroke-width: 1.8; marker-end: url(#arrow); }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker></defs>
+  <rect width="720" height="464" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="28" y="40">宣布弃用之后，靠什么真正移除旧系统</text>
+  <text class="sub" x="28" y="69">从上到下依次补齐期限与资源；每行从左往右读：怎样推进、使用者的反应、结果</text>
+  <text class="note" x="132" y="104">怎样推进</text>
+  <text class="note" x="376" y="104">使用者的反应</text>
+  <text class="note" x="604" y="104">结果</text>
+
+  <rect class="node" x="28" y="116" width="208" height="86" rx="7"/>
+  <text class="label" x="132" y="153">建议性弃用</text>
+  <text class="body" x="132" y="181">弃用说明＋自助工具</text>
+  <path class="flow" d="M242 159H268"/>
+  <rect class="node" x="278" y="116" width="196" height="86" rx="7"/>
+  <text class="label" x="376" y="153">新增使用略减</text>
+  <text class="body" x="376" y="181">已有调用很少迁走</text>
+  <path class="flow" d="M480 159H506"/>
+  <rect class="node stalled" x="516" y="116" width="176" height="86" rx="7"/>
+  <text class="label" x="604" y="153">旧系统仍要维护</text>
+  <text class="body" x="604" y="181">需要更主动的安排</text>
+
+  <rect class="node" x="28" y="218" width="208" height="86" rx="7"/>
+  <text class="label" x="132" y="255">强制性弃用：只下期限</text>
+  <text class="body" x="132" y="283">没有专门迁移人力</text>
+  <path class="flow" d="M242 261H268"/>
+  <rect class="node" x="278" y="218" width="196" height="86" rx="7"/>
+  <text class="label" x="376" y="255">视为额外负担</text>
+  <text class="body" x="376" y="283">只为维持原有功能</text>
+  <path class="flow" d="M480 261H506"/>
+  <rect class="node stalled" x="516" y="218" width="176" height="86" rx="7"/>
+  <text class="label" x="604" y="255">进展停滞</text>
+  <text class="body" x="604" y="283">合作变成相互推诿</text>
+
+  <rect class="focus" x="28" y="320" width="208" height="86" rx="7"/>
+  <text class="label" x="132" y="357">强制性弃用：配齐资源</text>
+  <text class="body" x="132" y="385">期限＋授权＋迁移团队</text>
+  <path class="flow" d="M242 363H268"/>
+  <rect class="focus" x="278" y="320" width="196" height="86" rx="7"/>
+  <text class="label" x="376" y="357">专家集中迁移</text>
+  <text class="body" x="376" y="385">调用方参与评审</text>
+  <path class="flow" d="M480 363H506"/>
+  <rect class="focus" x="516" y="320" width="176" height="86" rx="7"/>
+  <text class="label" x="604" y="357">迁移持续到完成</text>
+  <text class="body" x="604" y="385">旧系统可以移除</text>
+
+  <text class="note" x="360" y="442">虚线框：旧系统仍留在原处　　强调框：迁移持续到可以移除</text>
+</svg>

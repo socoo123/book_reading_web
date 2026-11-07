@@ -1,0 +1,223 @@
+[
+  {
+    "type": "text",
+    "id": "title",
+    "x": 24,
+    "y": 18,
+    "text": "MVCC：同一行的两个版本",
+    "fontSize": 25,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "subtitle",
+    "x": 24,
+    "y": 62,
+    "text": "插入／删除标记为教学模型；事务 13 已提交，但旧快照不因此改变。",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "rectangle",
+    "id": "oldreader",
+    "x": 24,
+    "y": 132,
+    "width": 248,
+    "height": 112,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "旧快照\n在事务 13 开始前取点",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "oldversion",
+    "x": 478,
+    "y": 132,
+    "width": 300,
+    "height": 112,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "余额 500\ninserted_by = 5\ndeleted_by = 13",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "oldvisible",
+    "x": 278,
+    "y": 182,
+    "width": 194,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        194,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "text",
+    "id": "oldvislabel",
+    "x": 300,
+    "y": 152,
+    "text": "可见：500",
+    "fontSize": 19,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "deletion",
+    "x": 480,
+    "y": 270,
+    "text": "旧快照也忽略删除标记 13，\n因此 500 仍可见。",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "arrow",
+    "id": "filtered",
+    "x": 148,
+    "y": 250,
+    "width": 324,
+    "height": 174,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        90
+      ],
+      [
+        324,
+        90
+      ],
+      [
+        324,
+        174
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "dashed"
+  },
+  {
+    "type": "text",
+    "id": "filterlabel",
+    "x": 178,
+    "y": 306,
+    "text": "旧快照忽略新版本",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "rectangle",
+    "id": "newreader",
+    "x": 24,
+    "y": 382,
+    "width": 248,
+    "height": 112,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "新快照\n在事务 13 提交后取点",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "newversion",
+    "x": 478,
+    "y": 382,
+    "width": 300,
+    "height": 112,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "余额 400\ninserted_by = 13\ndeleted_by = 空",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "newvisible",
+    "x": 278,
+    "y": 446,
+    "width": 194,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        194,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "text",
+    "id": "newvislabel",
+    "x": 300,
+    "y": 456,
+    "text": "可见：400",
+    "fontSize": 19,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "note",
+    "x": 24,
+    "y": 552,
+    "text": "实线：当前快照可见　　虚线：被旧快照过滤\n版本能否回收，取决于是否仍有有效快照需要它。",
+    "fontSize": 19,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  }
+]

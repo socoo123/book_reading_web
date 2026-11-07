@@ -1,0 +1,306 @@
+[
+  {
+    "type": "text",
+    "id": "title",
+    "x": 24,
+    "y": 18,
+    "text": "LSM：恢复依据与有序文件",
+    "fontSize": 25,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "subtitle",
+    "x": 24,
+    "y": 60,
+    "text": "示意同步持久化；步骤可以流水化，成功确认需满足持久性约定。",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "rectangle",
+    "id": "wal",
+    "x": 24,
+    "y": 120,
+    "width": 220,
+    "height": 96,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.7,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "追加 WAL\n保留恢复依据",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "mem",
+    "x": 292,
+    "y": 120,
+    "width": 220,
+    "height": 96,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.7,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "内存表\n活动 / 冻结",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "read",
+    "x": 560,
+    "y": 120,
+    "width": 200,
+    "height": 96,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.7,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "读请求\n检查有效状态",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "write",
+    "x": 250,
+    "y": 168,
+    "width": 36,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        36,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.6,
+    "strokeStyle": "solid",
+    "start": {
+      "id": "wal"
+    },
+    "end": {
+      "id": "mem"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "readmem",
+    "x": 554,
+    "y": 168,
+    "width": 36,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        -36,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.6,
+    "strokeStyle": "dashed",
+    "start": {
+      "id": "read"
+    },
+    "end": {
+      "id": "mem"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "temp",
+    "x": 292,
+    "y": 284,
+    "width": 220,
+    "height": 96,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.7,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "冻结表按序写出\n临时 SSTable",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "flush",
+    "x": 402,
+    "y": 222,
+    "width": 0,
+    "height": 56,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        56
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.6,
+    "strokeStyle": "solid",
+    "start": {
+      "id": "mem"
+    },
+    "end": {
+      "id": "temp"
+    }
+  },
+  {
+    "type": "text",
+    "id": "flush-label",
+    "x": 420,
+    "y": 240,
+    "text": "落盘",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "rectangle",
+    "id": "published",
+    "x": 292,
+    "y": 448,
+    "width": 220,
+    "height": 96,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.7,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "已发布 SSTables\n合并新旧版本读取",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "publish",
+    "x": 402,
+    "y": 386,
+    "width": 0,
+    "height": 56,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        56
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.6,
+    "strokeStyle": "solid",
+    "start": {
+      "id": "temp"
+    },
+    "end": {
+      "id": "published"
+    }
+  },
+  {
+    "type": "text",
+    "id": "publish-label",
+    "x": 420,
+    "y": 403,
+    "text": "持久化并发布",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "arrow",
+    "id": "readfiles",
+    "x": 660,
+    "y": 222,
+    "width": 142,
+    "height": 274,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        274
+      ],
+      [
+        -142,
+        274
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.6,
+    "strokeStyle": "dashed",
+    "start": {
+      "id": "read"
+    },
+    "end": {
+      "id": "published"
+    }
+  },
+  {
+    "type": "text",
+    "id": "failure",
+    "x": 24,
+    "y": 302,
+    "text": "写到一半崩溃：\n保留 WAL\n丢弃未发布半成品",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "text",
+    "id": "release",
+    "x": 24,
+    "y": 464,
+    "text": "发布完成后，才回收\n对应更新的 WAL",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "text",
+    "id": "legend",
+    "x": 24,
+    "y": 582,
+    "text": "实线：写入 / 发布　　虚线：读取　　文件集合还须可恢复",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  }
+]

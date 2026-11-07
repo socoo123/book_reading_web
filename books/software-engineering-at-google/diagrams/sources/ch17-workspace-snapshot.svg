@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="388" viewBox="0 0 720 388" role="img" aria-labelledby="title desc">
+  <title id="title">工作区搜索由固定基线与少量差异共同确定</title>
+  <desc id="desc">基线修订 R 包含 A、B、C 三个文件，工作区差异修改 B 为 B 撇、新增 D、删除 C。搜索应当呈现 A、B 撇、D，隐藏旧 B 和 C，不混入随后前进的主干 HEAD。</desc>
+  <!-- Original editable hand-written SVG; the web export is an identical copy. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 15px; fill: var(--muted); }
+    .label { font-size: 18px; font-weight: 600; text-anchor: middle; }
+    .body { font-size: 17px; text-anchor: middle; }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.2; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .arrow { fill: none; stroke: var(--line); stroke-width: 1.8; marker-end: url(#arrow); }
+  </style>
+  <!-- Image mode inherits the page's color scheme; standalone mode reads its saved choice. -->
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker></defs>
+  <rect width="720" height="388" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="28" y="39">搜索工作区 = 基线快照 + 少量本地改动</text>
+  <text class="sub" x="28" y="67">箭头：两份信息共同决定同一个版本视图，不表示生成新索引</text>
+  <rect class="node" x="28" y="108" width="280" height="103" rx="7"/>
+  <text class="label" x="168" y="143">历史索引：基线修订 R</text>
+  <text class="body" x="168" y="181">A　·　B　·　C</text>
+  <rect class="node" x="412" y="108" width="280" height="103" rx="7"/>
+  <text class="label" x="552" y="143">工作区差异：直接扫描</text>
+  <text class="sub" x="552" y="181" text-anchor="middle">B → B′　·　新增 D　·　删除 C</text>
+  <path class="arrow" d="M168 211V233L312 272"/>
+  <path class="arrow" d="M552 211V233L408 272"/>
+  <text class="sub" x="360" y="247" text-anchor="middle">组合为逻辑搜索视图</text>
+  <rect class="focus" x="108" y="281" width="504" height="64" rx="7"/>
+  <text class="label" x="360" y="308">搜索结果来自：A　·　B′　·　D</text>
+  <text class="sub" x="360" y="332" text-anchor="middle">旧版 B 被覆盖，已删除的 C 被隐藏</text>
+  <text class="sub" x="28" y="373">团队主干 HEAD 可以继续前进；工作区未改文件仍取自修订 R。</text>
+</svg>

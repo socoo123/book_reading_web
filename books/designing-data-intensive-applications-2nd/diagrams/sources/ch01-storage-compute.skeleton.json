@@ -1,0 +1,13 @@
+[
+  {"type":"text","id":"title","x":24,"y":20,"text":"调整算力，不必搬走唯一的持久副本","fontSize":25,"fontFamily":2,"strokeColor":"#292824"},
+  {"type":"text","id":"subtitle","x":24,"y":62,"text":"计算节点可替换；长期数据保存在独立的存储层。","fontSize":17,"fontFamily":2,"strokeColor":"#66645d"},
+  {"type":"rectangle","id":"compute-a","x":24,"y":130,"width":270,"height":112,"strokeColor":"#386d74","backgroundColor":"#f0ece4","fillStyle":"solid","roughness":1,"label":{"text":"计算节点 A\nCPU / 内存 / 本地缓存","fontSize":21,"fontFamily":2,"strokeColor":"#292824"}},
+  {"type":"rectangle","id":"compute-b","x":390,"y":130,"width":270,"height":112,"strokeColor":"#386d74","backgroundColor":"#f0ece4","fillStyle":"solid","roughness":1,"label":{"text":"新增计算节点 B\nCPU / 内存 / 本地缓存","fontSize":21,"fontFamily":2,"strokeColor":"#292824"}},
+  {"type":"rectangle","id":"storage","x":154,"y":374,"width":376,"height":104,"strokeColor":"#386d74","backgroundColor":"#f0ece4","fillStyle":"solid","roughness":1,"label":{"text":"长期存储服务\n持久数据由这一层负责","fontSize":21,"fontFamily":2,"strokeColor":"#292824"}},
+  {"type":"arrow","id":"network-a","x":159,"y":248,"width":108,"height":120,"points":[[0,0],[108,120]],"startArrowhead":"arrow","endArrowhead":"arrow","strokeColor":"#386d74","roughness":1,"start":{"id":"compute-a"},"end":{"id":"storage"}},
+  {"type":"arrow","id":"network-b","x":525,"y":248,"width":108,"height":120,"points":[[0,0],[-108,120]],"startArrowhead":"arrow","endArrowhead":"arrow","strokeColor":"#386d74","roughness":1,"start":{"id":"compute-b"},"end":{"id":"storage"}},
+  {"type":"text","id":"network-a-label","x":25,"y":292,"text":"网络访问","fontSize":17,"fontFamily":2,"strokeColor":"#66645d"},
+  {"type":"text","id":"network-b-label","x":555,"y":292,"text":"网络访问","fontSize":17,"fontFamily":2,"strokeColor":"#66645d"},
+  {"type":"text","id":"cache-note","x":24,"y":518,"text":"本地缓存可重建；扩算仍受网络、冷缓存和存储吞吐约束。","fontSize":17,"fontFamily":2,"strokeColor":"#66645d"},
+  {"type":"text","id":"scope-note","x":24,"y":552,"text":"箭头表示数据访问，不表示每次行更新都直接写入对象存储。","fontSize":17,"fontFamily":2,"strokeColor":"#66645d"}
+]

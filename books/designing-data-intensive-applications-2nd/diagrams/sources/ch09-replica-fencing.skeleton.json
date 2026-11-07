@@ -1,0 +1,209 @@
+[
+  {
+    "type": "text",
+    "id": "title",
+    "x": 24,
+    "y": 20,
+    "text": "多副本隔离：局部旧写，不成为读取胜者",
+    "fontSize": 25,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "subtitle",
+    "x": 24,
+    "y": 66,
+    "text": "假设固定 3 副本，成功写 2、读取 2，读者取最大版本。",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "rectangle",
+    "id": "r1",
+    "x": 24,
+    "y": 136,
+    "width": 234,
+    "height": 104,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.5,
+    "strokeWidth": 1.5,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "R1：保存 (34,1)\n拒绝后来的 33",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "r2",
+    "x": 308,
+    "y": 136,
+    "width": 234,
+    "height": 104,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.5,
+    "strokeWidth": 1.5,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "R2：保存 (34,1)\n拒绝后来的 33",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "r3",
+    "x": 592,
+    "y": 136,
+    "width": 234,
+    "height": 104,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.5,
+    "strokeWidth": 1.5,
+    "strokeStyle": "dashed",
+    "label": {
+      "text": "R3：暂存 (33,999)\n还没见过 34",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "text",
+    "id": "order",
+    "x": 24,
+    "y": 286,
+    "text": "比较规则：(代次, 代内序号)；先比代次，故 (34,1) > (33,999)。",
+    "fontSize": 19,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "rectangle",
+    "id": "q12",
+    "x": 24,
+    "y": 358,
+    "width": 234,
+    "height": 90,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.5,
+    "strokeWidth": 1.5,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "读 R1 + R2\n选 (34,1)",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "q13",
+    "x": 308,
+    "y": 358,
+    "width": 234,
+    "height": 90,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.5,
+    "strokeWidth": 1.5,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "读 R1 + R3\n选 (34,1)",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "q23",
+    "x": 592,
+    "y": 358,
+    "width": 234,
+    "height": 90,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.5,
+    "strokeWidth": 1.5,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "读 R2 + R3\n选 (34,1)",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "repair",
+    "x": 430,
+    "y": 246,
+    "width": 274,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        274,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.4,
+    "strokeStyle": "dashed",
+    "start": {
+      "id": "r2"
+    },
+    "end": {
+      "id": "r3"
+    }
+  },
+  {
+    "type": "text",
+    "id": "repair-label",
+    "x": 552,
+    "y": 262,
+    "text": "之后修复 R3",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "text",
+    "id": "note",
+    "x": 24,
+    "y": 506,
+    "text": "每组读集合都与新写集合 {R1,R2} 相交；只读 R3 没有此保证。",
+    "fontSize": 19,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "boundary",
+    "x": 24,
+    "y": 542,
+    "text": "图中保护的是可归并的存储状态，不回滚外部邮件等副作用。",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  }
+]

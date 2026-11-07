@@ -1,0 +1,202 @@
+[
+  {
+    "type": "text",
+    "id": "title",
+    "x": 20,
+    "y": 10,
+    "text": "一个用户组：先读档案，再顺序处理事件",
+    "fontSize": 25,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "sub",
+    "x": 20,
+    "y": 55,
+    "text": "笔记假设：每个 user_id 恰有一份档案；本图只展示用户 104。",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "rectangle",
+    "id": "sorted",
+    "x": 20,
+    "y": 145,
+    "width": 260,
+    "height": 200,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.5,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "按复合键排序后\n104 · 档案 · 1989-01-30\n104 · 事件 · /x\n104 · 事件 · /z",
+      "fontSize": 19,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "join",
+    "x": 365,
+    "y": 145,
+    "width": 225,
+    "height": 200,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.5,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "连接循环\n保存一份出生日期\n事件逐条读取\n不逐行查远端库",
+      "fontSize": 20,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "joined",
+    "x": 675,
+    "y": 145,
+    "width": 240,
+    "height": 200,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.5,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "输出两条记录\n/x · 1989-01-30\n/z · 1989-01-30",
+      "fontSize": 20,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "input",
+    "x": 285,
+    "y": 245,
+    "width": 75,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        75,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid",
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "sorted"
+    },
+    "end": {
+      "id": "join"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "emit",
+    "x": 595,
+    "y": 245,
+    "width": 75,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        75,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid",
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "join"
+    },
+    "end": {
+      "id": "joined"
+    }
+  },
+  {
+    "type": "text",
+    "id": "keys",
+    "x": 20,
+    "y": 410,
+    "text": "分片键／分组键：user_id\n排序键：(user_id, type, event_time)\n档案的 type 排在事件前。",
+    "fontSize": 19,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "rectangle",
+    "id": "group-url",
+    "x": 675,
+    "y": 450,
+    "width": 240,
+    "height": 105,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.5,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "下一阶段\n改按 URL 分片聚合",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "reshuffle",
+    "x": 795,
+    "y": 350,
+    "width": 0,
+    "height": 95,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        95
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid",
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "joined"
+    },
+    "end": {
+      "id": "group-url"
+    }
+  },
+  {
+    "type": "text",
+    "id": "legend",
+    "x": 20,
+    "y": 620,
+    "text": "实线：记录流动　两侧有重复键时，需另行处理版本或多对多配对。",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  }
+]

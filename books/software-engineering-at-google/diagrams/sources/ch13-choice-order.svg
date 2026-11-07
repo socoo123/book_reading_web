@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="466" viewBox="0 0 720 466" role="img" aria-labelledby="title desc">
+  <title id="title">测试里的依赖按什么顺序处理</title>
+  <desc id="desc">从上往下依次判断。真实实现够快、确定而且容易构造时，直接使用真实实现；否则，若有符合契约、能满足需要的伪实现，就使用伪实现；仍需替换依赖时，要让依赖返回特定值或错误就用打桩，结果查不到或调用本身就是要求时才用交互验证。打桩和交互验证把返回值或调用方式写进测试，实现一改就容易失败，所以排在最后。实线箭头指向满足条件时的做法，虚线箭头表示不满足、退到下一级。</desc>
+  <!-- Original editable hand-written SVG; web export is an identical copy. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 15px; fill: var(--muted); }
+    .label { font-size: 18px; font-weight: 600; text-anchor: middle; }
+    .ask { font-size: 17px; text-anchor: middle; }
+    .body { font-size: 16px; text-anchor: middle; }
+    .note { font-size: 14px; fill: var(--muted); text-anchor: middle; }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.3; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .flow { fill: none; stroke: var(--line); stroke-width: 1.8; marker-end: url(#arrow); }
+    .fallback { stroke-dasharray: 5 5; }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker></defs>
+  <rect width="720" height="466" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="28" y="40">测试里的依赖，按什么顺序处理？</text>
+  <text class="sub" x="28" y="68">从上往下判断：实线箭头指向满足条件时的做法，虚线箭头表示不满足、退到下一级</text>
+
+  <rect class="node" x="28" y="88" width="250" height="62" rx="7"/>
+  <text class="ask" x="153" y="114">真实实现够快、确定，</text>
+  <text class="ask" x="153" y="138">而且容易构造？</text>
+  <path class="flow" d="M282 119H340"/>
+  <text class="note" x="311" y="110">是</text>
+  <rect class="focus" x="348" y="88" width="344" height="62" rx="7"/>
+  <text class="label" x="520" y="113">真实实现</text>
+  <text class="body" x="520" y="138">首选：业务协作真实执行</text>
+
+  <path class="flow fallback" d="M153 152V180"/>
+  <text class="note" x="170" y="171">否</text>
+  <rect class="node" x="28" y="184" width="250" height="62" rx="7"/>
+  <text class="ask" x="153" y="210">有符合契约、</text>
+  <text class="ask" x="153" y="234">能满足需要的伪实现？</text>
+  <path class="flow" d="M282 215H340"/>
+  <text class="note" x="311" y="206">是</text>
+  <rect class="focus" x="348" y="184" width="344" height="62" rx="7"/>
+  <text class="label" x="520" y="209">伪实现</text>
+  <text class="body" x="520" y="234">保留接口契约，省掉昂贵运行</text>
+
+  <path class="flow fallback" d="M153 248V276"/>
+  <text class="note" x="170" y="267">否</text>
+  <rect class="node" x="28" y="280" width="250" height="136" rx="7"/>
+  <text class="ask" x="153" y="343">仍需替换依赖：</text>
+  <text class="ask" x="153" y="367">测试要它做什么？</text>
+  <path class="flow" d="M282 311H340"/>
+  <text class="note" x="311" y="302">制造条件</text>
+  <path class="flow" d="M282 385H340"/>
+  <text class="note" x="311" y="376">确认调用</text>
+  <rect class="node" x="348" y="280" width="344" height="62" rx="7"/>
+  <text class="label" x="520" y="305">打桩</text>
+  <text class="body" x="520" y="330">让依赖返回特定值或错误</text>
+  <rect class="node" x="348" y="354" width="344" height="62" rx="7"/>
+  <text class="label" x="520" y="379">交互验证</text>
+  <text class="body" x="520" y="404">结果查不到，或调用本身就是要求</text>
+
+  <text class="note" x="360" y="448">打桩和交互验证把返回值或调用方式写进测试，实现一改就容易失败，所以排在最后</text>
+</svg>

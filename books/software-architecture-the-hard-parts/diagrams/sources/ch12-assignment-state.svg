@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="450" viewBox="0 0 720 450" role="img" aria-labelledby="title desc">
+<title id="title">工单分派与重派的状态回路</title>
+<desc id="desc">CREATED经选定专家进入ASSIGNED，投递并确认后进入ACCEPTED；专家无法完成则进入REASSIGN，找到其他专家后回到ASSIGNED。</desc>
+<style>
+:root{--surface:#fcfbf8;--text:#292824;--muted:#66645d;--line:#969187;--soft:#f0ece4;--accent:#386d74}
+@media(prefers-color-scheme:dark){:root:not([data-theme='light']){--surface:#252524;--text:#e6e3dc;--muted:#b6b1a7;--line:#8c8982;--soft:#353534;--accent:#94c8cf}}
+:root[data-theme='dark']{--surface:#252524;--text:#e6e3dc;--muted:#b6b1a7;--line:#8c8982;--soft:#353534;--accent:#94c8cf}
+.bg{fill:var(--surface)}text{fill:var(--text);font:17px system-ui,-apple-system,"PingFang SC",sans-serif}.title{font-size:22px;font-weight:600}.small{font-size:15px;fill:var(--muted)}.box{fill:var(--soft);stroke:var(--line);stroke-width:1.5}.edge{fill:none;stroke:var(--accent);stroke-width:2;marker-end:url(#arrow)}.arrow{fill:var(--accent)}.dashed{stroke-dasharray:6 5}
+</style>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path class="arrow" d="M0 0 8 4 0 8Z"/></marker></defs>
+<rect class="bg" width="720" height="450"/>
+<text class="title" x="28" y="38">重新分派，只重做相关阶段</text><text class="small" x="28" y="65">原书状态机的局部；状态名称不是独立服务名称</text>
+<rect class="box" x="35" y="123" width="170" height="70" rx="12"/><text x="120" y="152" text-anchor="middle">CREATED</text><text class="small" x="120" y="177" text-anchor="middle">已创建，待选人</text>
+<rect class="box" x="275" y="123" width="170" height="70" rx="12"/><text x="360" y="152" text-anchor="middle">ASSIGNED</text><text class="small" x="360" y="177" text-anchor="middle">已选人，待确认</text>
+<rect class="box" x="515" y="123" width="170" height="70" rx="12"/><text x="600" y="152" text-anchor="middle">ACCEPTED</text><text class="small" x="600" y="177" text-anchor="middle">专家已接受</text>
+<path class="edge" d="M205 158H266"/><text class="small" x="239" y="107" text-anchor="middle">选定专家</text>
+<path class="edge" d="M445 158H506"/><text class="small" x="480" y="95" text-anchor="middle">投递并</text><text class="small" x="480" y="115" text-anchor="middle">获得确认</text>
+<rect class="box" x="275" y="298" width="170" height="70" rx="12"/><text x="360" y="327" text-anchor="middle">REASSIGN</text><text class="small" x="360" y="352" text-anchor="middle">等待其他专家</text>
+<path class="edge dashed" d="M600 193V333H454"/><text class="small" x="506" y="286">专家无法完成</text>
+<path class="edge" d="M360 298V202"/><text class="small" x="375" y="248">选定另一专家</text>
+<text class="small" x="35" y="407">无候选人：保留 CREATED / REASSIGN</text>
+<text class="small" x="35" y="432">本章简化模型中，投递尚未确认：保留 ASSIGNED</text>
+<script><![CDATA[try { const t=localStorage.getItem('reading-notes-theme'); if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t); } catch {}]]></script>
+</svg>

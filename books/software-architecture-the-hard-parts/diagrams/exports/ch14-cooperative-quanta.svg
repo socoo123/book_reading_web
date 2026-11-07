@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="440" viewBox="0 0 720 440" role="img" aria-labelledby="title desc">
+<title id="title">同一领域内的运营量子与数据产品量子</title><desc id="desc">运营量子异步更新源对齐DPQ，两者语义紧密相连但各自运行。分析量子通过独立契约消费DPQ，不直接查询运营表。</desc>
+<style>:root{--surface:#fcfbf8;--text:#292824;--muted:#66645d;--line:#969187;--soft:#f0ece4;--accent:#386d74}@media(prefers-color-scheme:dark){:root:not([data-theme='light']){--surface:#252524;--text:#e6e3dc;--muted:#b6b1a7;--line:#8c8982;--soft:#353534;--accent:#94c8cf}}:root[data-theme='dark']{--surface:#252524;--text:#e6e3dc;--muted:#b6b1a7;--line:#8c8982;--soft:#353534;--accent:#94c8cf}.bg{fill:var(--surface)}text{fill:var(--text);font:17px system-ui,-apple-system,"PingFang SC",sans-serif}.heading{font-size:21px;font-weight:600}.small{font-size:15px;fill:var(--muted)}.box{fill:var(--soft);stroke:var(--line);stroke-width:1.5}.domain{fill:none;stroke:var(--accent);stroke-width:1.5;stroke-dasharray:8 5}.edge{fill:none;stroke:var(--accent);stroke-width:2;stroke-dasharray:6 5;marker-end:url(#arrow)}.arrow{fill:var(--accent)}</style>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path class="arrow" d="M0 0 8 4 0 8Z"/></marker></defs>
+<rect class="bg" width="720" height="440"/><text class="heading" x="28" y="36">运行分离，不等于语义无关</text>
+<rect class="domain" x="24" y="64" width="400" height="318" rx="12"/><text x="44" y="95">同一领域团队的责任范围</text>
+<rect class="box" x="44" y="116" width="360" height="82" rx="9"/><text x="224" y="146" text-anchor="middle">运营量子</text><text class="small" x="224" y="176" text-anchor="middle">业务行为 ＋ 运营数据</text>
+<path class="edge" d="M224 204V266"/><text class="small" x="242" y="230">异步、最终一致</text><text class="small" x="242" y="251">领域契约紧密</text>
+<rect class="box" x="44" y="276" width="360" height="83" rx="9"/><text x="224" y="307" text-anchor="middle">源对齐 DPQ</text><text class="small" x="224" y="337" text-anchor="middle">分析数据 ＋ 生成与提供逻辑 ＋ 元数据</text>
+<path class="edge" d="M430 318H502"/><text class="small" x="520" y="245" text-anchor="middle">独立分析契约</text><text class="small" x="520" y="267" text-anchor="middle">通常较宽松</text>
+<rect class="box" x="512" y="291" width="182" height="80" rx="9"/><text x="603" y="322" text-anchor="middle">分析量子</text><text class="small" x="603" y="350" text-anchor="middle">报表／模型／洞察</text>
+<text class="small" x="28" y="410">虚线箭头是本图异步数据流；分析侧也可按契约同步查询 DPQ。</text>
+<script><![CDATA[try{const t=localStorage.getItem('reading-notes-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch{}]]></script>
+</svg>

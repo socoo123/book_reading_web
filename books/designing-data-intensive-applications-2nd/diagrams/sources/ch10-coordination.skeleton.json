@@ -1,0 +1,372 @@
+[
+  {
+    "type": "text",
+    "id": "title",
+    "x": 24,
+    "y": 18,
+    "text": "协调服务：控制决定小，业务数据流大",
+    "fontSize": 25,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "subtitle",
+    "x": 24,
+    "y": 62,
+    "text": "实线：控制请求／业务访问　虚线：异步变更通知。",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "rectangle",
+    "id": "control",
+    "x": 24,
+    "y": 124,
+    "width": 790,
+    "height": 162,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 3,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "text",
+    "id": "control-label",
+    "x": 44,
+    "y": 138,
+    "text": "小型控制面：3 个投票副本保存同一份决定",
+    "fontSize": 21,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "rectangle",
+    "id": "r1",
+    "x": 54,
+    "y": 188,
+    "width": 178,
+    "height": 70,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "副本 1",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "r2",
+    "x": 330,
+    "y": 188,
+    "width": 178,
+    "height": 70,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "副本 2",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "r3",
+    "x": 606,
+    "y": 188,
+    "width": 178,
+    "height": 70,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "副本 3",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "line",
+    "id": "r12",
+    "x": 238,
+    "y": 223,
+    "width": 86,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        86,
+        0
+      ]
+    ],
+    "strokeColor": "#66645d",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "line",
+    "id": "r23",
+    "x": 514,
+    "y": 223,
+    "width": 86,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        86,
+        0
+      ]
+    ],
+    "strokeColor": "#66645d",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "text",
+    "id": "state",
+    "x": 238,
+    "y": 308,
+    "text": "分片 7 → 工作节点 B，代次 42",
+    "fontSize": 21,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "arrow",
+    "id": "lease",
+    "x": 190,
+    "y": 292,
+    "width": 0,
+    "height": 148,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        148
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "text",
+    "id": "lease-label",
+    "x": 36,
+    "y": 354,
+    "text": "授予归属\n与令牌 42",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "arrow",
+    "id": "watch",
+    "x": 686,
+    "y": 292,
+    "width": 0,
+    "height": 148,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        148
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "dashed"
+  },
+  {
+    "type": "text",
+    "id": "watch-label",
+    "x": 700,
+    "y": 354,
+    "text": "变更\n通知",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "rectangle",
+    "id": "worker",
+    "x": 24,
+    "y": 446,
+    "width": 332,
+    "height": 100,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "工作节点 B\n持有代次 42",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "cache",
+    "x": 560,
+    "y": 446,
+    "width": 254,
+    "height": 100,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "路由缓存\n稍后才更新",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "business",
+    "x": 190,
+    "y": 552,
+    "width": 0,
+    "height": 108,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        108
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "text",
+    "id": "business-label",
+    "x": 210,
+    "y": 590,
+    "text": "业务写：携带 42",
+    "fontSize": 19,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "rectangle",
+    "id": "storage",
+    "x": 24,
+    "y": 666,
+    "width": 332,
+    "height": 100,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "业务数据存储\n原子检查并记录代次",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "old",
+    "x": 560,
+    "y": 666,
+    "width": 254,
+    "height": 100,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "dashed",
+    "label": {
+      "text": "恢复的旧节点 A\n仍携带 41",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "stale",
+    "x": 554,
+    "y": 716,
+    "width": 192,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        -192,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "text",
+    "id": "stale-label",
+    "x": 386,
+    "y": 678,
+    "text": "41：拒绝",
+    "fontSize": 19,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "legend",
+    "x": 24,
+    "y": 808,
+    "text": "资源已接受 42 后拒绝旧代次 41；通知到达，不等于旧节点已经停机。",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  }
+]

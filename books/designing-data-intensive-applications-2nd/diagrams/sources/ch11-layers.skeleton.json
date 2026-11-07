@@ -1,0 +1,289 @@
+[
+  {
+    "type": "text",
+    "id": "title",
+    "x": 20,
+    "y": 10,
+    "text": "同一条批管道，三个不同职责",
+    "fontSize": 26,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "sub",
+    "x": 20,
+    "y": 55,
+    "text": "虚线是运行控制；实线是数据读写。方框表示逻辑角色。",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "rectangle",
+    "id": "workflow",
+    "x": 20,
+    "y": 125,
+    "width": 280,
+    "height": 100,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.5,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "工作流编排\n依赖就绪才提交作业",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "scheduler",
+    "x": 510,
+    "y": 125,
+    "width": 280,
+    "height": 100,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.5,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "资源调度\n分配 CPU／内存／GPU",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "submit",
+    "x": 305,
+    "y": 175,
+    "width": 200,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        200,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "dashed",
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "workflow"
+    },
+    "end": {
+      "id": "scheduler"
+    }
+  },
+  {
+    "type": "text",
+    "id": "submit-label",
+    "x": 350,
+    "y": 140,
+    "text": "提交作业",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "rectangle",
+    "id": "input",
+    "x": 20,
+    "y": 335,
+    "width": 280,
+    "height": 100,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.5,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "存储：输入快照\n固定清单，只读",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "compute",
+    "x": 510,
+    "y": 335,
+    "width": 280,
+    "height": 100,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.5,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "计算任务\n扫描 → 连接 → 聚合",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "allocate",
+    "x": 650,
+    "y": 230,
+    "width": 0,
+    "height": 100,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        100
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "dashed",
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "scheduler"
+    },
+    "end": {
+      "id": "compute"
+    }
+  },
+  {
+    "type": "text",
+    "id": "allocate-label",
+    "x": 680,
+    "y": 265,
+    "text": "分配／启动",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "arrow",
+    "id": "read",
+    "x": 305,
+    "y": 385,
+    "width": 200,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        200,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid",
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "input"
+    },
+    "end": {
+      "id": "compute"
+    }
+  },
+  {
+    "type": "text",
+    "id": "read-label",
+    "x": 345,
+    "y": 350,
+    "text": "读取记录",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "rectangle",
+    "id": "output",
+    "x": 510,
+    "y": 550,
+    "width": 280,
+    "height": 100,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.5,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "存储：新版本输出\n完整确认后交给下游",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "write",
+    "x": 650,
+    "y": 440,
+    "width": 0,
+    "height": 105,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        105
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid",
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "compute"
+    },
+    "end": {
+      "id": "output"
+    }
+  },
+  {
+    "type": "text",
+    "id": "write-label",
+    "x": 680,
+    "y": 475,
+    "text": "写入结果",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "note",
+    "x": 20,
+    "y": 555,
+    "text": "工作流决定“何时可消费”。\n计算引擎决定“如何计算”。\n存储保存数据与版本。",
+    "fontSize": 19,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "legend",
+    "x": 20,
+    "y": 700,
+    "text": "三种职责可由多个工具协作，也可集成于同一托管服务。",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  }
+]

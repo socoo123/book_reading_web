@@ -1,0 +1,15 @@
+[
+  {"type":"text","id":"title","x":24,"y":20,"text":"先记录事实，再生成读取视图","fontSize":25,"fontFamily":2,"strokeColor":"#292824"},
+  {"type":"text","id":"subtitle","x":24,"y":64,"text":"单场会议的有序事件流；视图允许在各自位置暂时落后。","fontSize":17,"fontFamily":2,"strokeColor":"#66645d"},
+  {"type":"rectangle","id":"command","x":24,"y":125,"width":204,"height":94,"strokeColor":"#386d74","backgroundColor":"#f0ece4","fillStyle":"solid","roughness":1,"label":{"text":"命令：预订3席\n先校验可用座位","fontSize":21,"fontFamily":2,"strokeColor":"#292824"}},
+  {"type":"rectangle","id":"log","x":358,"y":125,"width":352,"height":94,"strokeColor":"#386d74","backgroundColor":"#f0ece4","fillStyle":"solid","roughness":1,"label":{"text":"权威事件日志\n已预订A → 已预订B → A已取消","fontSize":20,"fontFamily":2,"strokeColor":"#292824"}},
+  {"type":"arrow","id":"append","x":234,"y":173,"width":118,"height":0,"points":[[0,0],[118,0]],"strokeColor":"#386d74","roughness":1,"start":{"id":"command"},"end":{"id":"log"}},
+  {"type":"text","id":"append-label","x":247,"y":140,"text":"有效后追加","fontSize":17,"fontFamily":2,"strokeColor":"#66645d"},
+  {"type":"rectangle","id":"booking-view","x":24,"y":348,"width":276,"height":96,"strokeColor":"#386d74","backgroundColor":"#f0ece4","fillStyle":"solid","roughness":1,"label":{"text":"预订状态视图\nA已取消 · B有效","fontSize":21,"fontFamily":2,"strokeColor":"#292824"}},
+  {"type":"rectangle","id":"stats-view","x":434,"y":348,"width":276,"height":96,"strokeColor":"#386d74","backgroundColor":"#f0ece4","fillStyle":"solid","roughness":1,"label":{"text":"统计视图\n容量500 · 剩余495","fontSize":21,"fontFamily":2,"strokeColor":"#292824"}},
+  {"type":"arrow","id":"derive-booking","x":423,"y":225,"width":261,"height":117,"points":[[0,0],[-261,117]],"strokeStyle":"dashed","strokeColor":"#386d74","roughness":1,"start":{"id":"log"},"end":{"id":"booking-view"}},
+  {"type":"arrow","id":"derive-stats","x":572,"y":225,"width":0,"height":117,"points":[[0,0],[0,117]],"strokeStyle":"dashed","strokeColor":"#386d74","roughness":1,"start":{"id":"log"},"end":{"id":"stats-view"}},
+  {"type":"text","id":"derive-label","x":402,"y":276,"text":"按序派生","fontSize":18,"fontFamily":2,"strokeColor":"#66645d"},
+  {"type":"text","id":"legend","x":24,"y":482,"text":"实线：确认事实并写入　虚线：派生更新（不是共同事务）","fontSize":17,"fontFamily":2,"strokeColor":"#66645d"},
+  {"type":"rectangle","id":"boundary","x":24,"y":531,"width":686,"height":108,"strokeColor":"#66645d","backgroundColor":"#f0ece4","fillStyle":"solid","strokeStyle":"dashed","roughness":1,"label":{"text":"重建边界\n可重算：纯读取状态\n不可盲目重做：扣款、发邮件、实际打印","fontSize":21,"fontFamily":2,"strokeColor":"#292824"}}
+]

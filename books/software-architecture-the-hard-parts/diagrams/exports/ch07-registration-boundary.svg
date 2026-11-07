@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="500" viewBox="0 0 720 500" role="img" aria-labelledby="title desc">
+  <title id="title">客户注册的事务边界与权限边界</title>
+  <desc id="desc">一次注册请求经过 API 层访问控制进入一个客户服务，服务继续控制敏感操作访问；资料、卡信息、认证资料、产品记录一同进入本地数据库事务，完整提交不意味着各类操作权限相同。</desc>
+  <style>
+    :root{--surface:#fcfbf8;--text:#292824;--muted:#66645d;--line:#969187;--soft:#f0ece4;--accent:#386d74}
+    @media(prefers-color-scheme:dark){:root:not([data-theme='light']){--surface:#252524;--text:#e6e3dc;--muted:#b6b1a7;--line:#8c8982;--soft:#353534;--accent:#94c8cf}}
+    :root[data-theme='dark']{--surface:#252524;--text:#e6e3dc;--muted:#b6b1a7;--line:#8c8982;--soft:#353534;--accent:#94c8cf}
+    .bg{fill:var(--surface)}text{fill:var(--text);font-family:system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;font-size:17px}.heading{font-size:21px;font-weight:600}.small{font-size:15px;fill:var(--muted)}.box{fill:var(--soft);stroke:var(--line);stroke-width:1.5}.boundary{fill:var(--surface);stroke:var(--accent);stroke-width:2}.transaction{fill:none;stroke:var(--accent);stroke-width:2;stroke-dasharray:7 5}.edge{fill:none;stroke:var(--accent);stroke-width:2;marker-end:url(#arrow)}.arrow{fill:var(--accent)}
+  </style>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path class="arrow" d="M0 0 8 4 0 8Z"/></marker></defs>
+  <rect class="bg" width="720" height="500"/>
+  <text class="heading" x="28" y="36">一起提交，不等于所有操作具有相同权限</text>
+  <text class="small" x="28" y="65">箭头：请求推进　虚线框：本地事务的整体提交范围</text>
+  <text x="360" y="96" text-anchor="middle">客户注册请求</text><path class="edge" d="M360 104V124"/>
+  <rect class="box" x="125" y="133" width="470" height="43" rx="8"/><text x="360" y="161" text-anchor="middle">API 层：Tortoise 访问控制</text>
+  <path class="edge" d="M360 177V199"/>
+  <rect class="boundary" x="28" y="208" width="664" height="245" rx="12"/>
+  <text x="50" y="237">一个客户服务</text>
+  <rect class="box" x="65" y="255" width="590" height="44" rx="8"/><text x="360" y="283" text-anchor="middle">服务侧继续控制访问 · 敏感操作单独授权</text>
+  <path class="edge" d="M360 300V317"/>
+  <rect class="transaction" x="65" y="325" width="590" height="105" rx="8"/>
+  <text class="small" x="360" y="349" text-anchor="middle">同一本地数据库工作单元：全有或全无</text>
+  <rect class="box" x="82" y="366" width="128" height="43" rx="6"/><text x="146" y="394" text-anchor="middle">资料</text>
+  <rect class="box" x="224" y="366" width="128" height="43" rx="6"/><text x="288" y="394" text-anchor="middle">卡信息</text>
+  <rect class="box" x="366" y="366" width="128" height="43" rx="6"/><text x="430" y="394" text-anchor="middle">认证资料</text>
+  <rect class="box" x="508" y="366" width="128" height="43" rx="6"/><text x="572" y="394" text-anchor="middle">支持产品</text>
+  <text class="small" x="360" y="483" text-anchor="middle">Tortoise 是原书自定义库；图示不代表已验证其安全实现</text>
+  <script><![CDATA[try { const t = localStorage.getItem('reading-notes-theme'); if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t); } catch {}]]></script>
+</svg>

@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="436" viewBox="0 0 720 436" role="img" aria-labelledby="title desc">
+  <title id="title">从知识单点走向共享维护</title>
+  <desc id="desc">上半部分只有小林拥有设计与排障经验，一条箭头通向导出服务。下半部分由小林主责、阿岚备份，两人分别有箭头通向导出服务，共享记录、评审与演练帮助两人独立处理常见问题。箭头表示能够承担维护，不是网络调用。</desc>
+  <!-- Original, editable hand-written SVG. The export is an identical web copy. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 15px; fill: var(--muted); }
+    .label { font-size: 18px; font-weight: 600; }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.2; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .node-text { font-size: 18px; text-anchor: middle; }
+    .small { font-size: 15px; fill: var(--muted); text-anchor: middle; }
+    .arrow { fill: none; stroke: var(--line); stroke-width: 1.8; marker-end: url(#arrow); }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker></defs>
+  <rect width="720" height="436" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="32" y="39">多一条能接手的维护路径</text>
+  <text class="sub" x="32" y="67">箭头表示能够承担维护；不是系统之间的调用</text>
+
+  <text class="label" x="32" y="132">知识单点</text>
+  <rect class="node" x="180" y="100" width="200" height="72" rx="7"/>
+  <text class="node-text" x="280" y="128">小林</text>
+  <text class="small" x="280" y="153">设计与排障经验</text>
+  <path class="arrow" d="M389 136H436"/>
+  <rect class="node" x="448" y="100" width="240" height="72" rx="7"/>
+  <text class="node-text" x="568" y="128">导出服务</text>
+  <text class="small" x="568" y="153">维护依赖一个人</text>
+  <text class="sub" x="180" y="199">关键成员离开，维护路径就可能中断</text>
+
+  <text class="label" x="32" y="305">共享维护</text>
+  <rect class="node" x="180" y="232" width="200" height="60" rx="7"/>
+  <text class="node-text" x="280" y="268">小林 · 主责</text>
+  <rect class="node" x="180" y="316" width="200" height="60" rx="7"/>
+  <text class="node-text" x="280" y="352">阿岚 · 备份</text>
+  <path class="arrow" d="M389 262H436"/>
+  <path class="arrow" d="M389 346H436"/>
+  <rect class="focus" x="448" y="232" width="240" height="144" rx="7"/>
+  <text class="node-text" x="568" y="266">导出服务</text>
+  <text class="small" x="568" y="296">共享记录 · 评审 · 演练</text>
+  <text class="small" x="568" y="326">两人逐步具备</text>
+  <text class="small" x="568" y="349">独立处理常见问题的能力</text>
+  <text class="sub" x="32" y="415">文档留下线索，评审与实际操作把线索变成可接手的能力。</text>
+</svg>

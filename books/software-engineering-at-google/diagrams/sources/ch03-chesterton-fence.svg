@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="468" viewBox="0 0 720 468" role="img" aria-labelledby="title desc">
+  <title id="title">拆掉旧设计之前，先弄清它为什么存在</title>
+  <desc id="desc">以笔记假设的报表服务为例。顶部是一段看似多余的重复请求检查。左列虚线：看不懂就直接删掉，调用方超时重试时，同一次操作会生成多份任务。右列实线：先通过提交记录、文档、测试和知情的人追查来历，弄清它保证超时重新提交时同一请求只建一份任务，再按现在的条件三选一：保留并写明重试约定、简化查询但保留语义、调用协议变化后重新设计。</desc>
+  <!-- Original editable hand-written SVG; web export is an identical copy. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 15px; fill: var(--muted); }
+    .label { font-size: 18px; font-weight: 600; text-anchor: middle; }
+    .body { font-size: 16px; fill: var(--muted); text-anchor: middle; }
+    .choice { font-size: 16px; font-weight: 600; text-anchor: middle; }
+    .note { font-size: 14px; fill: var(--muted); }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.3; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .skipped { fill: var(--bg); stroke-dasharray: 5 4; }
+    .flow { fill: none; stroke: var(--line); stroke-width: 1.8; marker-end: url(#arrow); }
+    .branch { fill: none; stroke: var(--line); stroke-width: 1.8; }
+    .shortcut { stroke-dasharray: 5 5; }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker></defs>
+  <rect width="720" height="468" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="28" y="38">拆掉之前，先弄清它为什么在那里</text>
+  <text class="sub" x="28" y="64">笔记假设的报表服务。实线：先理解再决定；虚线：跳过理解，直接删除</text>
+
+  <rect class="node" x="28" y="80" width="664" height="44" rx="7"/>
+  <text class="label" x="360" y="108">看似多余的重复请求检查：多一次查询和分支</text>
+
+  <path class="flow shortcut" d="M132 132V158"/>
+  <rect class="node skipped" x="28" y="166" width="208" height="64" rx="7"/>
+  <text class="label" x="132" y="193">看不懂，直接删掉</text>
+  <text class="body" x="132" y="218">少了一次查询和分支</text>
+  <path class="flow shortcut" d="M132 238V258"/>
+  <rect class="node skipped" x="28" y="266" width="208" height="64" rx="7"/>
+  <text class="label" x="132" y="293">超时重试时</text>
+  <text class="body" x="132" y="318">同一操作生成多份任务</text>
+
+  <path class="flow" d="M484 132V158"/>
+  <rect class="node" x="276" y="166" width="416" height="64" rx="7"/>
+  <text class="label" x="484" y="193">追查来历</text>
+  <text class="body" x="484" y="218">提交记录、文档、测试、知情的人</text>
+  <path class="flow" d="M484 238V258"/>
+  <rect class="focus" x="276" y="266" width="416" height="64" rx="7"/>
+  <text class="label" x="484" y="293">弄清它防的是什么</text>
+  <text class="body" x="484" y="318">超时重新提交时，同一请求只建一份任务</text>
+
+  <path class="branch" d="M484 338V362M340 362H628"/>
+  <text class="note" x="496" y="354">按现在的条件决定</text>
+  <path class="flow" d="M340 362V380"/>
+  <path class="flow" d="M484 362V380"/>
+  <path class="flow" d="M628 362V380"/>
+  <rect class="node" x="276" y="388" width="128" height="56" rx="7"/>
+  <text class="choice" x="340" y="411">保留</text>
+  <text class="body" x="340" y="434">写明重试约定</text>
+  <rect class="node" x="420" y="388" width="128" height="56" rx="7"/>
+  <text class="choice" x="484" y="411">简化查询</text>
+  <text class="body" x="484" y="434">保留语义</text>
+  <rect class="node" x="564" y="388" width="128" height="56" rx="7"/>
+  <text class="choice" x="628" y="411">协议变了</text>
+  <text class="body" x="628" y="434">重新设计</text>
+</svg>

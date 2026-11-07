@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="420" viewBox="0 0 720 420" role="img" aria-labelledby="title desc">
+<title id="title">消息间隔不能独自证明完整性</title><desc id="desc">自然静默会误报，持续部分到达会漏报，完全停止后只在到达时比较无法发现后续间隔。这些是笔记假设，不是案例运行数据。</desc>
+<style>:root{--surface:#fcfbf8;--text:#292824;--muted:#66645d;--line:#969187;--soft:#f0ece4;--accent:#386d74}@media(prefers-color-scheme:dark){:root:not([data-theme='light']){--surface:#252524;--text:#e6e3dc;--muted:#b6b1a7;--line:#8c8982;--soft:#353534;--accent:#94c8cf}}:root[data-theme='dark']{--surface:#252524;--text:#e6e3dc;--muted:#b6b1a7;--line:#8c8982;--soft:#353534;--accent:#94c8cf}.bg{fill:var(--surface)}text{fill:var(--text);font:17px system-ui,-apple-system,"PingFang SC",sans-serif}.heading{font-size:21px;font-weight:600}.small{font-size:15px;fill:var(--muted)}.box{fill:var(--soft);stroke:var(--line);stroke-width:1.5}.edge{fill:none;stroke:var(--accent);stroke-width:2;marker-end:url(#arrow)}.arrow{fill:var(--accent)}</style>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path class="arrow" d="M0 0 8 4 0 8Z"/></marker></defs>
+<rect class="bg" width="720" height="420"/><text class="heading" x="28" y="36">收到消息 ≠ 收齐这一天的数据</text><text class="small" x="28" y="64">三种独立假设；箭头连接观测与能作出的判断</text>
+<rect class="box" x="28" y="90" width="408" height="72" rx="9"/><text x="46" y="119">自然低流量：两分钟没有业务事件</text><text class="small" x="46" y="147">间隔超过一分钟，但没有丢记录</text><path class="edge" d="M444 126H488"/><text x="508" y="133">可能误报</text>
+<rect class="box" x="28" y="188" width="408" height="72" rx="9"/><text x="46" y="217">每十秒两条，只到达其中一条</text><text class="small" x="46" y="245">消息不断到达，但持续缺少一半</text><path class="edge" d="M444 224H488"/><text x="508" y="231">可能漏报</text>
+<rect class="box" x="28" y="286" width="408" height="72" rx="9"/><text x="46" y="315">最后一条之后，来源完全停止</text><text class="small" x="46" y="343">若仅在到达回调中比较，没有下一次检查</text><path class="edge" d="M444 322H488"/><text x="508" y="315">还需独立观测</text><text class="small" x="508" y="343">例如时钟检查</text>
+<text class="small" x="28" y="395">完整性需要明确的覆盖边界与证据；间隔检测仅是一项异常线索。</text>
+<script><![CDATA[try{const t=localStorage.getItem('reading-notes-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch{}]]></script>
+</svg>

@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="440" viewBox="0 0 720 440" role="img" aria-labelledby="title desc">
+  <title id="title">逐个换入新版本时的两种环境布局</title>
+  <desc id="desc">以四个服务 A 到 D 为例。左栏是朴素做法：每个测试环境含一个主干新版本和其余三个生产版本，四个环境共需部署十六个副本，规模为 O(N²)。右栏是 hotswapping：只部署四个主干新版本，测试请求把它们分别换入同一套已有的生产版本服务，只需新增四个副本，规模为 O(N)。</desc>
+  <!-- Original editable hand-written SVG; web export is an identical copy. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 15px; fill: var(--muted); }
+    .label { font-size: 18px; font-weight: 600; text-anchor: middle; }
+    .body { font-size: 16px; text-anchor: middle; }
+    .strong { font-size: 16px; font-weight: 600; text-anchor: middle; }
+    .note { font-size: 14px; fill: var(--muted); text-anchor: middle; }
+    .group { fill: var(--box); }
+    .tile { fill: var(--bg); stroke: var(--line); stroke-width: 1.3; }
+    .new { fill: var(--focus); stroke: var(--accent); stroke-width: 1.6; }
+    .reuse { stroke-dasharray: 5 4; }
+    .link { fill: none; stroke: var(--line); stroke-width: 1.8; }
+    .divider { stroke: var(--line); stroke-width: 1; }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <rect width="720" height="440" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="28" y="40">逐个换入新版本：复制整套，还是按请求换址</text>
+  <text class="sub" x="28" y="69">以四个服务 A—D 为例；带“新”字的是主干新版本，其余为生产版本</text>
+
+  <text class="label" x="184" y="112">朴素做法：每个环境一整套</text>
+  <rect class="group" x="28" y="128" width="312" height="42" rx="6"/>
+  <rect class="tile new" x="52" y="134" width="60" height="30" rx="5"/>
+  <text class="strong" x="82" y="155">A新</text>
+  <rect class="tile" x="120" y="134" width="60" height="30" rx="5"/>
+  <text class="body" x="150" y="155">B</text>
+  <rect class="tile" x="188" y="134" width="60" height="30" rx="5"/>
+  <text class="body" x="218" y="155">C</text>
+  <rect class="tile" x="256" y="134" width="60" height="30" rx="5"/>
+  <text class="body" x="286" y="155">D</text>
+
+  <rect class="group" x="28" y="178" width="312" height="42" rx="6"/>
+  <rect class="tile" x="52" y="184" width="60" height="30" rx="5"/>
+  <text class="body" x="82" y="205">A</text>
+  <rect class="tile new" x="120" y="184" width="60" height="30" rx="5"/>
+  <text class="strong" x="150" y="205">B新</text>
+  <rect class="tile" x="188" y="184" width="60" height="30" rx="5"/>
+  <text class="body" x="218" y="205">C</text>
+  <rect class="tile" x="256" y="184" width="60" height="30" rx="5"/>
+  <text class="body" x="286" y="205">D</text>
+
+  <rect class="group" x="28" y="228" width="312" height="42" rx="6"/>
+  <rect class="tile" x="52" y="234" width="60" height="30" rx="5"/>
+  <text class="body" x="82" y="255">A</text>
+  <rect class="tile" x="120" y="234" width="60" height="30" rx="5"/>
+  <text class="body" x="150" y="255">B</text>
+  <rect class="tile new" x="188" y="234" width="60" height="30" rx="5"/>
+  <text class="strong" x="218" y="255">C新</text>
+  <rect class="tile" x="256" y="234" width="60" height="30" rx="5"/>
+  <text class="body" x="286" y="255">D</text>
+
+  <rect class="group" x="28" y="278" width="312" height="42" rx="6"/>
+  <rect class="tile" x="52" y="284" width="60" height="30" rx="5"/>
+  <text class="body" x="82" y="305">A</text>
+  <rect class="tile" x="120" y="284" width="60" height="30" rx="5"/>
+  <text class="body" x="150" y="305">B</text>
+  <rect class="tile" x="188" y="284" width="60" height="30" rx="5"/>
+  <text class="body" x="218" y="305">C</text>
+  <rect class="tile new" x="256" y="284" width="60" height="30" rx="5"/>
+  <text class="strong" x="286" y="305">D新</text>
+
+  <text class="label" x="184" y="354">4 × 4 = 16 个副本</text>
+  <text class="note" x="184" y="378">N 个服务约需 N² 个，即 O(N²)</text>
+
+  <path class="divider" d="M360 92V384"/>
+
+  <text class="label" x="536" y="112">hotswapping：按请求换址</text>
+  <rect class="tile new" x="404" y="130" width="60" height="36" rx="5"/>
+  <text class="strong" x="434" y="154">A新</text>
+  <rect class="tile new" x="472" y="130" width="60" height="36" rx="5"/>
+  <text class="strong" x="502" y="154">B新</text>
+  <rect class="tile new" x="540" y="130" width="60" height="36" rx="5"/>
+  <text class="strong" x="570" y="154">C新</text>
+  <rect class="tile new" x="608" y="130" width="60" height="36" rx="5"/>
+  <text class="strong" x="638" y="154">D新</text>
+  <path class="link" d="M434 166V212M502 166V212M570 166V212M638 166V212"/>
+  <rect class="group" x="380" y="212" width="312" height="108" rx="6"/>
+  <text class="label" x="536" y="241">共用的生产版本服务</text>
+  <rect class="tile reuse" x="404" y="256" width="60" height="32" rx="5"/>
+  <text class="body" x="434" y="278">A</text>
+  <rect class="tile reuse" x="472" y="256" width="60" height="32" rx="5"/>
+  <text class="body" x="502" y="278">B</text>
+  <rect class="tile reuse" x="540" y="256" width="60" height="32" rx="5"/>
+  <text class="body" x="570" y="278">C</text>
+  <rect class="tile reuse" x="608" y="256" width="60" height="32" rx="5"/>
+  <text class="body" x="638" y="278">D</text>
+  <text class="note" x="536" y="309">已在运行，不再复制</text>
+
+  <text class="label" x="536" y="354">只新增 4 个副本</text>
+  <text class="note" x="536" y="378">N 个服务只需新增 N 个，即 O(N)</text>
+
+  <text class="note" x="360" y="418">实线框：需要新部署的副本　虚线框：复用的已有服务　连线：测试请求把新版本换入共用服务</text>
+</svg>

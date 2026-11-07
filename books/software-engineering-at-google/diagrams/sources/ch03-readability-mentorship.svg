@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="444" viewBox="0 0 720 444" role="img" aria-labelledby="title desc">
+  <title id="title">Readability 把导师式指导放进真实改动</title>
+  <desc id="desc">真实改动交给评审者，评审者引用公共指南并解释理由，作者反复运用并形成稳定判断。虚线从评审返回当前改动，表示作者按反馈修改后再评审。稳定掌握后取得该语言认证，继续写作与评审。此图不表示单次改动通过即可获得认证。</desc>
+  <!-- Original, editable hand-written SVG. The export is an identical web copy. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 15px; fill: var(--muted); }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.2; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .node-text { font-size: 18px; text-anchor: middle; font-weight: 500; }
+    .small { font-size: 15px; fill: var(--muted); text-anchor: middle; }
+    .arrow { fill: none; stroke: var(--line); stroke-width: 1.8; marker-end: url(#arrow); }
+    .feedback { fill: none; stroke: var(--accent); stroke-width: 1.8; stroke-dasharray: 6 5; marker-end: url(#feedback-arrow); }
+    .feedback-label { font-size: 15px; fill: var(--accent); text-anchor: middle; }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker>
+    <marker id="feedback-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--accent)"/></marker>
+  </defs>
+  <rect width="720" height="444" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="32" y="39">把规范，教到正在发生的工作里</text>
+  <text class="sub" x="32" y="67">共同参考提供依据，人根据实际代码解释与指导</text>
+  <rect class="node" x="258" y="92" width="204" height="54" rx="7"/>
+  <text class="node-text" x="360" y="125">公共指南与理由</text>
+  <path class="arrow" d="M360 156V178"/>
+  <rect class="node" x="32" y="188" width="172" height="80" rx="7"/>
+  <text class="node-text" x="118" y="220">真实改动 CL</text>
+  <text class="small" x="118" y="245">作者带着实际问题</text>
+  <path class="arrow" d="M214 228H248"/>
+  <rect class="focus" x="258" y="188" width="204" height="80" rx="7"/>
+  <text class="node-text" x="360" y="220">导师式评审</text>
+  <text class="small" x="360" y="245">引用规范，解释理由</text>
+  <path class="arrow" d="M472 228H506"/>
+  <rect class="node" x="516" y="188" width="172" height="80" rx="7"/>
+  <text class="node-text" x="602" y="220">反复运用</text>
+  <text class="small" x="602" y="245">逐步形成稳定判断</text>
+  <path class="feedback" d="M360 278V325H118V278"/>
+  <rect x="165" y="313" width="150" height="24" fill="var(--bg)"/>
+  <text class="feedback-label" x="240" y="330">按反馈修改并再评审</text>
+  <path class="arrow" d="M602 278V330"/>
+  <text class="sub" x="616" y="309">掌握后</text>
+  <rect class="node" x="516" y="340" width="172" height="58" rx="7"/>
+  <text class="node-text" x="602" y="364">取得语言认证</text>
+  <text class="small" x="602" y="387">继续写作与评审</text>
+  <text class="sub" x="32" y="426">实线：规范与判断进入工作　　虚线：当前改动的反馈循环</text>
+</svg>

@@ -1,0 +1,340 @@
+[
+  {
+    "type": "text",
+    "id": "title",
+    "x": 24,
+    "y": 18,
+    "text": "持久化执行：完成记录决定恢复路径",
+    "fontSize": 25,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "subtitle",
+    "x": 24,
+    "y": 60,
+    "text": "两行是两种故障时点；框架历史与外部副作用没有共同提交点。",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "text",
+    "id": "case-a",
+    "x": 24,
+    "y": 110,
+    "text": "A　完成结果已入历史，随后工作流进程重启",
+    "fontSize": 21,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "rectangle",
+    "id": "a-history",
+    "x": 24,
+    "y": 158,
+    "width": 214,
+    "height": 112,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "引擎历史\n扣款完成\n结果 = charge-9",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "a-replay",
+    "x": 292,
+    "y": 158,
+    "width": 204,
+    "height": 112,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "重放工作流\n返回历史中的\ncharge-9",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "a-next",
+    "x": 550,
+    "y": 158,
+    "width": 210,
+    "height": 112,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "继续后续步骤\n银行入账",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "a1",
+    "x": 244,
+    "y": 214,
+    "width": 42,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        42,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid",
+    "start": {
+      "id": "a-history"
+    },
+    "end": {
+      "id": "a-replay"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "a2",
+    "x": 502,
+    "y": 214,
+    "width": 42,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        42,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid",
+    "start": {
+      "id": "a-replay"
+    },
+    "end": {
+      "id": "a-next"
+    }
+  },
+  {
+    "type": "text",
+    "id": "a-note",
+    "x": 24,
+    "y": 300,
+    "text": "这次恢复不用再次执行已记录完成的扣款活动。",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "text",
+    "id": "case-b",
+    "x": 24,
+    "y": 362,
+    "text": "B　外部已扣款，完成报告未进入历史",
+    "fontSize": 21,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "rectangle",
+    "id": "b-external",
+    "x": 24,
+    "y": 410,
+    "width": 214,
+    "height": 112,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "支付方\n已执行扣款\n保存键 K 的结果",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "b-history",
+    "x": 292,
+    "y": 410,
+    "width": 204,
+    "height": 112,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeStyle": "dashed",
+    "label": {
+      "text": "引擎历史\n活动已安排\n无完成结果",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "gap",
+    "x": 244,
+    "y": 466,
+    "width": 42,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        42,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "dashed",
+    "start": {
+      "id": "b-external"
+    },
+    "end": {
+      "id": "b-history"
+    }
+  },
+  {
+    "type": "text",
+    "id": "gap-label",
+    "x": 243,
+    "y": 538,
+    "text": "完成报告丢失",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "rectangle",
+    "id": "b-retry",
+    "x": 550,
+    "y": 410,
+    "width": 210,
+    "height": 112,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "超时后重试活动\n仍使用同一个 K",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "b1",
+    "x": 502,
+    "y": 466,
+    "width": 42,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        42,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid",
+    "start": {
+      "id": "b-history"
+    },
+    "end": {
+      "id": "b-retry"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "b-dedup",
+    "x": 292,
+    "y": 608,
+    "width": 468,
+    "height": 90,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "支付方识别 K，返回既有 charge-9\n不新增第二笔扣款",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "retry-call",
+    "x": 655,
+    "y": 528,
+    "width": 0,
+    "height": 74,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        74
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid",
+    "start": {
+      "id": "b-retry"
+    },
+    "end": {
+      "id": "b-dedup"
+    }
+  },
+  {
+    "type": "text",
+    "id": "b-note",
+    "x": 24,
+    "y": 746,
+    "text": "K = payment-742:debit；去重效果依赖支付方协议、作用域与保留期。",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  }
+]

@@ -1,0 +1,310 @@
+[
+  {
+    "type": "text",
+    "id": "title",
+    "x": 24,
+    "y": 18,
+    "text": "一种事实，多种派生表示",
+    "fontSize": 25,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "subtitle",
+    "x": 24,
+    "y": 60,
+    "text": "先明确输入与顺序，再让各视图独立推进。",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "rectangle",
+    "id": "input",
+    "x": 24,
+    "y": 135,
+    "width": 150,
+    "height": 76,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "label": {
+      "text": "业务输入",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "record",
+    "x": 250,
+    "y": 135,
+    "width": 195,
+    "height": 76,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "label": {
+      "text": "权威记录\n决定相关写顺序",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "log",
+    "x": 520,
+    "y": 135,
+    "width": 195,
+    "height": 76,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "label": {
+      "text": "CDC / 事件日志\n持久输入与位点",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "write",
+    "x": 180,
+    "y": 173,
+    "width": 64,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        64,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "strokeStyle": "solid",
+    "roughness": 0.6,
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "input"
+    },
+    "end": {
+      "id": "record"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "capture",
+    "x": 451,
+    "y": 173,
+    "width": 63,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        63,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "strokeStyle": "dashed",
+    "roughness": 0.6,
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "record"
+    },
+    "end": {
+      "id": "log"
+    }
+  },
+  {
+    "type": "text",
+    "id": "cap",
+    "x": 455,
+    "y": 137,
+    "text": "捕获",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "rectangle",
+    "id": "search",
+    "x": 24,
+    "y": 365,
+    "width": 195,
+    "height": 86,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "label": {
+      "text": "转换 → 搜索\n独立进度 p₁",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "view",
+    "x": 274,
+    "y": 365,
+    "width": 195,
+    "height": 86,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "label": {
+      "text": "转换 → 页面视图\n独立进度 p₂",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "analysis",
+    "x": 524,
+    "y": 365,
+    "width": 195,
+    "height": 86,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "label": {
+      "text": "转换 → 分析\n独立进度 p₃",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "to-search",
+    "x": 550,
+    "y": 218,
+    "width": 430,
+    "height": 140,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        -430,
+        140
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "strokeStyle": "dashed",
+    "roughness": 0.6,
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "log"
+    },
+    "end": {
+      "id": "search"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "to-view",
+    "x": 615,
+    "y": 218,
+    "width": 245,
+    "height": 140,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        -245,
+        140
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "strokeStyle": "dashed",
+    "roughness": 0.6,
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "log"
+    },
+    "end": {
+      "id": "view"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "to-analysis",
+    "x": 685,
+    "y": 218,
+    "width": 65,
+    "height": 140,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        -65,
+        140
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "strokeStyle": "dashed",
+    "roughness": 0.6,
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "log"
+    },
+    "end": {
+      "id": "analysis"
+    }
+  },
+  {
+    "type": "text",
+    "id": "derive",
+    "x": 24,
+    "y": 278,
+    "text": "虚线：按契约派生\n允许暂时落后",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "text",
+    "id": "read",
+    "x": 24,
+    "y": 490,
+    "text": "读请求访问需要的表示；各进度不必相同。",
+    "fontSize": 19,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "text",
+    "id": "boundary",
+    "x": 24,
+    "y": 527,
+    "text": "恢复依赖：输入仍在、转换可重现、输出可靠且可去重。",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  }
+]

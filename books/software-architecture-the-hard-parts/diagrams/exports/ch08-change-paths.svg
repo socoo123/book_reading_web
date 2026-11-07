@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="530" viewBox="0 0 720 530" role="img" aria-labelledby="title desc">
+  <title id="title">复用方式改变变化传播路径</title>
+  <desc id="desc">三个独立情境：复制使甲乙各自维护规则R；共享库由甲选择v2、乙保留v1；无版本隔离的共享服务升级后，甲乙都调用新实现。虚线表示构建选入，实线表示运行时调用。</desc>
+  <style>
+    :root{--surface:#fcfbf8;--text:#292824;--muted:#66645d;--line:#969187;--soft:#f0ece4;--accent:#386d74}
+    @media(prefers-color-scheme:dark){:root:not([data-theme='light']){--surface:#252524;--text:#e6e3dc;--muted:#b6b1a7;--line:#8c8982;--soft:#353534;--accent:#94c8cf}}
+    :root[data-theme='dark']{--surface:#252524;--text:#e6e3dc;--muted:#b6b1a7;--line:#8c8982;--soft:#353534;--accent:#94c8cf}
+    .bg{fill:var(--surface)}text{fill:var(--text);font-family:system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;font-size:17px}.heading{font-size:21px;font-weight:600}.small{font-size:15px;fill:var(--muted)}.box{fill:var(--soft);stroke:var(--line);stroke-width:1.5}.core{fill:var(--surface);stroke:var(--accent);stroke-width:2}.edge{fill:none;stroke:var(--accent);stroke-width:2;marker-end:url(#arrow)}.build{stroke-dasharray:6 5}.arrow{fill:var(--accent)}.divider{stroke:var(--line);stroke-width:1}
+  </style>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path class="arrow" d="M0 0 8 4 0 8Z"/></marker></defs>
+  <rect class="bg" width="720" height="530"/>
+  <text class="heading" x="28" y="36">同一个规则变化，三种传播方式</text>
+  <text class="small" x="28" y="63">笔记假设 · 甲需要更新规则 R，乙暂不需要</text>
+  <text x="28" y="120">① 代码复制</text>
+  <rect class="box" x="178" y="90" width="220" height="72" rx="9"/><text x="288" y="120" text-anchor="middle">甲：自己的 R 副本</text><text class="small" x="288" y="146" text-anchor="middle">本次自行修改</text>
+  <rect class="box" x="456" y="90" width="236" height="72" rx="9"/><text x="574" y="120" text-anchor="middle">乙：自己的 R 副本</text><text class="small" x="574" y="146" text-anchor="middle">公共缺陷需另外修复</text>
+  <path class="divider" d="M28 184H692"/>
+  <text x="28" y="232">② 共享库</text>
+  <rect class="box" x="178" y="204" width="220" height="52" rx="9"/><text x="288" y="237" text-anchor="middle">甲服务</text>
+  <rect class="box" x="456" y="204" width="236" height="52" rx="9"/><text x="574" y="237" text-anchor="middle">乙服务</text>
+  <rect class="core" x="178" y="303" width="220" height="50" rx="9"/><text x="288" y="335" text-anchor="middle">R 库 v2</text>
+  <rect class="core" x="456" y="303" width="236" height="50" rx="9"/><text x="574" y="335" text-anchor="middle">R 库 v1</text>
+  <path class="edge build" d="M288 303V265"/><path class="edge build" d="M574 303V265"/>
+  <text class="small" x="306" y="285">选入新版</text><text class="small" x="590" y="285">保留旧版</text>
+  <path class="divider" d="M28 375H692"/>
+  <text x="28" y="418">③ 共享服务</text>
+  <rect class="box" x="178" y="395" width="132" height="50" rx="9"/><text x="244" y="427" text-anchor="middle">甲服务</text>
+  <rect class="box" x="178" y="464" width="132" height="50" rx="9"/><text x="244" y="496" text-anchor="middle">乙服务</text>
+  <rect class="core" x="456" y="423" width="236" height="68" rx="9"/><text x="574" y="451" text-anchor="middle">R 服务：新实现</text><text class="small" x="574" y="477" text-anchor="middle">本图未做版本隔离</text>
+  <path class="edge" d="M310 420 447 443"/><path class="edge" d="M310 489 447 472"/>
+  <text class="small" x="337" y="406">运行时调用</text>
+  <script><![CDATA[try { const t = localStorage.getItem('reading-notes-theme'); if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t); } catch {}]]></script>
+</svg>

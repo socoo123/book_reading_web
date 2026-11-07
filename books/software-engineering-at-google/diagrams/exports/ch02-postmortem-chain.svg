@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="470" viewBox="0 0 720 470" role="img" aria-labelledby="title desc">
+  <title id="title">无责复盘把发生了什么接到今后改变什么</title>
+  <desc id="desc">笔记假设的导出服务出现队列堆积。上方虚线框是只追究个人的写法：只写“小林考虑不周，以后加强检查”，别人无法理解当时的决策，也不知道怎样识别类似风险。下方实线是无责复盘：依次还原发生了什么、找出临时错误后不断重试且没有总时限的原因、为每项改变指定负责人、在测试环境模拟存储报错加以验证；四部分写进同一份可访问的复盘，下一位维护者能理解重试为什么要有边界，也知道积压时先查哪里。</desc>
+  <!-- Original editable hand-written SVG; web export is an identical copy. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 15px; fill: var(--muted); }
+    .label { font-size: 18px; font-weight: 600; text-anchor: middle; }
+    .body { font-size: 16px; text-anchor: middle; }
+    .faint { fill: var(--muted); }
+    .note { font-size: 14px; fill: var(--muted); text-anchor: middle; }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.3; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .blame { stroke-dasharray: 6 5; }
+    .flow { fill: none; stroke: var(--line); stroke-width: 1.8; marker-end: url(#arrow); }
+    .join { fill: none; stroke: var(--line); stroke-width: 1.3; }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker></defs>
+  <rect width="720" height="470" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="28" y="40">复盘怎样把“发生了什么”接到“今后改变什么”</text>
+  <text class="sub" x="28" y="69">假设导出服务出现队列堆积。实线：无责复盘的推进　虚线框：只追究个人的写法</text>
+
+  <rect class="node" x="28" y="92" width="142" height="72" rx="7"/>
+  <text class="label" x="99" y="122">一次故障</text>
+  <text class="body faint" x="99" y="150">导出队列堆积</text>
+  <path class="flow blame" d="M171 128H193"/>
+  <rect class="node blame" x="202" y="92" width="490" height="72" rx="7"/>
+  <text class="label" x="447" y="122">只追究个人：“小林考虑不周，以后加强检查”</text>
+  <text class="body faint" x="447" y="150">别人无法理解当时的决策，也不知怎样识别类似风险</text>
+
+  <path class="flow" d="M99 165V197"/>
+  <text class="note" x="150" y="190">无责复盘</text>
+
+  <rect class="node" x="28" y="206" width="142" height="130" rx="7"/>
+  <text class="label" x="99" y="238">发生了什么</text>
+  <text class="body" x="99" y="268">存储何时异常</text>
+  <text class="body" x="99" y="292">等待何时上升</text>
+  <text class="body" x="99" y="316">从哪条告警发现</text>
+  <path class="flow" d="M171 271H193"/>
+  <rect class="node" x="202" y="206" width="142" height="130" rx="7"/>
+  <text class="label" x="273" y="238">为什么</text>
+  <text class="body" x="273" y="268">临时错误后</text>
+  <text class="body" x="273" y="292">不断重试</text>
+  <text class="body" x="273" y="316">没有总时限</text>
+  <path class="flow" d="M345 271H367"/>
+  <rect class="node" x="376" y="206" width="142" height="130" rx="7"/>
+  <text class="label" x="447" y="238">改变什么</text>
+  <text class="body" x="447" y="268">小林：重试与时限</text>
+  <text class="body" x="447" y="292">阿岚：补失败测试</text>
+  <text class="body" x="447" y="316">值班：完善告警</text>
+  <path class="flow" d="M519 271H541"/>
+  <rect class="node" x="550" y="206" width="142" height="130" rx="7"/>
+  <text class="label" x="621" y="238">怎样确认</text>
+  <text class="body" x="621" y="268">模拟存储报错</text>
+  <text class="body" x="621" y="292">任务按约定结束</text>
+  <text class="body" x="621" y="316">告警提示积压</text>
+
+  <path class="join" d="M99 337V352M273 337V352M447 337V352M621 337V352M99 352H621"/>
+  <path class="flow" d="M360 352V376"/>
+  <rect class="focus" x="28" y="386" width="664" height="66" rx="7"/>
+  <text class="label" x="360" y="413">一份可访问的复盘，改变有人跟进</text>
+  <text class="body" x="360" y="439">下一位维护者能理解重试为什么要有边界，也知道积压时先查哪里</text>
+</svg>

@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="470" viewBox="0 0 720 470" role="img" aria-labelledby="title desc">
+  <title id="title">数据交叉依赖反过来影响服务边界</title>
+  <desc id="desc">A 拥有表 1、2、4、6。B 拥有表 3 并需要 C 的表 5，C 拥有表 5 并需要 B 的表 3。合并 B 与 C 后交叉读取成为内部访问，A 保持独立。</desc>
+  <style>
+    :root{--surface:#fcfbf8;--text:#292824;--muted:#66645d;--line:#969187;--soft:#f0ece4;--accent:#386d74}
+    @media(prefers-color-scheme:dark){:root:not([data-theme='light']){--surface:#252524;--text:#e6e3dc;--muted:#b6b1a7;--line:#8c8982;--soft:#353534;--accent:#94c8cf}}
+    :root[data-theme='dark']{--surface:#252524;--text:#e6e3dc;--muted:#b6b1a7;--line:#8c8982;--soft:#353534;--accent:#94c8cf}
+    .bg{fill:var(--surface)}text{fill:var(--text);font-family:system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;font-size:17px}.heading{font-size:21px;font-weight:600}.small{font-size:15px;fill:var(--muted)}.box{fill:var(--soft);stroke:var(--line);stroke-width:1.5}.boundary{fill:var(--surface);stroke:var(--accent);stroke-width:2}.edge{fill:none;stroke:var(--accent);stroke-width:2;marker-end:url(#arrow)}.remote{stroke-dasharray:6 5}.arrow{fill:var(--accent)}
+  </style>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path class="arrow" d="M0 0 8 4 0 8Z"/></marker></defs>
+  <rect class="bg" width="720" height="470"/>
+  <text class="heading" x="28" y="36">把每次业务都需要的交叉读取放回同一边界</text>
+  <text class="small" x="28" y="65">实线：本地数据归属　虚线：向另一服务索取数据</text>
+  <rect class="boundary" x="28" y="100" width="150" height="154" rx="10"/>
+  <text x="103" y="132" text-anchor="middle">服务 A</text><path class="edge" d="M103 143V174"/>
+  <rect class="box" x="42" y="183" width="122" height="50" rx="6"/><text x="103" y="214" text-anchor="middle">表 1 / 2 / 4 / 6</text>
+  <rect class="boundary" x="242" y="100" width="170" height="154" rx="10"/>
+  <text x="327" y="132" text-anchor="middle">服务 B</text><path class="edge" d="M327 143V174"/>
+  <rect class="box" x="265" y="183" width="124" height="50" rx="6"/><text x="327" y="214" text-anchor="middle">表 3</text>
+  <rect class="boundary" x="522" y="100" width="170" height="154" rx="10"/>
+  <text x="607" y="132" text-anchor="middle">服务 C</text><path class="edge" d="M607 143V174"/>
+  <rect class="box" x="545" y="183" width="124" height="50" rx="6"/><text x="607" y="214" text-anchor="middle">表 5</text>
+  <path class="edge remote" d="M412 151H514"/><text class="small" x="467" y="134" text-anchor="middle">索取表 5</text>
+  <path class="edge remote" d="M522 200H420"/><text class="small" x="467" y="228" text-anchor="middle">索取表 3</text>
+  <text class="small" x="103" y="302" text-anchor="middle">A 保持分开</text>
+  <text class="small" x="467" y="292" text-anchor="middle">聚合 B、C 后</text>
+  <rect class="boundary" x="242" y="309" width="450" height="116" rx="10"/>
+  <text x="467" y="338" text-anchor="middle">一个服务：B 与 C 组件</text>
+  <rect class="box" x="274" y="356" width="160" height="46" rx="6"/><text x="354" y="385" text-anchor="middle">表 3</text>
+  <rect class="box" x="499" y="356" width="160" height="46" rx="6"/><text x="579" y="385" text-anchor="middle">表 5</text>
+  <text class="small" x="360" y="454" text-anchor="middle">交叉读取成为内部协作；不是要求整个应用合回一个服务</text>
+  <script><![CDATA[try { const t = localStorage.getItem('reading-notes-theme'); if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t); } catch {}]]></script>
+</svg>

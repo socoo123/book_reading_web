@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="470" viewBox="0 0 720 470" role="img" aria-labelledby="title desc">
+  <title id="title">任务图与产物图的一条边各记下什么</title>
+  <desc id="desc">同一步先生成、再编译，分两列对照。左列是只声明先后的任务式构建：生成任务把代码写到 build/generated/，编译任务到 generated/ 读取，两者之间的边只表示先于，路径约定只写在脚本里；路径改了，图却没变，编译找不到文件或读到旧文件。右列是产物式构建：生成动作声明输出生成的源码，编译动作声明输入同一份源码，这条边就是那份源码；系统知道交接哪份文件，复用与并行也有了依据。</desc>
+  <!-- Original editable hand-written SVG; web export is an identical copy. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 15px; fill: var(--muted); }
+    .tag { font-size: 17px; font-weight: 600; }
+    .label { font-size: 18px; font-weight: 600; text-anchor: middle; }
+    .body { font-size: 16px; text-anchor: middle; }
+    .note { font-size: 14px; fill: var(--muted); }
+    .end { text-anchor: end; }
+    .mid { text-anchor: middle; }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.3; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .flow { fill: none; stroke: var(--line); stroke-width: 1.8; marker-end: url(#arrow); }
+    .hidden { fill: none; stroke: var(--line); stroke-width: 1.6; stroke-dasharray: 5 5; }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker></defs>
+  <rect width="720" height="470" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="28" y="40">同一步“先生成、再编译”，两种图各记下什么</text>
+  <text class="sub" x="28" y="69">箭头指向下一步；箭头旁的文字，是这条边告诉系统的内容</text>
+
+  <text class="tag" x="28" y="108">任务式：只声明先后</text>
+  <rect class="node" x="28" y="124" width="316" height="76" rx="7"/>
+  <text class="label" x="186" y="154">生成任务</text>
+  <text class="body" x="186" y="184">把代码写到 build/generated/</text>
+  <path class="flow" d="M110 200V250"/>
+  <text class="note end" x="98" y="235">先于</text>
+  <path class="hidden" d="M290 200V260"/>
+  <text class="note end" x="280" y="235">路径只写在脚本里</text>
+  <rect class="node" x="28" y="260" width="316" height="76" rx="7"/>
+  <text class="label" x="186" y="290">编译任务</text>
+  <text class="body" x="186" y="320">到 generated/ 读取代码</text>
+  <rect class="focus" x="28" y="356" width="316" height="72" rx="7"/>
+  <text class="label" x="186" y="385">路径改了，图却没变</text>
+  <text class="body" x="186" y="413">编译找不到文件，或读到旧文件</text>
+
+  <text class="tag" x="376" y="108">产物式：声明输入与输出</text>
+  <rect class="node" x="376" y="124" width="316" height="76" rx="7"/>
+  <text class="label" x="534" y="154">生成动作</text>
+  <text class="body" x="534" y="184">声明输出：生成的源码</text>
+  <path class="flow" d="M534 200V250"/>
+  <text class="note" x="548" y="235">这条边就是那份源码</text>
+  <rect class="node" x="376" y="260" width="316" height="76" rx="7"/>
+  <text class="label" x="534" y="290">编译动作</text>
+  <text class="body" x="534" y="320">声明输入：同一份源码</text>
+  <rect class="focus" x="376" y="356" width="316" height="72" rx="7"/>
+  <text class="label" x="534" y="385">系统知道交接哪份文件</text>
+  <text class="body" x="534" y="413">复用与并行也有了依据</text>
+
+  <text class="note mid" x="360" y="456">实线箭头：图中声明的边　　虚线：只存在于脚本里的约定　　底部框：由此带来的结果</text>
+</svg>

@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="580" viewBox="0 0 720 580" role="img" aria-labelledby="title desc">
+  <title id="title">协同的三种状态安排</title>
+  <desc id="desc">前置控制器由领域服务向入口汇报状态；无状态协同在查询时读取各服务再拼装；印记耦合让消息携带沿途已知状态。依次把成本放在持续汇总、查询组合和消息契约上。</desc>
+  <style>
+    :root{--surface:#fcfbf8;--text:#292824;--muted:#66645d;--line:#969187;--soft:#f0ece4;--accent:#386d74}
+    @media(prefers-color-scheme:dark){:root:not([data-theme='light']){--surface:#252524;--text:#e6e3dc;--muted:#b6b1a7;--line:#8c8982;--soft:#353534;--accent:#94c8cf}}
+    :root[data-theme='dark']{--surface:#252524;--text:#e6e3dc;--muted:#b6b1a7;--line:#8c8982;--soft:#353534;--accent:#94c8cf}
+    .bg{fill:var(--surface)}text{fill:var(--text);font-family:system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;font-size:17px}.heading{font-size:21px;font-weight:600}.small{font-size:15px;fill:var(--muted)}.box{fill:var(--soft);stroke:var(--line);stroke-width:1.5}.core{fill:var(--surface);stroke:var(--accent);stroke-width:2}.edge{fill:none;stroke:var(--accent);stroke-width:2;marker-end:url(#arrow)}.event{stroke-dasharray:6 5}.arrow{fill:var(--accent)}.rule{stroke:var(--line);stroke-dasharray:3 5}
+  </style>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path class="arrow" d="M0 0 8 4 0 8Z"/></marker></defs>
+  <rect class="bg" width="720" height="580"/>
+  <text class="heading" x="28" y="36">状态管理的成本，被放到了哪里？</text>
+  <text x="28" y="79">① 前置控制器：入口服务持有汇总状态</text>
+  <rect class="box" x="28" y="100" width="160" height="60" rx="9"/><text x="108" y="136" text-anchor="middle">领域服务 A / B</text>
+  <path class="edge" d="M188 130H307"/><text class="small" x="247" y="117" text-anchor="middle">汇报进度</text>
+  <rect class="core" x="318" y="100" width="260" height="60" rx="9"/><text x="448" y="126" text-anchor="middle">入口领域服务</text><text class="small" x="448" y="148" text-anchor="middle">领域数据 + 工作流状态</text>
+  <text class="small" x="28" y="188">查询更直接；代价是持续更新通信，以及入口的额外责任。</text>
+  <path class="rule" d="M28 211H692"/>
+  <text x="28" y="246">② 无状态协同：查询时重新组合</text>
+  <rect class="core" x="28" y="269" width="220" height="60" rx="9"/><text x="138" y="305" text-anchor="middle">查询时拼装视图</text>
+  <path class="edge" d="M248 299H360V278H409"/><path class="edge" d="M360 299V320H409"/>
+  <rect class="box" x="420" y="260" width="158" height="36" rx="7"/><text x="499" y="284" text-anchor="middle">领域服务 A</text>
+  <rect class="box" x="420" y="303" width="158" height="36" rx="7"/><text x="499" y="327" text-anchor="middle">领域服务 B</text>
+  <text class="small" x="290" y="285">读取</text>
+  <text class="small" x="28" y="363">没有持续汇总；查询增加往返，且不自动得到同一时点快照。</text>
+  <path class="rule" d="M28 387H692"/>
+  <text x="28" y="422">③ 印记耦合：消息携带沿途已知状态</text>
+  <rect class="box" x="28" y="446" width="160" height="60" rx="9"/><text x="108" y="482" text-anchor="middle">领域服务 A</text>
+  <path class="edge event" d="M188 476H470"/><text class="small" x="330" y="461" text-anchor="middle">消息 + 已知流程状态</text>
+  <rect class="box" x="481" y="446" width="160" height="60" rx="9"/><text x="561" y="482" text-anchor="middle">领域服务 B</text>
+  <text class="small" x="28" y="538">减少沿途查询；契约变大，随时可查的入口仍需另行安排。</text>
+  <text class="small" x="28" y="564">实线：状态汇报或读取　虚线：消息传递</text>
+  <script><![CDATA[try { const t = localStorage.getItem('reading-notes-theme'); if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t); } catch {}]]></script>
+</svg>

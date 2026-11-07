@@ -1,0 +1,262 @@
+[
+  {
+    "type": "text",
+    "id": "title",
+    "x": 24,
+    "y": 20,
+    "text": "把责任从数据管道接回人的生活",
+    "fontSize": 25,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "subtitle",
+    "x": 24,
+    "y": 66,
+    "text": "顺时针读：技术输出会成为人的实际处境。",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "rectangle",
+    "id": "person",
+    "x": 24,
+    "y": 130,
+    "width": 240,
+    "height": 90,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.7,
+    "label": {
+      "text": "人的行为\n身份、兴趣与处境",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "collect",
+    "x": 410,
+    "y": 130,
+    "width": 240,
+    "height": 90,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.7,
+    "label": {
+      "text": "采集与保留\n记录、关联与保存",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "decide",
+    "x": 410,
+    "y": 340,
+    "width": 240,
+    "height": 90,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.7,
+    "label": {
+      "text": "分析与决策\n预测、筛选与推荐",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "impact",
+    "x": 24,
+    "y": 340,
+    "width": 240,
+    "height": 90,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.7,
+    "label": {
+      "text": "生活中的结果\n机会、成本与自主权",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "capture",
+    "x": 274,
+    "y": 175,
+    "width": 126,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        126,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.7,
+    "strokeStyle": "solid",
+    "start": {
+      "id": "person"
+    },
+    "end": {
+      "id": "collect"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "process",
+    "x": 530,
+    "y": 230,
+    "width": 0,
+    "height": 100,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        100
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.7,
+    "strokeStyle": "solid",
+    "start": {
+      "id": "collect"
+    },
+    "end": {
+      "id": "decide"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "act",
+    "x": 400,
+    "y": 385,
+    "width": 126,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        -126,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.7,
+    "strokeStyle": "solid",
+    "start": {
+      "id": "decide"
+    },
+    "end": {
+      "id": "impact"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "return",
+    "x": 144,
+    "y": 330,
+    "width": 0,
+    "height": 100,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        -100
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.7,
+    "strokeStyle": "dashed",
+    "start": {
+      "id": "impact"
+    },
+    "end": {
+      "id": "person"
+    }
+  },
+  {
+    "type": "text",
+    "id": "capture-label",
+    "x": 302,
+    "y": 142,
+    "text": "采集",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "text",
+    "id": "process-label",
+    "x": 548,
+    "y": 270,
+    "text": "加工",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "text",
+    "id": "act-label",
+    "x": 300,
+    "y": 351,
+    "text": "行动",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "text",
+    "id": "return-label",
+    "x": 164,
+    "y": 270,
+    "text": "影响",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "text",
+    "id": "question-collect",
+    "x": 24,
+    "y": 480,
+    "text": "采集责任：是否必要？谁能选择用途与保留？",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "text",
+    "id": "question-decide",
+    "x": 24,
+    "y": 515,
+    "text": "决策责任：谁受影响？谁解释、纠错并承担后果？",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  }
+]

@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>第 1 章｜没有“最佳实践”时怎样决策 · Software Architecture: The Hard Parts · 架构提升读书笔记</title>
+  <meta name="description" content="从权衡分析、架构决策记录与适应度函数建立决策方法，辨明原子性与隔离性，并完整介绍 Sysops Squad 的业务、18 个组件与共享数据背景。">
+  <link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+  <script src="../../../assets/theme.js"></script>
+  <script src="../../../assets/reader.js" defer></script>
+  <link rel="stylesheet" href="../../../assets/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header reader-header"><div class="container header-inner">
+    <a class="brand" href="../../../index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5.5C8.5 3.8 5.8 3.6 2.5 4.5v14c3.3-.9 6-.7 9.5 1 3.5-1.7 6.2-1.9 9.5-1v-14c-3.3-.9-6-.7-9.5 1Zm0 0v14"/></svg>书架</a>
+    <a class="reader-book-title" href="../index.html" lang="en">Software Architecture: The Hard Parts</a>
+    <div class="theme-control" role="group" aria-label="外观" hidden><button type="button" data-theme-value="system" title="跟随系统"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path class="fill" d="M12 4a8 8 0 0 1 0 16Z"/></svg><span class="sr-only">跟随系统</span></button><button type="button" data-theme-value="light" title="浅色"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.6"/><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21M5.6 5.6l1.6 1.6M16.8 16.8l1.6 1.6M5.6 18.4l1.6-1.6M16.8 7.2l1.6-1.6"/></svg><span class="sr-only">浅色</span></button><button type="button" data-theme-value="dark" title="深色"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.5 14.6A7.8 7.8 0 0 1 9.4 4.5a7.8 7.8 0 1 0 10.1 10.1Z"/></svg><span class="sr-only">深色</span></button></div>
+  </div></header>
+  <main id="main" class="container reader-container">
+    <nav class="breadcrumb" aria-label="当前位置"><ol><li><a href="../../../index.html">书架</a></li><li><a href="../index.html">书籍概览</a></li><li aria-current="page">第 1 章</li></ol></nav>
+    <div class="reading-layout">
+      <aside class="toc"><nav aria-label="本页目录"><h2>本页目录</h2><ul>
+        <li><a href="#trade-off-context">01　从寻找标准答案，到解释收益与代价</a></li>
+        <li><a href="#data-as-architecture">02　数据为什么进入架构决策的中心</a></li>
+        <li><a href="#decision-records">03　ADR：让后来的人知道当时为什么这样选</a></li>
+        <li><a href="#fitness-functions">04　适应度函数：把架构意图接到持续反馈上</a></li>
+        <li><a href="#fitness-scope">05　检查通过，究竟证明了什么</a></li>
+        <li><a href="#working-definitions">06　先讲清选择，再讨论实现：几个必要定义</a></li>
+        <li><a href="#sysops-workflows">07　Sysops Squad：先沿着业务走一遍</a></li>
+        <li><a href="#sysops-components">08　现有组件：代码已经分组，部署仍是一个整体</a></li>
+        <li><a href="#sysops-data">09　共享数据：拆开代码之后仍要面对的连接</a></li>
+        <li><a href="#case-baseline">10　案例的起点是失效的业务，不是选定的微服务</a></li>
+      </ul><p class="toc-note"><a href="../index.html">← 书籍概览</a></p></nav></aside>
+      <article class="article">
+        <header class="article-header">
+          <p class="eyebrow">READING NOTES / CHAPTER 01</p>
+          <h1>第 1 章｜没有“最佳实践”时怎样决策</h1>
+          <p class="article-deck"><span lang="en">What Happens When There Are No “Best Practices”?</span> · 让选择、理由与持续反馈连起来</p>
+        </header>
+        <p>一个工单系统既要让客户随时提交问题，又要把任务交给合适的专家，还要支持账单、知识库和管理报表。把这些功能放在一起，事务与调用可能很直接，修改和故障却容易相互牵连；把它们拆开，独立变化的机会增加，原先由一个进程和一个数据库承担的协调工作又会重新出现。两边都有充分理由，也都有必须付出的代价。</p>
+        <p>本书从这种困境出发。它要教的不是遇到问题就采用某种架构，而是在具体环境里辨认冲突、比较方案、留下理由，并持续检查实现是否仍然符合决定。第 1 章先建立这套工作方式，再介绍贯穿全书的虚构案例 Sysops Squad。后面的分解、数据和通信讨论，都将回到这里建立的业务与系统基线。</p>
+        <details class="mobile-toc"><summary>本页目录 · 10 个小节</summary><nav aria-label="移动端本页目录"><ul>
+          <li><a href="#trade-off-context">01　从寻找标准答案，到解释收益与代价</a></li>
+          <li><a href="#data-as-architecture">02　数据为什么进入架构决策的中心</a></li>
+          <li><a href="#decision-records">03　ADR：让后来的人知道当时为什么这样选</a></li>
+          <li><a href="#fitness-functions">04　适应度函数：把架构意图接到持续反馈上</a></li>
+          <li><a href="#fitness-scope">05　检查通过，究竟证明了什么</a></li>
+          <li><a href="#working-definitions">06　先讲清选择，再讨论实现：几个必要定义</a></li>
+          <li><a href="#sysops-workflows">07　Sysops Squad：先沿着业务走一遍</a></li>
+          <li><a href="#sysops-components">08　现有组件：代码已经分组，部署仍是一个整体</a></li>
+          <li><a href="#sysops-data">09　共享数据：拆开代码之后仍要面对的连接</a></li>
+          <li><a href="#case-baseline">10　案例的起点是失效的业务，不是选定的微服务</a></li>
+        </ul></nav></details>
+
+        <section id="trade-off-context">
+          <h2><span class="section-number">01</span>从寻找标准答案，到解释收益与代价</h2>
+          <p>搜索引擎很擅长回答“某个框架怎样配置超时”。架构问题却往往还包括：哪些业务可以等待，团队能否承担消息系统的运维，已有数据库能否调整，故障时谁负责恢复，以及下个月的交付日期能否改变。即使另一家公司用同样的框架，它面对的约束组合也未必相同。技术方案可以借鉴，结论却不能省略适用条件直接搬过来。</p>
+          <p>作者因此把架构师的核心能力放在<strong>权衡分析（trade-off analysis）</strong>上：针对一个重要决定，客观说明各个候选方案改善什么、损害什么，以及这些变化在当前情境中有多重要。书中“寻找最不坏的权衡组合”的说法，是提醒读者不要假定所有架构特性都能同时最大化。例如，更细的部署边界可能降低局部发布的影响范围，却把原先的本地协作变成跨服务协作；可靠性、性能与团队工作量，需要放在同一问题里判断。</p>
+          <p>“没有通用最佳实践”并不意味着没有知识、没有优劣，也不意味着只能凭个人喜好。成熟模式提供候选解，已有经验提供常见后果，而当前约束决定哪些后果可以接受。能够说明“为什么在这里选择它”，比只说“业界都这么做”更有判断力。一个方案如果违反不可让步的业务约束，就不能靠其他优点抵消；其余可行方案之间，才有继续比较的空间。</p>
+          <p>本书标题中的 <em>hard</em> 同时指困难与坚实：这些问题难，是因为技术、组织和长期影响纠缠在一起；它们又像基础结构，改变时常常牵动已经建立在上面的许多东西。作者借“以后难改的东西”说明关注范围，但这不是要求所有决定都在最初冻结。恰恰因为未来可能改变，今天才需要说清哪些条件支撑了当前选择。</p>
+          <p>原书以集中式、编排驱动的 SOA 与微服务之间的变化，说明环境会改变方案的相对成本。作者的历史解释是：企业集成压力与当时的组织条件，使共享资源和集中协调有吸引力；开源软件、基础设施自动化与容器等能力，又降低了大量独立运行环境的管理门槛。这里应当保留其 2021 年的叙述语境。“运维上免费”是对自动化降低重复劳动的修辞，并不表示机器、平台或值班真的零成本；书中“几乎没人再建某种 SOA”的概括，也不宜当成所有企业的现状统计。</p>
+          <p>因此，值得长期学习的是分析方法：先把约束讲清，再把选择引起的后果展开。工具会变，平台成本会变，团队能力也会变；保留这些因果关系，结论才有机会在环境变化时被合理更新。</p>
+        </section>
+
+        <section id="data-as-architecture">
+          <h2><span class="section-number">02</span>数据为什么进入架构决策的中心</h2>
+          <p>前言交代了本书形成过程中的一个重要发现：许多“服务该怎样拆”的难题，实际绕不开谁可以读取数据、谁可以修改数据，以及业务数据怎样继续用于分析。为了同时从架构与数据两个方向理解问题，Neal Ford、Mark Richards 邀请 Pramod Sadalage 与 Zhamak Dehghani 一起写作。这也解释了为什么本书不是只在服务框图上讨论边界。</p>
+          <p>作者回顾，他们早年建设的不少分布式系统虽然把计算放在不同位置，却仍把数据放在同一个关系数据库里。多个处理过程可以借助同一数据库完成关联查询和事务。转向以<strong>限界上下文（bounded context）</strong>约束实现细节的微服务时，数据也进入服务边界，原先由数据库内部机制承担的工作，就可能变成服务之间必须安排的协作。</p>
+          <p>用一个笔记假设来说明：注册客户与建立支持合同原来由同一个数据库事务提交，如果两个步骤随后归入不同服务、不同数据库，那么“客户记录成功、合同记录失败”就不再只是同一事务里的一条异常路径。团队必须明确是否要求整体全成或全败，是否容许暂时存在待完成状态，以及失败后由谁恢复。拆开的收益可能是独立变化，代价则可能是新的状态、消息和恢复责任。第 1 章没有替这个假设选定方案，它先让我们看见数据边界会改变问题本身。</p>
+          <p>这里还要区分两类数据用途。<strong>运营数据（operational data）</strong>支撑业务当下运行，例如客户、库存、交易、合同与工单；“运营”不是机器的运维监控指标。原书把这类工作联系到在线事务处理（OLTP）。<strong>分析数据（analytical data）</strong>用于趋势、预测、经营评估和战略判断，可以从运营数据加工、聚合或形成不同时间点的快照。两类数据可能来自同一业务事实，但使用目的、时效要求和处理方式不同。</p>
+          <p>以 Sysops Squad 为例，决定现在把工单分派给谁，需要及时的专家技能与可用性信息；分析某类产品过去几个月的维修问题，则需要跨工单的历史视角。前者不能为了月度统计而停止运转，后者也不能因为服务已经拆开就失去一致的业务含义。把服务做成独立部署单元，并没有自动解决跨领域分析的问题。</p>
+          <p>原书将分析数据概括为通常不直接支撑日常运转，这有助于区分用途，却不是普遍的关键性排序。实际系统也可能把分析结果送回在线决策；分析工作同样可以使用关系数据库。更稳妥的判断方法是看数据用于什么、允许多旧、错误或延迟影响什么，而不是把“关系型”与“运营”、“非关系型”与“分析”画等号。</p>
+        </section>
+
+        <section id="decision-records">
+          <h2><span class="section-number">03</span>ADR：让后来的人知道当时为什么这样选</h2>
+          <p>一张架构图可以告诉接手者“现在有一个异步通知组件”，却不一定告诉他为什么没有直接调用邮件服务。如果理由丢了，后来的人可能盲目保留已经不合适的结构，也可能删掉一个仍在保护关键目标的边界。<strong>架构决策记录（Architectural Decision Record，ADR）</strong>保存的就是这层容易消失的知识：面对什么情况，比较过哪些选择，为什么作出这个决定，接受了什么后果。</p>
+          <p>本章采用短文本记录，一般一到两页，一个记录对应一个重要决定。正文示例默认已经批准，因此使用标题加三部分：<strong>背景（Context）</strong>写问题与候选方案；<strong>决定（Decision）</strong>明确选择并给出理由；<strong>后果（Consequences）</strong>说明决定实施后的变化，包括代价和后续负担。记录“采用消息队列”还不够，因为它只给出了结果，没有说明这个选择服务于什么目标。</p>
+          <p>下面是一份笔记自拟的微型示例，借用售后问卷场景解释格式，<strong>不是 Sysops Squad 在本章已经作出的决定</strong>。假设业务明确允许维修完成后的问卷邮件稍后送达，而“工单已完成”的确认不能等待邮件服务恢复。</p>
+          <blockquote><p><strong>示例 ADR：问卷邮件异步发送</strong></p><p><strong>背景。</strong> 工单完成确认当前等待邮件调用；邮件服务不可用时，客户服务流程受阻。候选方案是在完成请求里同步发送，或把发送安排为后续异步工作。</p><p><strong>决定。</strong> 选择异步发送，因为此假设业务允许问卷延后，而工单完成状态应及时确认。工单完成与可靠记录待发送任务需要保持一致，具体实现另行确定。</p><p><strong>后果。</strong> 邮件服务的响应时间不再直接成为完成请求的等待时间；系统新增待发送状态、失败重试和重复处理的责任。完成确认不代表邮件已送达，需要能观察未完成的发送任务。</p></blockquote>
+          <p>这份记录的价值不在于“异步总是好”。如果问卷必须在某个合规步骤前送达，或团队不能可靠管理待发送任务，结论就需要重新评估。背景保存的是决定成立的条件，后果保存的是团队承诺承担的工作。把代价藏起来，记录就退化成了为既定方案辩护的材料。</p>
+          <p>Michael Nygard 的原始 ADR 文章还包含<strong>状态（Status）</strong>，例如 proposed、accepted、superseded。原书为节省重复而假设记录均已批准，不表示真实项目应该省略状态。Nygard 同时建议保留被替代的记录，并指向新决定：这样才能知道旧结构在当时为什么合理，而不把历史改写成“我们从来就想这样做”。</p>
+          <p>ADR 解决解释与记忆，下一步仍然是执行。写下“模块不能循环依赖”之后，未来一次顺手的调用仍可能把边界穿透。要让决定跟随代码持续生效，就需要把其中可验证的部分转成反馈机制。</p>
+        </section>
+
+        <section id="fitness-functions">
+          <h2><span class="section-number">04</span>适应度函数：把架构意图接到持续反馈上</h2>
+          <p><strong>架构适应度函数（architecture fitness function）</strong>是客观评估某项架构特性或特性组合的机制。这里的“函数”不限于一段数学公式，也不限于测试方法：依赖分析、性能测试、运行监控、故障注入乃至按明确准则进行的人工验证，都可能承担这个角色。共同点是把架构目标转成能检查、能反馈的条件。</p>
+          <p>“网站性能要高”不足以执行；需要进一步说明测什么请求、在什么负载与环境下、用什么统计口径判断。以下仅是笔记假设：在固定测试数据与稳定运行环境中，500 个并发用户访问工单查询，观察十分钟内请求的第 95 百分位响应时间是否低于 300ms。条件、观测窗口与阈值一起构成规则；300ms 不是本书为 Sysops Squad 给出的目标，也不是任何业务的通用标准。</p>
+          <p>作者特别提醒，某些看似单一的特性其实是组合词。“敏捷”本身过于宽泛，但团队能否快速且有信心地改变系统，可以进一步观察部署难度、测试支持、变更周期等。量化不是为了给一个宽泛口号贴分数，而是为了找到能说明目标正在改善或退化的具体证据。代理指标仍需解释：部署次数增加，不能单独证明每次变更都有业务价值。</p>
+          <p>原书按评估范围区分两类适应度函数。<strong>单项型（atomic）</strong>一次关注一个特性，例如组件之间是否存在循环依赖；这里的 atomic 与数据库事务原子性无关。<strong>整体型（holistic）</strong>评估相互影响的多个特性，例如加强安全措施后，系统在目标负载下是否仍满足响应要求。分别通过几个孤立测试，不一定等于组合起来仍然满足要求，因为检查、加密、资源争用等会改变实际工作路径。</p>
+          <p>适应度函数也不一定使用永远不变的常数。规则可以根据明确的上下文变化：在不同并发规模下使用不同的性能期望，只要对应关系预先定义且可复核，仍然是客观检查。原书称这类规则为动态适应度函数；“动态”在此指判定依据依赖上下文，不能与后文的动态耦合混为一谈。</p>
+          <p>图 1-1 把权衡、记录与检查连起来。先读上方从左到右的工作顺序，再读下方的两条反馈路径：实现偏离已有决定时可以修正实现；如果新证据推翻了原假设，则应重新分析决定。检查失败是一个需要解释的信号，并不自动意味着原决定永远正确。</p>
+          <figure class="concept-figure"><a href="../diagrams/exports/ch01-decision-feedback.svg" target="_blank" rel="noopener"><img src="../diagrams/exports/ch01-decision-feedback.svg" width="720" height="430" alt="从业务约束与候选方案出发，经权衡分析形成 ADR，再把可检验意图落实为适应度函数；反馈既可能引导修正实现，也可能在假设变化时触发重新分析。"></a><figcaption>图 1-1：原创决策反馈示意。实线表示从分析到执行的推进，虚线表示新证据触发的回看；ADR 记录理由，适应度函数检查所声明的性质，两者职责互补。点击<a href="../diagrams/exports/ch01-decision-feedback.svg" target="_blank" rel="noopener">查看大图</a>。</figcaption></figure>
+          <p>适应度函数与功能测试的区别在目标，而不在是否使用 JUnit。验证地址是否合法、专家技能是否匹配工单，主要是业务规则测试；验证组件依赖是否越界、目标负载下响应是否达标，主要是架构特性检查。原书提供“执行检查是否需要领域知识”作为辨认线索，也承认边界不是二元切割：测试工作负载需要真实业务情境，一个功能测试也可能顺带观察延迟。</p>
+          <p>这些机制只有实际执行，才提供保护。原书建议尽量自动化并持续运行；必须人工判断的事项，则放进可执行的工作流。它同时反对把规则堆成让团队无法前进的复杂障碍。目标是让重要但容易被紧急需求挤掉的原则得到反馈，而不是把每一种个人偏好都设成构建失败条件。</p>
+        </section>
+
+        <section id="fitness-scope">
+          <h2><span class="section-number">05</span>检查通过，究竟证明了什么</h2>
+          <p>原书图 1-1 展示了 A → B → C → A 的组件循环依赖。箭头表示依赖，循环意味着取出 A 时还会牵出 B 和 C，很难把其中一个当成真正独立的复用单元。循环通常不是某位开发者一次画出来的，而是在许多局部看来方便的引用中逐渐闭合；持续检查可以在新边刚出现时反馈，避免等到大范围变更完成后再拆。</p>
+          <p>示例 1-1 使用 JDepend 分析指定目录中的 Java 类，判断包依赖图是否有环。这里至少有两个范围条件：输入覆盖了哪些编译产物，以及 Java 包怎样对应团队所说的组件。<strong>在已分析的包依赖图中无环，不等于整个系统不存在耦合。</strong> 共享数据库、部署配置、经字符串查找的对象、远程调用等关系，不会自动被一个包依赖检查完整表达；缺失目录也会缩小它能够发现问题的范围。</p>
+          <p>示例 1-2 则使用 ArchUnit 表达分层约束。原书的三个受检层是 Controller、Service、Persistence：Controller 不应被其他层反向访问，Service 只接受 Controller 层访问，Persistence 只接受 Service 层访问。它约束的是允许的依赖方向，并不要求每个 Controller 一定调用 Service，也不要求每个 Service 必须访问数据库。把“允许访问”读成“强制发生调用”，会把结构规则误解成工作流。</p>
+          <p>另一个容易漏掉的地方来自原图与示例的差别：原书图 1-2 还画了 Presentation 层和 Database，但示例 1-2 只声明上述三个代码层。不能因为图上有五个元素，就说这段规则已经完整验证了图里的每条边。应用时必须明确包模式、导入类集合及对层外依赖的处理。现行 ArchUnit 文档示例还显式调用 <code>consideringAllDependencies()</code>；原书代码片段展示的是规则意图，不能不看版本就当成完整的新项目配置。</p>
+          <p>从工具的实际机制看，ArchUnit 读取 Java 字节码，建立类、方法、字段访问及依赖等模型，然后对导入的模型应用规则。它比搜索源文件里的 <code>import</code> 更丰富，但仍然是对已建模关系的检查。通过反射、配置或外部系统形成的真实运行路径，不能仅凭这一段分层规则得到端到端证明。规则能发现“控制器直接依赖持久层”这一类违约，不会证明 SQL 正确、服务已授权或数据库一定可用。</p>
+          <p>原书示例 1-3 用 NetArchTest 表达相近的 .NET 约束：Presentation 命名空间中的类不应直接依赖 Data 命名空间。片段最终得到一个 <code>IsSuccessful</code> 布尔值；在测试或流水线里仍须消费这个结果，使违规真正成为失败反馈。仅把结果存进变量、没有断言或退出状态，并不会自动阻断发布。</p>
+          <p>同样的范围意识也适用于安全与运行检查。原书提出在各项目流水线放入统一的漏洞版本检测规则，并在规则或依赖环境变化时重新触发。这个机制有助于让已知问题覆盖更多项目；它的效力仍取决于资产范围、依赖信息、规则更新与实际执行。只扫描了构建输入，不能据此断言所有长期运行实例都已经修补；检测危险版本也不是发现任意未知漏洞的能力。</p>
+          <p>因此，适应度函数的结果最好读成一个完整句子：“在这些输入、环境与规则下，没有发现这一类违规。”这并没有削弱自动化的价值，反而让团队知道可以依赖什么、还需要哪一种观察。用结构检查守住结构，用运行检查观察运行性质，用业务测试验证业务约束，才能避免把一个绿色信号误当成系统整体正确的证明。</p>
+        </section>
+
+        <section id="working-definitions">
+          <h2><span class="section-number">06</span>先讲清选择，再讨论实现：几个必要定义</h2>
+          <p>本章有意把“为什么选择”放在“用哪个工具实现”之前。同步与异步的区别，会影响等待、错误处理和工作流状态；这些取舍在选定某个消息产品之前就已经存在。作者采用简洁工作定义，是为了让读者先辨认力量之间的关系，而不是声称架构与详细设计之间有一条永远清楚的分界线。</p>
+          <p><strong>组件（component）</strong>是承担业务或基础设施职责的代码组织单元，常表现为 Java 包、C# 命名空间或文件目录。<strong>服务（service）</strong>是作为独立可执行体部署的一组内聚功能。一个单体里可以有很多组件，这些组件并不会因为各自有名字就变成独立服务；而服务是否能在实际环境中独立运行，还要连同数据库、框架、运行设施等依赖一起看。下一章将用架构量子进一步讨论这个范围。</p>
+          <p><strong>耦合（coupling）</strong>指一部分改变时，另一部分可能也必须改变才能维持正确功能。“可能”很重要：不是每一次修改都会传递，但边界上存在这种变化关系。<strong>契约（contract）</strong>则广义地指两个软件部分相接时的约定，既包括远程 API，也包括方法签名和运行依赖。把调用改成网络请求，不会自动消除契约带来的变化影响。</p>
+          <p><strong>同步通信（synchronous communication）</strong>要求调用者在继续相关流程之前等待响应；<strong>异步通信（asynchronous communication）</strong>允许调用者发出请求后继续，结果可以通过另一条路径通知。异步并不意味着工作已经完成，也不意味着没有确认或错误；它把结果与失败的处理移到了后续交互中。这个定义讨论工作流依赖，不宜简单等同于某段代码是否占住一条线程。</p>
+          <p><strong>编排（orchestration）</strong>有一个以协调工作流为主要职责的服务；<strong>协同（choreography）</strong>没有这样的集中协调者，由参与者分担协调责任。它们与同步／异步是不同维度：存在协调者，不代表所有步骤必须同步；没有协调者，也不表示各参与者就无需知道何时继续。服务的通信和协调选择将在后续章节展开。</p>
+          <p>这里必须纠正原书一个过度简化的定义。印刷页 15 把 <strong>atomicity</strong>（原书误拼作 Atomicty）描述为“工作流所有部分始终保持一致状态”，并把最终一致性放在另一端。这个表达容易将原子性、隔离性和业务一致性混在一起。更准确地说，<strong>事务原子性</strong>关注事务内约定的修改是否全体提交或全体撤销；<strong>隔离性（isolation）</strong>关注并发事务之间能看见什么、怎样相互影响；<strong>一致性约束</strong>则关乎合法业务状态及其不变量。</p>
+          <p>以一个笔记假设的转账为例，从 A 扣款、向 B 加款放在同一数据库事务中，执行到中间时，事务自己的工作状态可以暂时只完成扣款。原子性要求失败后不能只留下这一半结果；其他事务是否会读到未提交修改、两次查询是否看到相同快照，则要看隔离语义。即使每次修改都具备原子性，两个并发流程对同一业务条件的判断仍可能冲突，不能用“都是事务”替代并发分析。</p>
+          <p>PostgreSQL 官方文档分别解释了事务的全成或全败，以及不同隔离级别允许的并发现象，为这个区分提供了具体依据。这里并不是将 PostgreSQL 的所有实现细节推广到每种数据库，而是说明：讨论跨服务工作流时，必须分别问“失败如何收束”“处理中谁能看到什么”“哪些约束必须持续成立”。最终一致性描述的是更新传播与收敛的性质，也不能直接当作原子性的逻辑反义词。</p>
+        </section>
+
+        <section id="sysops-workflows">
+          <h2><span class="section-number">07</span>Sysops Squad：先沿着业务走一遍</h2>
+          <p>Sysops Squad 是原书虚构的贯穿案例，并非一家真实公司的事故调查。Penultimate Electronics 是拥有多家零售门店的电子产品企业，客户购买电脑、电视、音响等设备时，可以一并购买支持计划。设备出现问题后，技术专家前往客户住宅或办公室维修。全书所谓 Sysops Squad Saga 是这段持续展开的“案例故事”，不要与第 12 章作为事务协调技术的 Saga 混淆。</p>
+          <p>工单应用有四类主要使用者。管理员维护内部用户、专家的技能、地点与可用性，也管理计费处理及静态参考数据。客户注册服务、维护资料与支持合同、更新账单信息，并提交工单和填写调查问卷。专家接收任务、维修设备、查阅知识库并记录经验。经理跟踪工单运营，并查看财务、专家表现和工单等报告。四类用户的工作相连，但对系统的及时性和变化需求并不完全相同。</p>
+          <p>并非所有工作都从工单开始。专家信息需要预先维护，否则分派没有可靠输入；客户可以为不同产品持有多个支持计划；系统按月依据客户资料中的支付信息计费，客户可查看历史账单；经理按需要请求运营与分析报告。这些非工单流程维持了工单业务所依赖的基础，也说明未来分解不能只留下最醒目的“接单到维修”路径。</p>
+          <p>原书的完整工单流程始于已购买支持计划的客户提交问题。系统依据专家的技能、当前位置、服务区域与可用性寻找合适人选。分派后，工单发送到专家专用移动应用，专家同时收到新任务短信；客户按资料偏好收到短信或邮件，得知专家正在前来。</p>
+          <p>随后，专家通过移动应用查看工单信息和地点，必要时搜索知识库，了解类似问题过去怎样解决。维修结束后，专家把工单标为完成，并可补充知识库记录。系统收到完成通知后，向客户发出带有问卷链接的邮件；客户填写，系统记录结果。对本案例来说，业务闭环直到收集反馈才结束，但这不表示所有步骤都属于同一个数据库事务或一次网络请求。</p>
+          <p>图 1-2 按业务先后关系重画这条路径。上方虚线只表示专家资料为分派提供输入；下方知识库支线表示查阅与补充维修经验。图中的实线是业务推进顺序，不是已经确定的同步调用链，也没有替本章选择消息队列或协调模式。</p>
+          <figure class="concept-figure"><a href="../diagrams/exports/ch01-ticket-workflow.svg" target="_blank" rel="noopener"><img src="../diagrams/exports/ch01-ticket-workflow.svg" width="720" height="570" alt="客户提单后系统选择专家，再将工单送达移动端并通知专家与客户，专家维修完成后系统发送问卷并记录客户反馈；专家资料支持分派，知识库支持维修与经验补充。"></a><figcaption>图 1-2：依据原书 Ticketing Workflow 绘制的原创业务流程图。方框是业务步骤，实线表示先后关系，虚线表示输入或辅助活动；不表达事务、服务与部署边界。点击<a href="../diagrams/exports/ch01-ticket-workflow.svg" target="_blank" rel="noopener">查看大图</a>。</figcaption></figure>
+          <p>这条流程已经暴露出后续分析需要面对的差异：分派依赖多类资料，工单投递依赖移动端交互，通知依赖客户偏好，知识库可被查询和补充，反馈又进入报告。若只把它们统称为“工单功能”，重要关系就会被藏起来；若立刻把每个动词都拆成服务，又会先于分析决定边界。本章做的是建立共同业务理解。</p>
+        </section>
+
+        <section id="sysops-components">
+          <h2><span class="section-number">08</span>现有组件：代码已经分组，部署仍是一个整体</h2>
+          <p>原书图 1-3 的起点是一个大型单体应用，上方有统一用户界面，内部容纳多组组件。图中 Ticket 之下嵌有分派、通知、投递，Survey 之下嵌有模板和通知，Reporting 是覆盖多个报告需求的大组件。这是一张组件布局图，不能从方框相邻就推导调用方向，也不能把方框面积当成准确的代码量测量结果。</p>
+          <p>下面保留原书表 1-1 的 18 个组件及命名空间，用中文重述职责。<code>ss.</code> 是 Sysops Squad 的应用命名空间前缀。保留这些名称很重要，因为后续章节会围绕已有代码组织讨论怎样识别、整理与分解，而不是从空白画一套理想服务。</p>
+          <div class="table-scroll" role="region" aria-label="现有 18 个组件" tabindex="0"><table><thead><tr><th scope="col">组件</th><th scope="col">命名空间</th><th scope="col">当前职责</th></tr></thead><tbody>
+            <tr><td>登录 Login</td><td><code>ss.login</code></td><td>内部用户与客户的登录及安全逻辑</td></tr>
+            <tr><td>计费支付 Billing payment</td><td><code>ss.billing.payment</code></td><td>每月计费与客户信用卡信息</td></tr>
+            <tr><td>账单历史 Billing history</td><td><code>ss.billing.history</code></td><td>支付历史与过往账单</td></tr>
+            <tr><td>客户通知 Customer notification</td><td><code>ss.customer.notification</code></td><td>账单及一般客户信息通知</td></tr>
+            <tr><td>客户资料 Customer profile</td><td><code>ss.customer.profile</code></td><td>客户注册与资料维护</td></tr>
+            <tr><td>专家资料 Expert profile</td><td><code>ss.expert.profile</code></td><td>专家姓名、位置、技能等资料维护</td></tr>
+            <tr><td>知识库维护 KB maint</td><td><code>ss.kb.maintenance</code></td><td>知识条目的维护与查看</td></tr>
+            <tr><td>知识库搜索 KB search</td><td><code>ss.kb.search</code></td><td>知识库查询引擎</td></tr>
+            <tr><td>报表 Reporting</td><td><code>ss.reporting</code></td><td>专家、工单与财务等所有报告</td></tr>
+            <tr><td>工单 Ticket</td><td><code>ss.ticket</code></td><td>工单创建、维护、完成及公共代码</td></tr>
+            <tr><td>工单分派 Ticket assign</td><td><code>ss.ticket.assign</code></td><td>查找专家并分派工单</td></tr>
+            <tr><td>工单通知 Ticket notify</td><td><code>ss.ticket.notify</code></td><td>通知客户专家正在前来</td></tr>
+            <tr><td>工单投递 Ticket route</td><td><code>ss.ticket.route</code></td><td>将工单发送到专家移动应用</td></tr>
+            <tr><td>支持合同 Support contract</td><td><code>ss.supportcontract</code></td><td>客户支持合同及计划内产品</td></tr>
+            <tr><td>问卷 Survey</td><td><code>ss.survey</code></td><td>维护问卷并收集、记录调查结果</td></tr>
+            <tr><td>问卷通知 Survey notify</td><td><code>ss.survey.notify</code></td><td>向客户发送问卷邮件</td></tr>
+            <tr><td>问卷模板 Survey templates</td><td><code>ss.survey.templates</code></td><td>按服务类型维护不同问卷</td></tr>
+            <tr><td>用户维护 User maintenance</td><td><code>ss.users</code></td><td>内部用户及角色维护</td></tr>
+          </tbody></table></div>
+          <p>这里有几个对阅读后文很有用的区别。Customer notification、Ticket notify 与 Survey notify 都包含“通知”，但当前负责不同场景；名称相近还不足以判定是否应合并。Ticket route 的 route 指向专家设备投递工单，不是行驶路线优化。KB search 与 KB maintenance 同属知识库，却代表读取搜索与内容维护的不同工作。</p>
+          <p>此外，<code>ss.ticket</code> 不仅是其下几个包的名字前缀，还包含自己的工单行为和公共代码。类似的父子包组织，后续会影响如何识别清楚的组件边界。此刻可以确认的是“存在这些责任与组织方式”，还不能根据表格判断依赖有多少、哪部分最难改，或每个组件应该成为一个服务。</p>
+          <p>业务流程与组件清单也不是一一对应关系。一条工单路径会经过多个组件，一个 Reporting 组件又需要理解多个业务区域。把两种视图并排阅读，才能看见“业务怎样完成”与“代码放在哪里”的差异；只看其中一种，都容易漏掉拆分时必须保持的连接。</p>
+        </section>
+
+        <section id="sysops-data">
+          <h2><span class="section-number">09</span>共享数据：拆开代码之后仍要面对的连接</h2>
+          <p>现有应用把所有表与相关数据库代码放在同一个数据库 schema 中。原书将其描述为基本采用第三范式的关系模型，只有少量存储过程与触发器，却有相当数量的视图，主要供 Reporting 使用。这意味着应用职责看上去分组清楚时，数据访问与报告仍可能把这些组连接起来。</p>
+          <p>原书图 1-4 为简洁省去了列与视图，表 1-2 列出 24 张表。以下按阅读用途重新归组，保留原始表名；这些分组不是已经决定的数据域边界，也不声明每张表将来只能被某个服务使用。</p>
+          <div class="table-scroll" role="region" aria-label="现有 24 张数据表的用途分组" tabindex="0"><table><thead><tr><th scope="col">当前数据主题</th><th scope="col">表及含义</th></tr></thead><tbody>
+            <tr><td>客户与通知偏好</td><td><code>Customer</code>：需要支持的客户实体；<code>Customer_Notification</code>：客户通知偏好</td></tr>
+            <tr><td>合同与账务</td><td><code>Contract</code>：支持合同；<code>Billing</code>：合同账单；<code>Payment_Method</code>：支付方式；<code>Payment</code>：账单对应的支付记录</td></tr>
+            <tr><td>用户与专家</td><td><code>SysOps_User</code>：系统用户；<code>Profile</code>：用户资料；<code>Expert_Profile</code>：专家资料；<code>Expertise</code>：专业技能；<code>Location</code>：专家服务地点</td></tr>
+            <tr><td>工单</td><td><code>Ticket</code>：客户支持工单；<code>Ticket_Type</code>：工单类型；<code>Ticket_History</code>：工单历史</td></tr>
+            <tr><td>知识库</td><td><code>Article</code>：知识文章；<code>Tag</code>、<code>Keyword</code>：标签与关键词；<code>Article_Tag</code>、<code>Article_Keyword</code>：文章与标签、关键词的关联</td></tr>
+            <tr><td>问卷</td><td><code>Survey</code>：维修后的满意度问卷；<code>Question</code>：问题；<code>Survey_Question</code>：问卷与问题的关联；<code>Survey_Administered</code>：向客户安排问卷问题；<code>Survey_Response</code>：客户回答</td></tr>
+          </tbody></table></div>
+          <p>这里的 schema 可以理解为数据库中组织这些表和相关对象的共同命名空间，不是一个已经隔离出来的业务服务。关系模型通过实体与关联表达业务事实：客户有合同与账单，工单联系客户和专家，问卷记录服务后的反馈，知识库保存可复用的维修经验。原图没有给出完整字段、外键定义与基数，因此不能只凭连线编造 SQL 表结构或唯一性约束。</p>
+          <p>第三范式的基本目的，是围绕合理的数据依赖减少冗余与更新异常；它并不是“拆成服务的最佳边界”。一个规范化模型可以很好地组织共享数据，同时依赖跨表查询来完成业务。后来如果把表移到不同数据库，原来的外键、关联查询和本地事务在哪里继续发挥作用，就必须重新回答。数据库设计的正确性与服务拆分的合适程度，是相关但不同的问题。</p>
+          <p>图 1-3 只抽取本章最重要的结构事实：上方许多职责仍位于同一个单体，下方各类业务数据仍在同一个 schema。粗箭头表示应用对共享数据的总体依赖，不表示每个组件都读写每一张表；报表旁的注记单独提醒我们，跨领域视图也是迁移时必须调查的连接。</p>
+          <figure class="concept-figure"><a href="../diagrams/exports/ch01-shared-boundary.svg" target="_blank" rel="noopener"><img src="../diagrams/exports/ch01-shared-boundary.svg" width="720" height="520" alt="一个单体部署边界中包含客户合同、工单分派、知识库、问卷、账务与报表等职责，它们的业务数据仍集中在同一个数据库 schema；报表还使用较多数据库视图。"></a><figcaption>图 1-3：根据原书图 1-3、图 1-4 与相邻说明绘制的原创边界示意。内部分组用于阅读，不是目标服务划分；箭头表示总体数据依赖，未展示逐组件访问矩阵与 ER 关系。点击<a href="../diagrams/exports/ch01-shared-boundary.svg" target="_blank" rel="noopener">查看大图</a>。</figcaption></figure>
+          <p>报表尤其值得单独留意。假设未来把工单与账务拆开，但原有报告仍直接连接两边数据，应用层看似获得了独立性，数据层却还可能要求共同变更。反过来，贸然切断访问也可能让经理失去经营视图。这是笔记据现有结构提出的分析问题，不是本章已经发生的迁移事故。作者在这里要求架构团队与数据库团队共同工作，原因正是数据库的表、视图和事务不能等到代码拆完后再临时补救。</p>
+        </section>
+
+        <section id="case-baseline">
+          <h2><span class="section-number">10</span>案例的起点是失效的业务，不是选定的微服务</h2>
+          <p>在原书设定里，Sysops Squad 已经出现几类严重问题：工单丢失导致专家没有上门，技能不匹配的专家接到不合适的任务，客户有时无法提交新工单。与此同时，修改既慢又容易破坏其他功能；应用会卡住或崩溃，定位问题并重启时，全部功能可能中断五分钟到两小时。这些时长是虚构案例给定的情况，不是真实企业的统计数据。</p>
+          <p>这些现象不能统一归因为“单体不好”。专家选错，可能涉及数据质量、分派规则或状态处理；工单丢失，需要追查接收、保存与投递路径；全站不可用，则提醒我们关注故障影响范围和共享资源。分布式架构也可以丢消息、错误分派或整体失效。若跳过诊断就把所有问题交给“改成微服务”，会把技术名称当成因果解释。</p>
+          <p>作者设置的业务压力是：如果系统继续恶化，公司可能放弃原本利润可观的支持合同业务，相关岗位也会受影响。因此，改造的目的首先是让支持服务可靠地运转，让修改不再不断伤害业务。更细的部署、代码模块化、数据拆分等，是实现这些目标的候选手段，必须解释各自能改善哪一类问题，以及新引入哪些成本。</p>
+          <p><strong>截至本章，案例尚未给出经比较批准的目标架构、服务数量、数据库划分或正式 ADR。</strong> 本章交付给后续故事的，是大型单体、18 个组件、单 schema 与 24 张表的当前基线，以及客户体验、变更风险和整体可用性的压力。识别耦合、建立模块化理由、选择分解方法，将由接下来的章节逐步展开。</p>
+          <p>从本章的方法看，合理的推进顺序已经很明确：让业务问题具体可见，辨认它与结构及数据之间的关系，比较可行选择，用 ADR 保存选择的理由与代价，再用适应度函数持续检查那些能够明确表达的意图。任何一环都不能替代其他环节：文档不能证明实现合规，测试不能替团队决定业务优先级，而一个架构名称也不能替代对后果的说明。</p>
+          <p>下一章<a href="ch02.html">辨析软件架构中的耦合</a>会进一步拆开“系统连在一起”的含义。第一部分引言将分析分成静态耦合与动态耦合：前者关心运行所需的连接与依赖，后者关心实际协作。先把这些力量分辨清楚，后续讨论服务粒度、数据边界和事务，才有共同的语言。</p>
+        </section>
+
+        <details id="sources" class="source-note">
+          <summary>来源、原书对应与核查说明</summary>
+          <p>依据 Neal Ford、Mark Richards、Pramod Sadalage、Zhamak Dehghani，<cite lang="en">Software Architecture: The Hard Parts — Modern Trade-Off Analysis for Distributed Architectures</cite>，O’Reilly 英文第一版 October 2021，First Release 2021-09-23，版权年 2022，ISBN <code>978-1-492-08689-5</code>。中文章名与术语为本站译法。核查日期：2026-11-06。</p>
+          <p>实际通读前言（印刷 xi—xv／PDF 页序 13—17）、第 1 章正文（印刷 1—21／PDF 19—39）、分章文本附带的第一部分引言（印刷 23—24／PDF 41—42），并阅读第 2 章作为耦合与架构量子的术语上下文。回看 PDF 页序 27、28、36、37、38、39 的图像，核对原书全部四张本章图、两张表及适应度函数示例布局。网页不提供本地原书文件链接。</p>
+          <ul>
+            <li>01：章首、Why “The Hard Parts”?、Giving Timeless Advice About Software Architecture，印刷 1—3。保留作者强调情境与权衡的论点；关于 SOA 与基础设施成本的历史概括按 2021 年作者叙述处理，不作为当前行业占比或零成本事实。</li>
+            <li>02：前言与 The Importance of Data in Architecture，印刷 4—5。运营／分析数据按用途区分；注册与合同跨库情境为笔记假设。关于分析可能进入在线决策的说明是适用边界解释，不归为案例事实。</li>
+            <li>03：Architectural Decision Records，印刷 5。另对照 Michael Nygard 的原始文章 <a href="https://www.cognitect.com/blog/2011/11/15/documenting-architecture-decisions">Documenting Architecture Decisions（2011-11-15）</a>，确认 Context、Decision、Status、Consequences 与保留 superseded 记录的建议。问卷邮件 ADR 为本笔记自拟示例。</li>
+            <li>04—05：Architecture Fitness Functions、Using Fitness Functions，印刷 6—13。原书图 1-1 为循环依赖，图 1-2 为分层架构，示例 1-1／1-2／1-3 分别使用 JDepend、ArchUnit 与 NetArchTest。另查 <a href="https://github.com/clarkware/jdepend">JDepend 项目文档入口</a>及 <a href="https://www.archunit.org/userguide/html/000_Index.html">ArchUnit 官方指南</a>，重点为 Introduction、Importing Classes、Layer Checks、The Core API 和 Architectures。原表述“检查循环／治理分层” → 输入范围、代码模型和图示层次并不自动覆盖整个运行系统 → 本文限定为被分析模型中的规则验证，并明确原图 Presentation／Database 未被原示例完整声明。没有提供声称可直接运行的新代码；原示例 API 名称仅用于解释。未展开原书 Equifax 事故框，安全部分保留一般性的已知漏洞规则更新场景。</li>
+            <li>06：Architecture Versus Design: Keeping Definitions Simple，印刷 13—15。原书 atomicity 表述为工作流各部分“始终保持一致” → 混合了失败结果、可见性与业务约束 → 本文分别解释原子性、隔离性和一致性，并指出最终一致性不是原子性的逻辑反义词。依据 <a href="https://www.postgresql.org/docs/18/tutorial-transactions.html">PostgreSQL 18：Transactions</a>与 <a href="https://www.postgresql.org/docs/18/transaction-iso.html">Transaction Isolation</a>。转账过程为笔记解释性假设，不是 Sysops Squad 原有业务。</li>
+            <li>07：Introducing the Sysops Squad Saga、Nonticketing Workflow、Ticketing Workflow，印刷 15—17。覆盖四类用户、专家维护、注册／支持计划、月度计费、报告与八步工单闭环。未推定通知实现协议、事务边界与服务划分。</li>
+            <li>08：Sysops Squad Architectural Components，印刷 18—19，原书图 1-3、表 1-1。保留 18 个组件与命名空间；原图的框大小不用于推算代码规模，邻接不用于推导调用。</li>
+            <li>09：Sysops Squad Data Model，印刷 19—21，原书图 1-4、表 1-2。24 张表按阅读用途重组；原图省略列与视图，不据此补造字段、外键定义和关系基数。表名 <code>SysOps_User</code> 依表 1-2 的拼写保留。</li>
+            <li>10：A Bad Scenario，印刷 17—18，以及第一部分引言，印刷 23—24。问题与停机时长属于原书虚构设定；本章尚无经批准的拆分方案，不把后续章节的选择提前归入此章。</li>
+          </ul>
+          <p>本文三张图均为原创解释图，并非原图复刻：图 1-1 为本笔记组合的决策反馈关系；图 1-2 根据原书工单步骤整理；图 1-3 根据现有组件、数据图与文字抽取共同边界。可编辑 SVG 保存在本书 <code>diagrams/sources/ch01-*</code>，网页导出副本位于 <code>diagrams/exports/ch01-*</code>，两者内容相同。</p>
+        </details>
+
+        <nav class="chapter-pagination" aria-label="章节翻页"><a class="page-link prev" href="../index.html" rel="prev"><span class="page-label">← 上一页</span><span class="page-title">书籍概览</span></a><a class="page-link next" href="ch02.html" rel="next"><span class="page-label">下一章 · 第 2 章 →</span><span class="page-title">辨析软件架构中的耦合</span></a><a class="pagination-home" href="../index.html">书籍概览与目录</a></nav>
+        <p class="source-note"><a href="../guide.html">全书导航：术语、案例与来源</a></p>
+      </article>
+    </div>
+  </main>
+  <footer class="site-footer"><div class="container footer-inner"><span>个人书架 / 中文读书笔记</span><a href="#main">回到顶部 ↑</a></div></footer>
+</body>
+</html>

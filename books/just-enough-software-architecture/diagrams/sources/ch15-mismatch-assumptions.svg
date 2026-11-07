@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="535" viewBox="0 0 720 535" role="img" aria-labelledby="title desc">
+  <title id="title">把四类隐含架构假设放到组件旁边</title>
+  <desc id="desc">一个假设性待整合组件需要持有主事件循环、接收 CSV 输入、依赖某项外部服务，并要求首次使用前输出已初始化。四项分别对应组件、连接器、系统与构建过程假设。虚线关联说明，不表示通信。</desc>
+  <!-- Original editable SVG; the exported web copy is identical. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 16px; fill: var(--muted); }
+    .note { fill: var(--box); stroke: var(--line); stroke-width: 1.3; }
+    .component { fill: var(--focus); stroke: var(--accent); stroke-width: 1.5; }
+    .label { font-size: 20px; font-weight: 600; text-anchor: middle; }
+    .detail { font-size: 17px; text-anchor: middle; fill: var(--muted); }
+    .reference { fill: none; stroke: var(--line); stroke-width: 1.5; stroke-dasharray: 6 5; }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <rect width="720" height="535" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="30" y="35">接口接得上，架构假设仍可能接不上</text>
+  <text class="sub" x="30" y="65">以一个假设性的待整合组件为中心，显露四类前提</text>
+
+  <rect class="note" x="30" y="101" width="310" height="93" rx="7"/>
+  <text class="label" x="185" y="134">组件前提：控制权</text>
+  <text class="detail" x="185" y="167">必须由我持有主事件循环</text>
+  <rect class="note" x="380" y="101" width="310" height="93" rx="7"/>
+  <text class="label" x="535" y="134">连接器前提：数据</text>
+  <text class="detail" x="535" y="167">输入记录必须是 CSV</text>
+
+  <path class="reference" d="M185 194V215H265V237M535 194V215H455V237M265 307V329H185V352M455 307V329H535V352"/>
+  <rect class="component" x="205" y="237" width="310" height="70" rx="7"/>
+  <text class="label" x="360" y="266">待整合组件</text>
+  <text class="detail" x="360" y="292">签名兼容 ≠ 假设兼容</text>
+
+  <rect class="note" x="30" y="352" width="310" height="93" rx="7"/>
+  <text class="label" x="185" y="385">系统前提：组成</text>
+  <text class="detail" x="185" y="418">某项外部服务必须存在</text>
+  <rect class="note" x="380" y="352" width="310" height="93" rx="7"/>
+  <text class="label" x="535" y="385">构建前提：初始化</text>
+  <text class="detail" x="535" y="418">首次使用前，输出已初始化</text>
+
+  <text class="sub" x="30" y="481">若宿主也要求独占主事件循环，第一项就发生冲突。</text>
+  <text class="sub" x="30" y="511">虚线仅关联说明与组件，不表示运行通信或调用方向。</text>
+</svg>

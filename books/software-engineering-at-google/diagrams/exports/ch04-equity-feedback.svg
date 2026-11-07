@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="386" viewBox="0 0 720 386" role="img" aria-labelledby="title desc">
+  <title id="title">让用户的实际影响回到产品假设</title>
+  <desc id="desc">从左到右，产品假设、数据、评测沿用对用户的认识，遗漏可能一直延续到上线后。下方实线通向用户承担的后果，虚线回到前面的产品假设，表示把受影响用户的经验带回需求、数据和验证。此图为笔记归纳，不是 Google 内部流程。</desc>
+  <!-- Original, editable hand-written SVG. The export is an identical web copy. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 15px; fill: var(--muted); }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.2; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .label { font-size: 18px; font-weight: 600; text-anchor: middle; }
+    .small { font-size: 16px; fill: var(--muted); text-anchor: middle; }
+    .arrow { fill: none; stroke: var(--line); stroke-width: 1.8; marker-end: url(#arrow); }
+    .feedback { fill: none; stroke: var(--accent); stroke-width: 1.8; stroke-dasharray: 6 5; marker-end: url(#feedback-arrow); }
+    .feedback-label { font-size: 16px; fill: var(--accent); }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker>
+    <marker id="feedback-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--accent)"/></marker>
+  </defs>
+  <rect width="720" height="386" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="32" y="39">测试通过，为什么仍可能伤害用户？</text>
+  <text class="sub" x="32" y="67">同一处用户认识的遗漏，可能穿过多个环节</text>
+  <rect class="node" x="32" y="100" width="196" height="88" rx="7"/>
+  <text class="label" x="130" y="134">产品假设</text>
+  <text class="small" x="130" y="163">把谁当作用户？</text>
+  <path class="arrow" d="M235 144H252"/>
+  <rect class="node" x="260" y="100" width="196" height="88" rx="7"/>
+  <text class="label" x="358" y="134">数据</text>
+  <text class="small" x="358" y="163">覆盖了谁的经验？</text>
+  <path class="arrow" d="M463 144H480"/>
+  <rect class="node" x="488" y="100" width="200" height="88" rx="7"/>
+  <text class="label" x="588" y="134">评测</text>
+  <text class="small" x="588" y="163">验证了哪些失败？</text>
+  <path class="arrow" d="M588 196V235"/>
+  <rect class="focus" x="260" y="244" width="428" height="76" rx="7"/>
+  <text class="label" x="474" y="275">上线后：实际用户承担后果</text>
+  <text class="small" x="474" y="303">覆盖不足的伤害，此时才被看见</text>
+  <path class="feedback" d="M252 282H130V196"/>
+  <text class="feedback-label" x="32" y="356">把受影响用户的经验，带回需求、数据和验证</text>
+  <text class="sub" x="32" y="378">实线：工作与影响向后传递　　虚线：实际影响反馈到前面的设计</text>
+</svg>

@@ -1,0 +1,193 @@
+[
+  {
+    "type": "text",
+    "id": "title",
+    "x": 24,
+    "y": 20,
+    "text": "超时：没有响应，不等于没有执行",
+    "fontSize": 25,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "subtitle",
+    "x": 24,
+    "y": 66,
+    "text": "从左到右读；× 表示未送达，虚线表示仍在等待。",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "rectangle",
+    "id": "lost",
+    "x": 24,
+    "y": 126,
+    "width": 338,
+    "height": 94,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.5,
+    "strokeWidth": 1.5,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "请求在途中丢失 ×\n远端尚未执行",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "paused",
+    "x": 24,
+    "y": 272,
+    "width": 338,
+    "height": 94,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.5,
+    "strokeWidth": 1.5,
+    "strokeStyle": "dashed",
+    "label": {
+      "text": "请求已到，服务端暂停\n稍后可能继续执行",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "done",
+    "x": 24,
+    "y": 418,
+    "width": 338,
+    "height": 94,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.5,
+    "strokeWidth": 1.5,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "远端已执行\n成功响应丢失 ×",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "observation",
+    "x": 548,
+    "y": 272,
+    "width": 276,
+    "height": 100,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.5,
+    "strokeWidth": 1.5,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "客户端超时\n仍然不知道业务结果",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "a",
+    "x": 368,
+    "y": 173,
+    "width": 174,
+    "height": 116,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        174,
+        116
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.4,
+    "strokeStyle": "solid",
+    "start": {
+      "id": "lost"
+    },
+    "end": {
+      "id": "observation"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "b",
+    "x": 368,
+    "y": 319,
+    "width": 174,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        174,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.4,
+    "strokeStyle": "dashed",
+    "start": {
+      "id": "paused"
+    },
+    "end": {
+      "id": "observation"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "c",
+    "x": 368,
+    "y": 465,
+    "width": 174,
+    "height": 111,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        174,
+        -111
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.4,
+    "strokeStyle": "solid",
+    "start": {
+      "id": "done"
+    },
+    "end": {
+      "id": "observation"
+    }
+  },
+  {
+    "type": "text",
+    "id": "note",
+    "x": 24,
+    "y": 564,
+    "text": "超时结束的是本次等待；原请求仍可能排队、执行或已经提交。",
+    "fontSize": 19,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  }
+]

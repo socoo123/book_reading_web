@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="430" viewBox="0 0 720 430" role="img" aria-labelledby="title desc">
+  <title id="title">版本声明与实际兼容性的两种偏差</title>
+  <desc id="desc">上行：基础库只不兼容地修改 Bar，调用方仅使用 Foo。主版本升到 2.x 后旧范围拒绝，但当前用法仍可工作。下行：补丁修改日志格式，版本范围允许升级，但依赖日志细节的调用方失败。箭头表示从变更到声明再到实际影响的判断过程，不是依赖关系。</desc>
+  <!-- Original editable hand-written SVG; web export is an identical copy. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 15px; fill: var(--muted); }
+    .lane { font-size: 17px; fill: var(--accent); font-weight: 600; }
+    .label { font-size: 18px; font-weight: 600; text-anchor: middle; }
+    .body { font-size: 15px; text-anchor: middle; }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.3; }
+    .result { fill: var(--focus); stroke: var(--accent); stroke-width: 1.3; }
+    .flow { fill: none; stroke: var(--line); stroke-width: 1.8; marker-end: url(#arrow); }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker></defs>
+  <rect width="720" height="430" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="28" y="40">版本声明，保留不了所有使用细节</text>
+  <text class="sub" x="28" y="69">每行从左向右：发生的变更 → 版本判断 → 当前用法的实际影响</text>
+  <text class="lane" x="28" y="117">1　约束过度：拒绝了可工作的组合</text>
+  <rect class="node" x="28" y="136" width="180" height="82" rx="7"/>
+  <text class="label" x="118" y="168">只改 Bar</text>
+  <text class="body" x="118" y="196">调用方只用 Foo</text>
+  <path class="flow" d="M208 177H260"/>
+  <rect class="node" x="270" y="136" width="180" height="82" rx="7"/>
+  <text class="label" x="360" y="168">主版本升至 2.x</text>
+  <text class="body" x="360" y="196">旧范围仅接受 1.x</text>
+  <path class="flow" d="M450 177H502"/>
+  <rect class="result" x="512" y="136" width="180" height="82" rx="7"/>
+  <text class="label" x="602" y="168">实际仍可工作</text>
+  <text class="body" x="602" y="196">声明却拒绝这一组合</text>
+  <text class="lane" x="28" y="265">2　保护不足：允许了会失败的组合</text>
+  <rect class="node" x="28" y="284" width="180" height="82" rx="7"/>
+  <text class="label" x="118" y="316">补丁改日志格式</text>
+  <text class="body" x="118" y="344">公共 API 约定未变</text>
+  <path class="flow" d="M208 325H260"/>
+  <rect class="node" x="270" y="284" width="180" height="82" rx="7"/>
+  <text class="label" x="360" y="316">范围允许升级</text>
+  <text class="body" x="360" y="344">声明约束得到满足</text>
+  <path class="flow" d="M450 325H502"/>
+  <rect class="result" x="512" y="284" width="180" height="82" rx="7"/>
+  <text class="label" x="602" y="316">调用方实际失败</text>
+  <text class="body" x="602" y="344">它依赖了日志细节</text>
+  <text class="sub" x="28" y="407">兼容性需要结合具体用法判断；解析成功不等于行为已经验证。</text>
+</svg>

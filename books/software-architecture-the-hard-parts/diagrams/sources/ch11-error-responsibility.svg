@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="550" viewBox="0 0 720 550" role="img" aria-labelledby="title desc">
+  <title id="title">缺货之后，恢复责任放在哪里</title>
+  <desc id="desc">上半部：履约把缺货结果交给编排器，再由编排器协调订单更新、支付退款、邮件通知。下半部：履约发布缺货事件，订单、支付、邮件分别订阅。业务后果相同，协调知识的位置不同。</desc>
+  <style>
+    :root{--surface:#fcfbf8;--text:#292824;--muted:#66645d;--line:#969187;--soft:#f0ece4;--accent:#386d74}
+    @media(prefers-color-scheme:dark){:root:not([data-theme='light']){--surface:#252524;--text:#e6e3dc;--muted:#b6b1a7;--line:#8c8982;--soft:#353534;--accent:#94c8cf}}
+    :root[data-theme='dark']{--surface:#252524;--text:#e6e3dc;--muted:#b6b1a7;--line:#8c8982;--soft:#353534;--accent:#94c8cf}
+    .bg{fill:var(--surface)}text{fill:var(--text);font-family:system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;font-size:17px}.heading{font-size:21px;font-weight:600}.small{font-size:15px;fill:var(--muted)}.box{fill:var(--soft);stroke:var(--line);stroke-width:1.5}.core{fill:var(--surface);stroke:var(--accent);stroke-width:2}.edge{fill:none;stroke:var(--accent);stroke-width:2;marker-end:url(#arrow)}.event{stroke-dasharray:6 5}.arrow{fill:var(--accent)}.rule{stroke:var(--line);stroke-dasharray:3 5}
+  </style>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path class="arrow" d="M0 0 8 4 0 8Z"/></marker></defs>
+  <rect class="bg" width="720" height="550"/>
+  <text class="heading" x="28" y="36">缺货之后，三项业务后果仍要有人处理</text>
+  <text class="small" x="28" y="65">编排：由协调者掌握后续动作；箭头不限定通信方式</text>
+  <rect class="box" x="28" y="89" width="148" height="55" rx="9"/><text x="102" y="123" text-anchor="middle">履约：缺货</text>
+  <path class="edge" d="M176 117H270"/><text class="small" x="225" y="102" text-anchor="middle">结果</text>
+  <rect class="core" x="280" y="89" width="160" height="55" rx="9"/><text x="360" y="123" text-anchor="middle">编排器</text>
+  <path class="edge" d="M360 144V170H135V191"/><path class="edge" d="M360 144V191"/><path class="edge" d="M360 144V170H585V191"/>
+  <rect class="box" x="45" y="201" width="180" height="55" rx="9"/><text x="135" y="235" text-anchor="middle">订单：调整状态</text>
+  <rect class="box" x="270" y="201" width="180" height="55" rx="9"/><text x="360" y="235" text-anchor="middle">支付：退款</text>
+  <rect class="box" x="495" y="201" width="180" height="55" rx="9"/><text x="585" y="235" text-anchor="middle">邮件：通知客户</text>
+  <path class="rule" d="M28 286H692"/>
+  <text class="small" x="28" y="316">协同：参与者各自解释事件；虚线是订阅关系</text>
+  <rect class="box" x="28" y="340" width="148" height="55" rx="9"/><text x="102" y="374" text-anchor="middle">履约：缺货</text>
+  <path class="edge event" d="M176 367H270"/><text class="small" x="225" y="353" text-anchor="middle">发布</text>
+  <rect class="core" x="280" y="340" width="160" height="55" rx="9"/><text x="360" y="374" text-anchor="middle">缺货事件</text>
+  <path class="edge event" d="M360 395V421H135V441"/><path class="edge event" d="M360 395V441"/><path class="edge event" d="M360 395V421H585V441"/>
+  <rect class="box" x="45" y="451" width="180" height="55" rx="9"/><text x="135" y="485" text-anchor="middle">订单：调整状态</text>
+  <rect class="box" x="270" y="451" width="180" height="55" rx="9"/><text x="360" y="485" text-anchor="middle">支付：退款</text>
+  <rect class="box" x="495" y="451" width="180" height="55" rx="9"/><text x="585" y="485" text-anchor="middle">邮件：通知客户</text>
+  <text class="small" x="360" y="535" text-anchor="middle">退款沿用原书示例策略；事件框是消息，不是另一个服务</text>
+  <script><![CDATA[try { const t = localStorage.getItem('reading-notes-theme'); if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t); } catch {}]]></script>
+</svg>

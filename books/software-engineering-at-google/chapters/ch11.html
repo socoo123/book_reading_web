@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>第 11 章｜测试概览 · Software Engineering at Google · 架构提升读书笔记</title>
+  <meta name="description" content="《Software Engineering at Google》第十一章读书笔记：从 GWS 的转变理解自动化测试、测试大小与范围、套件组合、覆盖率、稳定反馈及测试文化。">
+  <link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+  <script src="../../../assets/theme.js"></script>
+  <script src="../../../assets/reader.js" defer></script>
+  <link rel="stylesheet" href="../../../assets/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header reader-header"><div class="container header-inner">
+    <a class="brand" href="../../../index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5.5C8.5 3.8 5.8 3.6 2.5 4.5v14c3.3-.9 6-.7 9.5 1 3.5-1.7 6.2-1.9 9.5-1v-14c-3.3-.9-6-.7-9.5 1Zm0 0v14"/></svg>书架</a>
+    <a class="reader-book-title" href="../index.html" lang="en">Software Engineering at Google</a>
+    <div class="theme-control" role="group" aria-label="外观" hidden><button type="button" data-theme-value="system" title="跟随系统"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path class="fill" d="M12 4a8 8 0 0 1 0 16Z"/></svg><span class="sr-only">跟随系统</span></button><button type="button" data-theme-value="light" title="浅色"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.6"/><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21M5.6 5.6l1.6 1.6M16.8 16.8l1.6 1.6M5.6 18.4l1.6-1.6M16.8 7.2l1.6-1.6"/></svg><span class="sr-only">浅色</span></button><button type="button" data-theme-value="dark" title="深色"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.5 14.6A7.8 7.8 0 0 1 9.4 4.5a7.8 7.8 0 1 0 10.1 10.1Z"/></svg><span class="sr-only">深色</span></button></div>
+  </div></header>
+  <main id="main" class="container reader-container">
+    <nav class="breadcrumb" aria-label="当前位置"><ol><li><a href="../../../index.html">书架</a></li><li><a href="../index.html">书籍概览</a></li><li aria-current="page">第 11 章</li></ol></nav>
+    <div class="reading-layout">
+      <aside class="toc"><nav aria-label="本页目录"><h2>本页目录</h2><ul>
+        <li><a href="#change-with-confidence">01　把一次发现，变成每次改动的保护</a></li>
+        <li><a href="#write-run-react">02　写、运行、响应，形成完整闭环</a></li>
+        <li><a href="#test-size">03　测试大小，约束它怎样运行</a></li>
+        <li><a href="#test-scope">04　测试范围，说明它实际验证什么</a></li>
+        <li><a href="#balanced-suite">05　让不同层次各自承担风险</a></li>
+        <li><a href="#behaviors-and-coverage">06　守住重要行为与失败表现</a></li>
+        <li><a href="#trustworthy-signals">07　稳定、隔离和易读</a></li>
+        <li><a href="#suite-at-scale">08　维护测试本身</a></li>
+        <li><a href="#testing-culture">09　测试文化怎样长出来</a></li>
+        <li><a href="#automation-and-exploration">10　机器守住已知，人探索未知</a></li>
+      </ul><p class="toc-note"><a href="../index.html">← 书籍概览</a></p></nav></aside>
+      <article class="article">
+        <header class="article-header">
+          <p class="eyebrow">READING NOTES / CHAPTER 11</p>
+          <h1>第 11 章｜测试概览</h1>
+          <p class="article-deck"><span lang="en">Testing Overview</span> · 架构提升读书笔记</p>
+        </header>
+        <p>软件交付之后仍会变化。新功能要接进来，旧设计要整理，依赖会升级，接手的人也会更换。一次运行正确，只说明某个版本在某次尝试里表现正常；要让许多人长期修改同一个系统，还需要一种能够反复确认重要行为的办法。</p>
+        <p>本章把开发者驱动的自动化测试放在这个位置：它既帮助团队及时发现缺陷，也把“这次改动会不会破坏已有能力”的担忧，转化成可以持续获得的反馈。围绕这个目标，作者讨论了测试套件的组成、反馈的速度与可信度，以及 Google 怎样逐步建立起人人参与测试的文化。</p>
+        <details class="mobile-toc"><summary>本页目录 · 10 个小节</summary><nav aria-label="移动端本页目录"><ul>
+          <li><a href="#change-with-confidence">01　把一次发现，变成每次改动的保护</a></li>
+          <li><a href="#write-run-react">02　写、运行、响应，形成完整闭环</a></li>
+          <li><a href="#test-size">03　测试大小，约束它怎样运行</a></li>
+          <li><a href="#test-scope">04　测试范围，说明它实际验证什么</a></li>
+          <li><a href="#balanced-suite">05　让不同层次各自承担风险</a></li>
+          <li><a href="#behaviors-and-coverage">06　守住重要行为，也守住失败时的表现</a></li>
+          <li><a href="#trustworthy-signals">07　把稳定、隔离和易读当作测试质量</a></li>
+          <li><a href="#suite-at-scale">08　规模越大，越要维护测试本身</a></li>
+          <li><a href="#testing-culture">09　测试文化怎样从局部成功长出来</a></li>
+          <li><a href="#automation-and-exploration">10　让机器守住已知，让人探索未知</a></li>
+        </ul></nav></details>
+
+        <section id="change-with-confidence">
+          <h2><span class="section-number">01</span>把一次发现，变成每次改动的保护</h2>
+          <p>书中最有分量的案例，是 Google Web Server（GWS）的转变。GWS 负责承接 Google 搜索查询。2005 年，随着项目变大，发布越来越慢，缺陷却越来越多。工程师修改代码时缺乏把握，常常等线上功能坏了才知道出了问题；一度有超过 80% 的生产发布包含影响用户、需要回滚的缺陷。</p>
+          <p>GWS 的技术负责人随后要求，新代码改动必须附带测试，并让这些测试持续运行。实施这一政策后的一年内，紧急发布次数减少了一半，而项目每个季度的新改动数量仍在创纪录地增长。到本书写作时，GWS 已拥有数万项测试，能够接近每天发布，用户可见的失败也相对较少。</p>
+          <p>这段经历的重要性，在于团队同时改善了变更能力与可靠性。过去，一位工程师理解了某个隐蔽条件，往往只能靠记忆在下次修改时继续小心。把这个条件写成测试后，其他人修改相关代码、升级依赖或执行自动化维护时，也能够得到同样的提醒。原本属于个人的一次排查成果，进入了团队可反复使用的公共资源。</p>
+          <p>作者用一个假设说明，单靠个人少犯错无法解决规模问题：一个百人团队，即使每人每月只引入一个缺陷，合起来也有一百个。按每月约二十个工作日计算，就是每天约五个新缺陷。所以，即使每个人都很优秀，也仍然需要团队级的反馈机制。</p>
+          <p>测试的投入也因此要放到代码的整个寿命里理解。写测试可能与实现功能花费同样多的时间，但同一段代码以后还会经历许多修改。清楚的测试持续减少调试，支持保持行为的重构，帮助评审者确认边界情况，并为频繁发布提供依据。测试还能作为代码的早期使用者：如果验证一个计算规则也必须先启动数据库和整套服务，就可能暴露出职责或依赖没有分开的设计问题。</p>
+          <p>这也连接了前两章的工作：<a href="ch09.html">代码评审</a>让另一个人检查改动，<a href="ch10.html">文档</a>保存使用和设计知识，测试则让一部分行为约定能够由机器持续核对。三者配合，才更容易把一次正确实现变成长期可维护的能力。</p>
+          <aside class="key-point"><p class="key-point-label">核心观点</p><p>自动化测试把已经理解的行为保存成可重复执行的检查。它的长期收益，是让后来的人能够继续改进系统，同时及时看见已有能力是否被破坏。</p></aside>
+        </section>
+
+        <section id="write-run-react">
+          <h2><span class="section-number">02</span>写、运行、响应，形成完整闭环</h2>
+          <p>最简单的自动化测试，包含一个要验证的行为、一份明确输入、一个可观察的结果，以及受控的执行环境。测试把输入交给程序，再把实际结果与预期比较。许多这样的检查组成<strong>测试套件（test suite）</strong>，持续呈现系统在哪些已知行为上仍然符合约定。</p>
+          <p>原书用计算器的减法展示这个结构：输入 2 和 5，期望结果是 −3。下面保留这个行为，补全成可独立编译运行的类。作者刻意没有使用任何测试框架：实际项目不会这样写整套测试，但每个自动化测试的核心都与它相似。</p>
+          <pre><code class="language-java">public final class CalculatorTest {
+    static final class Calculator {
+        int subtract(int left, int right) {
+            return left - right;
+        }
+    }
+
+    public static void main(String[] args) {
+        Calculator calculator = new Calculator();
+        int expectedResult = -3;
+        int actualResult = calculator.subtract(2, 5);
+        assert expectedResult == actualResult
+                : "expected " + expectedResult + ", got " + actualResult;
+    }
+}</code></pre>
+          <p>把程序保存为 <code>CalculatorTest.java</code>，用下面两条命令编译、运行：</p>
+          <pre><code class="language-sh">javac CalculatorTest.java
+java -ea CalculatorTest</code></pre>
+          <p>这里的 <code>-ea</code> 是本笔记补上的关键条件：Java 语言的 <code>assert</code> 默认不启用。正确实现会正常结束；如果把减法误写成 <code>right - left</code>，启用断言的运行会抛出 <code>AssertionError</code>，提示实际得到 3。实际测试框架通常有自己的断言 API，应与 Java 语言的 <code>assert</code> 区分。</p>
+          <p><strong>写出检查只是第一步。</strong>第二步是经常运行：测试被表达成代码后，就能随着代码变化反复执行，不必等人逐项点击。搜索、邮件这类产品还要面对浏览器、语言和设备组合；相同的检查逻辑可以通过配置在不同环境中运行。原书脚注特别提醒，复用测试代码并不会自动消除这些环境之间的产品差异，兼容性本身仍需要被验证。</p>
+          <p>第三步是对失败作出响应。测试失败后，团队要及时确认是产品回归、测试错误还是环境问题，并恢复一个可信的状态。原书强调，能够在失败后几分钟内优先处理的团队，通常更容易保持信心，也更容易定位导致失败的改动。这里的重点是缩短反馈与行动的距离：如果失败已持续几周，期间又累积了许多提交，就很难知道新的红灯增加了什么信息。</p>
+          <p>自动化于是形成一条闭环：开发者共同写下重要行为，基础设施持续运行检查，人根据失败修复问题。只留下大量测试文件，却很少运行；或者每天运行，却把失败当作背景噪声，都无法得到这套机制原本承诺的收益。</p>
+        </section>
+
+        <section id="test-size">
+          <h2><span class="section-number">03</span>测试大小，约束它怎样运行</h2>
+          <p>Google 早期也曾偏爱“大到能够代表整个系统”的测试。它们看起来接近用户的真实使用，却容易慢、难复现，失败时也难定位。工程师逐渐把检查拆小，先测试一个服务，再测试服务中的模块，才发现更少的运行依赖通常带来更快、更稳定的反馈。</p>
+          <p>为了把这种经验变成可执行的约定，原章先区分<strong>测试大小（size）</strong>与<strong>测试范围（scope）</strong>。大小关注测试运行时使用什么资源、允许跨越什么边界；范围关注测试打算验证哪些行为。一个测试写了多少行，并不能决定它的大小。</p>
+          <div class="table-scroll" role="region" aria-label="测试大小的运行边界" tabindex="0"><table>
+            <thead><tr><th scope="col">测试大小</th><th scope="col">原章中的主要运行边界</th><th scope="col">典型能力与代价</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">小型（small）</th><td>单进程；许多语言还要求单线程。不能访问真实磁盘或网络，不能休眠或进行其他阻塞调用</td><td>依赖少，通常快且容易保持确定性；外部依赖需要换成进程内组件</td></tr>
+              <tr><th scope="row">中型（medium）</th><td>单台机器。允许多进程、线程和阻塞调用，网络通信限于 <code>localhost</code></td><td>可以启动本机数据库或浏览器；开始依赖进程调度、启动和同步</td></tr>
+              <tr><th scope="row">大型（large）</th><td>可以跨机器，访问远程系统</td><td>能检查远程集群、部署配置或完整流程；网络和多系统状态增加等待与不确定性</td></tr>
+            </tbody>
+          </table></div>
+          <p>小型测试的限制是在主动移除常见的变慢与不稳定来源。例如，验证导出任务的状态规则时，如果测试需要连共享数据库，就会同时受数据库负载、已有数据和网络状态影响。把数据访问替换成进程内的<strong>测试替身（test double）</strong>，就能把注意力留在状态规则上。原书脚注允许小型测试使用封闭的内存文件系统，受限制的是真实磁盘与外部依赖。</p>
+          <p>这些限制让测试更容易做到快和确定，但还要靠写法兑现：一个纯内存程序也可能做过多计算，或者读取不可控的时间与随机值。需要检查真实数据库协议、浏览器行为或跨进程协作时，中型测试则有明确价值：它保留所需的真实性，同时把远程网络排除在外。用后续章节的术语说，这里涉及<strong>保真度（fidelity）</strong>，即测试中的表现与真实使用情况接近的程度；真实依赖能保留一部分交互细节，也会带来相应的运行成本。</p>
+          <p>大型测试进一步放开边界，适合验证整套部署是否连通、配置是否匹配，以及难以替换依赖的遗留组件。原章记述，一些团队会把这类测试与日常的小型、中型测试分开，在构建、发布阶段运行，避免所有局部改动都等待完整系统。选择大小时，先满足要验证的行为，再使用足够小的运行环境，才能控制整套反馈的成本。</p>
+          <p>书中还描述了当时用自定义 Java Security Manager 阻止小型测试联网的做法。这个机制已在 JDK 24 被永久禁用（JEP 486），今天要换用其他工具实现同样的约束；保留下来的原则，是让工具真正检查资源边界，而非仅靠给测试贴一个 <code>small</code> 标签。</p>
+        </section>
+
+        <section id="test-scope">
+          <h2><span class="section-number">04</span>测试范围，说明它实际验证什么</h2>
+          <p>测试范围可以从局部规则逐步扩展到组件协作和完整系统行为。<strong>狭范围测试</strong>通常称为单元测试，聚焦某个类、方法或一小块逻辑；<strong>中等范围测试</strong>通常称为集成测试，检查几个组件之间的配合；<strong>广范围测试</strong>则可能称为功能测试、端到端测试或系统测试，检查多个部分共同形成的行为。</p>
+          <p>判断范围时，要看测试真正核对了什么。一个类调用了日期工具、集合库和其他业务对象，测试运行时自然也会执行它们；只要检查聚焦在目标类的某个行为上，它仍可以是狭范围测试。原书明确倾向于在可行时保留真实依赖，而不是为了让执行过程只经过一个类，就把所有协作者都替换掉。</p>
+          <p>大小与范围经常相关，却能够交叉。原章举了两个有助于摆脱直觉的例子：一个服务端入口可以同时验证请求解析、参数校验和业务处理，只把数据库、文件系统等进程外依赖换掉，于是验证范围较广，运行大小仍然是小型；一个日期选择组件可能只检查一条很局部的路径，却要启动真实浏览器，所以范围很窄，大小已是中型。</p>
+          <figure class="concept-figure"><a href="../diagrams/exports/ch11-size-scope.svg" target="_blank" rel="noopener"><img src="../diagrams/exports/ch11-size-scope.svg" width="720" height="498" alt="测试大小与范围的交叉示例：小型测试既能验证单个计算规则，也能在替换外部存储后验证导出入口的完整逻辑；中型测试既能只验证一个浏览器组件路径，也能验证本机服务与数据库的协作。"></a><figcaption>图 11-1：按列看验证目标从局部规则扩展到组合行为，按行看运行边界从单进程扩展到单机多进程。列按相对范围比较，右列也包括组件集成；行只展示小型与中型。点击<a href="../diagrams/exports/ch11-size-scope.svg" target="_blank" rel="noopener">查看大图</a>。</figcaption></figure>
+          <p>图里的导出入口与本机服务是笔记中的假设例子。它们说明，团队可以分别优化两件事：用更小的运行环境缩短等待，用更聚焦的验证目标降低理解和定位成本。给一个检查同时说明大小与范围，比只说“这是集成测试”更容易知道它依赖什么、失败后应该先看哪里。</p>
+          <aside class="key-point"><p class="key-point-label">核心观点</p><p>测试大小回答“它怎样运行、消耗什么”，测试范围回答“它核对哪些行为”。执行过的代码、测试文件的长度，以及测试名称，都不能替代这两个判断。</p></aside>
+        </section>
+
+        <section id="balanced-suite">
+          <h2><span class="section-number">05</span>让不同层次各自承担风险</h2>
+          <p>一个健康的测试套件，需要让局部规则、组件接口与系统组合都得到检查。原书给出的粗略目标，是按<strong>测试用例数量</strong>计算，约 80% 为狭范围单元测试、15% 为中等范围集成测试、5% 为端到端测试。这组比例按测试范围划分，作者也说明，每个团队都需要结合自身情况调整。</p>
+          <p>大量聚焦的单元测试适合作为基础，是因为它们把一次需要考虑的行为压缩到较小空间。工程师可以清楚列出某个函数的正常输入、边界值和错误结果；失败后也更容易回到相应规则。组件之间的编码、协议和数据约定，则交给集成测试核对。少量端到端测试最后确认这些部分在真实组合中能够一起工作，尤其是装配和配置没有遗漏。</p>
+          <p>假设一个报表导出服务包含请求接口、任务处理器和对象存储。日期范围是否合法、没有数据时输出什么、上传失败后怎样改变任务状态，可以由聚焦的测试反复检查。服务与真实存储之间的鉴权、字段和错误映射，需要在对应集成环境里验证。用户发起导出、等待完成、再下载文件的关键旅程，则由少量端到端测试守住。这个例子要表达的是，每一层有不同的观察能力。</p>
+          <p>这样的分工能够让大量逻辑缺陷在较早、较便宜的位置暴露。若日期规则写错，只要局部测试就能指出具体输入与错误结果，无须等到下载流程失败，再沿页面、队列、任务处理器一路排查。反过来，局部逻辑全对只说明各自的规则成立；两个独立组件的接口是否兼容，需要在它们相遇的边界上验证。</p>
+          <p>原章提醒两种失衡。<strong>冰淇淋筒形</strong>的套件有大量端到端测试，却缺少单元和集成基础，常见于原型急忙转生产、测试债务没有补齐的项目。大量简单缺陷也要在完整系统里发现，反馈就会又慢又难查。<strong>沙漏形</strong>有不少单元测试和端到端测试，中间的集成层却很薄；组件契约出了问题，只能由最上层兜底。书中把紧耦合、难以独立装配依赖，列为形成沙漏的一种原因。图 11-2 把三种形状并排画出：哪一层薄弱，相应的缺陷就会被推迟到更慢、更难定位的位置才暴露。</p>
+          <figure class="concept-figure"><a href="../diagrams/exports/ch11-suite-shapes.svg" target="_blank" rel="noopener"><img src="../diagrams/exports/ch11-suite-shapes.svg" width="720" height="440" alt="三种测试套件形状对比：金字塔以大量单元测试为基础，多数逻辑缺陷在单元层暴露；冰淇淋筒以端到端测试为主，简单缺陷也要到完整系统才发现；沙漏缺少集成层，组件契约问题只能由端到端测试兜底。"></a><figcaption>图 11-2：三列从左到右是推荐形状与两种反模式，每列自上而下为端到端、集成、单元三层。横条长短示意各层用例数量，虚线框标出薄弱的一层，箭头指向由此带来的后果。点击<a href="../diagrams/exports/ch11-suite-shapes.svg" target="_blank" rel="noopener">查看大图</a>。</figcaption></figure>
+          <p>因此，测试组合应当跟着风险和架构走。接口变化频繁、由不同团队分别维护的系统，可能需要更多集成验证；业务规则密集而依赖简单的模块，可以让更多反馈留在聚焦测试中。80／15／5 的用处，是帮助观察套件是否失去基础、是否缺少中间层。</p>
+        </section>
+
+        <section id="behaviors-and-coverage">
+          <h2><span class="section-number">06</span>守住重要行为，也守住失败时的表现</h2>
+          <p>原书把“为你不希望损坏的行为补上测试”称为 <strong>Beyoncé Rule</strong>。这个说法帮助团队明确共享代码环境里的责任：基础设施或其他团队的改动，如果通过了你的全部测试，却仍破坏了产品的重要能力，产品团队需要修复问题，并把遗漏的行为加入测试。否则，下一位修改者仍然看不到这条约定。</p>
+          <p>值得守住的行为也包括性能、无障碍、安全，以及遇到故障时的响应。只确认成功路径，留下的是理想条件下的保证。原章建议，在单元测试中模拟异常或错误，在集成和端到端测试中注入远程过程调用（RPC）的错误与延迟，还提到更大规模的混沌工程。测试希望确认的是，条件恶化时系统仍以可预期、受控的方式结束或恢复；在生产环境做故障实验，还需要另行控制风险。</p>
+          <p>继续用假设的导出服务说明。上传失败时，团队真正关心的可能是任务不会被错误标成成功、重试次数有上限、用户能看到失败原因。让存储依赖返回一次明确错误，再分别检查这些结果，就把“我们做了异常处理”展开成了可以验证的行为。若代码只是捕获异常、写一条日志后仍返回成功，虽然错误分支被执行，用户需要的保障仍然没有成立。</p>
+          <p>这正是<strong>代码覆盖率</strong>的用途与局限。原章用行覆盖率说明：一百行代码执行了九十行，可以得到 90% 的行覆盖率。这个数字说明哪些行被经过，没有说明执行后是否产生了正确结果。测试完全可以调用减法方法，却从不比较 −3；它经过了实现，仍然可能放过把减法方向写反的缺陷。分支覆盖、路径覆盖等指标各自衡量不同的东西，这个例子只用了最简单的行覆盖。</p>
+          <p>原书还指出，固定覆盖率门槛可能改变人的行为。团队原本希望“至少达到 80%”，工程师却容易把它理解成“达到 80% 就够了”，之后围绕满足数字补测试。书中建议用小型测试的覆盖率观察未测代码，以减少大型测试顺带执行大量路径造成的虚高；同时仍要回到重要行为、有效断言、稳定性，以及依赖变化能否被发现这些实际证据上。</p>
+          <p>在这个意义上，覆盖率更像查漏入口。看到上传失败分支从未被执行，可以继续检查是否缺了故障测试；看到它已被执行，还需要读断言，确认任务状态与重试边界真的被核对。数字帮助找到值得调查的位置，工程判断决定那里应当守住什么。</p>
+          <aside class="key-point"><p class="key-point-label">核心观点</p><p>重要行为需要明确的检查结果。覆盖率证明“代码经过了这里”，行为测试进一步确认“在这些条件下，它做了约定的事”。故障处理同样需要这一步。</p></aside>
+        </section>
+
+        <section id="trustworthy-signals">
+          <h2><span class="section-number">07</span>把稳定、隔离和易读当作测试质量</h2>
+          <p>测试失败应该带来值得调查的信息。如果相同代码在相同预期条件下有时通过、有时失败，团队就面对<strong>偶发失败测试（flaky test）</strong>。其来源可能是时钟、线程调度、网络延迟，也可能是浏览器渲染或更底层的环境差异。测试越多、运行越频繁，单次很小的不确定性就越容易变成持续的工作负担。</p>
+          <p>原书给出的假设很直观：每次执行有 0.1% 的概率错误地失败，每天执行 10,000 次，偶发失败次数的期望就是 <code>10,000 × 0.001 = 10</code>。也就是说，即使每个用例单独看起来“基本都能过”，整套系统平均每天仍会亮起约十个与产品回归无关的“假红灯”，每一个都要有人辨认。</p>
+          <p>自动重跑有时能用机器资源换取人的时间，但它暂时遮住的是症状。继续积累不稳定性，损失会从排查时间扩展到信任：人们逐渐把红灯解释为“再跑一下就好”，真正的错误也就容易混在其中。原书写作时，Google 的偶发失败率约为 0.15%，在其规模下仍意味着每天成千上万次；作者还提到，接近 1% 时测试的价值就会明显受损。图 11-3 把这条成本链连了起来：上排是规模把小概率放大成每天的假红灯，下面无论逐个排查还是自动重跑，只要根因还在，最后都会消耗团队对测试的信任。</p>
+          <figure class="concept-figure"><a href="../diagrams/exports/ch11-flaky-cost.svg" target="_blank" rel="noopener"><img src="../diagrams/exports/ch11-flaky-cost.svg" width="720" height="420" alt="偶发失败的成本链：单次 0.1% 的误报概率乘以每天 10,000 次执行，平均每天约 10 个假红灯；逐个排查占用工程时间，自动重跑让根因留下、不稳定继续积累，两条路径最终都让红灯被当作噪声，真实回归混在其中。"></a><figcaption>图 11-3：上排按书中假设计算每天的假红灯数量。实线表示成本继续累积，虚线表示自动重跑这条路径，它把处理根因往后推；两条路径最后汇到同一处。点击<a href="../diagrams/exports/ch11-flaky-cost.svg" target="_blank" rel="noopener">查看大图</a>。</figcaption></figure>
+          <p>稳定性的一个基础是<strong>环境自足与隔离（hermeticity）</strong>：测试应带齐准备、执行和清理环境所需的信息，把依赖、数据和配置尽量纳入自身控制。衡量它的是环境有多少受测试控制，是否联网只是其中一个因素。假设两个导出测试共用数据库里的“当前任务”，一个先创建、另一个再删除，就可能因执行顺序而改变结果。让各自准备独立数据、明确清理责任，才能使单独重跑与并行执行更接近同一件事。大型测试实现这种隔离更困难，目标仍然有价值。</p>
+          <p>另一个基础是易读。测试通常在失败时才被陌生维护者重新打开，这时最需要快速看清输入、动作和预期。只保留解释当前行为所需的信息，少在测试里写条件分支和循环，可以减少检查逻辑本身藏错的机会。如果测试重复实现一遍生产算法来算“预期结果”，两边也可能共享同一个误解。原章因此强调，测试应当容易通过直接阅读判断正误，并且需要认真评审。</p>
+          <p>这些要求也作用于环境准备和公共辅助函数。一个名字清楚、准备工作简单的用例，失败时能直接说明哪条约定没有成立；一个需要理解大量隐式状态、复杂循环与分支的用例，则把产品排查和测试排查叠在了一起。稳定与清楚共同决定了团队是否愿意认真对待每一次失败。</p>
+        </section>
+
+        <section id="suite-at-scale">
+          <h2><span class="section-number">08</span>规模越大，越要维护测试本身</h2>
+          <p>原章描述的 Google 开发环境，使这种维护尤其重要。到本书写作时，单一代码仓库中有超过二十亿行代码，每周接近二千五百万行改动，人工与自动化系统大致各占一半。许多改动来自所属团队之外，几乎所有团队都直接围绕仓库主线工作，依赖也大多从源码随主线一起构建。持续集成（CI）及其中的 TAP 测试平台，帮助团队在如此频繁的共同变化中获得反馈。</p>
+          <p>共享代码越充分，测试越需要稳定地表达产品真正依赖的能力。与此同时，测试本身也可能阻止健康的修改。原章把这类问题称为<strong>脆弱测试（brittle tests）</strong>：它们把不必要的实现细节写进预期，或依赖复杂的重复准备代码，以至于一个保持行为的五行改动，导致几十个无关测试失败。团队于是可能为了避开测试维护，连必要的重构也不愿做。</p>
+          <p>脆弱性与偶发失败应分开理解。一个测试可以每次都稳定失败，却只因为内部调用顺序改变了，用户可见行为实际上保持不变；另一个测试检查的是合理行为，却因时序竞争而随机失败。前者需要修正检查所绑定的细节，后者需要控制不确定因素。原章特别提到，滥用 mock 对象曾给 Google 带来严重的脆弱测试问题；详细的测试替身选择留待第十三章讨论。</p>
+          <p>速度也会慢慢退化。最初只依赖一个服务的测试，几年后可能接入十几个服务；公共辅助函数里一次看似无害的半秒休眠，被数百个用例复用，就会把大量等待带进每轮执行。增加机器和并行度能够缓解总耗时，却无法持续抵消每个测试都越来越慢的问题。</p>
+          <p>原书建议主动轮询状态变化，频率可以接近微秒级，并配合超时，替代随意插入 <code>sleep()</code> 或 <code>setTimeout()</code> 后“猜测已经完成”。沿着这个思路，在假设的异步导出测试中，可以等待明确的完成状态，并给失败留下有界的等待；轮询远程服务时，间隔应服从被测系统的响应节奏。对于小型测试，前面禁止休眠和阻塞的约束仍然成立。</p>
+          <p>最终，需要像维护生产代码一样维护测试：有人关心它们的耗时、稳定性和表达方式，慢下来的用例得到整理，稳定可靠的测试工作得到认可。基础设施还可以用检查器、文档和统一工具减少坏测试的产生。原书脚注说明，当时每种受支持语言有一套标准测试框架及 mock／打桩库，并由共享基础设施运行大多数测试；统一支持面，让一次改进能够惠及更多团队。</p>
+          <aside class="key-point"><p class="key-point-label">核心观点</p><p>可信的测试套件也需要持续维护。慢、偶发失败或过度绑定实现细节的测试，会增加每次改动的成本；长期忽视这些成本，最终会削弱工程师对整个反馈机制的信任。</p></aside>
+        </section>
+
+        <section id="testing-culture">
+          <h2><span class="section-number">09</span>测试文化怎样从局部成功长出来</h2>
+          <p>GWS 的成功并没有自动变成全公司的日常。原书记述，2005 年前 Google 的测试实践仍很不统一，之后由志愿者组成的 Testing Grouplet 推动传播。他们没有先寻求公司高层颁布统一命令，而是把可见的成功、易进入的学习入口和逐步改进的路径接到一起。</p>
+          <p>第一个入口是新员工培训。从 2005 年起，新工程师的入职课程里加入了一小时自动化测试讨论，说明测试怎样支持生产力、文档和重构，也介绍好测试的写法。关键安排是把这些内容作为公司的标准实践来讲。新人进入团队后开始写测试，也会询问已有代码为何没有测试。一两年间，接受过这套培训的人数超过了旧有测试文化中的工程师，许多新项目由此有了不同起点。</p>
+          <p>第二个入口是 <strong>Test Certified</strong>。面对历史包袱很重、几乎无从测试的项目，光说“把测试做好”很难带来行动。这个认证计划把改进分成五级，每次升级所需的工作被设计为一个季度内能够完成。第一级先建立持续构建、跟踪覆盖率、为测试标注大小、识别偶发失败，并形成一组能快速运行的测试。</p>
+          <p>后续级别再逐渐提高要求，例如不带着失败测试发布、移除非确定性测试。第五级提出所有测试自动化、快速测试在每次提交前运行、消除非确定性并覆盖所有行为等目标。团队能看到共同的成熟度阶梯，也能通过内部看板看到彼此的进展。原章记述，到 2015 年这一计划被自动化方式取代时，它已帮助超过 1,500 个项目改善测试文化。</p>
+          <p>第三个入口是 <strong>Testing on the Toilet（TotT）</strong>。为了让短小的测试建议绕过邮件噪声，志愿者把单页材料贴进洗手间。2006 年 4 月第一期讲 Python 测试，一开始引发强烈反应，有人认为它侵入私人空间，讨论却也把测试带进了更多人的注意。后来它成为持续的知识传播方式。书中强调每期严格限制一页，内容要聚焦到工程师读完回到工位就能尝试的建议。</p>
+          <p>这些做法分别影响了新人的默认期待、旧项目的改进路径，以及在岗工程师的日常学习。再配合评审要求，测试逐渐从额外好习惯变成正常工作的一部分。原书还介绍了替代人工认证的 Project Health（pH）工具，持续收集覆盖率、测试延迟等数十项指标，以一至五级呈现项目健康状态。它负责把问题暴露出来，后续处理仍要靠团队对重要行为的判断。</p>
+          <p>GWS 的团队内部准入要求，与全公司依靠成功案例扩散，是两个不同层次的安排。一个已经承诺改变的团队，可以要求新代码带测试；要让更多团队也愿意投入，则需要让人看见收益，并提供实际做得到的下一步。原章展现的文化建设，是培训、帮助、工具、评审和持续示范一起作用的过程。</p>
+        </section>
+
+        <section id="automation-and-exploration">
+          <h2><span class="section-number">10</span>让机器守住已知，让人探索未知</h2>
+          <p>自动化擅长反复检查已经明确的行为，而产品质量里仍有许多需要判断和发现的部分。原章以搜索结果的质量、通话中的音视频体验为例：人需要亲自感受和评价，一条机械断言很难完整表达“这个结果是否真正有帮助”或“这段声音听起来是否自然”。书中也强调了人在发现复杂安全问题时的创造性作用。</p>
+          <p><strong>探索性测试（exploratory testing）</strong>把应用当作尚未完全理解的对象，通过意料之外的操作顺序、输入和反馈寻找遗漏。开始时不必已经知道具体会发现哪一个缺陷；探索本身就在帮助团队认识系统。假设导出页面在正常的“提交、等待、下载”流程里一直通过，测试者却在任务结束前取消、随后立即重试，发现旧结果被错误展示，这就是一条既有固定脚本没有想到的交互路径。</p>
+          <p>一旦问题被理解，就可以把它收敛成受控条件下的自动化回归测试，修复后反复运行。探索负责带来新的认识，自动化负责让已付出的发现成本不必一再重付。把熟悉的重复检查交给机器，也能让人的时间更多用于体验、风险和新的失败方式，而非机械重复已经清楚的步骤。</p>
+          <p>把全章连起来，自动化测试的价值来自一整套相互支持的安排：重要行为写成可执行检查，大小与范围有清楚分工，运行环境尽量受控，失败得到及时响应，套件本身有人维护。后续三章会继续展开<a href="ch12.html">单元测试</a>、<a href="ch13.html">测试替身</a>，以及<a href="ch14.html">更大范围的测试</a>；其中涉及的伪实现（fake）、打桩（stubbing）和交互验证（interaction testing），都是为这条可信反馈链服务的具体技术。</p>
+        </section>
+
+        <details id="sources" class="source-note">
+          <summary>来源、主题对应与核查说明</summary>
+          <p>依据《Software Engineering at Google》（2020）Abseil 官方公开英文 HTML 版<a href="https://abseil.io/resources/swe-book/html/ch11.html">第 11 章 Testing Overview</a>，Adam Bender 撰写、Tom Manshreck 编辑；核查日期 2026-11-06。</p>
+          <ul>
+            <li>01：<a href="https://abseil.io/resources/swe-book/html/ch11.html#why_do_we_write_testsquestion_mark">Why Do We Write Tests?</a>、<a href="https://abseil.io/resources/swe-book/html/ch11.html#the_story_of_google_web_server">The Story of Google Web Server</a>、<a href="https://abseil.io/resources/swe-book/html/ch11.html#benefits_of_testing_code">Benefits of Testing Code</a>。原书报告的是紧急发布次数减半，没有给出缺陷总数或回滚率的变化。</li>
+            <li>02：<a href="https://abseil.io/resources/swe-book/html/ch11.html#testing_at_the_speed_of_modern_developm">Testing at the Speed of Modern Development</a>、<a href="https://abseil.io/resources/swe-book/html/ch11.html#writecomma_runcomma_react">Write, Run, React</a>、<a href="https://abseil.io/resources/swe-book/html/ch11.html#an_example_test">Example 11-1</a>，以及<a href="https://abseil.io/resources/swe-book/html/ch11.html#ch01fn118">脚注 3</a>的跨环境说明。</li>
+            <li>03：<a href="https://abseil.io/resources/swe-book/html/ch11.html#designing_a_test_suite">Designing a Test Suite</a>、<a href="https://abseil.io/resources/swe-book/html/ch11.html#test_size">Test Size</a>下的 Small／Medium／Large tests、<a href="https://abseil.io/resources/swe-book/html/ch11.html#test_sizes_in_practice">Test sizes in practice</a>。<a href="https://abseil.io/resources/swe-book/html/ch11.html#ch01fn119">脚注 4</a>补充 Google 内部还有历史性的 enormous 分类，本书将相关讨论归入 large；<a href="https://abseil.io/resources/swe-book/html/ch11.html#ch01fn120">脚注 5</a>说明内存文件系统的例外。</li>
+            <li>04—05：<a href="https://abseil.io/resources/swe-book/html/ch11.html#test_scope">Test Scope</a>。80／15／5 按测试用例数量计算，见原章 <a href="https://abseil.io/resources/swe-book/html/ch11.html#googleapostrophes_version_of_mike_cohna">Figure 11-3</a> 的图注；原章注明测试金字塔源自 Mike Cohn 2009 年的著作（<a href="https://abseil.io/resources/swe-book/html/ch11.html#ch01fn121">脚注 6</a>）。图 11-2 的三种形状对应原章 Figure 11-3 的金字塔与 <a href="https://abseil.io/resources/swe-book/html/ch11.html#test_suite_antipatterns">Figure 11-4</a> 的两种反模式。</li>
+            <li>06：<a href="https://abseil.io/resources/swe-book/html/ch11.html#the_beyonceacutesemicolon_rule">The Beyoncé Rule</a>、<a href="https://abseil.io/resources/swe-book/html/ch11.html#testing_for_failure">Testing for Failure</a>、<a href="https://abseil.io/resources/swe-book/html/ch11.html#a_note_on_code_coverage">A Note on Code Coverage</a>，以及<a href="https://abseil.io/resources/swe-book/html/ch11.html#ch01fn122">脚注 7</a>对覆盖率类型的说明。</li>
+            <li>07：<a href="https://abseil.io/resources/swe-book/html/ch11.html#flaky_tests_are_expensive">Case Study: Flaky Tests Are Expensive</a>、<a href="https://abseil.io/resources/swe-book/html/ch11.html#properties_common_to_all_test_sizes">Properties common to all test sizes</a>。<code>10,000 × 0.001 = 10</code> 是期望值，实际每天的次数会围绕它波动；0.15% 与“接近 1%”是原书写作时 Google 的经验，不宜当作通用合格线。</li>
+            <li>08：<a href="https://abseil.io/resources/swe-book/html/ch11.html#testing_at_google_scale">Testing at Google Scale</a>、<a href="https://abseil.io/resources/swe-book/html/ch11.html#the_pitfalls_of_a_large_test_suite">The Pitfalls of a Large Test Suite</a>，以及<a href="https://abseil.io/resources/swe-book/html/ch11.html#ch01fn123">脚注 8</a>的标准工具说明。</li>
+            <li>09：<a href="https://abseil.io/resources/swe-book/html/ch11.html#history_of_testing_at_google">History of Testing at Google</a>下的 Orientation Classes、Test Certified、Testing on the Toilet 和 Testing Culture Today，以及<a href="https://abseil.io/resources/swe-book/html/ch11.html#ch01fn124">脚注 9</a>的培训补充。</li>
+            <li>10：<a href="https://abseil.io/resources/swe-book/html/ch11.html#the_limits_of_automated_testing">The Limits of Automated Testing</a>、<a href="https://abseil.io/resources/swe-book/html/ch11.html#conclusion-id00015">Conclusion</a>、<a href="https://abseil.io/resources/swe-book/html/ch11.html#tlsemicolondrs-id00113">TL;DRs</a>。</li>
+          </ul>
+          <p>Java 示例运行条件补齐：原章 <a href="https://abseil.io/resources/swe-book/html/ch11.html#an_example_test">Example 11-1</a> 是不带类声明、使用 <code>assert</code> 的方法片段 → 作为传统命令行程序还缺类和静态入口，而且 Java 的 <code>assert</code> 默认关闭，直接运行可能根本不执行比较（Oracle <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/language/assert.html#enable-disable">Programming With Assertions</a>）→ 本文补齐类、<code>public static void main</code> 和 <code>java -ea</code>，在 JDK 21.0.2 下确认正确实现正常结束、减法写反时断言失败。原书已说明这是刻意简化的示例，这里只补运行条件。</p>
+          <p>Security Manager 的时代局限：原书用自定义 Java Security Manager 阻止小型测试联网 → OpenJDK <a href="https://openjdk.org/jeps/486">JEP 486: Permanently Disable the Security Manager</a> 已在 JDK 24 永久禁用启用和安装该机制 → 正文保留它的历史作用和“由工具检查资源边界”的原则，并提示 JDK 24 及以后需改用其他工具。</p>
+          <p>跨章年份不一致：第 11 章写 GWS 的转型发生在 2005 年，<a href="https://abseil.io/resources/swe-book/html/ch14.html#larger_tests_at_google">第 14 章 Larger Tests at Google</a>则写 GWS 在 2003 年强制要求自动化测试 → 原书两章叙述不一致 → 本文沿用第 11 章的年份，不推断两个年份各自对应的阶段。</p>
+          <p>导出服务、组件组合、取消重试和故障处理情境均为本笔记的假设例子；Google 内部的案例与数据均依据原章叙述。图示为本笔记原创示意图。本文围绕可信反馈重组原章，不是逐段翻译。</p>
+        </details>
+
+        <nav class="chapter-pagination" aria-label="章节翻页"><a class="page-link prev" href="ch10.html" rel="prev"><span class="page-label">← 上一章 · 第 10 章</span><span class="page-title">文档</span></a><a class="page-link next" href="ch12.html" rel="next"><span class="page-label">下一章 · 第 12 章 →</span><span class="page-title">单元测试</span></a><a class="pagination-home" href="../index.html">书籍概览与目录</a></nav>
+      </article>
+    </div>
+  </main>
+  <footer class="site-footer"><div class="container footer-inner"><span>个人书架 / 中文读书笔记</span><a href="#main">回到顶部 ↑</a></div></footer>
+</body>
+</html>

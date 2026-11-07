@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="386" viewBox="0 0 720 386" role="img" aria-labelledby="title desc">
+  <title id="title">支付测试能够拿到哪一种证据</title>
+  <desc id="desc">两行分别从执行业务、依赖行为读到可观察证据。第一行使用只配置返回值的网关替身，只能检查调用记录。第二行使用维护交易状态的网关伪实现，可以读回账本，检查金额和卡号。伪实现结果不等于真实外部清算结果。</desc>
+  <!-- Original editable hand-written SVG; the export is an identical web copy. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { color-scheme: dark; --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    :root[data-theme='light'] { color-scheme: light; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 15px; fill: var(--muted); }
+    .label { font-size: 18px; font-weight: 600; }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.2; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .body { font-size: 17px; text-anchor: middle; }
+    .arrow { fill: none; stroke: var(--line); stroke-width: 1.8; marker-end: url(#arrow); }
+  </style>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker></defs>
+  <rect width="720" height="386" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="28" y="39">同一次支付，测试看见了什么？</text>
+  <text class="sub" x="28" y="67">每行从左到右：执行业务 → 依赖行为 → 可获得的证据</text>
+  <text class="label" x="28" y="135">调用证据</text>
+  <rect class="node" x="148" y="94" width="150" height="88" rx="7"/>
+  <text class="body" x="223" y="130">执行支付<tspan x="223" dy="26">处理器</tspan></text>
+  <path class="arrow" d="M306 138H340"/>
+  <rect class="node" x="348" y="94" width="160" height="88" rx="7"/>
+  <text class="body" x="428" y="130">只配置返回值的<tspan x="428" dy="26">网关替身</tspan></text>
+  <path class="arrow" d="M516 138H548"/>
+  <rect class="node" x="556" y="94" width="136" height="88" rx="7"/>
+  <text class="body" x="624" y="130">调用发生过<tspan x="624" dy="26">交易结果未验证</tspan></text>
+  <text class="label" x="28" y="279">结果证据</text>
+  <rect class="node" x="148" y="238" width="150" height="88" rx="7"/>
+  <text class="body" x="223" y="274">执行支付<tspan x="223" dy="26">处理器</tspan></text>
+  <path class="arrow" d="M306 282H340"/>
+  <rect class="focus" x="348" y="238" width="160" height="88" rx="7"/>
+  <text class="body" x="428" y="274">维护交易状态的<tspan x="428" dy="26">网关伪实现</tspan></text>
+  <path class="arrow" d="M516 282H548"/>
+  <rect class="focus" x="556" y="238" width="136" height="88" rx="7"/>
+  <text class="body" x="624" y="274">读取账本条目<tspan x="624" dy="26">检查卡号与金额</tspan></text>
+  <text class="sub" x="28" y="366">伪实现提供结果证据；真实客户端与服务的协作仍需另行验证。</text>
+  <script><![CDATA[
+    (() => {
+      const syncTheme = () => {
+        try {
+          const saved = localStorage.getItem('reading-notes-theme');
+          document.documentElement.dataset.theme = ['light', 'dark'].includes(saved) ? saved : 'system';
+        } catch {}
+      };
+      syncTheme();
+      window.addEventListener('storage', syncTheme);
+    })();
+  ]]></script>
+</svg>

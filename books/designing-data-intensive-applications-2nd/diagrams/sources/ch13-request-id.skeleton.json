@@ -1,0 +1,297 @@
+[
+  {
+    "type": "text",
+    "id": "title",
+    "x": 24,
+    "y": 18,
+    "text": "网络重试，仍是同一次业务操作",
+    "fontSize": 25,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "subtitle",
+    "x": 24,
+    "y": 60,
+    "text": "r7 在客户端创建；所有重试保持 r7。",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "rectangle",
+    "id": "client",
+    "x": 24,
+    "y": 125,
+    "width": 180,
+    "height": 76,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "label": {
+      "text": "客户端\n意图 r7",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "app",
+    "x": 300,
+    "y": 125,
+    "width": 180,
+    "height": 76,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "label": {
+      "text": "应用服务器\n传递 r7",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "db",
+    "x": 580,
+    "y": 125,
+    "width": 220,
+    "height": 76,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "label": {
+      "text": "数据库\n唯一请求记录",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "first",
+    "x": 210,
+    "y": 163,
+    "width": 84,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        84,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "strokeStyle": "solid",
+    "roughness": 0.6,
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "client"
+    },
+    "end": {
+      "id": "app"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "forward",
+    "x": 486,
+    "y": 163,
+    "width": 88,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        88,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "strokeStyle": "solid",
+    "roughness": 0.6,
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "app"
+    },
+    "end": {
+      "id": "db"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "tx",
+    "x": 510,
+    "y": 250,
+    "width": 290,
+    "height": 105,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "label": {
+      "text": "本地事务共同提交\n请求 r7 ＋ 余额修改",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "execute",
+    "x": 690,
+    "y": 207,
+    "width": 0,
+    "height": 37,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        37
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "strokeStyle": "solid",
+    "roughness": 0.6,
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "db"
+    },
+    "end": {
+      "id": "tx"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "lost",
+    "x": 504,
+    "y": 303,
+    "width": 294,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        -294,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "strokeStyle": "dashed",
+    "roughness": 0.6,
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "tx"
+    }
+  },
+  {
+    "type": "text",
+    "id": "loss",
+    "x": 30,
+    "y": 270,
+    "text": "× 成功响应丢失\n客户端不知道结果",
+    "fontSize": 19,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "rectangle",
+    "id": "retry",
+    "x": 24,
+    "y": 420,
+    "width": 220,
+    "height": 76,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "label": {
+      "text": "仍用 r7 重试",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "result",
+    "x": 510,
+    "y": 420,
+    "width": 290,
+    "height": 76,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "label": {
+      "text": "重复插入失败并回滚\n读取 r7 的原结果",
+      "fontSize": 20,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "again",
+    "x": 250,
+    "y": 458,
+    "width": 254,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        254,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "strokeStyle": "solid",
+    "roughness": 0.6,
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "retry"
+    },
+    "end": {
+      "id": "result"
+    }
+  },
+  {
+    "type": "text",
+    "id": "againlabel",
+    "x": 300,
+    "y": 423,
+    "text": "不重新扣款",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "text",
+    "id": "bottom",
+    "x": 24,
+    "y": 550,
+    "text": "新业务意图才用新 ID；唯一约束失败后不能继续执行余额更新。",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  }
+]

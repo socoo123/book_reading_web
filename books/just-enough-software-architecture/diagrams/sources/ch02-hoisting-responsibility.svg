@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="570" viewBox="0 0 720 570" role="img" aria-labelledby="title desc">
+  <title id="title">架构提升让共同机制主动分担质量目标</title>
+  <desc id="desc">上行是关注架构：一次远程调用假设花十毫秒，为服务端处理留下约四十毫秒预算。下行是架构提升：容量控制器从处理节点池接收负载反馈，主动调整节点数量。容量控制分担峰值压力，但不保证每次请求都在五十毫秒内完成。</desc>
+  <!-- Original, editable hand-written SVG. The export is an identical web copy. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 16px; fill: var(--muted); }
+    .panel { fill: none; stroke: var(--line); stroke-width: 1; }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.2; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .label { font-size: 18px; font-weight: 600; }
+    .center { text-anchor: middle; }
+    .detail { font-size: 16px; fill: var(--muted); }
+    .arrow { fill: none; stroke: var(--line); stroke-width: 1.8; marker-end: url(#arrow); }
+    .manage { fill: none; stroke: var(--accent); stroke-width: 1.8; marker-end: url(#manage-arrow); }
+    .feedback { fill: none; stroke: var(--line); stroke-width: 1.8; stroke-dasharray: 6 5; marker-end: url(#arrow); }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker>
+    <marker id="manage-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--accent)"/></marker>
+  </defs>
+  <rect width="720" height="570" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="30" y="40">从“可实现”到“有机制分担”</text>
+  <text class="sub" x="30" y="69">书中 50ms 响应目标的假设情境；数字不是实测性能</text>
+
+  <rect class="panel" x="30" y="95" width="660" height="135" rx="8"/>
+  <text class="label" x="48" y="124">关注架构：选择一条可行的请求路径</text>
+  <rect class="node" x="48" y="145" width="100" height="58" rx="6"/>
+  <text class="label center" x="98" y="180">请求</text>
+  <path class="arrow" d="M156 176H365"/>
+  <text class="detail center" x="261" y="160">远程调用约 10ms</text>
+  <rect class="node" x="378" y="145" width="294" height="58" rx="6"/>
+  <text class="label center" x="525" y="180">服务端处理：预算约 40ms</text>
+
+  <rect class="panel" x="30" y="250" width="660" height="246" rx="8"/>
+  <text class="label" x="48" y="279">架构提升：容量管理机制另行分担峰值压力</text>
+  <rect class="node" x="48" y="300" width="100" height="58" rx="6"/>
+  <text class="label center" x="98" y="335">请求</text>
+  <path class="arrow" d="M156 329H365"/>
+  <text class="detail center" x="261" y="314">请求分配</text>
+  <rect class="node" x="378" y="300" width="294" height="58" rx="6"/>
+  <text class="label center" x="525" y="335">处理节点池</text>
+  <rect class="focus" x="378" y="422" width="294" height="50" rx="6"/>
+  <text class="label center" x="525" y="453">容量控制器</text>
+  <path class="manage" d="M430 414V367"/>
+  <text class="detail" x="445" y="396">调整节点数</text>
+  <path class="feedback" d="M620 366V413"/>
+  <text class="detail" x="605" y="396" text-anchor="end">负载信号</text>
+  <text class="detail" x="48" y="435">业务处理仍须满足自身预算</text>
+  <text class="detail" x="48" y="462">扩容不等于硬实时保证</text>
+
+  <text class="sub" x="30" y="529">实线：请求或管理动作　　虚线：负载反馈</text>
+  <text class="sub" x="30" y="554">两行用于比较；图不表示扩容即时完成，也不是完整部署图。</text>
+</svg>

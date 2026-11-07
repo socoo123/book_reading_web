@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="476" viewBox="0 0 720 476" role="img" aria-labelledby="title desc">
+  <title id="title">测量之前的两道关口</title>
+  <desc id="desc">从上往下依次回答两个问题。第一问：不同结果会导向不同行动吗，负面结果也要能改变决定；回答否就先不测，因为结果只会是好看的数字，例如发布工具改动即使收益很小也会实施。第二问：有权的人能据此行动吗，即认可这类证据且现在能做改变；回答否就暂缓或不测，例如无力改动、即将重组或系统退役。两问都回答是，才开展研究。书中 Readability 研究事先约定了两种行动：收益足以支持成本就保留并公布依据，成本更高或收益很小就取消该语言的过程。实线表示回答是，虚线表示回答否。</desc>
+  <!-- Original editable hand-written SVG; web export is an identical copy. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 15px; fill: var(--muted); }
+    .label { font-size: 18px; font-weight: 600; text-anchor: middle; }
+    .body { font-size: 16px; text-anchor: middle; }
+    .note { font-size: 14px; fill: var(--muted); text-anchor: middle; }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.3; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .piece { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .flow { fill: none; stroke: var(--line); stroke-width: 1.8; marker-end: url(#arrow); }
+    .no { stroke-dasharray: 5 5; }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker></defs>
+  <rect width="720" height="476" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="28" y="40">测量之前先分诊：结果能改变什么</text>
+  <text class="sub" x="28" y="68">从上往下依次回答；任何一个“否”，都说明此刻不值得投入测量</text>
+
+  <rect class="node" x="28" y="92" width="372" height="88" rx="7"/>
+  <text class="label" x="214" y="126">① 不同结果会导向不同行动吗？</text>
+  <text class="body" x="214" y="156">负面结果也要能改变决定</text>
+  <path class="flow no" d="M400 136H446"/>
+  <text class="note" x="423" y="126">否</text>
+  <rect class="node no" x="456" y="92" width="236" height="88" rx="7"/>
+  <text class="label" x="574" y="119">先不测</text>
+  <text class="body" x="574" y="145">结果只会是好看的数字</text>
+  <text class="note" x="574" y="168">例：发布工具改动，收益小也会做</text>
+
+  <path class="flow" d="M214 180V206"/>
+  <text class="note" x="232" y="199">是</text>
+
+  <rect class="node" x="28" y="216" width="372" height="88" rx="7"/>
+  <text class="label" x="214" y="250">② 有权的人能据此行动吗？</text>
+  <text class="body" x="214" y="280">认可这类证据，且现在能做改变</text>
+  <path class="flow no" d="M400 260H446"/>
+  <text class="note" x="423" y="250">否</text>
+  <rect class="node no" x="456" y="216" width="236" height="88" rx="7"/>
+  <text class="label" x="574" y="243">暂缓或不测</text>
+  <text class="body" x="574" y="269">证据暂时进不了决定</text>
+  <text class="note" x="574" y="292">例：无力改动、即将重组或退役</text>
+
+  <path class="flow" d="M214 304V330"/>
+  <text class="note" x="232" y="323">是</text>
+
+  <rect class="focus" x="28" y="340" width="664" height="96" rx="7"/>
+  <text class="label" x="360" y="368">开展研究：Readability 事先约定的两种行动</text>
+  <rect class="piece" x="44" y="382" width="308" height="40" rx="5"/>
+  <text class="body" x="198" y="408">收益足以支持成本：保留并公布依据</text>
+  <rect class="piece" x="368" y="382" width="308" height="40" rx="5"/>
+  <text class="body" x="522" y="408">成本更高或收益很小：取消该语言的过程</text>
+
+  <text class="note" x="360" y="462">实线：回答“是”，继续　　虚线：回答“否”，先不测或暂缓</text>
+</svg>

@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="420" viewBox="0 0 720 420" role="img" aria-labelledby="title desc">
+  <title id="title">数据库提交与缓存副本可见之间的陈旧窗口</title>
+  <desc id="desc">假设同一描述由 v7 改为 v8：t1 数据库提交，t2 拥有者缓存更新，t3 读取者收到复制。在 t1 至 t3 之间，本地副本仍为 v7。各步骤不是一个全局原子事务。</desc>
+  <style>
+    :root{--surface:#fcfbf8;--text:#292824;--muted:#66645d;--line:#969187;--soft:#f0ece4;--accent:#386d74}
+    @media(prefers-color-scheme:dark){:root:not([data-theme='light']){--surface:#252524;--text:#e6e3dc;--muted:#b6b1a7;--line:#8c8982;--soft:#353534;--accent:#94c8cf}}
+    :root[data-theme='dark']{--surface:#252524;--text:#e6e3dc;--muted:#b6b1a7;--line:#8c8982;--soft:#353534;--accent:#94c8cf}
+    .bg{fill:var(--surface)}text{fill:var(--text);font-family:system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;font-size:17px}.heading{font-size:21px;font-weight:600}.small{font-size:15px;fill:var(--muted)}.box{fill:var(--soft);stroke:var(--line);stroke-width:1.5}.new{fill:var(--surface);stroke:var(--accent);stroke-width:2}.edge{fill:none;stroke:var(--accent);stroke-width:2;marker-end:url(#arrow)}.replica{stroke-dasharray:6 5}.arrow{fill:var(--accent)}
+  </style>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path class="arrow" d="M0 0 8 4 0 8Z"/></marker></defs>
+  <rect class="bg" width="720" height="420"/>
+  <text class="heading" x="28" y="36">同一描述的更新，不会同时出现在所有位置</text>
+  <text class="small" x="28" y="64">笔记假设 · 向右是时间，虚线是异步复制；不是实测延迟</text>
+  <path class="edge" d="M218 91H681"/>
+  <text class="small" x="250" y="117" text-anchor="middle">t0 原值</text>
+  <text class="small" x="375" y="117" text-anchor="middle">t1 提交</text>
+  <text class="small" x="500" y="117" text-anchor="middle">t2 发布</text>
+  <text class="small" x="625" y="117" text-anchor="middle">t3 副本到达</text>
+  <text x="28" y="162">权威数据库</text>
+  <rect class="box" x="214" y="136" width="72" height="40" rx="7"/><text x="250" y="162" text-anchor="middle">v7</text>
+  <rect class="new" x="339" y="136" width="72" height="40" rx="7"/><text x="375" y="162" text-anchor="middle">v8</text>
+  <rect class="new" x="464" y="136" width="72" height="40" rx="7"/><text x="500" y="162" text-anchor="middle">v8</text>
+  <rect class="new" x="589" y="136" width="72" height="40" rx="7"/><text x="625" y="162" text-anchor="middle">v8</text>
+  <text x="28" y="237">拥有者缓存</text>
+  <rect class="box" x="214" y="211" width="72" height="40" rx="7"/><text x="250" y="237" text-anchor="middle">v7</text>
+  <rect class="box" x="339" y="211" width="72" height="40" rx="7"/><text x="375" y="237" text-anchor="middle">v7</text>
+  <rect class="new" x="464" y="211" width="72" height="40" rx="7"/><text x="500" y="237" text-anchor="middle">v8</text>
+  <rect class="new" x="589" y="211" width="72" height="40" rx="7"/><text x="625" y="237" text-anchor="middle">v8</text>
+  <text x="28" y="312">读取者副本</text>
+  <rect class="box" x="214" y="286" width="72" height="40" rx="7"/><text x="250" y="312" text-anchor="middle">v7</text>
+  <rect class="box" x="339" y="286" width="72" height="40" rx="7"/><text x="375" y="312" text-anchor="middle">v7</text>
+  <rect class="box" x="464" y="286" width="72" height="40" rx="7"/><text x="500" y="312" text-anchor="middle">v7</text>
+  <rect class="new" x="589" y="286" width="72" height="40" rx="7"/><text x="625" y="312" text-anchor="middle">v8</text>
+  <path class="edge replica" d="M536 242 585 282"/>
+  <path class="edge" d="M375 347H618"/><text class="small" x="500" y="373" text-anchor="middle">读取者的陈旧窗口</text>
+  <text class="small" x="28" y="404">提交成功 ≠ 缓存发布成功 ≠ 所有副本已经可见</text>
+  <script><![CDATA[try { const t = localStorage.getItem('reading-notes-theme'); if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t); } catch {}]]></script>
+</svg>

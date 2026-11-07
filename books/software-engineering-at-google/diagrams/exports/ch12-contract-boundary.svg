@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="360" viewBox="0 0 720 360" role="img" aria-labelledby="title desc">
+  <title id="title">行为测试依赖公开约定，让内部实现可以替换</title>
+  <desc id="desc">从左向右：同一组测试准备余额150与20，转账100后断言50与120；测试通过公开的transfer与balance接口工作。右侧余额表和交易流水是二选一的实现示意，不是连续执行步骤。</desc>
+  <!-- Original editable hand-written SVG; the export is an identical web copy. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='light'] { color-scheme: light; }
+    :root[data-theme='dark'] { color-scheme: dark; --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 15px; fill: var(--muted); }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.2; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.5; }
+    .label { font-size: 18px; font-weight: 600; text-anchor: middle; }
+    .body { font-size: 17px; text-anchor: middle; }
+    .code { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 16px; text-anchor: middle; }
+    .arrow { fill: none; stroke: var(--line); stroke-width: 1.8; marker-end: url(#arrow); }
+    .branch { fill: none; stroke: var(--line); stroke-width: 1.8; }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker></defs>
+  <rect width="720" height="360" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="28" y="39">固定行为约定，保留实现选择</text>
+  <text class="sub" x="28" y="69">箭头表示调用或实现关系；右侧是可替换方案</text>
+  <rect class="node" x="28" y="104" width="194" height="182" rx="7"/>
+  <text class="label" x="125" y="136">同一组行为测试</text>
+  <text class="body" x="125" y="174">初始余额 150、20</text>
+  <text class="body" x="125" y="211">转账 100</text>
+  <text class="body" x="125" y="251">应得到 50、120</text>
+  <path class="arrow" d="M230 195H256"/>
+  <rect class="focus" x="264" y="104" width="174" height="182" rx="7"/>
+  <text class="label" x="351" y="141">公开 API</text>
+  <text class="code" x="351" y="191">transfer(...)</text>
+  <text class="code" x="351" y="234">balance(...)</text>
+  <path class="branch" d="M438 195H459M459 143V247"/>
+  <path class="arrow" d="M459 143H476"/>
+  <path class="arrow" d="M459 247H476"/>
+  <rect class="node" x="484" y="104" width="208" height="78" rx="7"/>
+  <text class="label" x="588" y="136">方案 A：余额表</text>
+  <text class="body" x="588" y="164">直接保存各账户余额</text>
+  <rect class="node" x="484" y="208" width="208" height="78" rx="7"/>
+  <text class="label" x="588" y="240">方案 B：交易流水</text>
+  <text class="body" x="588" y="268">按交易记录计算余额</text>
+  <text class="sub" x="28" y="330">测试无需固定私有方法名、内部调用次数或存储格式。</text>
+</svg>

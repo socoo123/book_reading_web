@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="414" viewBox="0 0 720 414" role="img" aria-labelledby="title desc">
+  <title id="title">设计在整体与细节之间双向修正</title>
+  <desc id="desc">上层是整体中的质量优先级、风格与职责边界，下层是接口、框架能力与原型结果。向下箭头表示核实整体假设，向上箭头表示把实际约束与设计机会带回整体。它们是推理方向，不是两个一次完成的阶段。</desc>
+  <!-- Original, editable hand-written SVG. The export is an identical web copy. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 16px; fill: var(--muted); }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.2; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .label { font-size: 20px; font-weight: 600; text-anchor: middle; }
+    .detail { font-size: 16px; text-anchor: middle; fill: var(--muted); }
+    .direction { font-size: 17px; text-anchor: middle; }
+    .arrow { fill: none; stroke: var(--line); stroke-width: 1.8; marker-end: url(#arrow); }
+    .back { fill: none; stroke: var(--accent); stroke-width: 1.8; marker-end: url(#back-arrow); }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker>
+    <marker id="back-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--accent)"/></marker>
+  </defs>
+  <rect width="720" height="414" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="30" y="38">让整体假设与实现事实相互修正</text>
+  <text class="sub" x="30" y="67">下钻核实假设，返回调整选择</text>
+
+  <rect class="node" x="60" y="92" width="600" height="88" rx="7"/>
+  <text class="label" x="360" y="128">整体：质量优先级、风格与职责边界</text>
+  <text class="detail" x="360" y="157">提出需要核实的设计假设</text>
+
+  <path class="arrow" d="M240 189V253"/>
+  <text class="direction" x="145" y="226">下钻验证 ↓</text>
+  <path class="back" d="M480 253V189"/>
+  <text class="direction" x="575" y="226">↑ 返回修正</text>
+
+  <rect class="focus" x="60" y="264" width="600" height="88" rx="7"/>
+  <text class="label" x="360" y="300">细节：接口、框架能力与原型结果</text>
+  <text class="detail" x="360" y="329">发现实际约束，或找到新的设计机会</text>
+
+  <text class="sub" x="30" y="390">箭头表示推理方向；往返可发生在开发的任何阶段。</text>
+</svg>

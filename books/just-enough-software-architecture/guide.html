@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>全书导航｜术语、案例与来源 · Just Enough Software Architecture</title>
+  <meta name="description" content="全书16章术语导航、跨章案例路径、来源与纠错索引。">
+  <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+  <script src="../../assets/theme.js"></script>
+  <script src="../../assets/reader.js" defer></script>
+  <link rel="stylesheet" href="../../assets/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header reader-header"><div class="container header-inner">
+    <a class="brand" href="../../index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5.5C8.5 3.8 5.8 3.6 2.5 4.5v14c3.3-.9 6-.7 9.5 1 3.5-1.7 6.2-1.9 9.5-1v-14c-3.3-.9-6-.7-9.5 1Zm0 0v14"/></svg>书架</a>
+    <a class="reader-book-title" href="index.html" lang="en">Just Enough Software Architecture</a>
+    <div class="theme-control" role="group" aria-label="外观" hidden><button type="button" data-theme-value="system" title="跟随系统"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path class="fill" d="M12 4a8 8 0 0 1 0 16Z"/></svg><span class="sr-only">跟随系统</span></button><button type="button" data-theme-value="light" title="浅色"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.6"/><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21M5.6 5.6l1.6 1.6M16.8 16.8l1.6 1.6M5.6 18.4l1.6-1.6M16.8 7.2l1.6-1.6"/></svg><span class="sr-only">浅色</span></button><button type="button" data-theme-value="dark" title="深色"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.5 14.6A7.8 7.8 0 0 1 9.4 4.5a7.8 7.8 0 1 0 10.1 10.1Z"/></svg><span class="sr-only">深色</span></button></div>
+  </div></header>
+  <main id="main" class="container reader-container">
+    <nav class="breadcrumb" aria-label="当前位置"><ol><li><a href="../../index.html">书架</a></li><li><a href="index.html">书籍概览</a></li><li aria-current="page">全书导航</li></ol></nav>
+    <div class="reading-layout">
+      <aside class="toc"><nav aria-label="本页目录"><h2>本页目录</h2><ul><li><a href="#reading-routes">01　两条阅读主线</a></li><li><a href="#risk-terms">02　风险、质量与设计工作</a></li><li><a href="#model-terms">03　模型、元素与关系</a></li><li><a href="#cases">04　沿着案例跨章阅读</a></li><li><a href="#sources">05　来源定位与核查范围</a></li><li><a href="#corrections">06　纠错与适用边界索引</a></li></ul><p class="toc-note"><a href="index.html">← 书籍概览</a></p></nav></aside>
+      <article class="article">
+        <header class="article-header"><p class="eyebrow">READING GUIDE / 全书索引</p><h1>全书导航｜术语、案例与来源</h1><p class="article-deck">连接风险驱动与架构建模两条主线</p></header>
+        <p>本页是第 1—16 章笔记的阅读索引。按问题寻找术语、沿案例连接章节，或回到具体来源与纠错说明；完整推理仍在各章正文中。中文术语为本站笔记译法。</p>
+        <details class="mobile-toc"><summary>本页目录 · 6 个小节</summary><nav aria-label="移动端本页目录"><ul><li><a href="#reading-routes">01　两条阅读主线</a></li><li><a href="#risk-terms">02　风险、质量与设计工作</a></li><li><a href="#model-terms">03　模型、元素与关系</a></li><li><a href="#cases">04　沿着案例跨章阅读</a></li><li><a href="#sources">05　来源定位与核查范围</a></li><li><a href="#corrections">06　纠错与适用边界索引</a></li></ul></nav></details>
+        <section id="reading-routes"><h2><span class="section-number">01</span>两条阅读主线</h2>
+          <ul>
+            <li><strong>决定投入多少</strong>：<a href="chapters/ch02.html#function-and-quality">架构与质量属性</a> → <a href="chapters/ch03.html#risk-loop">风险—技术—证据闭环</a> → <a href="chapters/ch04.html#evidence-and-stopping">播放器的实际取舍</a> → <a href="chapters/ch05.html#focus-on-risks">建模建议</a> → <a href="chapters/ch16.html#stop-modeling-functionality">结论中的停止点</a>。</li>
+            <li><strong>用模型形成可检查的认识</strong>：<a href="chapters/ch06.html#model-roundtrip">模型往返</a> → <a href="chapters/ch07.html#three-primary-models">领域／设计／代码模型</a> → <a href="chapters/ch12.html#component-types-instances">元素</a>与<a href="chapters/ch13.html#using-the-relationships">关系</a> → <a href="chapters/ch14.html#styles-as-constraints">风格约束</a> → <a href="chapters/ch15.html#analysis-roundtrip">模型分析</a> → <a href="chapters/ch16.html#validate-in-running-system">运行验证</a>。</li>
+          </ul>
+          <p>初读可从<a href="chapters/ch01.html">第 1 章</a>顺序阅读；复习时，先明确自己在问投入、结构、行为还是证据，再选择下面的入口。</p>
+        </section>
+        <section id="risk-terms"><h2><span class="section-number">02</span>风险、质量与设计工作</h2>
+          <div class="table-scroll" role="region" aria-label="风险与设计术语" tabindex="0"><table><thead><tr><th>统一术语／英文</th><th>含义与阅读位置</th></tr></thead><tbody>
+            <tr><td>架构设计活动 / architecting</td><td>与架构师角色、架构产物分开理解：<a href="chapters/ch01.html#role-activity-artifact">第 1 章</a>。</td></tr>
+            <tr><td>风险驱动模型 / risk-driven model</td><td>识别并排序风险，选择并应用技术，评估风险降低；新证据也可能揭露新风险：<a href="chapters/ch03.html#risk-loop">第 3 章</a>。</td></tr>
+            <tr><td>质量属性 / quality attributes</td><td>系统以何种性质完成功能；可修改性、可扩展性等须放在具体情境中：<a href="chapters/ch02.html#function-and-quality">第 2 章</a>。</td></tr>
+            <tr><td>延迟 / latency；吞吐量 / throughput</td><td>前者是一次操作所需时间，后者是单位时间完成量；不能直接互换：<a href="chapters/ch06.html#website-performance">第 6 章</a>。</td></tr>
+            <tr><td>质量属性场景 / quality attribute scenario</td><td>用刺激源、刺激、环境、对象、响应、响应度量明确要求：<a href="chapters/ch09.html#quality-scenarios-drivers">第 9 章</a>。</td></tr>
+            <tr><td>架构驱动因素 / architecture driver</td><td>对架构选择影响显著的要求；如何分配职责见<a href="chapters/ch12.html#drivers-and-responsibilities">第 12 章</a>。</td></tr>
+            <tr><td>预设架构 / presumptive architecture</td><td>一个领域中通常默认采用的架构；与供设计参照的参考架构区分：<a href="chapters/ch02.html#presumptive-architecture">第 2 章</a>。</td></tr>
+            <tr><td>架构提升 / architecture hoisting</td><td>由共同架构机制承担某项目标或性质的实现责任：<a href="chapters/ch02.html#hoisting-mechanism">第 2 章</a>。</td></tr>
+            <tr><td>架构失配 / architectural mismatch</td><td>组件对环境、控制或交互的假设不兼容：<a href="chapters/ch04.html#cots-boundary">播放器案例</a>、<a href="chapters/ch15.html#architectural-mismatch">第 15 章</a>。</td></tr>
+            <tr><td>关注架构的设计 / architecture-focused design</td><td>有意识地选择结构与约束以支持目标：<a href="chapters/ch02.html#indifferent-and-focused">第 2 章</a>。</td></tr>
+            <tr><td>横切关注点 / crosscutting concern</td><td>跨越既定边界的责任或性质，不能仅靠一种划分全部封装：<a href="chapters/ch16.html#dynamic-and-crosscutting">第 16 章</a>。</td></tr>
+          </tbody></table></div>
+        </section>
+        <section id="model-terms"><h2><span class="section-number">03</span>模型、元素与关系</h2>
+          <div class="table-scroll" role="region" aria-label="模型术语" tabindex="0"><table><thead><tr><th>统一术语／英文</th><th>区别与阅读位置</th></tr></thead><tbody>
+            <tr><td>领域／设计／代码模型 / domain / design / code model</td><td>分别组织问题领域事实、设计承诺与实现细节，不是必须单向完成的三个阶段：<a href="chapters/ch07.html#three-primary-models">第 7 章</a>。</td></tr>
+            <tr><td>边界模型／内部模型 / boundary / internals model</td><td>从使用者所需承诺与内部实现两个尺度说明同一实体：<a href="chapters/ch09.html#boundary-and-refinement">第 9 章</a>。</td></tr>
+            <tr><td>主模型／视图／视图类型 / master model / view / viewtype</td><td>视图是选择性表达；视图类型按元素与关系组织表达：<a href="chapters/ch07.html#master-model-and-views">第 7 章</a>、<a href="chapters/ch09.html#viewtypes-and-instances">第 9 章</a>。</td></tr>
+            <tr><td>模块／运行时／分配视图类型</td><td>分别看实现组织、运行协作及软件与环境的对应；运行时也称组件与连接器（C&amp;C）视图类型：<a href="chapters/ch09.html#viewtypes-and-instances">第 9 章</a>。</td></tr>
+            <tr><td>模块／组件／连接器／节点 / module / component / connector / node</td><td>代码组织、运行实体、交互机制与分配环境中的计算资源不能只凭名称等同：<a href="chapters/ch12.html#modules-and-components">第 12 章</a>、<a href="chapters/ch12.html#allocation-elements">分配元素</a>。</td></tr>
+            <tr><td>提供端口／所需端口 / provided / required port</td><td>边界提供的能力与所依赖的能力；端口还可包含协议：<a href="chapters/ch12.html#ports-types-interfaces">第 12 章</a>。</td></tr>
+            <tr><td>角色／附接 / role / attachment</td><td>角色是连接器端点；附接把组件端口与连接器角色连接起来：<a href="chapters/ch12.html#bindings-and-attachment">第 12 章</a>。</td></tr>
+            <tr><td>绑定 / binding</td><td>内外端口对应见<a href="chapters/ch12.html#bindings-and-attachment">第 12 章</a>；把模式占位符及约束应用到模型的另一语境见<a href="chapters/ch13.html#binding-and-dependency">第 13 章</a>。</td></tr>
+            <tr><td>信息模型／快照／不变量 / information model / snapshot / invariant</td><td>概念与关系、某一具体状态、所有合法状态应满足的规则：<a href="chapters/ch08.html#navigation-and-invariants">第 8 章</a>。</td></tr>
+            <tr><td>功能场景／脑内演练 / functionality scenario / mental animation</td><td>场景给出具体轨迹，脑内演练沿轨迹检查状态、责任与规则：<a href="chapters/ch12.html#functionality-scenarios">第 12 章</a>、<a href="chapters/ch15.html#mental-animation">第 15 章</a>。</td></tr>
+            <tr><td>指称关系 / designation</td><td>说明模型中的概念代表什么，不要求复制被指称对象的全部结构：<a href="chapters/ch07.html#designation">第 7 章</a>、<a href="chapters/ch13.html#designation">第 13 章</a>。</td></tr>
+            <tr><td>精化关系 / refinement</td><td>增加细节并承接抽象层已有承诺：<a href="chapters/ch07.html#refinement">第 7 章</a>、<a href="chapters/ch13.html#refinement">第 13 章</a>。</td></tr>
+            <tr><td>开放／闭合精化语义 / open / closed refinement semantics</td><td>决定能否增加指定类别的内容，闭合不等于所有细节都已列尽：<a href="chapters/ch13.html#open-and-closed">第 13 章</a>。</td></tr>
+            <tr><td>分类／泛化 / classification / generalization</td><td>类型—实例与一般—特殊类型是两种关系：<a href="chapters/ch13.html#classification-and-generalization">第 13 章</a>。</td></tr>
+            <tr><td>投影／划分／组合 / projection / partition / composition</td><td>选择性表达、把整体拆开、把部分合成整体：<a href="chapters/ch13.html#projection">第 13 章</a>及<a href="chapters/ch13.html#partition-and-composition">划分与组合</a>。</td></tr>
+            <tr><td>封装／设计秘密／抽象数据类型 / encapsulation / design secret / ADT</td><td>缩小使用者必须理解的范围，隐藏可变决定，以契约描述操作：<a href="chapters/ch11.html#effective-encapsulation">第 11 章</a>。</td></tr>
+            <tr><td>架构显式编码风格／模型入码原则</td><td>让架构抽象及设计意图能在代码中被识别：<a href="chapters/ch10.html#intent-and-model-in-code">第 10 章</a>。</td></tr>
+            <tr><td>理想风格／具身风格 / Platonic / embodied style</td><td>严格的理想形式与真实系统中体现的形式；后者可能偏离理想约束：<a href="chapters/ch14.html#ideal-and-embodied">第 14 章</a>。</td></tr>
+            <tr><td>分层 / layered；运行服务层级 / tier</td><td>layer 讨论模块依赖，tier 讨论运行服务链，都不能直接按机器数计算：<a href="chapters/ch14.html#layers-vs-tiers">第 14 章</a>。</td></tr>
+          </tbody></table></div>
+        </section>
+        <section id="cases"><h2><span class="section-number">04</span>沿着案例跨章阅读</h2>
+          <ul>
+            <li><strong>Rackspace 日志查询</strong>：<a href="chapters/ch01.html#rackspace-generations">第 1 章三代系统</a> → <a href="chapters/ch14.html#map-reduce">第 14 章 MapReduce 风格</a> → <a href="chapters/ch16.html#constraints-as-guide-rails">第 16 章约束取舍</a>。保持查询响应、索引新鲜度、新种类分析等待三个口径；第 14 章是一般机制解释，不是为 Rackspace 补写实施细节。</li>
+            <li><strong>家庭媒体播放器</strong>：<a href="chapters/ch04.html#prototype-and-risks">第 4 章背景与风险</a> → <a href="chapters/ch04.html#pause-and-connectors">暂停场景</a>、<a href="chapters/ch04.html#adapters-and-failure">适配与故障隔离</a>、<a href="chapters/ch04.html#overlay-and-latency">延迟测量</a> → <a href="chapters/ch16.html#validate-in-running-system">第 16 章运行验证</a>。50ms 响应目标与约一秒恢复是不同指标；内部适配器不各自等于一个顶层进程。</li>
+            <li><strong>Yinzer 社交网络</strong>：<a href="chapters/ch07.html#three-primary-models">第 7 章三类模型</a> → <a href="chapters/ch08.html#yinzer-vocabulary">第 8 章领域词汇</a> → <a href="chapters/ch09.html#yinzer-internals">第 9 章边界与内部</a> → <a href="chapters/ch11.html#invitation-snapshots">第 11 章邀请快照</a> → <a href="chapters/ch16.html#constraints-as-guide-rails">第 16 章异步邮件取舍</a>。领域场景、系统场景和接口快照说明不同层次，不拼成同一次操作；一秒目标指系统发出网页。</li>
+            <li><strong>邮件处理流水线</strong>：<a href="chapters/ch10.html#email-pipeline">第 10 章结构与实现</a> → <a href="chapters/ch10.html#pipe-code-check">Pipe 读取／关闭问题</a>与<a href="chapters/ch10.html#run-versus-start">线程启动问题</a> → <a href="chapters/ch14.html#pipe-and-filter">第 14 章管道风格</a>。这是独立的邮件过滤示例，不把它等同于 Yinzer 的异步发信实现。</li>
+            <li><strong>图书馆</strong>：<a href="chapters/ch12.html#component-types-instances">第 12 章组件及实例</a> → <a href="chapters/ch12.html#assemblies-and-refinement">装配</a>与<a href="chapters/ch12.html#two-level-general-behavior">两层场景</a> → <a href="chapters/ch15.html#return-scenario">第 15 章归还</a>、<a href="chapters/ch15.html#action-specifications">借出契约</a>。六端口完整边界与四业务端口局部图各有范围；模型逐步暴露缺口，不把后续补全反写成最初就已具备。</li>
+          </ul>
+        </section>
+        <section id="sources"><h2><span class="section-number">05</span>来源定位与核查范围</h2>
+          <p>依据 George Fairbanks，<em>Just Enough Software Architecture: A Risk-Driven Approach</em>，Marshall &amp; Brainerd，2010 年 8 月首次印刷，ISBN <code>978-0-9846181-0-1</code>。<a href="https://www.georgefairbanks.com/book/">作者官网</a>提供书目信息；第 1 章笔记实际依据<a href="https://www.georgefairbanks.com/assets/jesa/Just_Enough_Software_Architecture__Fairbanks_2010-demo.pdf">官方 99 页试读</a>，第 2—16 章依据用户提供的 378 页全书。两文件未逐页比对，保留各自来源记录。</p>
+          <p>每章文末折叠区保留原书小节对应、页序、补充链接和核查范围：</p>
+          <ul>
+            <li>导论：<a href="chapters/ch01.html#sources">01 来源</a>。</li>
+            <li>风险驱动：<a href="chapters/ch02.html#sources">02</a> · <a href="chapters/ch03.html#sources">03</a> · <a href="chapters/ch04.html#sources">04</a> · <a href="chapters/ch05.html#sources">05</a>。</li>
+            <li>模型基础：<a href="chapters/ch06.html#sources">06</a> · <a href="chapters/ch07.html#sources">07</a> · <a href="chapters/ch08.html#sources">08</a> · <a href="chapters/ch09.html#sources">09</a>。</li>
+            <li>实现、元素与关系：<a href="chapters/ch10.html#sources">10</a> · <a href="chapters/ch11.html#sources">11</a> · <a href="chapters/ch12.html#sources">12</a> · <a href="chapters/ch13.html#sources">13</a>。</li>
+            <li>风格、使用与结论：<a href="chapters/ch14.html#sources">14</a> · <a href="chapters/ch15.html#sources">15</a> · <a href="chapters/ch16.html#sources">16</a>。</li>
+          </ul>
+          <p>原书中的历史案例按原书归属；未独立通读的引用资料在各章说明。Java、OMG UML／OCL、Fielding、Bloch、NIST、MapReduce 原始论文及 SEI 等补充依据用于核查具体问题，不追认为 2010 年原书新增内容。既有外部核查日期为 2026-11-06；本索引汇总已有记录，不表示重新验证了所有外部链接或重跑了所有示例。</p>
+        </section>
+        <section id="corrections"><h2><span class="section-number">06</span>纠错与适用边界索引</h2>
+          <p>以下按阅读位置区分原文错误、术语澄清、模型前提与时代背景。链接处保留完整的“原表述 → 问题及依据 → 修正解释”。</p>
+          <h3>原文错误与内部不一致</h3>
+          <ul>
+            <li><strong>§2.1 JavaBeans 大小写</strong>：<code>getTargetVelocity()</code> 对应 <code>TargetVelocity</code> → 默认内省首字母规则不符 → 应为 <code>targetVelocity</code>；<a href="chapters/ch02.html#sources">原文位置与 Oracle 依据</a>。</li>
+            <li><strong>§3.7 指标名称</strong>：“90% 消息在 25ms 内交付”称吞吐量预算 → 实为延迟分布 → 按延迟目标解释；<a href="chapters/ch03.html#sources">核查说明</a>。第 6 章同样区分<a href="chapters/ch06.html#website-performance">单请求延迟与吞吐量</a>。</li>
+            <li><strong>图 7.3 图注</strong>：精化图却写领域类型与设计类型对应 → 与图及正文冲突 → 按代码对设计的精化解释；<a href="chapters/ch07.html#refinement">详细说明</a>。</li>
+            <li><strong>§8.3 OCL 不变量</strong>：空联系网络代入原式得 <code>0 = 1</code> → 排除模型本来允许的零联系状态 → 应容纳空网络并明确关系规则；<a href="chapters/ch08.html#navigation-and-invariants">反例与修正思路</a>。未提供已执行的修正版 OCL。</li>
+            <li><strong>§9.5.8 六要素漏项</strong>：文字称六项却列五项 → 图 9.7 明列 Artifact → 补齐“对象”；<a href="chapters/ch09.html#quality-scenarios-drivers">六要素说明</a>。同章 <code>Own</code>／Owen、Web 入口计数及邮件动作未展开见<a href="chapters/ch09.html#sources">来源记录</a>。</li>
+            <li><strong>§10.8 Pipe</strong>：注释承诺等待，代码空队列却返回 <code>null</code>；正文关闭语义也未由读取实现 → 队列线程安全不等于关闭协议正确 → 分别说明等待、结束、可见性、原子性与唤醒；<a href="chapters/ch10.html#pipe-code-check">代码核查</a>。</li>
+            <li><strong>图 10.11 线程</strong>：直接调用 <code>run()</code> → 不启动独立线程 → 用 <code>Thread.start()</code> 等启动机制区分结构装配与执行；<a href="chapters/ch10.html#run-versus-start">代码与官方依据</a>。</li>
+            <li><strong>§12.2 分类／泛化</strong>：类型—实例误称 generalization → 与第 13 章及 UML 区分冲突 → 统一为 classification；<a href="chapters/ch12.html#component-types-instances">纠错</a>。同章绑定段的 B.P1／B.P2 笔误按图 12.22 解释为外部 P1—内部 P2，见<a href="chapters/ch12.html#bindings-and-attachment">绑定</a>。</li>
+            <li><strong>§13.7.4 算法归属</strong>：将 Bloch 中点溢出案例写作 Quicksort → 原文章具体展示二分搜索并扩展到归并排序 → 更正归属，保留非负有序 Java <code>int</code> 索引前提；<a href="chapters/ch13.html#overflow-and-model-risk">案例与安全式</a>。</li>
+            <li><strong>§14.10 模型居中依赖</strong>：称视图与控制器独立于中央模型 → 同页正文与图明确依赖模型 → 解释为外围彼此独立、共同依赖模型；<a href="chapters/ch14.html#model-centered">说明</a>。</li>
+            <li><strong>§14.15 镜像可靠性</strong>：由两机更可能有一台坏掉推断服务可靠性下降 → 部件故障不等于服务失效 → 区分冗余前提、接管与共同原因故障；<a href="chapters/ch14.html#allocation-styles">NIST 依据与解释</a>。</li>
+            <li><strong>§15.3.1／§15.13 缺失引用</strong>：<code>(?, )</code> → 引用未排出 → 补 Kruchten 1995 年“4+1”论文；<a href="chapters/ch15.html#sources">书目与核查范围</a>。</li>
+            <li><strong>§16.4 措辞</strong>：将 risk 与应被促进或保证的目标并列 → 字面含义与降低失败风险矛盾 → 解释为促进功能、支持质量属性或降低风险；<a href="chapters/ch16.html#sources">原表述与位置</a>。</li>
+          </ul>
+          <h3>概念澄清、简化前提与时代背景</h3>
+          <ul>
+            <li><strong>本站术语表修正</strong>：先前将具身风格概括为“由框架等具体技术承载”，范围偏窄；§14.2 指真实系统中体现的风格。英文统一为 Platonic／embodied，与<a href="chapters/ch14.html#ideal-and-embodied">第 14 章</a>正文一致。</li>
+            <li><strong>跨章属性命名</strong>：§12.9 的 <code>is_removed</code> 与 §15.3.3 的 <code>isRemoved</code> 都用于说明 Copy 是否移出馆藏。保留原书两种拼写并说明对应，不推定为两个独立属性；见<a href="chapters/ch15.html#action-specifications">第 15 章</a>。</li>
+            <li><strong>术语范围</strong>：原书广义“架构重构”与严格保持可观察行为的重构定义有别，见<a href="chapters/ch03.html#architecture-refactoring">第 3 章</a>；REST 不能仅由消息格式说明，见<a href="chapters/ch14.html#sources">第 14 章 Fielding 依据</a>。</li>
+            <li><strong>模型范围</strong>：<a href="chapters/ch04.html#bounded-domain-model">第 4 章音乐元数据基数</a>、<a href="chapters/ch08.html#relationships-and-multiplicity">第 8 章 Employment 简化</a>、<a href="chapters/ch11.html#sources">第 11 章 Person／Member 命名差异</a>均保留说明；不将局部示例扩大为通用领域规范。</li>
+            <li><strong>实现前提</strong>：<a href="chapters/ch12.html#drivers-and-responsibilities">第 12 章 UI 验证量词例</a>不等于安全建议；<a href="chapters/ch14.html#map-reduce">MapReduce</a>顺序等价涉及确定函数与提交语义，不自动覆盖外部副作用；<a href="chapters/ch15.html#analysis-scope">Alloy 有限范围分析</a>无反例不等于证明实际系统。</li>
+            <li><strong>时代背景</strong>：<a href="chapters/ch10.html#patterns-module-boundaries">Java 模块系统</a>区分原书 Java 7 预期与 Java 9 实际交付；<a href="chapters/ch16.html#dynamic-and-crosscutting">动态架构与工具</a>保留 2010 年语境，不写成当前工具能力结论。</li>
+          </ul>
+        </section>
+        <p><a href="index.html">返回书籍概览</a> · <a href="chapters/ch16.html">重读结论</a></p>
+      </article>
+    </div>
+  </main>
+  <footer class="site-footer"><div class="container footer-inner"><a href="index.html">← 返回书籍概览</a><a href="#main">回到顶部 ↑</a></div></footer>
+</body>
+</html>

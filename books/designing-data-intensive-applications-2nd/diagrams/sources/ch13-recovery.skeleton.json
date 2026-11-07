@@ -1,0 +1,308 @@
+[
+  {
+    "type": "text",
+    "id": "title",
+    "x": 24,
+    "y": 18,
+    "text": "恢复的是尚未完成的输出责任",
+    "fontSize": 25,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "subtitle",
+    "x": 24,
+    "y": 60,
+    "text": "工程补充：持久待发清单；另一条路径是状态与位点一致恢复后重放。",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "rectangle",
+    "id": "tx",
+    "x": 24,
+    "y": 135,
+    "width": 320,
+    "height": 140,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "label": {
+      "text": "一个本地事务\n批准 r7、预留 31、输入位点\n待发：A−31 / B+30 / F+1",
+      "fontSize": 20,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "publish",
+    "x": 440,
+    "y": 155,
+    "width": 190,
+    "height": 100,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "label": {
+      "text": "发布器\n逐条可靠交接",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "scan",
+    "x": 350,
+    "y": 205,
+    "width": 84,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        84,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "strokeStyle": "solid",
+    "roughness": 0.6,
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "tx"
+    },
+    "end": {
+      "id": "publish"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "b",
+    "x": 710,
+    "y": 155,
+    "width": 190,
+    "height": 100,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "label": {
+      "text": "B 已收到 +30\n确认可能丢失",
+      "fontSize": 20,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "sendb",
+    "x": 636,
+    "y": 205,
+    "width": 68,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        68,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "strokeStyle": "dashed",
+    "roughness": 0.6,
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "publish"
+    },
+    "end": {
+      "id": "b"
+    }
+  },
+  {
+    "type": "text",
+    "id": "crash",
+    "x": 440,
+    "y": 295,
+    "text": "× 只发 B 后崩溃",
+    "fontSize": 20,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "rectangle",
+    "id": "resume",
+    "x": 24,
+    "y": 395,
+    "width": 320,
+    "height": 110,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "label": {
+      "text": "重启读取持久待发记录\n补齐未确认的责任",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "recover",
+    "x": 184,
+    "y": 281,
+    "width": 0,
+    "height": 108,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        108
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "strokeStyle": "solid",
+    "roughness": 0.6,
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "tx"
+    },
+    "end": {
+      "id": "resume"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "a",
+    "x": 440,
+    "y": 385,
+    "width": 190,
+    "height": 100,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "label": {
+      "text": "A：补发 −31\n完成预留出账",
+      "fontSize": 20,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "f",
+    "x": 710,
+    "y": 385,
+    "width": 190,
+    "height": 100,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "label": {
+      "text": "F：补发 +1\n手续费入账",
+      "fontSize": 20,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "senda",
+    "x": 350,
+    "y": 430,
+    "width": 84,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        84,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "strokeStyle": "dashed",
+    "roughness": 0.6,
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "resume"
+    },
+    "end": {
+      "id": "a"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "sendf",
+    "x": 350,
+    "y": 480,
+    "width": 354,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        35,
+        60
+      ],
+      [
+        340,
+        60
+      ],
+      [
+        354,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "strokeStyle": "dashed",
+    "roughness": 0.6,
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "resume"
+    },
+    "end": {
+      "id": "f"
+    }
+  },
+  {
+    "type": "text",
+    "id": "duplicate",
+    "x": 440,
+    "y": 560,
+    "text": "B 若重复收到：同一分录只生效一次。",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "text",
+    "id": "bottom",
+    "x": 24,
+    "y": 620,
+    "text": "不能只记 seen(r7) 就跳过；确认前的发送责任必须可恢复。",
+    "fontSize": 19,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  }
+]

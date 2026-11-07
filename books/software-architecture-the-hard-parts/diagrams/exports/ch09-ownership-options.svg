@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="670" viewBox="0 0 720 670" role="img" aria-labelledby="title desc">
+  <title id="title">联合所有权的四种替代安排</title>
+  <desc id="desc">拆表后目录与库存各写一表；数据域保留两服务写同一表；委托让库存请求目录写表；合并让两种功能在同一个服务内写表。实线为直接写入，虚线为服务间交接。</desc>
+  <style>
+    :root{--surface:#fcfbf8;--text:#292824;--muted:#66645d;--line:#969187;--soft:#f0ece4;--accent:#386d74}
+    @media(prefers-color-scheme:dark){:root:not([data-theme='light']){--surface:#252524;--text:#e6e3dc;--muted:#b6b1a7;--line:#8c8982;--soft:#353534;--accent:#94c8cf}}
+    :root[data-theme='dark']{--surface:#252524;--text:#e6e3dc;--muted:#b6b1a7;--line:#8c8982;--soft:#353534;--accent:#94c8cf}
+    .bg{fill:var(--surface)}text{fill:var(--text);font-family:system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;font-size:17px}.heading{font-size:21px;font-weight:600}.small{font-size:14px;fill:var(--muted)}.box{fill:var(--soft);stroke:var(--line);stroke-width:1.5}.boundary{fill:none;stroke:var(--line);stroke-width:1.5}.data{fill:var(--surface);stroke:var(--accent);stroke-width:1.5}.edge{fill:none;stroke:var(--accent);stroke-width:2;marker-end:url(#arrow)}.handoff{stroke-dasharray:6 5}.arrow{fill:var(--accent)}.divider{stroke:var(--line);stroke-width:1}
+  </style>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path class="arrow" d="M0 0 8 4 0 8Z"/></marker></defs>
+  <rect class="bg" width="720" height="670"/>
+  <text class="heading" x="28" y="36">同一张商品表，四种责任安排</text>
+  <text class="small" x="28" y="63">每行是替代方案 · 实线：直接写入 · 虚线：服务间交接</text>
+  <text x="28" y="108">① 拆表</text><text class="small" x="28" y="133">单一拥有</text>
+  <rect class="boundary" x="180" y="85" width="202" height="120" rx="10"/>
+  <rect class="box" x="197" y="96" width="168" height="40" rx="7"/><text x="281" y="123" text-anchor="middle">目录服务</text>
+  <rect class="data" x="197" y="161" width="168" height="32" rx="5"/><text x="281" y="184" text-anchor="middle">Product</text><path class="edge" d="M281 136V157"/>
+  <rect class="boundary" x="480" y="85" width="212" height="120" rx="10"/>
+  <rect class="box" x="497" y="96" width="178" height="40" rx="7"/><text x="586" y="123" text-anchor="middle">库存服务</text>
+  <rect class="data" x="497" y="161" width="178" height="32" rx="5"/><text x="586" y="184" text-anchor="middle">Inventory</text><path class="edge" d="M586 136V157"/>
+  <path class="edge handoff" d="M382 116H475"/><text class="small" x="431" y="147" text-anchor="middle">新增／删除</text><text class="small" x="431" y="169" text-anchor="middle">需协调</text>
+  <path class="divider" d="M28 224H692"/>
+  <text x="28" y="261">② 数据域</text><text class="small" x="28" y="286">共享拥有</text>
+  <rect class="box" x="197" y="241" width="168" height="40" rx="7"/><text x="281" y="268" text-anchor="middle">目录服务</text>
+  <rect class="box" x="497" y="241" width="178" height="40" rx="7"/><text x="586" y="268" text-anchor="middle">库存服务</text>
+  <rect class="data" x="267" y="316" width="333" height="40" rx="7"/><text x="433" y="343" text-anchor="middle">共同数据域：Product</text>
+  <path class="edge" d="M281 281V311"/><path class="edge" d="M586 281V311"/>
+  <path class="divider" d="M28 378H692"/>
+  <text x="28" y="419">③ 委托</text><text class="small" x="28" y="444">单一拥有</text>
+  <rect class="boundary" x="180" y="396" width="202" height="120" rx="10"/>
+  <rect class="box" x="197" y="407" width="168" height="40" rx="7"/><text x="281" y="434" text-anchor="middle">目录服务</text>
+  <rect class="data" x="197" y="472" width="168" height="32" rx="5"/><text x="281" y="495" text-anchor="middle">Product</text><path class="edge" d="M281 447V468"/>
+  <rect class="box" x="497" y="407" width="178" height="40" rx="7"/><text x="586" y="434" text-anchor="middle">库存服务</text>
+  <path class="edge handoff" d="M497 427H387"/><text class="small" x="439" y="460" text-anchor="middle">委托修改</text><text class="small" x="586" y="490" text-anchor="middle">此处采用领域优先</text>
+  <path class="divider" d="M28 536H692"/>
+  <text x="28" y="579">④ 合并服务</text><text class="small" x="28" y="604">单一拥有</text>
+  <rect class="boundary" x="180" y="551" width="512" height="98" rx="10"/>
+  <rect class="box" x="197" y="568" width="250" height="61" rx="7"/><text x="322" y="593" text-anchor="middle">同一个服务</text><text class="small" x="322" y="616" text-anchor="middle">目录模块 ＋ 库存模块</text>
+  <path class="edge" d="M447 600H488"/><rect class="data" x="496" y="579" width="179" height="40" rx="7"/><text x="585" y="606" text-anchor="middle">Product</text>
+  <script><![CDATA[try { const t = localStorage.getItem('reading-notes-theme'); if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t); } catch {}]]></script>
+</svg>

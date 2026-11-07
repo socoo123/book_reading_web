@@ -1,0 +1,279 @@
+[
+  {
+    "type": "text",
+    "id": "title",
+    "x": 20,
+    "y": 10,
+    "text": "固定分片：只改变“分片 → 节点”",
+    "fontSize": 25,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "rule",
+    "x": 20,
+    "y": 52,
+    "text": "键 → S = hash(key) % 12  始终不变；假设各片等大、等负载。",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "text",
+    "id": "before",
+    "x": 20,
+    "y": 100,
+    "text": "扩容前：3 个节点，每节点 4 片",
+    "fontSize": 20,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "rectangle",
+    "id": "old0",
+    "x": 20,
+    "y": 145,
+    "width": 220,
+    "height": 100,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "节点 0\nS0 · S1 · S2 · S3",
+      "fontSize": 19,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "old1",
+    "x": 285,
+    "y": 145,
+    "width": 220,
+    "height": 100,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "节点 1\nS4 · S5 · S6 · S7",
+      "fontSize": 19,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "old2",
+    "x": 550,
+    "y": 145,
+    "width": 220,
+    "height": 100,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "节点 2\nS8 · S9 · S10 · S11",
+      "fontSize": 19,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "text",
+    "id": "move",
+    "x": 20,
+    "y": 335,
+    "text": "只搬 S3、S7、S11，共 3/12 = 25%",
+    "fontSize": 19,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "arrow",
+    "id": "m0",
+    "x": 130,
+    "y": 250,
+    "width": 565,
+    "height": 155,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        565,
+        155
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid",
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "old0"
+    },
+    "end": {
+      "id": "new3"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "m1",
+    "x": 395,
+    "y": 250,
+    "width": 300,
+    "height": 155,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        300,
+        155
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid",
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "old1"
+    },
+    "end": {
+      "id": "new3"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "m2",
+    "x": 660,
+    "y": 250,
+    "width": 35,
+    "height": 155,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        35,
+        155
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid",
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "old2"
+    },
+    "end": {
+      "id": "new3"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "new0",
+    "x": 20,
+    "y": 410,
+    "width": 170,
+    "height": 100,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "节点 0\nS0 · S1 · S2",
+      "fontSize": 18,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "new1",
+    "x": 220,
+    "y": 410,
+    "width": 170,
+    "height": 100,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "节点 1\nS4 · S5 · S6",
+      "fontSize": 18,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "new2",
+    "x": 420,
+    "y": 410,
+    "width": 170,
+    "height": 100,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "节点 2\nS8 · S9 · S10",
+      "fontSize": 18,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "new3",
+    "x": 620,
+    "y": 410,
+    "width": 170,
+    "height": 100,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "节点 3（新增）\nS3 · S7 · S11",
+      "fontSize": 18,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "text",
+    "id": "after",
+    "x": 20,
+    "y": 545,
+    "text": "扩容后：4 个节点，每节点 3 片",
+    "fontSize": 20,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "legend",
+    "x": 20,
+    "y": 585,
+    "text": "框：物理节点　S：逻辑分片　箭头：整片迁移；其余分片不动。",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  }
+]

@@ -1,0 +1,186 @@
+[
+  {
+    "type": "text",
+    "id": "title",
+    "x": 24,
+    "y": 18,
+    "text": "B-tree：数据页落后时，日志保留恢复依据",
+    "fontSize": 25,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "subtitle",
+    "x": 24,
+    "y": 60,
+    "text": "时间向下；示意已提交更新，不表示盲目重做所有未提交记录。",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "text",
+    "id": "one",
+    "x": 24,
+    "y": 131,
+    "text": "① WAL 已同步",
+    "fontSize": 21,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "rectangle",
+    "id": "wal",
+    "x": 240,
+    "y": 112,
+    "width": 500,
+    "height": 92,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.7,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "页修改与分裂的恢复信息\n已可靠保存",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "advance",
+    "x": 490,
+    "y": 210,
+    "width": 0,
+    "height": 62,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        62
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.6,
+    "strokeStyle": "solid",
+    "start": {
+      "id": "wal"
+    }
+  },
+  {
+    "type": "text",
+    "id": "two",
+    "x": 24,
+    "y": 295,
+    "text": "② 部分页刷盘\n    此时崩溃",
+    "fontSize": 21,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "rectangle",
+    "id": "newpage",
+    "x": 240,
+    "y": 278,
+    "width": 235,
+    "height": 98,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.7,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "部分子页\n已是新状态",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "oldparent",
+    "x": 505,
+    "y": 278,
+    "width": 235,
+    "height": 98,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.7,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "父页引用\n可能仍是旧状态",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "redo",
+    "x": 490,
+    "y": 389,
+    "width": 0,
+    "height": 61,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        61
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.6,
+    "strokeStyle": "solid",
+    "end": {
+      "id": "restored"
+    }
+  },
+  {
+    "type": "text",
+    "id": "three",
+    "x": 24,
+    "y": 478,
+    "text": "③ 重启恢复",
+    "fontSize": 21,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "rectangle",
+    "id": "restored",
+    "x": 240,
+    "y": 456,
+    "width": 500,
+    "height": 94,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.7,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "依据 WAL 重做必要修改\n恢复页内容与引用关系",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "text",
+    "id": "note",
+    "x": 24,
+    "y": 594,
+    "text": "不变量：相关 WAL 先持久化，数据页才可写入持久存储。",
+    "fontSize": 19,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  }
+]

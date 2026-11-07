@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>第 14 章｜管理分析数据 · Software Architecture: The Hard Parts · 架构提升读书笔记</title>
+  <meta name="description" content="解释数据仓库、湖、网格与四原则，展开数据产品量子、契约和组织责任，重建专家供给分析案例并澄清完整日数据检测边界。">
+  <link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+  <script src="../../../assets/theme.js"></script>
+  <script src="../../../assets/reader.js" defer></script>
+  <link rel="stylesheet" href="../../../assets/styles.css">
+</head>
+<body>
+<a class="skip-link" href="#main">跳到主要内容</a>
+<header class="site-header reader-header"><div class="container header-inner">
+<a class="brand" href="../../../index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5.5C8.5 3.8 5.8 3.6 2.5 4.5v14c3.3-.9 6-.7 9.5 1 3.5-1.7 6.2-1.9 9.5-1v-14c-3.3-.9-6-.7-9.5 1Zm0 0v14"/></svg>书架</a>
+<a class="reader-book-title" href="../index.html" lang="en">Software Architecture: The Hard Parts</a>
+<div class="theme-control" role="group" aria-label="外观" hidden><button type="button" data-theme-value="system" title="跟随系统"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path class="fill" d="M12 4a8 8 0 0 1 0 16Z"/></svg><span class="sr-only">跟随系统</span></button><button type="button" data-theme-value="light" title="浅色"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.6"/><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21M5.6 5.6l1.6 1.6M16.8 16.8l1.6 1.6M5.6 18.4l1.6-1.6M16.8 7.2l1.6-1.6"/></svg><span class="sr-only">浅色</span></button><button type="button" data-theme-value="dark" title="深色"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.5 14.6A7.8 7.8 0 0 1 9.4 4.5a7.8 7.8 0 1 0 10.1 10.1Z"/></svg><span class="sr-only">深色</span></button></div>
+</div></header>
+<main id="main" class="container reader-container">
+<nav class="breadcrumb" aria-label="当前位置"><ol><li><a href="../../../index.html">书架</a></li><li><a href="../index.html">书籍概览</a></li><li aria-current="page">第 14 章</li></ol></nav>
+<div class="reading-layout">
+<aside class="toc"><nav aria-label="本页目录"><h2>本页目录</h2><ul>
+<li><a href="#two-data-purposes">01　运营数据与分析数据，服务于不同的决定</a></li>
+<li><a href="#warehouse">02　数据仓库：先组织共同的分析模型，再让人查询</a></li>
+<li><a href="#lake">03　数据湖：延后转换，也把更多解释责任交给使用者</a></li>
+<li><a href="#mesh-ownership-product">04　数据网格的前两项原则：拥有数据，也拥有消费体验</a></li>
+<li><a href="#platform-governance">05　后两项原则：用平台降低重复建设，用联邦治理保证能够合作</a></li>
+<li><a href="#dpq">06　数据产品量子：把数据、生成逻辑和对外承诺放进一个边界</a></li>
+<li><a href="#cooperative-coupling">07　协作量子：运行可以分开，领域语义仍然紧密相连</a></li>
+<li><a href="#analytical-contracts">08　分析契约不仅约定字段，还约定时间与可用程度</a></li>
+<li><a href="#when-mesh">09　仓库、湖、网格：比较责任安排，而不是排出升级阶梯</a></li>
+<li><a href="#sysops-domain-products">10　Sysops：已有服务之外，逐步建设领域分析产品</a></li>
+<li><a href="#sysops-supply">11　专家供给：三个领域事实，组成一个新的分析用途</a></li>
+<li><a href="#daily-decision">12　完整一天或者不用这一天：一项明确的分析质量决定</a></li>
+<li><a href="#completeness-check">13　一分钟没有消息，是异常线索，不是完整性证明</a></li>
+<li><a href="#conclusion">14　把数据重新组合，不必把所有责任重新集中</a></li>
+</ul><p class="toc-note"><a href="../index.html">← 书籍概览</a></p></nav></aside>
+<article class="article">
+<header class="article-header"><p class="eyebrow">READING NOTES / CHAPTER 14</p><h1>第 14 章｜管理分析数据</h1><p class="article-deck"><span lang="en">Managing Analytical Data</span> · 保留领域知识，让分析获得可以信任的数据</p></header>
+<p>工单系统被拆成多个服务以后，客户提交问题、专家接受任务、调查记录答案，都有了各自的责任边界。但管理者还想知道：哪些地区未来会缺少某种技能的专家，应该怎样招聘和培训？回答这个问题，需要重新组合工单、专家资料和调查数据。此前费力拆开的边界，并没有让跨领域分析的需求消失。</p>
+<p>本章依次讨论数据仓库、数据湖和数据网格，重点不是存储产品的代际排名，而是数据被搬走以后，谁仍然解释其含义、维护质量并承担变化。Sysops Squad 是原书虚构案例；以下把作者的模式与决定、笔记的解释及外部核查分开，尤其不把“采用数据网格”写成完整性或预测准确性的自动保证。</p>
+<details class="mobile-toc"><summary>本页目录 · 14 个小节</summary><nav aria-label="移动端本页目录"><ul>
+<li><a href="#two-data-purposes">01　运营数据与分析数据，服务于不同的决定</a></li>
+<li><a href="#warehouse">02　数据仓库：先组织共同的分析模型，再让人查询</a></li>
+<li><a href="#lake">03　数据湖：延后转换，也把更多解释责任交给使用者</a></li>
+<li><a href="#mesh-ownership-product">04　数据网格的前两项原则：拥有数据，也拥有消费体验</a></li>
+<li><a href="#platform-governance">05　后两项原则：用平台降低重复建设，用联邦治理保证能够合作</a></li>
+<li><a href="#dpq">06　数据产品量子：把数据、生成逻辑和对外承诺放进一个边界</a></li>
+<li><a href="#cooperative-coupling">07　协作量子：运行可以分开，领域语义仍然紧密相连</a></li>
+<li><a href="#analytical-contracts">08　分析契约不仅约定字段，还约定时间与可用程度</a></li>
+<li><a href="#when-mesh">09　仓库、湖、网格：比较责任安排，而不是排出升级阶梯</a></li>
+<li><a href="#sysops-domain-products">10　Sysops：已有服务之外，逐步建设领域分析产品</a></li>
+<li><a href="#sysops-supply">11　专家供给：三个领域事实，组成一个新的分析用途</a></li>
+<li><a href="#daily-decision">12　完整一天或者不用这一天：一项明确的分析质量决定</a></li>
+<li><a href="#completeness-check">13　一分钟没有消息，是异常线索，不是完整性证明</a></li>
+<li><a href="#conclusion">14　把数据重新组合，不必把所有责任重新集中</a></li>
+</ul></nav></details>
+<section id="two-data-purposes"><h2><span class="section-number">01</span>运营数据与分析数据，服务于不同的决定</h2>
+<p><strong>运营数据（operational data）</strong>支撑业务正在发生的动作：一张工单由谁处理、当前状态是什么、客户支持计划是否有效。这里的“运营”不是服务器运维指标。<strong>分析数据（analytical data）</strong>则为历史比较、趋势预测、商业智能和机器学习提供事实，例如过去一年各地区的工单量与维修耗时。两者可能源于同一业务事件，却不需要相同的保存形态、查询方式和更新节奏。</p>
+<p>运营系统常围绕单次事务和当前状态组织表；分析可能扫描长时间范围，关联多个领域，保存事件发生时的历史值。假设专家今天新增了某项技能，分派服务要尽快使用新资料；分析上个月的供给情况时，却不能把今天的技能倒填成他上个月已经具备的技能。这是笔记假设，用来说明“拿到最新数据”与“拿到正确历史数据”不是同一目标。</p>
+<p>前章已经形成的案例边界继续有效：<a href="../chapters/ch06.html#data-domains">第 6 章</a>建立六个数据域；<a href="../chapters/ch08.html#sysops-ticket-library">第 8 章</a>让创建、分派（含投递）、完成三个工单服务共用版本化 DLL 和工单数据域；用户维护拥有专家资料，分派读取技能、服务区域、标准排班的复制缓存；Survey 服务独占调查写入。主工单选择编排，第 12 章讨论最终一致与恢复，但没有新的最终 Saga 选型 ADR。</p>
+<p>这些决定保护业务写入和运行，却没有给分析者一份自动完整的历史。第 10 章的内存缓存是运营读优化，不是专家历年状态的分析产品；第 12 章的 <code>CLOSED</code> 表示调查已发出，不表示客户已经回答。若分析团队把这两者混用，即使技术链路没有丢消息，也会得出错误结论。</p>
+<p>因此，本章开场 Dana 的问题并不是要推翻数据拆分，而是要在保留业务边界的同时，建立适合分析的组合路径。资源隔离只是第一层要求；领域语义、时间和质量也必须沿这条路径被保留下来。</p>
+</section>
+<section id="warehouse"><h2><span class="section-number">02</span>数据仓库：先组织共同的分析模型，再让人查询</h2>
+<p>原书介绍的<strong>数据仓库（data warehouse）</strong>把多个运营数据源抽取到专用分析环境，先转换为便于报表的共同模型，再装载和查询。这条典型路径称为 <strong>ETL：Extract、Transform、Load，即抽取、转换、装载</strong>。昂贵的历史聚合不必每次都打到工单数据库，分析团队也有机会在一个经过整理的模型上建立一致的报表。</p>
+<p>转换不是简单复制列名。运营表围绕更新与事务组织，分析则可能围绕事实和维度组织。<strong>事实（fact）</strong>表达可测量的业务事件或数值，例如维修耗时、距离和费率；<strong>维度（dimension）</strong>提供分类与解释，例如地区、日期和专家技能。原书以星型模式（star schema）说明维度建模：事实表关联维度，以适度反规范化减少分析时反复拼装的负担。</p>
+<p>用一个笔记假设展开：若每条事实代表“一次已完成维修”，可以按月份、地区汇总维修数量和耗时。首先必须确定事实的粒度——一张工单一次维修，还是一次上门访问；否则一张工单多次上门就可能被重复计数。耗时可以在适当口径下求和，费率却不能随便相加；“平均维修时间”也不能简单平均各地区平均值而不考虑样本数。分析模型的价值，正在于提前明确这些含义，而不只是让 SQL 更短。</p>
+<p>代价是转换逻辑同时理解源模型与目标模型。工单领域改变“完成”的定义，导入代码、事实生成和下游报表可能都要调整。原书称其为集成脆弱性与领域知识的极端分割：领域团队理解业务变化，仓库团队理解目标结构，分析者理解统计用途，任何一方单独修改都可能让另两方误解。</p>
+<p>专用分析环境能够隔离大量查询负载，但抽取和同步仍会消耗源系统资源；多领域数据都经过同一组管道与团队时，又会形成技术和组织瓶颈。表 14-1 列出的集中整合、分析隔离是真实收益，复杂度、集成脆弱性和功能适配不足则是需要比较的成本。原书关于“多数仓库失败”的判断没有在本章提供统计样本，本文将其保留为作者对这种历史集中模式的批评，不当作已核实的行业失败率。</p>
+</section>
+<section id="lake"><h2><span class="section-number">03</span>数据湖：延后转换，也把更多解释责任交给使用者</h2>
+<p><strong>数据湖（data lake）</strong>改变的是转换时机。原书的典型模型先把多源数据以较接近原始的形式装载，再由数据科学家围绕具体问题转换，常用 <strong>ELT：Extract、Load、Transform</strong> 概括。不是所有进入湖的数据都完全未经处理，原文也允许格式整理与列式快照；关键是不先要求所有用途服从一个预制分析模型。</p>
+<p>这种安排对探索性问题很有价值。若仓库只保留按月平均维修耗时，后来想分析耗时分布或训练需要逐次记录的模型，细节可能已被聚合掉。湖保留更丰富的历史，消费者可以提出当初未预料的问题，也不必为所有可能用途预先建设转换。收益来自保留选择空间，而不是原始数据天然更正确。</p>
+<p>相应地，工作没有消失。分析者要发现哪些数据可用，理解哪些标识能够关联，处理缺失、重复、时间口径和源结构变化。不同消费者可能重复清洗同一类错误；若这些工作又集中到少数数据工程师，原来的瓶颈只是从装载前移到了装载后。可找到文件，不等于能理解文件；结构宽松也不等于没有契约。</p>
+<figure class="concept-figure"><a href="../diagrams/exports/ch14-etl-elt.svg" target="_blank" rel="noopener"><img src="../diagrams/exports/ch14-etl-elt.svg" width="720" height="400" alt="两行比较数据处理顺序：ETL先转换为分析模型再装载；ELT先装载近原始数据，再按用途转换。两条路径都需要语义解释和质量责任。"></a><figcaption>图 14-1：原创顺序图。实线箭头表示数据处理推进，框下说明典型的责任重心；它比较本章的两种安排，不声称所有仓库只用 ETL、所有湖只用 ELT。先看转换发生在哪里，再看谁为转换后的含义负责。点击<a href="../diagrams/exports/ch14-etl-elt.svg" target="_blank" rel="noopener">查看大图</a>。</figcaption></figure>
+<p>原书还强调敏感数据风险：单看不敏感的地域、时间、行为记录，组合后可能识别个人。领域团队最清楚这些含义，原始数据一旦脱离其责任范围，集中团队往往要重新发现这些关联。这个问题不是湖独有，也不是换一种存储名称就能消除。</p>
+<p>本章引用的 Martin Fowler 2015 年原文实际上同时强调清楚的来源与时间、熟练分析者，以及面向具体上下文整理的湖边数据集市。因而不能把“湖”简单定义成无人维护的数据倾倒场。ETL／ELT 是处理顺序，仓库／湖还涉及模型和使用方式；它们并非严格一一对应的产品分类。</p>
+</section>
+<section id="mesh-ownership-product"><h2><span class="section-number">04</span>数据网格的前两项原则：拥有数据，也拥有消费体验</h2>
+<p><strong>数据网格（data mesh）</strong>在本章被定义为一种社会技术方法：按业务领域分散分析数据的拥有和提供责任，使不同领域能够直接消费彼此的数据。它同时改变架构与组织，不是安装一套数据目录，或给每个微服务加一个数据库副本就算完成。</p>
+<p>第一项原则是<strong>领域数据所有权（domain ownership of data）</strong>。最了解事实产生过程的领域，负责把它作为可消费的分析数据提供出去；某些面向消费的聚合领域也可以拥有自己的派生产品。例如工单团队能够解释“创建”“分派”“维修完成”分别发生什么，专家供给分析团队则能够解释自己的预测指标。派生产品的责任不改变源领域对运营事实的权威写入责任。</p>
+<p>这与第 6 章的数据域有关，但不等同。数据域用于划定相关表和访问责任；数据网格还要安排外部消费、历史视图、质量承诺和产品生命周期。一组表划在同一个 schema，并不会自动成为一个可发现、可理解的分析产品。也不要求每个部署服务机械对应一个领域或一个产品。</p>
+<p>第二项原则是<strong>数据即产品（data as a product）</strong>。若只把责任分散，各域可以把文件放进自己的角落，结果成为更多孤岛。产品思维要求以消费方为对象：能够发现和访问，知道字段及业务含义，知道覆盖时间、质量和使用权限，出现问题能找到负责人。这里的产品不一定对外销售，也不只是某个数据文件，而是一项持续兑现的数据服务承诺。</p>
+<p>Zhamak Dehghani 的原始文章进一步明确数据产品负责人和开发者的角色。负责人要了解消费者、决定演进与退役、关注质量及使用体验；开发者维护生成、提供与运行产品的机制。以“成功消费所需时间”衡量体验，比只统计上传多少张表更接近目标。把这类工作加给只按运营功能交付考核的团队，却不给时间、技能与优先级，不会自动形成产品责任。</p>
+<p>因此，前两项原则互相约束：领域所有权使知识靠近数据，产品责任使领域不能只顾内部方便。消费者少做一次反向猜测，通常意味着提供者提前解释并维护了一项承诺。</p>
+</section>
+<section id="platform-governance"><h2><span class="section-number">05</span>后两项原则：用平台降低重复建设，用联邦治理保证能够合作</h2>
+<p>第三项原则是<strong>自助式数据平台（self-serve data platform）</strong>。如果每个领域都要独立掌握存储集群、处理引擎、权限、部署、目录和监控，分散所有权会让成本成倍增加。平台应把这些通用能力作为自助服务，让领域开发者通过清楚的接口创建、运行和发布产品，而不是每次等中央团队手工搭建管道。</p>
+<p>“自助”不只是一组云资源申请按钮。Dehghani 2020 年文章区分基础设施供给、数据产品开发体验、网格级发现与监督等能力：底层创建资源，中层简化产品生命周期，上层支持查找产品、理解血缘与观察整体健康。领域负责业务含义，平台负责让这些责任可以经济地实现。平台若接管所有领域转换，又会回到一支团队解释全企业数据的瓶颈。</p>
+<p>第四项原则是<strong>联邦计算治理（federated computational governance）</strong>。联邦意味着领域数据产品负责人、平台负责人及有关专业角色共同确定全局规则，同时保留领域内部决策；计算治理意味着把可执行的规则落实到平台和产品中持续检查，而不只留下会议纪要。本章把策略执行放在 DPQ 的伴随组件中，在数据读写入口执行访问等策略。</p>
+<p>哪些内容统一，需要依据互操作需要决定。不同领域可以使用不同内部模型，但跨域关联专家时需要可解释的身份映射；质量承诺应有共同表达方式，而每个领域可以依据事实特点定义不同指标与目标。共同标准不等于一份覆盖所有业务字段的企业超级模型，否则又会把所有变化绑定在一起。</p>
+<div class="table-scroll" role="region" aria-label="数据产品与平台治理责任" tabindex="0"><table><thead><tr><th scope="col">责任主体</th><th scope="col">必须理解并持续维护的事情</th><th scope="col">不由它独自代替的事情</th></tr></thead><tbody>
+<tr><td>领域数据产品团队</td><td>事实含义、历史口径、质量、消费接口与演进</td><td>不必各自重建所有通用基础设施</td></tr>
+<tr><td>自助平台团队</td><td>创建发布、运行观测、发现、通用策略执行能力</td><td>不凭基础设施指标判断领域事实是否真实</td></tr>
+<tr><td>联邦治理参与者</td><td>跨域标识、契约与质量表达、访问及互操作规则</td><td>不把每个领域内部模型都集中审批</td></tr>
+<tr><td>分析产品团队</td><td>输入适用性、组合口径、模型与结果解释</td><td>不把源缺失或错误静默解释成真实业务下降</td></tr>
+</tbody></table></div>
+<p>这张表是依据本章与原始文章整理的责任解释。四原则需要配套：只有领域所有权，可能产生孤岛；只有产品要求，没有平台，会迫使每队重复建设；只有平台，没有领域责任，会保留中央知识瓶颈；只有自治，没有共同规则，又难以可靠组合。原书说“不需要专门数据团队”，应理解为不必由一个中央团队拥有并加工所有领域数据，而不是取消数据工程师、数据科学家或平台团队。</p>
+<aside class="notice correction"><p><strong>隐私表述的边界。</strong> 印刷 389 页的案例对话称数据网格能“消除”律师担心的个人可识别信息（PII）问题 → 同章第四原则以及 Dehghani 原文都仍要求访问控制、隐私规则与执行机制 → 应修正为：数据网格把这些责任放到更明确的位置，提供持续执行的架构条件，并不自动消除敏感信息泄露或组合识别风险。这是技术范围澄清，不是出版社勘误。</p></aside>
+</section>
+<section id="dpq"><h2><span class="section-number">06</span>数据产品量子：把数据、生成逻辑和对外承诺放进一个边界</h2>
+<p><strong>数据产品量子（data product quantum，DPQ）</strong>是本章用来实现数据产品的架构单位。它包含分析数据，也包含生成、整理与提供数据的行为。结合 Dehghani 2020 年的逻辑架构，还应把元数据及运行所需基础设施纳入理解：只有数据没有代码，无法持续更新；只有代码没有质量和语义说明，消费者无法判断是否可用；只有接口没有运行责任，也无法持续交付。</p>
+<p>这里的“量子”承接<a href="../chapters/ch02.html">第 2 章</a>：看独立部署、功能内聚以及必要的静态和动态依赖，而不是数数据库或容器。DPQ 可以围绕一种内聚的分析职责独立运行，其所有权仍属于相应领域。原书图 14-1、14-2 中，运营服务和 DPQ 各有行为与数据，位于同一领域边界内；它不是把运营数据库直接开放给分析者。</p>
+<p>产品和 DPQ 是不同观察角度。产品回答消费者获得什么可信能力；DPQ 回答代码、数据和运行依赖怎样形成可交付单位。一个 DPQ 可以通过文件、表或事件等不同接口表达相同产品语义，也可能支持相关的多个消费视图。原书的 Tickets DPQ 就同时提供每日文件与表格快照，不能因此计算为两个完全独立的领域。</p>
+<p>本章列出三种常见角色。<strong>源对齐 DPQ（source-aligned / native）</strong>靠近产生事实的运营领域，提供其历史分析视图；<strong>聚合 DPQ（aggregate）</strong>组合多个输入，提供更完整的共同视图；<strong>特定用途 DPQ（fit-for-purpose）</strong>为报表、商业智能或机器学习等具体用途服务。它们描述职责，不必是互斥类型：一个专门服务专家供给预测的 DPQ，也会聚合多个上游产品。</p>
+<aside class="notice correction"><p><strong>缩写纠错。</strong> 印刷 395／PDF 413 页把维护对象写成 “DQP cooperative quantum” → 出版社 Confirmed Errata 明确答复应为 DPQ（2023-03-13 提交，未列修正日期） → 本文统一使用 DPQ。实际回看印刷 391／PDF 409 页还发现小标题 “Aggregate DQP” 同样倒置，依据本章完整名称统一为“聚合 DPQ”；这一处是笔记额外核对，不冒称出版社另列了 391 页勘误。</p></aside>
+</section>
+<section id="cooperative-coupling"><h2><span class="section-number">07</span>协作量子：运行可以分开，领域语义仍然紧密相连</h2>
+<p>作者把源对齐 DPQ 与运营服务的关系称为 <strong>cooperative quantum（协作量子）</strong>：双方运行上分离，通过异步通信和最终一致协作，但契约与领域语义联系紧密；DPQ 对外部分析消费者则通常提供更宽松、稳定的契约。这里“协作”不是第 11 章“协同（choreography）”的别名，它没有替团队决定采用编排还是协同。</p>
+<figure class="concept-figure"><a href="../diagrams/exports/ch14-cooperative-quanta.svg" target="_blank" rel="noopener"><img src="../diagrams/exports/ch14-cooperative-quanta.svg" width="720" height="440" alt="同一领域内，运营量子经异步最终一致的交接更新源对齐DPQ；DPQ通过独立分析契约向分析量子提供数据。两条边分别注明语义紧密与可独立演进，不把分析处理纳入运营提交。"></a><figcaption>图 14-2：依据原图 14-1、14-2 原创简化。大框表示领域所有权，两个内框表示不同运行职责；虚线箭头是本图选择的异步数据流，不是共同数据库事务。右侧分析量子消费 DPQ，而不越过边界直连运营表。点击<a href="../diagrams/exports/ch14-cooperative-quanta.svg" target="_blank" rel="noopener">查看大图</a>。</figcaption></figure>
+<p>这可以用第 8 章的<strong>正交耦合</strong>理解：领域模型是一条组织轴，分析供给是另一项职责，它们有关联但可以分别组织。工单内部把两张表合并时，领域团队更新 DPQ 的转换，让对外“每日工单视图”尽可能保持稳定。若业务把“维修完成”改为完全不同的含义，DPQ 不能靠换字段名消除语义变化，仍需与相关消费者协调。</p>
+<p>运行上的关键是不要让创建工单等待分析计算成功。原书要求运营服务与其数据伴随组件使用异步、最终一致，在第 12 章的三维坐标里对应 <strong>Parallel Saga（aeo：异步、最终一致、编排）</strong>或 <strong>Anthology Saga（aec：异步、最终一致、协同）</strong>。它表达这条分析交接边的选择空间，不是为 Sysops 主工单补上一份最终 Saga ADR，也不表示所有数据管道都要实现复杂补偿协议。</p>
+<p>另一方面，印刷 393 页也明确允许分析量子同步查询 DPQ，例如通过 SQL 接口。需要分清两段关系：运营写入不应被分析更新绑成共同事务；分析消费者查询分析产品时，可以按需要同步或异步。同步聚合若等待多个 DPQ，其延迟与可用性仍受到这些依赖影响，异步投影则需要接受传播窗口并负责恢复。</p>
+<p>作者同时说 DPQ、消息设施与必需分析能力存在静态耦合。这并不等于“系统只有一个量子”，也不等于每次运营请求都要等待所有分析服务。准确做法是列出各能力启动、部署及运行所需的接线依赖，再分析某次调用实际等待谁。原图是逻辑分工，不足以证明任意实现都可独立部署；若共享 schema、强制同步发布或公共故障点仍在，就应把它们计入真实边界。</p>
+</section>
+<section id="analytical-contracts"><h2><span class="section-number">08</span>分析契约不仅约定字段，还约定时间与可用程度</h2>
+<p>第 13 章把契约广义定义为系统各部分传达信息或依赖的格式，并说明严格与宽松存在一个连续谱。本章应用这个思想时，最重要的区别是：<strong>减少不必要的结构耦合，不等于放松业务承诺。</strong> 消费方只依赖需要的字段，可以减少无关变更传播；但“这是哪一天、哪些工单、是否完整”必须足够确定，否则趋势分析连输入是什么都无法判断。</p>
+<p>例如“每日专家资料”至少可能有三种含义：午夜时点的全体资料快照、当天变化过的记录，或截至当天可用的最新资料。三者字段可以完全一样，消费结果却不同。事件发生时间与摄取时间也不同：深夜发生、次日到达的工单，若按接收日期统计，会从一天移到另一天。这里是笔记的解释性情境，原书没有给 Sysops 定义时区、日界线或迟到期限。</p>
+<p>因此，一项可用的分析契约要让消费者理解标识与粒度、字段含义、时间窗口、刷新节奏、覆盖与缺失状态，以及版本变化的影响。具体阈值应由双方按用途确定。预测下一季度技能供给与实时分派专家，需要的新鲜度并不相同；不能把运营缓存的低延迟要求原封不动套到长期趋势，也不能反过来允许实时分派随意用昨日状态。</p>
+<p>原书在章末采用<strong>消费者驱动契约适应度函数</strong>，使 Tickets DPQ 的内部演进不破坏 Experts Supply DPQ。其价值是让消费方必需的结构和语义期待成为提供方持续验证的一部分，而不是要求双方共享全部内部模型。结构验证、样例验证能够发现约定范围内的破坏，但不会证明生产环境每天都没有漏数。</p>
+<p>契约因而至少有两类互补反馈：发布时检查兼容性，运行中观察产品是否按时提供约定数据。前者回答“这次改动仍会提供我理解的内容吗”，后者回答“今天承诺的内容真的到齐了吗”。最终一致需要允许延迟，也需要说明何时足够可靠地用于本次计算；没有时间与质量约定的“最终”，不是数据产品的完整承诺。</p>
+</section>
+<section id="when-mesh"><h2><span class="section-number">09</span>仓库、湖、网格：比较责任安排，而不是排出升级阶梯</h2>
+<p>下表根据原表 14-1—14-3 和前文论证重新组织。它描述本章典型安排与适用前提，不把优缺点换成通用分数，也不把所有现行产品都压进同一模型。</p>
+<div class="table-scroll" role="region" aria-label="仓库、湖与网格的责任与适用条件" tabindex="0"><table><thead><tr><th scope="col">安排</th><th scope="col">主要解决的问题</th><th scope="col">责任与主要代价</th><th scope="col">值得考虑的条件</th></tr></thead><tbody>
+<tr><td>集中式数据仓库</td><td>多源整合、共同报表模型、分析查询隔离</td><td>提前建模转换；跨域变化集中协调，可能不适合新探索</td><td>分析口径较明确，集中模型和团队仍可有效维护</td></tr>
+<tr><td>数据湖</td><td>保存丰富历史，为尚未明确的分析保留原始细节</td><td>消费方承担更多发现、解释、转换和质量工作</td><td>探索性需求强，能提供来源、治理及熟练使用者</td></tr>
+<tr><td>数据网格</td><td>在多领域、多消费者和持续变化下分散供给责任</td><td>领域产品维护、自助平台、联邦规则及契约协调</td><td>团队有领域自治与工程能力，分析交接允许最终一致</td></tr>
+</tbody></table></div>
+<p>原书表 14-3 强调网格适合边界良好、事务范围收敛的分布式架构，可以让领域决定数据量、节奏、质量和透明程度，支持分析能力较独立地演进。代价是维护 DPQ 契约，并接受异步与最终一致。若业务要求运营和分析在每个时刻都共同生效，就与本章的正交分离目标冲突，不能仅靠引入 DPQ 解决。</p>
+<p>组织规模同样影响价值。只有少量数据源和稳定报表的小团队，可能从一个维护良好的集中模型获得更低成本。若多个领域不断增加数据源和消费场景，而中央团队的知识与排期成为瓶颈，产品责任下放才更有理由。这里的判断依据是变化和协作复杂度，不只是存储容量或“已经使用微服务”。</p>
+<aside class="notice correction"><p><strong>原书绝对措辞的范围修正。</strong> 印刷 386 页对话说仓库在微服务中“肯定行不通”，389 页又将湖排除 → Dehghani 2019 年原文明确允许仓库或湖作为网格节点、产品内部实现或共享基础设施，并承认集中方案能适合更简单的领域 → 应理解为作者反对把全企业数据与语义都交给中央管道的组织模式，不是仓库引擎与微服务存在技术互斥。数据网格仍然可以使用 ETL／ELT、对象存储和查询引擎；它重新安排拥有与提供这些能力的责任。</p></aside>
+</section>
+<section id="sysops-domain-products"><h2><span class="section-number">10</span>Sysops：已有服务之外，逐步建设领域分析产品</h2>
+<p>章首的输入是数据库正在拆分，公司又希望加强预测规划。Logan 说团队考虑过数据仓库，认可集中整合，却不接受其模型和集成负担；Dana 接着提出数据湖，希望支持更多机器学习用途。讨论发现湖仍未充分解决领域知识、管道变化和数据责任，因此转向数据网格。原书提供的是定性取舍，没有候选产品基准或完整成本测算。</p>
+<p>到章末 6 月 10 日的对话，Logan 说明已实施的新服务带有 DPQ，领域团队负责运行和维护，能力随需求逐步建设。这是故事报告的阶段状态，不应扩写为全部服务已经迁移完成。平台提供产品搜索、发现、连接、创建和监控能力；出现不可用或不符合治理规则时，通知领域团队行动。平台并没有因此成为所有领域数据的业务拥有者。</p>
+<p>联邦治理组由领域数据产品负责人、平台产品负责人，以及安全、法律、风险和合规专业人员共同组成，决定哪些共享契约、异步传输与访问控制需要标准化。平台团队逐步丰富策略执行的伴随能力并统一升级。这里明确展示了前述四原则的组织前提：真正有人负责制定规则、实现机制、维护数据，而非只有架构图上的节点。</p>
+<p>原图 14-3 在 Ticket Management 业务领域内画出 Ticket Maintenance 与 Ticket Assignment 的两个服务及其 DPQ，再由 <strong>Tickets DPQ</strong> 汇聚工单视图，对外提供每日文件快照和表格快照。Logan 明确把 Tickets DPQ 视作自己的架构量子；它提供一个消费边界，让外部系统不必逐一理解工单内部来源。</p>
+<p>需要延续前章的图示范围限定：第 8 章明确是三个工单服务共享 DLL 与工单数据域，第 11 章已经用 Ticket Management 合框描述流程；本章又采用两个服务的分析视图，却没有给出新的服务合并或数据库重划 ADR。本文保留图 14-3 的聚合含义，不据此宣称旧共享数据域已拆除，也不替作者补造从三服务迁为两服务的过程。</p>
+</section>
+<section id="sysops-supply"><h2><span class="section-number">11</span>专家供给：三个领域事实，组成一个新的分析用途</h2>
+<p>新的业务目标很具体：理解不同时间、不同地理区域对专家技能的需求，为招聘、培训和其他供给规划提供依据。它不是实时给某张工单选人，因此不会取代第 10 章的分派缓存。数据科学家与领域团队先确定所需信息，再检查现有产品能否提供，而不是先选一个机器学习平台再寻找数据。</p>
+<p>三个输入在原文中各有不同形态。<strong>Tickets DPQ</strong>提供所有已提出和已解决工单的长期视图；<strong>User Maintenance DPQ（用户维护 DPQ）</strong>提供全体专家资料的每日快照；<strong>Survey DPQ（客户调查 DPQ）</strong>提供客户调查结果日志。图 14-4 分别使用 Experts DPQ、Tickets Data DPQ、Surveys DPQ 标签，本文按正文职责统一称呼，不把这些名字差异解释成额外的新服务。</p>
+<p>Addison 提议建立 <strong>Experts Supply DPQ（专家供给 DPQ）</strong>，异步消费三个上游产品，并以“供给建议”作为第一个数据产品：用聚合数据训练的机器学习模型，在新工单、调查与专家资料可用后提供每日建议。原图还画出专家技能趋势分析报表。原书没有给出模型算法、特征、训练切分或效果数字，因此不能进一步断言采用了某种模型、达到某个预测准确率。</p>
+<figure class="concept-figure"><a href="../diagrams/exports/ch14-expert-supply.svg" target="_blank" rel="noopener"><img src="../diagrams/exports/ch14-expert-supply.svg" width="720" height="480" alt="Tickets DPQ的工单长期视图、用户维护DPQ的专家每日快照和Survey DPQ的调查结果日志，经异步输入汇入专家供给DPQ，再产出每日供给建议与技能趋势分析。"></a><figcaption>图 14-3：依据原图 14-4 与相邻正文原创重组。左侧三个框是已明确的分析输入，虚线箭头表示拟采用的异步交接，右侧实线表示分析产出关系；不画运营数据库直连，也不暗示三个输入具有相同刷新方式。点击<a href="../diagrams/exports/ch14-expert-supply.svg" target="_blank" rel="noopener">查看大图</a>。</figcaption></figure>
+<p>Dana 认可整体设计，后续仍需确认源 DPQ 的具体端点，并实现新的专家供给 DPQ。新增用途主要落在新的分析产品，而非迫使每个运营服务承担预测算法，这是功能可扩展性的收益；其依据是源产品提供了可组合的契约，而不是“所有事情已经完全解耦”。</p>
+<p>新的责任也随之出现。专家供给团队要理解三个源的时间与关联口径，判断何时可开始一次计算，并解释结果依据哪些数据。工单量、资料快照与调查回答不是天然同时产生的；已发送调查也不能当作已返回结果。原书没有定义这些完整接口与统计口径，案例在这里提出下一项真正影响正确性的要求：不能把一天的部分数据误认为完整的一天。</p>
+</section>
+<section id="daily-decision"><h2><span class="section-number">12</span>完整一天或者不用这一天：一项明确的分析质量决定</h2>
+<p>Logan 担心某个来源只提供一天中的部分信息，趋势计算就会把丢失的数据解释为业务活动减少。Dana 提议宁可知道某天缺失，也不要把部分记录当成完整样本；偶尔缺一天可以在分析时排除。两者的差别是，缺失被明确表达后还能由分析者处理，而静默少数会伪装成可靠事实。</p>
+<p>用一个笔记自拟数字例子说明：正常一天有 100 张工单，某天实际也有 100 张，但传输只留下 60 张。若消费者当作完整日，会误读为需求下降 40%；如果把当天标为不可用，就至少不会把传输故障直接当作需求变化。数字只是展示误差来源，不是 Sysops 的观测量，也不表示删掉所有异常日一定能得到无偏预测。</p>
+<p>原书章末 ADR 的决定是：<strong>专家供给 DPQ 的各来源应提供完整日快照，否则该日不参与使用；源与消费者保持较宽松的契约以避免脆弱集成。</strong> 前者是数据可用于趋势计算的条件，后者是结构演进的目标，二者不冲突。可允许无关字段扩展，同时严格要求必要日窗口的覆盖含义。</p>
+<p>这个“完整或不用”是分析数据发布与使用层面的规则，不是把工单、用户维护、调查的数据库放进一个跨域原子事务。运营服务仍可各自处理当天业务，分析侧稍后根据约定决定是否接受这一日。若先发布临时结果，再收到迟到数据，是否更正或重算也需要额外约定；本章没有给出实现。</p>
+<p>ADR 接受的后果是：若因可用性等问题排除了太多天，趋势准确性会受损。笔记进一步提醒一种边界：如果恰好总在需求高峰丢数，被排除的天并非随机缺失，即使剩余每天都完整，样本仍可能偏向低负荷时段。原书允许“偶尔排除”是该案例的业务取舍，不是通用统计保证。</p>
+</section>
+<section id="completeness-check"><h2><span class="section-number">13</span>一分钟没有消息，是异常线索，不是完整性证明</h2>
+<p>原 ADR 给出两个适应度函数：检查到达消息的时间戳，按典型消息量判断，超过一分钟的间隔意味着处理缺口，并将该日排除；为 Tickets DPQ 与 Experts Supply DPQ 建立消费者驱动契约检查。后者保护演进兼容，前者尝试检测运行中的数据缺口，二者不能互相代替。</p>
+<aside class="notice correction"><p><strong>原表述 → 问题及依据 → 修正解释：</strong> 印刷 397／PDF 415 页把该检查标题写作“完整日快照”，但正文明确带有 “Given typical message volume” 前提 → 相邻消息间隔只观察收到的消息，无法推导所有应产生的记录都已收到；本章也没有给出来源总数、完成声明或可对账范围 → 应将一分钟规则解释为依赖流量模式的异常启发式，而非完整日数据的充分验证。这是依据原页与反例作出的技术澄清，不是出版社已确认勘误。</p></aside>
+<p>下面三个笔记假设说明它检测的边界。业务在夜间自然安静两分钟，可能没有数据丢失却触发排除；源每十秒产生两条记录，通道恰好每次只交付一条，消费者始终没有一分钟空档，却持续丢掉一半；系统最后一条消息后彻底停止，若逻辑只在新消息到达时比较时间戳，没有独立时钟检查，就连后续的大间隔也不会被触发观察。</p>
+<figure class="concept-figure"><a href="../diagrams/exports/ch14-completeness-gap.svg" target="_blank" rel="noopener"><img src="../diagrams/exports/ch14-completeness-gap.svg" width="720" height="420" alt="三种假设说明间隔检测的局限：自然低流量可能误报，持续收到部分消息可能漏报，完全停止后仅靠到达回调无法及时发现。图下强调收到消息与日数据完整是不同判断。"></a><figcaption>图 14-4：原创反例图。每行是一种独立情况，箭头只连接观测与结论，不表示案例已部署的检测程序；“十秒”及“两分钟”是解释用假设。先读中间的可观测现象，再看右侧它能否支持完整性判断。点击<a href="../diagrams/exports/ch14-completeness-gap.svg" target="_blank" rel="noopener">查看大图</a>。</figcaption></figure>
+<p>如果要实施 ADR，首先必须由来源与消费方定义“完整”的边界：哪一日、哪个时区、覆盖哪些记录、何时结束、迟到数据怎样处理、合法零记录怎样表示。<strong>零条但完整、尚未交付、交付失败、部分到达</strong>必须能够区分，否则“无数据”仍然有歧义。这些是从 ADR 推导出的未决契约责任，不是原书已经提供的机制。</p>
+<p>实现上可以考虑由源发布受控快照及完成元数据，再校验批次、分片或记录覆盖；或在事件模型下结合可核对的源位置、时间边界和对账。这里仅列笔记补充方向，不替 Sysops 定案。记录总数相同也未必代表集合相同：重复可以抵消缺失；完成标记若先于内容可见，也不能证明完整。哪种证据足够，应围绕实际数据模型论证，而不是在图上再加一个勾。</p>
+<p>即使传输集合完整，源业务事实也可能录错，模型还可能选错特征。因此应分别理解传输覆盖、领域质量与分析适用性。比较消息间隔有助于监控，契约测试有助于演进，源对账有助于覆盖验证；每个机制都应对应它实际能够检查的主张。</p>
+</section>
+<section id="conclusion"><h2><span class="section-number">14</span>把数据重新组合，不必把所有责任重新集中</h2>
+<p>本章的演进逻辑可以连成一条线：仓库通过共同模型与专用计算解决整合和查询；湖通过延后转换保留探索空间；网格进一步追问，谁最有条件长期维护数据含义，以及怎样让这种责任随领域与消费场景增长。后者没有消灭转换、复制或治理，而是把它们放进产品团队、平台和联邦规则共同支持的结构。</p>
+<p>Sysops 的链条也因此清楚：拆分运营数据后需要跨域预测 → 比较仓库和湖的集中责任代价 → 逐步建设领域 DPQ、自助平台与治理 → 通过工单、专家资料、调查产品形成专家供给 DPQ → 用完整日或排除日的 ADR 约束趋势输入，同时承担缺失天数与验证机制的成本。它展示的是选择与责任，不是已经验证的生产成效。</p>
+          <p>最值得保留的判断是：<strong>独立运行、契约兼容、数据完整、业务含义正确，是四项不同的承诺。</strong> DPQ 给这些承诺一个可以负责和演进的位置，不能替代它们的具体定义与验证。<a href="ch15.html#entangled-dimensions">下一章</a>将把类似推理提炼成自己的权衡分析方法，从纠缠的维度找到耦合点，再说明每项选择真正改变了什么。</p>
+</section>
+<details id="sources" class="source-note"><summary>来源、原书对应与核查说明</summary>
+<p>依据 Neal Ford、Mark Richards、Pramod Sadalage、Zhamak Dehghani，<em>Software Architecture: The Hard Parts — Modern Trade-Off Analysis for Distributed Architectures</em>，O’Reilly 英文第一版 October 2021，First Release 2021-09-23，版权 2022，ISBN 978-1-492-08689-5。完整通读第 14 章印刷 381—397／PDF 399—415；范围末页印刷 398／PDF 416 为空白。中文标题与术语为本站译法。核查日期：2026-11-07。</p>
+<ul>
+<li>01：章首印刷 381／PDF 399，以及第 1 章运营／分析数据与 Sysops 背景。专家技能历史例子为笔记假设；前章数据域、DLL、写所有权、复制缓存及编排决定保留原有范围。</li>
+<li>02：Previous Approaches / The Data Warehouse、The Star Schema，印刷 382—385／PDF 400—403，表 14-1。维修事实粒度与聚合口径是笔记解释，不是原书给出的完整维度模型；“多数失败”没有补造统计依据。</li>
+<li>03：The Data Lake，印刷 386—389／PDF 404—407，表 14-2；ETL／ELT 为对原文顺序的术语展开，结合 Fowler 原文澄清原始数据、消费方转换、来源时间和数据集市。</li>
+<li>04—05：Definition of Data Mesh，印刷 389—390／PDF 407—408；四原则逐项与 Dehghani 2020 年原文核对。组织职责与平台分层由原始文章补充；PII“消除”按同章治理要求作边界修正。</li>
+<li>06—08：Data Product Quantum、Data Mesh, Coupling, and Architecture Quantum，印刷 390—393／PDF 408—411，原图 14-1、14-2；核对两个运行职责、领域所有权、三种 DPQ、紧／松契约及同步分析查询的允许范围。对照第 2、8、12、13 章区分静态依赖、正交耦合、aeo／aec 和契约兼容。</li>
+<li>09：When to Use Data Mesh，印刷 393—394／PDF 411—412，表 14-3；三方案比较表为重组解释。仓库／湖不与网格技术互斥的限定依据 Dehghani 2019 年原文。</li>
+<li>10—11：Sysops Squad Saga: Data Mesh，印刷 394—396／PDF 412—414，原图 14-3、14-4。核对 Tickets DPQ 两种每日视图、平台与联邦治理职责、三源内容和专家供给建议；两个服务画法不冒充新的粒度 ADR。</li>
+<li>12—13：章末完整日数据 ADR 与两个 fitness functions，印刷 397／PDF 415。完整／排除为原书决定；100／60 工单、自然静默、持续部分投递及完全停止为笔记反例。时区、迟到、完成元数据和对账仅为说明未决责任的补充，未写成案例已实施。</li>
+<li>14：依据全章推理归纳，不新增产品选择、统计效果或生产结果。</li>
+</ul>
+<p>实际使用 PyMuPDF 渲染并回看的关键 PDF 页序为 <strong>403、406、409、410、411、412、413、414、415</strong>，对应印刷 <strong>385、388、391、392、393、394、395、396、397</strong>。覆盖全部四幅原图 14-1—14-4、三张权衡表 14-1—14-3、量子耦合正文、缩写错误及完整日 ADR。原图与本站四幅原创解释图独立编号，不把提取文本冒称逐页图像核验。</p>
+<p>前置实际阅读：Preface（PDF 13—17）、第 1 章案例与数据定义、第 2 章量子和三维原文；恢复第 6—12 章已完成笔记及本书 README 中的案例状态，重点回顾第 6 章数据域、第 8 章正交耦合、第 12 章 aeo／aec。另完整直接阅读第 13 章原文印刷 365—380／PDF 383—398，未使用同轮草稿作为契约概念依据。</p>
+<p>外部依据均于 2026-11-07 实际读取：</p>
+<ul>
+<li><a href="https://www.oreilly.com/catalog/errata.csp?isbn=9781492086895">O’Reilly · Confirmed Errata</a>：395 页 DQP → DPQ，作者／编辑明确确认，提交日期 2023-03-13，修正日期栏为空。391 页 Aggregate DQP 为本次原页额外核对；其余技术澄清未冒称官方勘误。</li>
+<li><a href="https://martinfowler.com/articles/data-mesh-principles.html">Zhamak Dehghani · Data Mesh Principles and Logical Architecture</a>，2020-12-03：四原则、产品代码／数据与元数据／基础设施、领域产品角色、自助平台三个平面与联邦计算治理。用于核对概念与组织前提，不把示意产品技术栈当 Sysops 选型。</li>
+<li><a href="https://martinfowler.com/articles/data-monolith-to-mesh.html">Zhamak Dehghani · How to Move Beyond a Monolithic Data Lake to a Distributed Data Mesh</a>，2019-05-20：集中与技术流水线瓶颈、源／消费导向产品、质量责任前移、领域跨职能团队、仓库和湖可作为网格节点。用于限制“仓库不能用于微服务”的绝对说法。</li>
+<li><a href="https://martinfowler.com/bliki/DataLake.html">Martin Fowler · Data Lake</a>，2015-02-05：原始数据与消费者转换、湖边数据集市、来源与时间、运营协作和分析用途的区别，以及隐私问题。此为原书直接提到的文章。</li>
+</ul>
+<p>四幅 SVG 为原创可编辑解释图，图源 <code>diagrams/sources/ch14-*</code> 与网页导出 <code>diagrams/exports/ch14-*</code> 内容一致。本文没有完整生产接口、日窗口规则、完整性实现、ML 模型、数据平台产品定案或效果实测；这些原书缺口保持明确，不由示意图或补充方案替代。</p>
+</details>
+<nav class="chapter-pagination" aria-label="章节翻页"><a class="page-link prev" href="ch13.html" rel="prev"><span class="page-label">← 上一章 · 第 13 章</span><span class="page-title">契约</span></a><a class="page-link next" href="ch15.html" rel="next"><span class="page-label">下一章 · 第 15 章 →</span><span class="page-title">构建自己的权衡分析</span></a><a class="pagination-home" href="../index.html">书籍概览与目录</a></nav>
+<p class="source-note"><a href="../guide.html">全书导航：术语、案例与来源</a></p>
+</article></div></main>
+<footer class="site-footer"><div class="container footer-inner"><span>个人书架 / 中文读书笔记</span><a href="#main">回到顶部 ↑</a></div></footer>
+</body></html>

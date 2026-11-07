@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>第 13 章｜契约 · Software Architecture: The Hard Parts · 架构提升读书笔记</title>
+  <meta name="description" content="解释严格与宽松契约、结构和语义兼容、消费者驱动检查、印记耦合，以及 Sysops 手机应用的发布约束与契约 ADR。">
+  <link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+  <script src="../../../assets/theme.js"></script>
+  <script src="../../../assets/reader.js" defer></script>
+  <link rel="stylesheet" href="../../../assets/styles.css">
+</head>
+<body>
+<a class="skip-link" href="#main">跳到主要内容</a>
+<header class="site-header reader-header"><div class="container header-inner">
+  <a class="brand" href="../../../index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5.5C8.5 3.8 5.8 3.6 2.5 4.5v14c3.3-.9 6-.7 9.5 1 3.5-1.7 6.2-1.9 9.5-1v-14c-3.3-.9-6-.7-9.5 1Zm0 0v14"/></svg>书架</a>
+  <a class="reader-book-title" href="../index.html" lang="en">Software Architecture: The Hard Parts</a>
+  <div class="theme-control" role="group" aria-label="外观" hidden><button type="button" data-theme-value="system" title="跟随系统"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path class="fill" d="M12 4a8 8 0 0 1 0 16Z"/></svg><span class="sr-only">跟随系统</span></button><button type="button" data-theme-value="light" title="浅色"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.6"/><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21M5.6 5.6l1.6 1.6M16.8 16.8l1.6 1.6M5.6 18.4l1.6-1.6M16.8 7.2l1.6-1.6"/></svg><span class="sr-only">浅色</span></button><button type="button" data-theme-value="dark" title="深色"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.5 14.6A7.8 7.8 0 0 1 9.4 4.5a7.8 7.8 0 1 0 10.1 10.1Z"/></svg><span class="sr-only">深色</span></button></div>
+</div></header>
+<main id="main" class="container reader-container">
+<nav class="breadcrumb" aria-label="当前位置"><ol><li><a href="../../../index.html">书架</a></li><li><a href="../index.html">书籍概览</a></li><li aria-current="page">第 13 章</li></ol></nav>
+<div class="reading-layout">
+<aside class="toc"><nav aria-label="本页目录"><h2>本页目录</h2><ul>
+<li><a href="#contracts-and-quanta">01　契约连接的不只是请求，还有部署与运行条件</a></li>
+<li><a href="#strictness-spectrum">02　严格与宽松：约束写在哪里，比格式叫什么更重要</a></li>
+<li><a href="#compatibility">03　结构兼容与语义兼容，是两道不同的门</a></li>
+<li><a href="#graphql-and-rest">04　GraphQL 的选择能力，不来自放弃类型</a></li>
+<li><a href="#tradeoffs-and-versions">05　版本既隔离变化，也积累需要维护的承诺</a></li>
+<li><a href="#bounded-models">06　各自的 Customer 模型，需要一个窄而清楚的交界</a></li>
+<li><a href="#consumer-driven-contracts">07　消费者驱动契约：把真实依赖变成提供方能够执行的检查</a></li>
+<li><a href="#stamp-coupling">08　印记耦合：整份文档传递，局部服务只使用一角</a></li>
+<li><a href="#bandwidth">09　带宽账：载荷大小必须乘上请求频率</a></li>
+<li><a href="#workflow-envelope">10　让契约携带工作流状态，也就让参与者承担共同协议</a></li>
+<li><a href="#sysops-contracts">11　Sysops：同一工作流里的契约，不必同样严格</a></li>
+<li><a href="#mobile-adr">12　手机端的例外：语义紧密，发布却不能紧绑</a></li>
+<li><a href="#conclusion">13　好的契约，把必须共同变化的范围说明白</a></li>
+</ul><p class="toc-note"><a href="../guide.html">全书导航</a> · <a href="../index.html">书籍概览</a></p></nav></aside>
+<article class="article">
+<header class="article-header"><p class="eyebrow">READING NOTES / CHAPTER 13</p><h1>第 13 章｜契约</h1><p class="article-deck"><span lang="en">Contracts</span> · 让必要的共同理解稳定下来，让无关的变化各自发生</p></header>
+<p>服务已经分开，工作流也有了编排器，接下来很容易直接讨论采用 REST 还是 gRPC。原书开场却把问题往前拉了一步：参与者究竟必须共同知道什么，哪些变化允许一方先发生，怎样发现双方已经无法合作？协议实现只是承载这些决定的机制。</p>
+<p>本章把契约放在静态依赖、运行时协作与发布节奏之间理解。严格和宽松并非好坏两端；关键是约束是否覆盖了真正需要共同变化的部分。Sysops Squad 是原书虚构案例，本章为手机应用选择宽松契约，并明确把更多验证责任留给编排器和应用，未提供上线后的效果数据。</p>
+<details class="mobile-toc"><summary>本页目录 · 13 个小节</summary><nav aria-label="移动端本页目录"><ul>
+<li><a href="#contracts-and-quanta">01　契约连接的不只是请求，还有部署与运行条件</a></li>
+<li><a href="#strictness-spectrum">02　严格与宽松：约束写在哪里，比格式叫什么更重要</a></li>
+<li><a href="#compatibility">03　结构兼容与语义兼容，是两道不同的门</a></li>
+<li><a href="#graphql-and-rest">04　GraphQL 的选择能力，不来自放弃类型</a></li>
+<li><a href="#tradeoffs-and-versions">05　版本既隔离变化，也积累需要维护的承诺</a></li>
+<li><a href="#bounded-models">06　各自的 Customer 模型，需要一个窄而清楚的交界</a></li>
+<li><a href="#consumer-driven-contracts">07　消费者驱动契约：把真实依赖变成提供方能够执行的检查</a></li>
+<li><a href="#stamp-coupling">08　印记耦合：整份文档传递，局部服务只使用一角</a></li>
+<li><a href="#bandwidth">09　带宽账：载荷大小必须乘上请求频率</a></li>
+<li><a href="#workflow-envelope">10　让契约携带工作流状态，也就让参与者承担共同协议</a></li>
+<li><a href="#sysops-contracts">11　Sysops：同一工作流里的契约，不必同样严格</a></li>
+<li><a href="#mobile-adr">12　手机端的例外：语义紧密，发布却不能紧绑</a></li>
+<li><a href="#conclusion">13　好的契约，把必须共同变化的范围说明白</a></li>
+</ul></nav></details>
+<section id="contracts-and-quanta"><h2><span class="section-number">01</span>契约连接的不只是请求，还有部署与运行条件</h2>
+<p>本书将<strong>契约（contract）</strong>广义定义为架构各部分传递信息或表达依赖所使用的形式。远程接口当然是契约，函数签名、库及其传递依赖、数据库结构、缓存记录也在讨论范围内。它们共同回答：一方可以依赖另一方提供哪些东西，变化后哪些约定仍然成立。</p>
+<p>沿<a href="../chapters/ch02.html#architecture-quantum">第 2 章</a>的定义，架构量子结合独立部署、功能内聚、静态依赖与同步动态耦合分析。服务需要某版库、某些数据库列才能启动运行，是静态接线的约束；请求必须等待另一服务答复，因而共同承受延迟与故障，是动态协作的约束。把请求体改为 JSON，既不会消除必需数据库，也不会让原来的同步等待自动消失。</p>
+<p>例如<a href="../chapters/ch08.html#sysops-ticket-library">第 8 章</a>的三个工单服务可以选择不同版本的共享 DLL，但都使用工单数据域。如果旧 DLL 仍要求某列存在，数据库删列就可能破坏旧部署。库版本化提供了采用新版的时间选择，却不能保证其外部数据契约永远相容。因此，不应从“服务使用宽松消息”直接推导“每个服务都成为完全独立的量子”。</p>
+<p>契约也横跨通信、一致性、协调三个维度。异步消息仍需要明确字段及结果含义；最终一致仍需要说明哪些暂态可接受；协同仍需要知道下一步依据什么推进。契约严格度是贯穿这些选择的一组约束，不是把第 12 章八种 Saga 再乘出一套机械分类。原子性、隔离性和业务一致性也继续分开：一个结构完全合法的消息，不会自动获得跨服务事务保证。</p>
+</section>
+<section id="strictness-spectrum"><h2><span class="section-number">02</span>严格与宽松：约束写在哪里，比格式叫什么更重要</h2>
+<p><strong>严格契约（strict contract）</strong>明确限定名称、类型、必需项以及适用的其他规则。远程方法调用容易让人像使用本地方法一样理解接口：调用哪个操作、传入哪些参数、得到什么结果，都有明确声明。收益是错误更早暴露，工具可以生成代码、验证结构和提供文档；代价是共同声明越宽，变化越容易触及无关消费者。</p>
+<p><strong>宽松契约（loose contract）</strong>让参与者只依赖必要的名称和值，允许其他信息独立增加或调整。宽松不是没有约定：<code>status</code> 拼错、必需的工单号缺失、完成状态的含义改变，照样会破坏业务。区别在于哪些约束由统一 schema 强制，哪些由消费者、契约测试或运行时逻辑兑现。</p>
+<p>原书图 13-2 把 XML／JSON Schema、对象和 RPC 放在较严格一端，把 REST、GraphQL 放在中间，把简单 JSON 和键值映射放在较宽松一端。这是作者帮助讨论的示意谱，不是这些技术不可改变的属性。JSON 可以严格校验；GraphQL 本身有强类型系统；Protobuf 也支持特定的兼容演进。应比较实际字段范围和兼容政策，而不是把协议名当作耦合等级。</p>
+<p>下面保留例 13-1 的三个字段，修正引号，并显式增加根对象类型，说明 schema 怎样把“一个 JSON”收紧为可验证的信息结构。它是笔记修订示例，不是原例逐字复制。</p>
+<pre><code class="language-json">{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "acct": {"type": "number"},
+    "cusip": {"type": "string"},
+    "shares": {"type": "number", "minimum": 100}
+  },
+  "required": ["acct", "cusip", "shares"]
+}</code></pre>
+<p>这里 <code>required</code> 要求三项存在，<code>type</code> 限定值类型，<code>minimum</code> 要求份额至少为 100。它仍允许额外字段；若需要封闭字段集合，才另加 <code>additionalProperties: false</code>。根 <code>type: object</code> 也有实际作用：只写 <code>properties</code> 和 <code>required</code> 不会使字符串等非对象实例自动失败，因为这些对象关键字只约束对象。<code>$schema</code> 声明 schema 使用的方言，不会单靠这一行自动启动业务消息验证。</p>
+<aside class="notice correction"><p><strong>原例核查。</strong> 印刷 368 页／PDF 386 的 <code>shares</code> 行把 <code>number</code> 前的引号印为弯引号 <code>“</code> → 原页回看确认不是纯文本提取误差，RFC 8259 第 7 节要求字符串界定符为 U+0022 → 应改为普通双引号 <code>"</code>。原例未限定根对象、未禁止额外字段，也不能读成“所有细节都严格匹配”。这是笔记的语法修正与能力说明，不冒称出版社已确认勘误。</p></aside>
+<p>同样，例 13-4 的简单 JSON 没有附带显式业务 schema，不等于 JSON 值没有类型：<code>"2003"</code> 是字符串，<code>2003</code> 才是数字。读者应区分序列化格式已有的值类型、额外声明的结构规则，以及业务语义。</p>
+</section>
+<section id="compatibility"><h2><span class="section-number">03</span>结构兼容与语义兼容，是两道不同的门</h2>
+<p><strong>结构兼容</strong>关心接收者能否继续读写预期的数据形状；<strong>语义兼容</strong>关心读到以后是否仍代表原来承诺的事实与行为。前者通过了，后者仍可能失败。以下是笔记假设：某响应始终包含数字 <code>amount</code>，原来表示含税金额，后来变成未税金额。JSON 解析、类型检查乃至字段齐全的测试都可能通过，但结算方按旧含义扣款便会出错。</p>
+<p>兼容还具有方向。服务端增加一个可选响应字段，旧客户端若忽略未知字段，通常可以继续工作；服务端增加一个必填请求字段，却可能立即拒绝旧客户端发来的请求。“都是加字段”不足以得出相同结论。已有消息、离线设备以及尚未升级的消费者，使这种新旧组合成为正常状态，而不是罕见边角。</p>
+<div class="table-scroll" role="region" aria-label="结构与语义兼容的变化示例" tabindex="0"><table><thead><tr><th>变化（笔记假设）</th><th>结构上要看什么</th><th>语义上要看什么</th></tr></thead><tbody>
+<tr><td>响应新增可选 <code>displayHint</code></td><td>旧读取者是否容忍未知字段</td><td>缺少它时能否保留原行为</td></tr>
+<tr><td>请求新增必填 <code>repairType</code></td><td>旧请求没有该字段会否被拒绝</td><td>旧流程是否有合理的旧语义入口</td></tr>
+<tr><td><code>status</code> 新增一个取值</td><td>枚举、分支或校验是否接受</td><td>不认识的状态能否被误当作已完成</td></tr>
+<tr><td><code>amount</code> 类型不变但单位改变</td><td>解析可能完全正常</td><td>金额单位与计算含义已破坏旧约定</td></tr>
+</tbody></table></div>
+<p>第 12 章提供了一个更贴近案例的语义边界：<code>COMPLETED</code> 表示维修完成，<code>CLOSED</code> 止于调查已经发送，并不表示客户回答了问卷。若移动端把三者显示为同一件事，接口即使字节完全一致，用户理解也会错误。契约应表达能够被消费方依赖的里程碑，而不是仅列几个字符串。</p>
+<p>原书印刷 370 页用“严格契约一变，双方都要改”概括耦合代价 → Protobuf 官方 proto3 文档明确允许若干二进制 wire-safe 演进，例如增加字段，并提醒线格式兼容不等于应用代码兼容 → 更准确的解释是：<strong>破坏已依赖约定的变化才要求协调；严格类型并不意味着每次新增都要同步发布。</strong> 对应地，宽松 JSON 也不会自动保护字段删除、单位变化或新业务状态。</p>
+</section>
+<section id="graphql-and-rest"><h2><span class="section-number">04</span>GraphQL 的选择能力，不来自放弃类型</h2>
+<p>原书用 Wishlist 与 Profile 说明“按需要知道”：愿望清单只想把客户 ID 对应到姓名，而资料服务还管理地址、国家等大量信息。若清单契约要求整个资料对象一字不差地匹配，地址结构调整也会牵连清单。这项推理有价值，但需要把 GraphQL 的机制说清。</p>
+<aside class="notice correction"><p><strong>技术澄清。</strong> 印刷 368 页把 REST 与 GraphQL 并称较宽松的“格式”，并以只读聚合介绍 GraphQL → Fielding 原始论文将 REST 定义为架构风格；GraphQL 2021 规范明确强类型、查询、变更和订阅三种操作 → REST 不是序列化格式或某个传输协议，GraphQL 也不是无类型、只读的数据接口。只读聚合是其一种用法；减少客户端请求不保证减少服务端远程调用，执行成本仍取决于字段解析与后端访问安排。</p></aside>
+<p>下面是对原例 13-2／13-3 的笔记改写。服务端定义一个包含多种能力的类型系统，客户端查询只选择姓名；两段应分别作为 schema 与请求使用。</p>
+<pre><code class="language-graphql">type Query {
+  profile(id: ID!): Profile
+}
+
+type Profile {
+  name: String
+  addr1: String
+  addr2: String
+  country: String
+}</code></pre>
+<pre><code class="language-graphql">query WishlistName {
+  profile(id: "123") {
+    name
+  }
+}</code></pre>
+<p>第一段声明提供方允许查询什么，<code>ID!</code> 表示必须提供非空标识。第二段声明本次实际需要什么。若示例数据的姓名是 Mei，成功结果的数据部分便只需包含 <code>profile</code> 下的 <code>name: "Mei"</code>，不用附带地址。查询仍须通过 schema 校验；删除 <code>name</code> 会破坏它，而在不改变现有字段和参数约定时新增一个地址输出字段通常不影响它。这里的 <code>Profile</code> 和 <code>name</code> 都可为空，消费者也应按这个声明处理空值。</p>
+<p>原书两段 <code>type Profile</code> 是两种视图的概念比较，不应直接拼成同一 schema 中两个同名类型；第二段的 <code>. . .</code> 也是省略标记，不是合法字段。实际 GraphQL 服务中，各类型名须唯一，字段选择表达消费者需要的投影。这个区分使“只取必要字段”可以与强类型验证同时成立。</p>
+<p>REST 的资源表示也能采用类似的兼容策略，但“给飞机资源增加发动机信息，不影响读取座位”成立的前提，是旧读取者只依赖座位且容忍新增表示内容。若它对所有键做精确相等校验，或者新增信息改变了分页、语义与错误行为，仍可能失败。资源建模创造演进机会，不能替代实际兼容规则。</p>
+</section>
+<section id="tradeoffs-and-versions"><h2><span class="section-number">05</span>版本既隔离变化，也积累需要维护的承诺</h2>
+<p>原书表 13-1 同时把 versioned 列为严格契约的优点和缺点，原因并不矛盾。保留旧接口可以让旧消费者继续按旧约定运行，新消费者采用新能力；但每保留一版，就多一组需要实现、验证、修复和最终退役的承诺。版本标签若指向已经改变语义的同一实现，并未真正隔离行为。</p>
+<p><a href="../chapters/ch08.html#library-versioning">第 8 章</a>的库版本由使用方选入部署，网络接口的旧版本则通常需要提供方继续运行和维护。两者都能减少一次性集体升级，却把成本放到不同位置。移动应用无法随服务器同步发布时，支持窗口尤其应对应消费者实际升级节奏，而不是仅规定“最多保留两个版本”。原书没有给 Sysops 规定这个窗口。</p>
+<p>宽松契约的收益，是减少不必要的共同声明，让实现与无关字段更容易独立变化；代价是校验责任不再全由统一类型工具承担。少一份 schema，不代表少一份必须一致的知识。字段拼写、必需信息、未知值处理仍要有维护者，缺失时还要产生可理解的失败结果。</p>
+<div class="table-scroll" role="region" aria-label="契约安排的收益与代价" tabindex="0"><table><thead><tr><th>安排</th><th>原书强调的收益</th><th>必须承担的代价</th></tr></thead><tbody>
+<tr><td>严格契约</td><td>明确结构保证；版本隔离；易于构建期检查；文档清楚</td><td>契约变化的共同影响；多版本维护与退役</td></tr>
+<tr><td>宽松契约</td><td>较少实现耦合；更自由的演进</td><td>名称及字段管理；适应度函数和应用验证</td></tr>
+<tr><td>消费者驱动契约</td><td>保留较窄的依赖；校验可按需求选择；支持演进</td><td>工程纪律；消息表达与契约验证两套机制的协作</td></tr>
+</tbody></table></div>
+<p>此表重组原表 13-1—13-3，不是把三种安排排成互斥等级。严格接口也可以采用消费者驱动测试；宽松消息也可以用局部 schema。适合的组合取决于共同变化是否真实存在、工具能检查什么，以及团队能否持续运行并维护这些检查。</p>
+</section>
+<section id="bounded-models"><h2><span class="section-number">06</span>各自的 Customer 模型，需要一个窄而清楚的交界</h2>
+<p>原书图 13-3、13-4 比较两个具有独立事务边界的服务共享客户信息。两者都认识 Customer，不意味着必须共享同一个完整类。配送可能关心可投递地址，结账可能关心客户标识与购买关系；让它们各自保留内部模型，再在边界交换必要值，能避免内部类的一次调整变成多个团队的发布任务。</p>
+<p>这类映射不是纯粹的多余代码。它明确指出“本服务从对方实际需要哪些信息”，也让 Java 服务改用另一种技术栈时不必要求邻居一并改变。但公共字段的含义仍要一致：如果一侧的地址是当前资料地址，另一侧需要的是下单时地址，换成键值对并不能消除这个差别。真正应共享的是经商定的信息语义，而不是恰好同名的所有字段。</p>
+<figure class="concept-figure"><a href="../diagrams/exports/ch13-contract-scope.svg" target="_blank" rel="noopener"><img src="../diagrams/exports/ch13-contract-scope.svg" width="720" height="420" alt="上行把完整 Profile 结构交给愿望清单，姓名、地址与联系方式一起成为约定；下行只约定标识到姓名的必要投影，资料内部地址调整不进入清单依赖。"></a><figcaption>图 13-1：依据原书 Wishlist／Profile 示例制作的原创边界图。箭头表示提供方交付给消费者的信息；框内字段是约定范围。下行只收窄清单的依赖，不表示资料服务删除了其他字段，也不保证姓名语义可以任意改变。点击<a href="../diagrams/exports/ch13-contract-scope.svg" target="_blank" rel="noopener">查看大图</a>。</figcaption></figure>
+<p>沿图比较，应关注的不仅是传了多少字节，还有接收者<strong>把多少东西当作必须稳定的承诺</strong>。传来一个额外字段但完全忽略它，与把整个对象绑定到封闭共享类型，并不是同样强的变化耦合。后者会让消费者为自己不使用的信息支付协调成本。</p>
+</section>
+<section id="consumer-driven-contracts"><h2><span class="section-number">07</span>消费者驱动契约：把真实依赖变成提供方能够执行的检查</h2>
+<p><strong>消费者驱动契约（consumer-driven contract）</strong>让消费者表达自己所需的交互，由提供方在构建或交付流水线中验证。原书把它称为由 push 转为 pull，指的是契约需求从谁出发，不是把网络通信改为拉取，更不是要求提供方执行消费者任意提交的程序。</p>
+<p>以前述愿望清单为例，消费者声明：查询存在的客户标识时，我需要可处理的姓名；客户不存在时，我也需要约定的空值或错误结果。清单自己的测试先证明它会发出正确请求，并能处理这些响应；提供方再对自己的实现验证相同交互。资料服务内部即使新增几十个字段，只要这些必要交互继续成立，清单就无须跟着修改。</p>
+<p>Pact 的官方说明把这一过程拆成消费者测试与提供方验证：消费者通过模拟提供方检验真实客户端代码，生成描述交互的契约文件；提供方重放请求，把实际响应与最小期望比较。对于消息，检查的是消息生产与消费的交界，不需要假装整个消息代理已经受测。工具也不限定所有团队使用完全相同的内部对象。</p>
+<figure class="concept-figure"><a href="../diagrams/exports/ch13-consumer-contracts.svg" target="_blank" rel="noopener"><img src="../diagrams/exports/ch13-consumer-contracts.svg" width="720" height="380" alt="愿望清单与地址展示两个消费者分别把最小交互约定送入提供方 CI；提供方实现接受两组验证，通过后分别保证姓名和地址交互仍符合各消费者需要。"></a><figcaption>图 13-2：依据原图 13-5 与 Pact 工作方式绘制的原创示意。虚线箭头表示测试契约流向提供方验证；实线箭头表示验证结果反馈，不是线上业务调用。两个消费者的需求可以重叠，提供方必须维护被支持消费者的有效约定。点击<a href="../diagrams/exports/ch13-consumer-contracts.svg" target="_blank" rel="noopener">查看大图</a>。</figcaption></figure>
+<p>这种安排避免“为了灵活性完全不要检查”和“为了检查共享全部模型”之间的假两难。但它需要工程纪律：消费方变更时更新契约，提供方运行相应验证，失败时阻止不兼容发布。测试只覆盖实际描述的交互，不能证明未建模的业务含义、并发恢复、消息送达或性能都正确；若把当前整个响应做成精确快照，又会重新制造不必要的印记耦合。</p>
+<aside class="notice correction"><p><strong>schema 能力澄清。</strong> 印刷 375 页说多数 schema 能限定数值类型却不能限定范围 → 同章例 13-1 已使用 <code>minimum</code>，JSON Schema draft-04 也明确提供 <code>minimum</code>／<code>maximum</code> 等关键字 → 数值范围不应被当作必须放弃 schema 的理由。消费者驱动检查更独特的价值，是表达实际消费依赖并由双方持续验证；更复杂的业务行为另用合适的业务测试。这里是对原书概括的修正，不是官方勘误。</p></aside>
+</section>
+<section id="stamp-coupling"><h2><span class="section-number">08</span>印记耦合：整份文档传递，局部服务只使用一角</h2>
+<p><strong>印记耦合（stamp coupling）</strong>指参与者传递一个较大的数据结构，而每个参与者只读写其中一小部分。原书以旅行行业标准 XML 文档说明其合理来源：不同系统各更新行程的一段，完整文档作为跨系统协作载体。因此，传递整体并非天然错误；它可能减少反复取数，并保留后续处理所需的上下文。</p>
+<p>问题常出在“以后也许会用到”。Wishlist 现在只需要姓名，团队却让完整 Profile 成为共同契约；资料服务调整清单不关心的 <code>state</code> 字段时，清单也可能因严格匹配而失败。原书图 13-7 展示的正是<strong>大结构加严格绑定</strong>造成的过度耦合，而不是声称每个额外 JSON 字段都会必然破坏客户端。</p>
+<p>要判断这种代价是否值得，先找每个参与者真正读取、写入和原样转交的范围。需要姓名的服务没有理由顺便依赖全部联系方式；需要转交整份行业文档的服务，则必须知道哪些部分属于自己，哪些应保留给后续步骤。这里收窄的是共同承诺，不是简单把所有对象拆到只剩单个标量。</p>
+<p>过小的契约也会产生另一种成本：消费者为了完成一个业务步骤，被迫连续请求多次，或者把本来应一起理解的信息拆散。比较应以完整业务交互为单位。一次交付恰当的一组字段，与一次交付全域数据库模型，是两种不同规模的选择。</p>
+</section>
+<section id="bandwidth"><h2><span class="section-number">09</span>带宽账：载荷大小必须乘上请求频率</h2>
+<p>印记耦合还有不依赖类型绑定的成本：无论接收者用不用，多出来的字节都要序列化、传输并处理。原书给出每秒 2,000 次请求、每次 500 KB 的假设，说明单次看起来无害的完整资料，在高频交互下会累积成很大的吞吐需求。</p>
+<p>按十进制口径 <code>1 KB = 1,000 B</code>，只计算这一路每次传输一次的应用载荷，有以下结果。它们是原书假设的算术复核，不是 Sysops 的实测，也没有计入请求／响应另一方向、协议头、重试、压缩和其他链路。</p>
+<div class="table-scroll" role="region" aria-label="契约载荷与带宽复算" tabindex="0"><table><thead><tr><th>载荷方案</th><th>每次大小</th><th>频率</th><th>每秒载荷</th><th>换成比特率</th></tr></thead><tbody>
+<tr><td>完整资料</td><td>500 KB</td><td>2,000 次／秒</td><td>1,000,000 KB/s = 1 GB/s</td><td>8 Gbit/s</td></tr>
+<tr><td>只传必要信息</td><td>200 B</td><td>2,000 次／秒</td><td>400,000 B/s = 400 KB/s</td><td>3.2 Mbit/s</td></tr>
+</tbody></table></div>
+<aside class="notice correction"><p><strong>单位修正。</strong> 印刷 377 页／PDF 395 把缩减后的单次载荷写成 “200 bytes per second”，结果又写成没有时间单位的 “400 KB” → 与前文每秒 2,000 次的计算维度不一致 → 应读为<strong>每次 200 B，每秒合计 400 KB/s</strong>。前一项 1,000,000 KB/s 是这类调用的累计流量，不是单次调用的大小。该修正来自原页与量纲计算，不冒称出版社确认。</p></aside>
+<p>在这些假设下，两者相差 2,500 倍。这个倍数解释了“先收窄契约”为什么有时比更换编码协议更有价值，但它不是对任意姓名响应大小的预测。实际应测量序列化后字节数、峰值调用率和经过的链路；同一载荷若沿四段流程转发，每段都要承担流量，不能只看入口一次。</p>
+</section>
+<section id="workflow-envelope"><h2><span class="section-number">10</span>让契约携带工作流状态，也就让参与者承担共同协议</h2>
+<p><a href="../chapters/ch11.html#stamp-coupling">第 11 章</a>已经提出，在协同中把状态随消息传递。第 13 章进一步解释为何它是印记耦合的正当用途：服务需要的不只自己的业务字段，还包括前序是否完成、当前流程处于什么阶段、出现过什么错误。把这些信息放进共同信封，可以减少后续逐个询问先前服务的需要。</p>
+<p>以下是依据原图 13-8 作出的笔记假设，而非 Sysops 已选方案：A 完成本地动作后记录 A 的结果，B 接收并更新自己的结果，终端接收者据此解释本次流程。每一步读取必要领域内容，但也转交其他步骤的状态；由此获得的整体上下文，正是增加契约耦合换来的。</p>
+<figure class="concept-figure"><a href="../diagrams/exports/ch13-workflow-envelope.svg" target="_blank" rel="noopener"><img src="../diagrams/exports/ch13-workflow-envelope.svg" width="720" height="360" alt="协同示例中 A 与 B 依次处理携带工作流标识和步骤结果的消息，终端读取已知进度；下方强调可靠保存、迟到重复及分支合并仍需独立安排。"></a><figcaption>图 13-3：原创状态传递示意。实线箭头表示顺序交接，节点上方列出此时消息中已经确认的结果；A、B 各自提交，不存在跨服务 ACID 边框。末端拥有该消息的已知进度，不等于用户随时都能找到全局最新状态。点击<a href="../diagrams/exports/ch13-workflow-envelope.svg" target="_blank" rel="noopener">查看大图</a>。</figcaption></figure>
+<p>状态责任没有随编排器一起消失。流程中途停住时，谁保存待办、谁发现超时、谁继续推进，仍须明确；若还需要任意时刻查询最新进度，消息本身并不自动构成查询入口。前置控制器可以汇集状态，查询投影也可承担读取，但这又是新的责任安排。并行分支尤其不能简单用“最后到达的完整对象”覆盖先前结果，否则旧副本可能抹掉另一分支已完成的进度。</p>
+<aside class="notice correction"><p><strong>一致性边界。</strong> 印刷 378 页说把契约重新广播给此前服务，以恢复 atomic consistency，原图还画出 Transactional boundary → 仅广播状态无法撤回已经独立提交、被其他业务观察到的效果；Microsoft 补偿模式明确要求业务补偿、可靠进度和失败恢复 → 应理解为凭状态组织后续恢复或补偿，不是消息再次走一遍便获得原子提交或隔离。补偿也可能失败，需要保留未完成责任。</p></aside>
+<p>原表 13-4 的交换因此很清楚：印记耦合能支持较复杂的协同工作流，却增加参与方共同理解状态协议的负担，并可能放大带宽。协同可能改善吞吐和独立伸缩机会，但有严格先后依赖时，换成信封不会让它们自动并行。若集中处理异常已经更简单，不能只为去掉中心而把所有复杂度搬进每条消息。</p>
+</section>
+<section id="sysops-contracts"><h2><span class="section-number">11</span>Sysops：同一工作流里的契约，不必同样严格</h2>
+<p>先恢复案例输入。<a href="../chapters/ch08.html#sysops-ticket-library">第 6—8 章</a>保留三个工单服务共享稳定 DLL 和工单数据域，分派包含投递；<a href="../chapters/ch09.html#sysops-survey">第 9 章</a>明确用户维护拥有专家资料，Survey 独占调查写入；<a href="../chapters/ch10.html#sysops-decision">第 10 章</a>让分派复制技能、服务区域和标准排班，实时位置另有来源。这些数据责任不会因契约宽松而改变。</p>
+<p>主工单已经在第 11 章选择编排，以管理丢单、取消、重派与状态查询。第 12 章提出保留维修完成事实、后台补发调查的思路，并比较 Fairy Tale／Parallel 候选，<strong>没有最终 Saga 模式 ADR</strong>。因此本章要决定的是参与者怎样交换信息，而不是宣布已有某种完整的最终一致实现上线。</p>
+<p>Sydney 最初提议全部使用 gRPC，因为听说它快。Addison 先让团队决定契约类型，再允许开发者选择满足适应度函数的实现。这并非排斥 gRPC，而是避免速度印象替代兼容与发布分析。原书没有给出最终通信框架或相关适应度函数的可执行代码。</p>
+<p>在章末对话里，编排器与工单管理、工单分派采用较严格契约：这些信息语义上联系紧密，新增需要管理的工单类别时，分派必须理解相应变化。通知和调查则可以宽松，因为它们在此交界处需要的信息变化较慢，紧密绑定整个工单模型收益不大。这里判断的是<strong>跨服务接口的变化</strong>；第 6 章调查内部问卷变化频繁，并不意味着调查启动接口也同样频繁改变。</p>
+<figure class="concept-figure"><a href="../diagrams/exports/ch13-sysops-contracts.svg" target="_blank" rel="noopener"><img src="../diagrams/exports/ch13-sysops-contracts.svg" width="720" height="500" alt="工单编排器分别连接工单管理、工单分派、通知、调查和专家手机；前两条标为严格，通知与调查标为宽松，手机因应用商店发布限制使用宽松契约。"></a><figcaption>图 13-4：依据原图 13-9 与章末 ADR 重绘的契约关系图。连线表示协作关系，粗细与线型不编码同步／异步，严格度由文字标注；手机箭头为双向，表示投递与回传。本图不是部署合并或工单投递职责迁移图。点击<a href="../diagrams/exports/ch13-sysops-contracts.svg" target="_blank" rel="noopener">查看大图</a>。</figcaption></figure>
+<p>原图继续使用 Ticket Management 合框，里面包含创建与完成，也继续把手机连线接到编排器。这与第 8 章的部署画法、第 7 章的投递职责视图不同，原书未补充新的服务合并或职责迁移 ADR。本节保留其工作流契约视角，不据此推翻前述边界。通知和调查契约宽松，也不表示可以缺少调查建档所需信息或绕过 Survey 的写所有权。</p>
+</section>
+<section id="mobile-adr"><h2><span class="section-number">12</span>手机端的例外：语义紧密，发布却不能紧绑</h2>
+<p>Sydney 注意到专家手机也直接处理工单，直觉上应像分派一样采用严格契约。这个候选并不荒谬：设备必须正确理解工单身份、处理内容及完成结果。但它遭遇另一项硬条件——应用通过公共应用商店发布，审核过程可能延迟更新；服务器团队不能假定所有接收方都能按同一时点升级。</p>
+<p>若服务器改动立刻要求新版字段，尚未获批的应用就无法合作。宽松契约的价值不是让旧应用理解任何新业务，而是让<strong>不影响既有必需语义的扩展</strong>可以先出现，减少每次小扩展都触发同步发布的需要。这一判断综合了领域联系和交付控制权，而不是只根据谁调用谁决定严格度。</p>
+<p>最终 ADR 的背景是商店发布带来的契约更新延迟；决定是在编排器与专家手机之间双向使用<strong>宽松的名称—值契约</strong>，并建立允许短期临时扩展的机制。后果有两项：如果商店政策允许更快甚至持续部署，应重新审视决定；编排器和手机应用内部必须承担更多契约验证逻辑。</p>
+<p>原书没有给扩展机制的字段结构、版本协商协议或退役时限。作为笔记的工程解释，临时扩展只有在旧端能够忽略、缺失时保留正确旧行为时才真正降低发布压力。新增一个可选显示提示与新增一个必须执行的维修确认步骤不同：后者改变了业务承诺，不能放进扩展袋就假装旧应用已经支持。若新行为不可省略，就仍需明确支持能力与迁移安排。</p>
+<p>更多校验逻辑也不是“遇到坏数据都尽量猜”。收到缺失工单号、错误类型或不认识的关键状态时，两端要按约定拒绝、提示或保留待处理，而不能把它们默认为成功。这里承接第 12 章：维修完成的确认和调查发送的确认是不同语义，字段宽松不能使手机错误宣布全部后续工作已经完成。</p>
+<p>案例链条至此完整：<strong>主工单已编排且协作方不同 → 比较统一实现与逐交界选择、手机严格绑定与宽松扩展 → 内部工单协作较严格，通知／调查较宽松，手机因不可控发布节奏选择宽松名称—值并记录 ADR → 接受两端更多验证及将来重评。</strong> 原书没有证明该方案已缩短审核、避免所有升级故障或达到某个性能指标。</p>
+</section>
+<section id="conclusion"><h2><span class="section-number">13</span>好的契约，把必须共同变化的范围说明白</h2>
+<p>这一章的核心并不是尽量删掉约束，而是让约束与真实依赖相匹配。类型、必填项和工具验证能让错误更早显现；较窄的投影、兼容演进和消费者驱动检查能减少无关变化的传播。两类能力可以结合，前提是团队知道哪些承诺来自结构，哪些来自业务含义。</p>
+<p>印记耦合又展示了同一个原则的两面：为了“将来可能有用”传完整模型，常常扩大不必要的依赖与流量；为了让协同中的参与者理解进度而携带共同状态，则可能值得承担这些成本。但消息结构不是事务、恢复器或全局查询入口，相关责任仍必须有人兑现。</p>
+<p>Sysops 的手机 ADR 把契约问题落到发布现实：业务上有关联的两端，未必拥有相同交付节奏。把稳定核心与可兼容扩展区分开，能给不同节奏留出空间；一旦真正的业务语义改变，协调仍然不可避免。下一章将把边界与契约的讨论带到分析数据，而不把运营服务的内部模型直接当作所有分析消费者的公共模型。</p>
+</section>
+<details id="sources" class="source-note"><summary>来源、原书对应与核查说明</summary>
+<p>依据 Neal Ford、Mark Richards、Pramod Sadalage、Zhamak Dehghani，<em>Software Architecture: The Hard Parts — Modern Trade-Off Analysis for Distributed Architectures</em>，O’Reilly 英文第一版 October 2021，首次发布 2021-09-23，版权 2022，ISBN 978-1-492-08689-5。完整通读第 13 章印刷 365—380／PDF 页序 383—398。中文标题与术语为本站译法；核查日期：2026-11-07。</p>
+<ul>
+<li>01：章首及契约定义，印刷 365—366／PDF 383—384，图 13-1；共同补读 Preface／PDF 13—17、第 1 章案例印刷 15—21、第 2 章原文印刷 25—44，特别是量子、静态／动态耦合及三维定义。</li>
+<li>02—04：Strict Versus Loose Contracts，印刷 367—369／PDF 385—387，图 13-2、例 13-1—13-4。JSON 引号按原页与 RFC 修正；根对象类型为笔记新增，GraphQL schema／查询为重写示例，未直接拼接原书两个 Profile 定义。</li>
+<li>03、05：Trade-Offs Between Strict and Loose Contracts，印刷 370—372／PDF 388—390，表 13-1、13-2；兼容方向与金额示例为笔记解释，版本衔接依据已完成第 8 章。</li>
+<li>06—07：Contracts in Microservices、Coupling levels、Consumer-driven contracts，印刷 372—375／PDF 390—393，图 13-3—13-5、表 13-3；结合 Pact 解释两侧验证，375 页数值范围概括与 draft-04 及原例对照。</li>
+<li>08—09：Stamp Coupling、Over-Coupling via Stamp Coupling、Bandwidth，印刷 376—377／PDF 394—395，图 13-6、13-7；2,000 次／秒、500 KB 与 200 B 沿用原书假设，按十进制复算并修正单位。</li>
+<li>10：Stamp Coupling for Workflow Management，印刷 378—379／PDF 396—397，图 13-8、表 13-4；补偿、查询入口与并发状态边界承接已完成第 11—12 章及外部补偿资料。A／B 信封图为明确假设，不是案例最终架构。</li>
+<li>11—13：Sysops Squad Saga: Managing Ticketing Contracts 及 Loose Contract for Sysops Squad Expert Mobile Application ADR，印刷 379—380／PDF 397—398，图 13-9。已恢复第 6—12 章已完成笔记和 README 的数据域、共享 DLL、写所有权、专家缓存、主工单编排与 Saga 候选状态；未使用同轮未审稿章节草稿作依据。</li>
+</ul>
+<p>实际用 PyMuPDF 渲染并回看 PDF 页序 <strong>384、385、386、387、389、390、391、392、393、394、395、396、397、398</strong>，对应印刷 <strong>366、367、368、369、371、372、373、374、375、376、377、378、379、380</strong>，覆盖原图 13-1—13-9、表 13-1—13-4、例 13-1—13-4，以及手机 ADR。正文其余两页以分章全文阅读核对，不声称逐页图像查看。</p>
+<p>外部资料均于 2026-11-07 实际读取：</p>
+<ul>
+<li><a href="https://www.rfc-editor.org/rfc/rfc8259.html#section-7">RFC 8259 · JSON</a>：第 1、3、4、7 节，核对 JSON 值类型、对象成员与普通双引号。</li>
+<li><a href="https://json-schema.org/draft-04/draft-fge-json-schema-validation-00">JSON Schema draft-04 validation</a>：4.1、5.1.2—5.1.3、5.4.3—5.4.4、5.5.2，核对类型适用范围、数值边界、必填与额外属性。采用与原例对应的方言，不把现行草案能力倒灌成原例。</li>
+<li><a href="https://spec.graphql.org/October2021/">GraphQL October 2021 规范</a>：Overview、2.2—2.4、3.3、3.12、5，核对强类型、三类操作、选择集、唯一类型名、非空及校验；GraphQL 不保证后端远程调用自动减少。</li>
+<li><a href="https://ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm">Roy Fielding · REST 原始论文第 5 章</a>：5.1、5.2、5.3.2，核对架构风格、资源表示、统一接口与不限定单个协议。</li>
+<li><a href="https://protobuf.dev/programming-guides/proto3/#updating">Protocol Buffers · proto3 Updating A Message Type</a>：二进制 wire-safe 变化及应用代码仍可能受影响，限定“严格契约任何变化都要求双方改动”的概括；不把二进制规则套到 ProtoJSON。</li>
+<li><a href="https://docs.pact.io/getting_started/how_pact_works">Pact · How Pact works</a>：消费者测试、最小响应、提供方验证、消息测试边界；不将交互检查冒称完整业务与消息基础设施验证。</li>
+<li><a href="https://learn.microsoft.com/en-us/azure/architecture/patterns/compensating-transaction">Microsoft · Compensating Transaction pattern</a>：补偿可能失败、需保存进度、考虑并发且不保证回到原始状态，用于限定 378 页“恢复 atomic consistency”。</li>
+</ul>
+<p>纠错均在对应正文按“原表述 → 问题及依据 → 修正解释”记录；JSON 引号、GraphQL／REST 分类、schema 数值范围、带宽单位与广播恢复的说明是本笔记核查或技术澄清，未冒称出版社已确认勘误。四幅 SVG 为原创解释图，编号独立于原书，源与导出副本一致。示例仅验证局部契约能力；原书未给扩展字段规范、兼容支持窗口、最终传输框架、完整适应度函数或生产结果，均不补造。</p>
+</details>
+<nav class="chapter-pagination" aria-label="章节翻页"><a class="page-link prev" href="ch12.html" rel="prev"><span class="page-label">← 上一章 · 第 12 章</span><span class="page-title">事务 Saga</span></a><a class="page-link next" href="ch14.html" rel="next"><span class="page-label">下一章 · 第 14 章 →</span><span class="page-title">管理分析数据</span></a><a class="pagination-home" href="../index.html">书籍概览与目录</a></nav>
+</article>
+</div>
+</main>
+<footer class="site-footer"><div class="container footer-inner"><span>个人书架 / 中文读书笔记</span><a href="#main">回到顶部 ↑</a></div></footer>
+</body>
+</html>

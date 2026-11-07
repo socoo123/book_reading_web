@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="590" viewBox="0 0 720 590" role="img" aria-labelledby="title desc">
+  <title id="title">主工单工作流的业务里程碑</title>
+  <desc id="desc">客户先得到已受理的工单号，之后分派并投递给专家、通知客户、维修完成、发起调查。流程跟踪贯穿这些阶段，但各阶段不是同一个长数据库事务。分派包含投递而不是行车路线。</desc>
+  <style>
+    :root{--surface:#fcfbf8;--text:#292824;--muted:#66645d;--line:#969187;--soft:#f0ece4;--accent:#386d74}
+    @media(prefers-color-scheme:dark){:root:not([data-theme='light']){--surface:#252524;--text:#e6e3dc;--muted:#b6b1a7;--line:#8c8982;--soft:#353534;--accent:#94c8cf}}
+    :root[data-theme='dark']{--surface:#252524;--text:#e6e3dc;--muted:#b6b1a7;--line:#8c8982;--soft:#353534;--accent:#94c8cf}
+    .bg{fill:var(--surface)}text{fill:var(--text);font-family:system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;font-size:17px}.heading{font-size:21px;font-weight:600}.small{font-size:15px;fill:var(--muted)}.box{fill:var(--soft);stroke:var(--line);stroke-width:1.5}.core{fill:var(--surface);stroke:var(--accent);stroke-width:2}.edge{fill:none;stroke:var(--accent);stroke-width:2;marker-end:url(#arrow)}.arrow{fill:var(--accent)}.rule{stroke:var(--line);stroke-dasharray:3 5}
+  </style>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path class="arrow" d="M0 0 8 4 0 8Z"/></marker></defs>
+  <rect class="bg" width="720" height="590"/>
+  <text class="heading" x="28" y="36">拿到工单号，只完成了第一个里程碑</text>
+  <text class="small" x="28" y="63">业务依赖图 · 不指定协议、部署连线或事务边界</text>
+  <rect class="core" x="28" y="87" width="290" height="61" rx="9"/><text x="173" y="123" text-anchor="middle">受理工单 → 返回工单号</text>
+  <text x="354" y="112">客户可结束本次前台等待</text><text class="small" x="354" y="137">已受理 ≠ 已分派 ≠ 已维修</text>
+  <path class="edge" d="M173 148V181"/>
+  <rect class="box" x="28" y="191" width="290" height="61" rx="9"/><text x="173" y="216" text-anchor="middle">分派专家 + 投递工单</text><text class="small" x="173" y="240" text-anchor="middle">投递到专家的移动应用</text>
+  <text x="354" y="216">依据技能、地点和可用性</text><text class="small" x="354" y="240">投递失败，需要重选与恢复</text>
+  <path class="edge" d="M173 252V281"/>
+  <rect class="box" x="28" y="291" width="290" height="54" rx="9"/><text x="173" y="324" text-anchor="middle">通知客户</text>
+  <text class="small" x="354" y="324">通知专家将来处理问题</text>
+  <path class="edge" d="M173 345V374"/>
+  <rect class="box" x="28" y="384" width="290" height="54" rx="9"/><text x="173" y="417" text-anchor="middle">专家维修并提交完成信息</text>
+  <text class="small" x="354" y="417">等待实际业务完成，不持有长事务</text>
+  <path class="edge" d="M173 438V467"/>
+  <rect class="box" x="28" y="477" width="290" height="54" rx="9"/><text x="173" y="510" text-anchor="middle">发起客户调查</text>
+  <text class="small" x="354" y="510">发起调查 ≠ 客户已经回答</text>
+  <path class="rule" d="M28 552H692"/>
+  <text class="small" x="28" y="578">编排负责整体进度与异常；领域服务仍负责各自业务动作。</text>
+  <script><![CDATA[try { const t = localStorage.getItem('reading-notes-theme'); if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t); } catch {}]]></script>
+</svg>

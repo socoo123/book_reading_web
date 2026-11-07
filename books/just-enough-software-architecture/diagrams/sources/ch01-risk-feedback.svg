@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="372" viewBox="0 0 720 372" role="img" aria-labelledby="title desc">
+  <title id="title">用风险选择架构工作，并根据结果调整</title>
+  <desc id="desc">三个动作从左向右连接：识别并排序风险，选择并应用技术，评估风险降低。若仍有关键风险，虚线返回，调整风险判断或应对办法；风险足够降低时，回到实现。它不是固定的项目阶段表。</desc>
+  <!-- Original, editable hand-written SVG. The export is an identical web copy. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 16px; fill: var(--muted); }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.2; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .label { font-size: 18px; font-weight: 600; text-anchor: middle; }
+    .detail { font-size: 16px; text-anchor: middle; fill: var(--muted); }
+    .arrow { fill: none; stroke: var(--line); stroke-width: 1.8; marker-end: url(#arrow); }
+    .return { fill: none; stroke: var(--accent); stroke-width: 1.8; stroke-dasharray: 6 5; marker-end: url(#return-arrow); }
+    .return-label { font-size: 16px; fill: var(--accent); text-anchor: middle; }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker>
+    <marker id="return-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--accent)"/></marker>
+  </defs>
+  <rect width="720" height="372" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="30" y="40">不是完成一套图，而是减少关键风险</text>
+  <text class="sub" x="30" y="69">三个动作可以在开发中反复发生，不只发生在编码之前</text>
+
+  <rect class="node" x="30" y="102" width="192" height="88" rx="7"/>
+  <text class="label" x="126" y="137">识别并排序风险</text>
+  <text class="detail" x="126" y="166">什么可能使项目失败？</text>
+  <path class="arrow" d="M230 146H257"/>
+  <rect class="focus" x="266" y="102" width="192" height="88" rx="7"/>
+  <text class="label" x="362" y="137">选择并应用技术</text>
+  <text class="detail" x="362" y="166">用合适的手段应对</text>
+  <path class="arrow" d="M466 146H493"/>
+  <rect class="node" x="502" y="102" width="188" height="88" rx="7"/>
+  <text class="label" x="596" y="137">评估风险降低</text>
+  <text class="detail" x="596" y="166">结果支持什么判断？</text>
+
+  <path class="return" d="M596 198V246H126V198"/>
+  <rect x="178" y="232" width="366" height="28" fill="var(--bg)"/>
+  <text class="return-label" x="361" y="251">仍有关键风险：调整判断或办法，再验证</text>
+  <text class="sub" x="30" y="309">风险足够降低，就回到实现；新风险出现时，再进入这条路径。</text>
+  <text class="sub" x="30" y="342">实线：动作之间的推进　　虚线：评估后的反馈</text>
+</svg>

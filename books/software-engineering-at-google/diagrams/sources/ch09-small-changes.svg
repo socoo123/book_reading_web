@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="384" viewBox="0 0 720 384" role="img" aria-labelledby="title desc">
+  <title id="title">小变更保留完整目的，也便于单独撤销</title>
+  <desc id="desc">原创报表上传假设案例。先进行行为不变的必要整理，再把重试边界、回归测试与说明作为第二个完整变更。实线向右表示依次推进，虚线向左表示只撤销重试修复，保留先前整理。无关格式调整与清理另行处理。</desc>
+  <!-- Original editable hand-written SVG; the export is an identical web copy. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 15px; fill: var(--muted); }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.2; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .label { font-size: 18px; font-weight: 600; text-anchor: middle; }
+    .body { font-size: 16px; fill: var(--muted); text-anchor: middle; }
+    .arrow { fill: none; stroke: var(--line); stroke-width: 1.8; marker-end: url(#arrow); }
+    .back { fill: none; stroke: var(--accent); stroke-width: 1.8; stroke-dasharray: 6 5; marker-end: url(#back-arrow); }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker>
+    <marker id="back-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--accent)"/></marker>
+  </defs>
+  <rect width="720" height="384" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="28" y="39">让“重试修复”成为一个完整、可撤销的目的</text>
+  <text class="sub" x="28" y="68">原创假设案例　　实线：依次推进　　虚线：单独撤销后一个变更</text>
+  <rect class="node" x="28" y="106" width="268" height="126" rx="7"/>
+  <text class="label" x="162" y="139">变更 A：必要的结构整理</text>
+  <text class="body" x="162" y="171">保持已有行为与测试</text>
+  <text class="body" x="162" y="201">先确认整理本身正确</text>
+  <path class="arrow" d="M296 169H378"/>
+  <rect class="focus" x="386" y="106" width="306" height="126" rx="7"/>
+  <text class="label" x="539" y="139">变更 B：重试边界修复</text>
+  <text class="body" x="539" y="171">实现 + 回归测试 + 必要说明</text>
+  <text class="body" x="539" y="201">共同证明一个行为改变</text>
+  <path class="back" d="M539 232V278H162V240"/>
+  <text class="body" x="360" y="308">撤销 B，仍保留已确认的 A</text>
+  <text class="sub" x="28" y="352">无关格式调整与清理另提，不扩大本次修复范围。</text>
+  <text class="sub" x="28" y="375">拆分标准是目的与理解成本，不是把测试留到下一次。</text>
+</svg>

@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="674" viewBox="0 0 720 674" role="img" aria-labelledby="title desc">
+  <title id="title">Rackspace 三代日志查询系统的结构对照</title>
+  <desc id="desc">三行并列对照同一种日志查询功能。第一代从邮件服务器的本地日志经 ssh 和 grep 得到工程师读取的结果；第二代把日志汇集到中央关系数据库，经 Web 界面交给客服；第三代把日志送入 HDFS，经 Hadoop 批量索引后供客服 Web 查询。箭头表示日志或结果的流向，不表示三代同时部署。第三代的秒级查询不等于索引实时更新。</desc>
+  <!-- Original, editable hand-written SVG. The export is an identical web copy. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --rule: #dedbd3; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --rule: #41403c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --rule: #41403c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 16px; fill: var(--muted); }
+    .label { font-size: 18px; font-weight: 600; }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.2; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .node-text { font-size: 17px; text-anchor: middle; }
+    .arrow { fill: none; stroke: var(--line); stroke-width: 1.8; marker-end: url(#arrow); }
+    .rule { stroke: var(--rule); stroke-width: 1; }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker></defs>
+  <rect width="720" height="674" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="30" y="40">同一项功能，三种负担分配方式</text>
+  <text class="sub" x="30" y="69">原书转述的历史案例：查询邮件日志，帮助诊断客户问题</text>
+
+  <text class="label" x="30" y="116">第一代 · 本地日志</text>
+  <rect class="node" x="30" y="135" width="182" height="70" rx="7"/>
+  <text class="node-text" x="121" y="164">邮件服务器<tspan x="121" dy="25">保存本地日志</tspan></text>
+  <path class="arrow" d="M220 170H259"/>
+  <rect class="focus" x="268" y="135" width="182" height="70" rx="7"/>
+  <text class="node-text" x="359" y="164">ssh + grep<tspan x="359" dy="25">在原机搜索</tspan></text>
+  <path class="arrow" d="M458 170H497"/>
+  <rect class="node" x="506" y="135" width="184" height="70" rx="7"/>
+  <text class="node-text" x="598" y="164">工程师<tspan x="598" dy="25">读取查询结果</tspan></text>
+  <text class="sub" x="30" y="233">搜索占用邮件服务器资源；日常客服依赖工程师介入。</text>
+  <path class="rule" d="M30 254H690"/>
+
+  <text class="label" x="30" y="288">第二代 · 中央数据库</text>
+  <rect class="node" x="30" y="307" width="182" height="70" rx="7"/>
+  <text class="node-text" x="121" y="336">邮件日志<tspan x="121" dy="25">每几分钟汇集</tspan></text>
+  <path class="arrow" d="M220 342H259"/>
+  <rect class="focus" x="268" y="307" width="182" height="70" rx="7"/>
+  <text class="node-text" x="359" y="336">中央关系数据库<tspan x="359" dy="25">单机导入与查询</tspan></text>
+  <path class="arrow" d="M458 342H497"/>
+  <rect class="node" x="506" y="307" width="184" height="70" rx="7"/>
+  <text class="node-text" x="598" y="336">Web 界面<tspan x="598" dy="25">客服直接使用</tspan></text>
+  <text class="sub" x="30" y="405">日志只保留三天；负担集中，单机承载能力逐渐成为瓶颈。</text>
+  <path class="rule" d="M30 426H690"/>
+
+  <text class="label" x="30" y="460">第三代 · 索引集群</text>
+  <rect class="node" x="30" y="479" width="182" height="70" rx="7"/>
+  <text class="node-text" x="121" y="508">邮件日志<tspan x="121" dy="25">进入 HDFS</tspan></text>
+  <path class="arrow" d="M220 514H259"/>
+  <rect class="focus" x="268" y="479" width="182" height="70" rx="7"/>
+  <text class="node-text" x="359" y="508">Hadoop 任务<tspan x="359" dy="25">批量并行索引</tspan></text>
+  <path class="arrow" d="M458 514H497"/>
+  <rect class="node" x="506" y="479" width="184" height="70" rx="7"/>
+  <text class="node-text" x="598" y="508">索引 + Web 查询<tspan x="598" dy="25">客服查看结果</tspan></text>
+  <text class="sub" x="30" y="577">已有索引查询秒级返回；索引本身约有十五分钟的陈旧度。</text>
+  <text class="sub" x="30" y="603">新的分析问题若需新增任务，编写、安排后数小时获得答案。</text>
+
+  <text class="sub" x="30" y="645">实线：日志或结果流向。仅示关键结构，不是完整部署图。</text>
+</svg>

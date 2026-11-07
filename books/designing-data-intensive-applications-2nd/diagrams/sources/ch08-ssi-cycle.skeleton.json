@@ -1,0 +1,170 @@
+[
+  {
+    "type": "text",
+    "id": "title",
+    "x": 24,
+    "y": 18,
+    "text": "SSI：串行顺序的要求形成环",
+    "fontSize": 25,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "subtitle",
+    "x": 24,
+    "y": 62,
+    "text": "箭头是等价串行顺序约束，不是消息，也不是实际时间。",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "rectangle",
+    "id": "a",
+    "x": 48,
+    "y": 232,
+    "width": 252,
+    "height": 104,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "T甲\n读乙在岗，改甲离岗",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "b",
+    "x": 500,
+    "y": 232,
+    "width": 252,
+    "height": 104,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "T乙\n读甲在岗，改乙离岗",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "ab",
+    "x": 180,
+    "y": 226,
+    "width": 440,
+    "height": 80,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        -80
+      ],
+      [
+        440,
+        -80
+      ],
+      [
+        440,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "text",
+    "id": "ab-label",
+    "x": 264,
+    "y": 108,
+    "text": "甲读乙旧值：甲必须在乙前",
+    "fontSize": 19,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "arrow",
+    "id": "ba",
+    "x": 620,
+    "y": 342,
+    "width": 440,
+    "height": 80,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        80
+      ],
+      [
+        -440,
+        80
+      ],
+      [
+        -440,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "text",
+    "id": "ba-label",
+    "x": 264,
+    "y": 444,
+    "text": "乙读甲旧值：乙必须在甲前",
+    "fontSize": 19,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "rectangle",
+    "id": "retry",
+    "x": 48,
+    "y": 522,
+    "width": 704,
+    "height": 110,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "两个顺序要求无法同时满足\n示意：甲提交，乙中止 → 乙重读后发现只剩一人",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "text",
+    "id": "note",
+    "x": 24,
+    "y": 670,
+    "text": "rw 反依赖：旧版本读者 → 改变该值的写者。\n这里只画最小环；实际 SSI 还使用危险结构与提交顺序规则。",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  }
+]

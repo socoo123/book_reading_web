@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="480" viewBox="0 0 720 480" role="img" aria-labelledby="title desc">
+  <title id="title">结构的精化，与通则意图的保留</title>
+  <desc id="desc">左列中，设计中的过滤器、管道和装配通过精化落实为类、队列与初始化代码。右列中，所有过滤器只能经管道通信的规则，需要用命名、接口、注释或分析规则另外保留与检查。箭头不表示开发流程。</desc>
+  <!-- Original editable SVG; export is an identical web copy. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 17px; fill: var(--muted); }
+    .box { fill: var(--box); stroke: var(--line); stroke-width: 1.2; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .label { font-size: 21px; font-weight: 600; text-anchor: middle; }
+    .detail { font-size: 18px; text-anchor: middle; }
+    .muted { fill: var(--muted); }
+    .arrow { fill: none; stroke: var(--line); stroke-width: 1.8; marker-end: url(#arrow); }
+    .hint { stroke-dasharray: 5 4; }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker></defs>
+  <rect width="720" height="480" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="28" y="38">代码能呈现结构，却不会自动保存全部规则</text>
+  <text class="sub" x="28" y="67">两列是两种对应问题，不是前后两个开发阶段</text>
+  <rect class="box" x="28" y="94" width="316" height="146" rx="8"/>
+  <text class="label" x="186" y="129">列出组成</text>
+  <text class="detail" x="186" y="167">过滤器、管道与装配</text>
+  <text class="detail muted" x="186" y="201">说明系统中有什么</text>
+  <rect class="focus" x="376" y="94" width="316" height="146" rx="8"/>
+  <text class="label" x="534" y="129">规定通则</text>
+  <text class="detail" x="534" y="167">所有过滤器只经管道通信</text>
+  <text class="detail muted" x="534" y="201">约束现在与以后的交互</text>
+  <path class="arrow" d="M62 242V302"/>
+  <text class="sub" x="85" y="279">精化结构</text>
+  <path class="arrow hint" d="M410 242V302"/>
+  <text class="sub" x="433" y="279">另外表达与检查</text>
+  <rect class="box" x="28" y="312" width="316" height="112" rx="8"/>
+  <text class="label" x="186" y="350">类、队列与初始化代码</text>
+  <text class="detail muted" x="186" y="389">可找到具体实现与连接</text>
+  <rect class="focus" x="376" y="312" width="316" height="112" rx="8"/>
+  <text class="label" x="534" y="350">命名、接口、注释、分析</text>
+  <text class="detail muted" x="534" y="389">各自保留或约束部分意图</text>
+  <text class="sub" x="28" y="459">没有发现旁路，不等于“禁止旁路”已经被声明并保证。</text>
+</svg>

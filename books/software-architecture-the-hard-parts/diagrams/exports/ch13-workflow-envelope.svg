@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="360" viewBox="0 0 720 360" role="img" aria-labelledby="title desc">
+<title id="title">协同中让消息携带已经确认的流程进度</title>
+<desc id="desc">消息在 A、B 和终端接收者之间顺序交接，沿途累计步骤结果；两个服务各自提交，携带状态不代表跨服务原子事务。</desc>
+<style>
+:root{--surface:#fcfbf8;--text:#292824;--muted:#66645d;--line:#969187;--soft:#f0ece4;--accent:#386d74}
+@media(prefers-color-scheme:dark){:root:not([data-theme='light']){--surface:#252524;--text:#e6e3dc;--muted:#b6b1a7;--line:#8c8982;--soft:#353534;--accent:#94c8cf}}
+:root[data-theme='dark']{--surface:#252524;--text:#e6e3dc;--muted:#b6b1a7;--line:#8c8982;--soft:#353534;--accent:#94c8cf}
+.bg{fill:var(--surface)}text{fill:var(--text);font:17px system-ui,-apple-system,"PingFang SC",sans-serif}.h{font-size:21px;font-weight:600}.s{font-size:15px;fill:var(--muted)}.b{fill:var(--soft);stroke:var(--line);stroke-width:1.5}.c{fill:var(--surface);stroke:var(--accent);stroke-width:1.5}.e{fill:none;stroke:var(--accent);stroke-width:2;marker-end:url(#a)}.arrow{fill:var(--accent)}
+</style>
+<defs><marker id="a" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path class="arrow" d="M0 0 8 4 0 8Z"/></marker></defs>
+<rect class="bg" width="720" height="360"/>
+<text class="h" x="28" y="36">业务结果与流程状态一起交接</text>
+<text class="s" x="28" y="65">假设顺序成功路径；上方框为接收时的消息内容</text>
+<rect class="c" x="28" y="91" width="190" height="84" rx="8"/><text x="123" y="123" text-anchor="middle">工作流 T</text><text class="s" x="123" y="153" text-anchor="middle">步骤结果：尚无</text>
+<rect class="c" x="265" y="91" width="190" height="84" rx="8"/><text x="360" y="123" text-anchor="middle">工作流 T</text><text class="s" x="360" y="153" text-anchor="middle">A：已成功</text>
+<rect class="c" x="502" y="91" width="190" height="84" rx="8"/><text x="597" y="123" text-anchor="middle">工作流 T</text><text class="s" x="597" y="153" text-anchor="middle">A、B：已成功</text>
+<path class="e" d="M123 175V204"/><path class="e" d="M360 175V204"/><path class="e" d="M597 175V204"/>
+<rect class="b" x="28" y="214" width="190" height="66" rx="8"/><text x="123" y="241" text-anchor="middle">A · 本地处理</text><text class="s" x="123" y="266" text-anchor="middle">提交并记录自己的结果</text>
+<rect class="b" x="265" y="214" width="190" height="66" rx="8"/><text x="360" y="241" text-anchor="middle">B · 本地处理</text><text class="s" x="360" y="266" text-anchor="middle">提交并记录自己的结果</text>
+<rect class="b" x="502" y="214" width="190" height="66" rx="8"/><text x="597" y="241" text-anchor="middle">终端接收者</text><text class="s" x="597" y="266" text-anchor="middle">解释消息中的已知进度</text>
+<path class="e" d="M218 247H255"/><path class="e" d="M455 247H492"/>
+<text class="s" x="360" y="316" text-anchor="middle">仍需安排：可靠保存、重复与迟到处理、并行分支合并</text>
+<text class="s" x="360" y="342" text-anchor="middle">状态在消息里 ≠ 随时可查的全局最新状态 ≠ 跨服务 ACID</text>
+<script><![CDATA[try{const t=localStorage.getItem('reading-notes-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch{}]]></script>
+</svg>

@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="380" viewBox="0 0 720 380" role="img" aria-labelledby="title desc">
+<title id="title">消费者提出必要交互，提供方持续验证</title>
+<desc id="desc">姓名与地址消费者分别产生最小交互契约，送入提供方 CI 验证；结果反馈给消费者。它检查接口承诺，不代表端到端业务全部受测。</desc>
+<style>
+:root{--surface:#fcfbf8;--text:#292824;--muted:#66645d;--line:#969187;--soft:#f0ece4;--accent:#386d74}
+@media(prefers-color-scheme:dark){:root:not([data-theme='light']){--surface:#252524;--text:#e6e3dc;--muted:#b6b1a7;--line:#8c8982;--soft:#353534;--accent:#94c8cf}}
+:root[data-theme='dark']{--surface:#252524;--text:#e6e3dc;--muted:#b6b1a7;--line:#8c8982;--soft:#353534;--accent:#94c8cf}
+.bg{fill:var(--surface)}text{fill:var(--text);font:17px system-ui,-apple-system,"PingFang SC",sans-serif}.h{font-size:21px;font-weight:600}.s{font-size:15px;fill:var(--muted)}.b{fill:var(--soft);stroke:var(--line);stroke-width:1.5}.c{fill:var(--surface);stroke:var(--accent);stroke-width:1.5}.e{fill:none;stroke:var(--accent);stroke-width:2;marker-end:url(#a)}.d{stroke-dasharray:6 5}.arrow{fill:var(--accent)}
+</style>
+<defs><marker id="a" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path class="arrow" d="M0 0 8 4 0 8Z"/></marker></defs>
+<rect class="bg" width="720" height="380"/>
+<text class="h" x="28" y="36">用可执行的交互约定保护真实依赖</text>
+<text class="s" x="28" y="65">虚线 ⇢ 契约输入　　实线 → 验证反馈；均为交付期关系</text>
+<rect class="b" x="28" y="94" width="224" height="95" rx="10"/><text x="140" y="125" text-anchor="middle">消费者：愿望清单</text><text class="s" x="140" y="152" text-anchor="middle">真实客户端通过模拟交互</text><text class="s" x="140" y="176" text-anchor="middle">需要姓名与空值约定</text>
+<rect class="b" x="28" y="221" width="224" height="95" rx="10"/><text x="140" y="252" text-anchor="middle">消费者：地址展示</text><text class="s" x="140" y="279" text-anchor="middle">真实客户端通过模拟交互</text><text class="s" x="140" y="303" text-anchor="middle">需要地址与缺失约定</text>
+<rect class="b" x="450" y="94" width="242" height="222" rx="10"/><text x="571" y="127" text-anchor="middle">提供方 CI</text>
+<rect class="c" x="472" y="149" width="198" height="105" rx="8"/><text x="571" y="182" text-anchor="middle">重放请求</text><text x="571" y="211" text-anchor="middle">对照真实实现</text><text class="s" x="571" y="239" text-anchor="middle">分别验证最小期望</text>
+<text class="s" x="571" y="287" text-anchor="middle">保持受支持的契约通过</text>
+<path class="e d" d="M252 124H440"/><text class="s" x="350" y="112" text-anchor="middle">姓名契约</text>
+<path class="e" d="M450 171H262"/><text class="s" x="350" y="159" text-anchor="middle">验证结果</text>
+<path class="e d" d="M252 246H440"/><text class="s" x="350" y="234" text-anchor="middle">地址契约</text>
+<path class="e" d="M450 298H262"/><text class="s" x="350" y="286" text-anchor="middle">验证结果</text>
+<text class="s" x="360" y="355" text-anchor="middle">检查已描述的交互；不自动覆盖消息投递、并发恢复或性能</text>
+<script><![CDATA[try{const t=localStorage.getItem('reading-notes-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch{}]]></script>
+</svg>

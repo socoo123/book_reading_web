@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="426" viewBox="0 0 720 426" role="img" aria-labelledby="title desc">
+  <title id="title">查询次数如何影响一次页面请求的延迟</title>
+  <desc id="desc">客户端请求经服务器访问数据库。简化公式为传输10毫秒加服务器处理10毫秒，再加查询次数乘单次查询25毫秒。技术X用20次查询得到520毫秒，技术Y用1次查询得到45毫秒。数字是说明模型的设想值，查询代价串行累加，忽略缓存与排队，不据此推算吞吐量。</desc>
+  <!-- Editable explanatory redraw and recalculation based on Fairbanks, §6.3 and Figure 6.2. Export is identical. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 16px; fill: var(--muted); }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.2; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .label { font-size: 20px; font-weight: 600; text-anchor: middle; }
+    .detail { font-size: 16px; text-anchor: middle; fill: var(--muted); }
+    .formula { font-size: 21px; font-weight: 600; text-anchor: middle; }
+    .arrow { fill: none; stroke: var(--line); stroke-width: 1.8; marker-end: url(#arrow); }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker>
+  </defs>
+  <rect width="720" height="426" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="30" y="38">同一套简化代价，比较不同的查询次数</text>
+  <text class="sub" x="30" y="67">一次页面请求的延迟，取决于它累积了哪些等待</text>
+
+  <rect class="node" x="30" y="106" width="148" height="66" rx="7"/>
+  <text class="label" x="104" y="147">客户端</text>
+  <path class="arrow" d="M189 139H267"/>
+  <text class="detail" x="229" y="121">请求</text>
+  <rect class="node" x="280" y="106" width="156" height="66" rx="7"/>
+  <text class="label" x="358" y="147">服务器</text>
+  <path class="arrow" d="M447 139H527"/>
+  <text class="detail" x="487" y="121">n 次查询</text>
+  <rect class="node" x="540" y="106" width="150" height="66" rx="7"/>
+  <text class="label" x="615" y="147">数据库</text>
+
+  <rect class="focus" x="30" y="201" width="660" height="66" rx="7"/>
+  <text class="formula" x="360" y="242">L(n) = 10ms + 10ms + n × 25ms</text>
+
+  <text class="label" x="195" y="309">X：n = 20 → 520ms</text>
+  <text class="detail" x="195" y="338">其中查询项：500ms</text>
+  <text class="label" x="525" y="309">Y：n = 1 → 45ms</text>
+  <text class="detail" x="525" y="338">其中查询项：25ms</text>
+
+  <text class="sub" x="30" y="382">设想值；查询代价串行累加，忽略缓存与排队。</text>
+  <text class="sub" x="30" y="407">这里得到的是延迟，不是每秒完成请求数。</text>
+</svg>

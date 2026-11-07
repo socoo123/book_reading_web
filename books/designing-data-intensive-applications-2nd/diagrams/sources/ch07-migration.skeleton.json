@@ -1,0 +1,300 @@
+[
+  {
+    "type": "text",
+    "id": "title",
+    "x": 20,
+    "y": 10,
+    "text": "迁移 S3：数据追上以后，还要交接写入资格",
+    "fontSize": 25,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "sub",
+    "x": 20,
+    "y": 52,
+    "text": "笔记假设协议；阶段从上到下。允许交接窗口内等待或重试。",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "text",
+    "id": "s1",
+    "x": 20,
+    "y": 100,
+    "text": "01　A 仍是所有者：复制快照并重放增量",
+    "fontSize": 20,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "rectangle",
+    "id": "a1",
+    "x": 20,
+    "y": 145,
+    "width": 220,
+    "height": 92,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "A：继续读写\n快照位点 40",
+      "fontSize": 20,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "b1",
+    "x": 550,
+    "y": 145,
+    "width": 220,
+    "height": 92,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "B：准备数据\n尚无写入资格",
+      "fontSize": 20,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "copy",
+    "x": 245,
+    "y": 190,
+    "width": 300,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        300,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid",
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "a1"
+    },
+    "end": {
+      "id": "b1"
+    }
+  },
+  {
+    "type": "text",
+    "id": "copylabel",
+    "x": 285,
+    "y": 155,
+    "text": "快照 + 后续日志",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "s2",
+    "x": 20,
+    "y": 285,
+    "text": "02　建立屏障：A 停止接新写，B 追至最终位点",
+    "fontSize": 20,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "rectangle",
+    "id": "a2",
+    "x": 20,
+    "y": 330,
+    "width": 220,
+    "height": 92,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "A：排空已接写入\n最终位点 48",
+      "fontSize": 20,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "b2",
+    "x": 550,
+    "y": 330,
+    "width": 220,
+    "height": 92,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "B：已应用到 48\n具备完整基线",
+      "fontSize": 20,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "catchup",
+    "x": 245,
+    "y": 375,
+    "width": 300,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        300,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid",
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "a2"
+    },
+    "end": {
+      "id": "b2"
+    }
+  },
+  {
+    "type": "text",
+    "id": "catchlabel",
+    "x": 290,
+    "y": 340,
+    "text": "最后一段增量",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "s3",
+    "x": 20,
+    "y": 470,
+    "text": "03　发布新代次：B 接管，A 的旧写入资格失效",
+    "fontSize": 20,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "rectangle",
+    "id": "map",
+    "x": 20,
+    "y": 515,
+    "width": 285,
+    "height": 92,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "协调层持久记录\n新代次：S3 → B",
+      "fontSize": 20,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "b3",
+    "x": 550,
+    "y": 515,
+    "width": 220,
+    "height": 92,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "B：新所有者\n开始接受写入",
+      "fontSize": 20,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "publish",
+    "x": 310,
+    "y": 560,
+    "width": 235,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        235,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "dashed",
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "map"
+    },
+    "end": {
+      "id": "b3"
+    }
+  },
+  {
+    "type": "text",
+    "id": "publishlabel",
+    "x": 350,
+    "y": 525,
+    "text": "发布资格／映射",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "stale",
+    "x": 20,
+    "y": 650,
+    "text": "旧路由到 A：拒绝／重定向／转发；不能再在 A 本地提交。",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "legend",
+    "x": 20,
+    "y": 690,
+    "text": "实线：数据传递　虚线：权威状态发布　B 未到 48 时不得切换。",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  }
+]

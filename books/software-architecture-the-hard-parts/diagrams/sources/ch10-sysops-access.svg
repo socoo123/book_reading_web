@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="500" viewBox="0 0 720 500" role="img" aria-labelledby="title desc">
+  <title id="title">Sysops：保留专家资料所有权，把只读副本带到分派侧</title>
+  <desc id="desc">左侧用户维护服务维护资料域，并发布技能、区域与标准排班的缓存；右侧工单分派读取其本地只读副本，通过共享 DLL 访问工单数据域。没有分派服务直连资料数据库的路径；实时位置来自其他来源。</desc>
+  <style>
+    :root{--surface:#fcfbf8;--text:#292824;--muted:#66645d;--line:#969187;--soft:#f0ece4;--accent:#386d74}
+    @media(prefers-color-scheme:dark){:root:not([data-theme='light']){--surface:#252524;--text:#e6e3dc;--muted:#b6b1a7;--line:#8c8982;--soft:#353534;--accent:#94c8cf}}
+    :root[data-theme='dark']{--surface:#252524;--text:#e6e3dc;--muted:#b6b1a7;--line:#8c8982;--soft:#353534;--accent:#94c8cf}
+    .bg{fill:var(--surface)}text{fill:var(--text);font-family:system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;font-size:17px}.heading{font-size:21px;font-weight:600}.small{font-size:15px;fill:var(--muted)}.box{fill:var(--soft);stroke:var(--line);stroke-width:1.5}.core{fill:var(--surface);stroke:var(--accent);stroke-width:1.5}.edge{fill:none;stroke:var(--accent);stroke-width:2;marker-end:url(#arrow)}.replica{stroke-dasharray:6 5}.arrow{fill:var(--accent)}
+  </style>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path class="arrow" d="M0 0 8 4 0 8Z"/></marker></defs>
+  <rect class="bg" width="720" height="500"/>
+  <text class="heading" x="28" y="36">复制必要字段，保留两个数据域</text>
+  <text class="small" x="28" y="64">实线 → 本域访问／本地读取　　虚线 ⇢ 缓存复制</text>
+  <rect class="box" x="28" y="92" width="270" height="267" rx="12"/>
+  <rect class="box" x="422" y="92" width="270" height="267" rx="12"/>
+  <text x="163" y="124" text-anchor="middle">用户维护服务</text><text class="small" x="163" y="150" text-anchor="middle">专家资料唯一权威写入者</text>
+  <text x="557" y="124" text-anchor="middle">工单分派服务</text><text class="small" x="557" y="150" text-anchor="middle">包含分派与投递</text>
+  <text class="small" x="163" y="184" text-anchor="middle">装载并发布必要字段</text><text class="small" x="557" y="184" text-anchor="middle">算法反复读取本地资料</text>
+  <path class="edge" d="M163 192V217"/><path class="edge" d="M557 192V217"/>
+  <rect class="core" x="48" y="225" width="230" height="65" rx="8"/>
+  <text x="163" y="251" text-anchor="middle">专家资料缓存</text><text class="small" x="163" y="277" text-anchor="middle">技能／区域／标准排班</text>
+  <rect class="core" x="442" y="225" width="230" height="65" rx="8"/>
+  <text x="557" y="251" text-anchor="middle">只读内存副本</text><text class="small" x="557" y="277" text-anchor="middle">不提供实时占用保证</text>
+  <path class="edge replica" d="M298 257H413"/><text class="small" x="360" y="237" text-anchor="middle">异步复制</text>
+  <text class="small" x="163" y="328" text-anchor="middle">最多 2 个实例</text>
+  <rect class="core" x="460" y="309" width="194" height="34" rx="6"/><text x="557" y="333" text-anchor="middle">工单共享 DLL</text>
+  <path class="edge" d="M163 359V393"/><path class="edge" d="M557 359V393"/>
+  <rect class="box" x="28" y="402" width="270" height="55" rx="9"/><text x="163" y="426" text-anchor="middle">Profile · 资料域</text><text class="small" x="163" y="448" text-anchor="middle">专家资料等权威数据</text>
+  <rect class="box" x="422" y="402" width="270" height="55" rx="9"/><text x="557" y="426" text-anchor="middle">Ticketing · 工单数据域</text><text class="small" x="557" y="448" text-anchor="middle">创建／分派／完成继续共用</text>
+  <text class="small" x="360" y="485" text-anchor="middle">分派最多 4 个实例；实时位置来自其他来源，不在缓存集合内</text>
+  <script><![CDATA[try { const t = localStorage.getItem('reading-notes-theme'); if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t); } catch {}]]></script>
+</svg>

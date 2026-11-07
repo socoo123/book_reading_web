@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>第 10 章｜文档 · Software Engineering at Google · 架构提升读书笔记</title>
+  <meta name="description" content="《Software Engineering at Google》第十章读书笔记：从 GooWiki 和开发者指南案例理解文档工作流、读者、五类文档、评审与持续维护，附四张解释图及原书命令纠错。">
+  <link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+  <script src="../../../assets/theme.js"></script>
+  <script src="../../../assets/reader.js" defer></script>
+  <link rel="stylesheet" href="../../../assets/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header reader-header"><div class="container header-inner">
+    <a class="brand" href="../../../index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5.5C8.5 3.8 5.8 3.6 2.5 4.5v14c3.3-.9 6-.7 9.5 1 3.5-1.7 6.2-1.9 9.5-1v-14c-3.3-.9-6-.7-9.5 1Zm0 0v14"/></svg>书架</a>
+    <a class="reader-book-title" href="../index.html" lang="en">Software Engineering at Google</a>
+    <div class="theme-control" role="group" aria-label="外观" hidden><button type="button" data-theme-value="system" title="跟随系统"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path class="fill" d="M12 4a8 8 0 0 1 0 16Z"/></svg><span class="sr-only">跟随系统</span></button><button type="button" data-theme-value="light" title="浅色"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.6"/><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21M5.6 5.6l1.6 1.6M16.8 16.8l1.6 1.6M5.6 18.4l1.6-1.6M16.8 7.2l1.6-1.6"/></svg><span class="sr-only">浅色</span></button><button type="button" data-theme-value="dark" title="深色"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.5 14.6A7.8 7.8 0 0 1 9.4 4.5a7.8 7.8 0 1 0 10.1 10.1Z"/></svg><span class="sr-only">深色</span></button></div>
+  </div></header>
+  <main id="main" class="container reader-container">
+    <nav class="breadcrumb" aria-label="当前位置"><ol><li><a href="../../../index.html">书架</a></li><li><a href="../index.html">书籍概览</a></li><li aria-current="page">第 10 章</li></ol></nav>
+    <div class="reading-layout">
+      <aside class="toc"><nav aria-label="本页目录"><h2>本页目录</h2><ul>
+        <li><a href="#lasting-value">01　可以反复使用的知识</a></li>
+        <li><a href="#docs-in-workflow">02　GooWiki 与维护责任</a></li>
+        <li><a href="#audience">03　先看读者站在哪里</a></li>
+        <li><a href="#reference">04　参考文档与接口承诺</a></li>
+        <li><a href="#design-and-concepts">05　设计理由与概念全貌</a></li>
+        <li><a href="#tutorials">06　教程带人完成真实动作</a></li>
+        <li><a href="#navigation-and-authority">07　入口与可信的位置</a></li>
+        <li><a href="#reviews-and-writers">08　评审与技术写作者</a></li>
+        <li><a href="#writing-and-lifecycle">09　写作、维护与退役</a></li>
+      </ul><p class="toc-note"><a href="../index.html">← 书籍概览</a></p></nav></aside>
+      <article class="article">
+        <header class="article-header">
+          <p class="eyebrow">READING NOTES / CHAPTER 10</p>
+          <h1>第 10 章｜文档</h1>
+          <p class="article-deck"><span lang="en">Documentation</span> · 架构提升读书笔记</p>
+        </header>
+        <p>工程师遇到的许多阻碍，看起来是技术问题，起点却是信息没有传到需要它的人那里。函数会不会产生副作用，教程中的一步需要什么权限，某项设计为什么保留了一个看似多余的限制，搜索出来的说明是否仍然有效——这些信息有的存在于代码中，有的只在某个人的记忆里。文档的作用，是让后来的人能够找到、理解并使用它们。</p>
+        <p>本章把文档放进软件工程的时间与规模问题中讨论。写得清楚当然重要，更基础的安排还包括：有人维护，位置可信，错误能反馈，修改能跟着代码一起发生。Tom Manshreck 关心的不是把所有工程师培养成职业作家，而是让写作成为一种正常、可持续的工程工作。</p>
+        <details class="mobile-toc"><summary>本页目录 · 9 个小节</summary><nav aria-label="移动端本页目录"><ul>
+          <li><a href="#lasting-value">01　把一次解释，变成可以反复使用的知识</a></li>
+          <li><a href="#docs-in-workflow">02　GooWiki 的教训：能编辑，还需要有人维护</a></li>
+          <li><a href="#audience">03　先看读者站在哪里</a></li>
+          <li><a href="#reference">04　参考文档：让接口的承诺清楚可查</a></li>
+          <li><a href="#design-and-concepts">05　设计文档保存理由，概念文档建立全貌</a></li>
+          <li><a href="#tutorials">06　教程要带人完成一次真实动作</a></li>
+          <li><a href="#navigation-and-authority">07　入口负责指路，文档集建立可信的位置</a></li>
+          <li><a href="#reviews-and-writers">08　用评审发现知识之间的空隙</a></li>
+          <li><a href="#writing-and-lifecycle">09　让文档完成自己的工作，也有机会退役</a></li>
+        </ul></nav></details>
+
+        <section id="lasting-value">
+          <h2><span class="section-number">01</span>把一次解释，变成可以反复使用的知识</h2>
+          <p>原书所说的文档，范围比一份正式说明书宽得多。代码注释、接口说明、设计文档、入门教程和团队入口页都在其中。它们使用不同形式，承担的共同任务是补上程序本身没有直接传达给人的信息。一个函数的类型可以说明它接收日期、返回标识符，却未必能说明日期属于哪个时区，返回时任务已经完成还是仅被接收。</p>
+          <p>文档的投入和收益往往发生在不同时间、不同人身上。作者今天要停下开发，把前提、操作和理由整理出来；收益可能在下个月由另一位调用者获得，也可能在两年后回到作者自己身上。这种延迟使文档容易在眼前的排期里被挤掉：代码完成得见，后来少走的弯路却很少被专门记录。</p>
+          <p>本章的推理是，软件越需要长期存在、越需要被多人使用，这份投入越能反复发挥作用。一个清楚的接口约定，可以帮助不同调用者避免同一类误用；一份可用的入门说明，可以减少每次入职都重新口述环境配置；一段保留设计理由的记录，可以让维护者在条件变化后判断原来的决定是否仍然成立。成本集中在写作和后续维护上，收益则分散到多次阅读与使用中。</p>
+          <p>作者也能从写作中立即得到一点回报。解释一个接口时，必须明确它到底承诺什么；写到“失败时会怎样”却无法落笔，往往暴露了尚未决定的行为。把设计写成连贯的文字，还可能发现目标与方案没有真正接起来。文档因此也是一种设计工具：它要求作者把脑中隐约成立的东西，变成别人能够检查的陈述。</p>
+          <p>更长期的回报，是减少反复回答同一个问题，并为未来的自己保留上下文。代码能够显示当时采用了哪个分支，设计记录则能说明为什么没有选择另一条看起来更简单的路。维护工作既需要了解当前行为，也需要知道当时的限制；只有后者留下来，后来的人才能在限制解除时有根据地改变实现。</p>
+          <p>书中借用 C++ 风格指南面向读者优化的原则，把收益的重心放在使用者一边。这里的“读者”也包括将来的作者本人。工程师今天多花一点时间补齐前提、统一术语、删去绕远的解释，可能让之后的许多人少花时间猜测。第二章讨论的<a href="ch02.html#shared-knowledge">知识共享</a>，在这里变成了可以持续复用的书面材料。</p>
+          <aside class="key-point"><p class="key-point-label">核心观点</p><p>文档把一次解释变成可以被反复使用的知识。它的价值取决于后来的人能否据此理解和行动，而不只取决于作者是否完成了一份文字材料。</p></aside>
+        </section>
+
+        <section id="docs-in-workflow">
+          <h2><span class="section-number">02</span>GooWiki 的教训：能编辑，还需要有人维护</h2>
+          <p>Google 早期使用内部 GooWiki 共享技术信息。它的吸引力很直接：大家面对同一套页面，谁有知识就可以补充，起步成本很低。但随着组织扩大，页面数量增加，创建、维护和查找之间逐渐脱节。没有明确负责人的文档容易停在过去，没有统一整理方式的资料则不断出现重复版本。</p>
+          <p>书中给出了一个具体后果：关于配置生产计算环境 Borg 的说明，一度有 7 至 10 份（视计数方式而定）。只有少量文档似乎仍在维护，而且不少说明依赖特定团队的权限和环境假设。对熟悉系统的人来说，这些差别或许显而易见；对第一次进入环境的人来说，搜索到多份相似说明，反而增加了判断哪份可用的成本。</p>
+          <p>问题还在于，最容易发现错误的人，往往没有能力判断如何修正。新人跟着教程操作失败，知道自己走不下去，却无法确定是权限不足、环境不同，还是步骤本身已经过时。真正了解系统的专家又很少再照着入门教程做一遍。文档于是处在一个尴尬的位置：使用者能看见问题，维护者未必收到问题，能够修复的人也没有自然的机会重新遇到它。</p>
+          <p>随着 Google 扩大，文档质量一度成了年度开发者调查中的首要抱怨。改进的关键，是把重要文档纳入与代码相似的管理方式：确定责任人和正式位置，把错误提交到缺陷跟踪系统，让文档修改经过现有的评审流程。读者可以报告故障，不必先成为领域专家；维护者则有明确渠道接收问题、判断原因并提交修订。</p>
+          <p>这里的<strong>权威文档（canonical documentation）</strong>，是团队认可的主要依据。若几份材料互相冲突，就需要确定以哪份为准，把有用内容合并进去，并处理重复版本。权威性来自清楚的责任、位置和维护过程；只有一个醒目的标题，仍然无法让读者确信内容可信。</p>
+          <p>Markdown 降低了编辑格式的门槛，后来的 <code>g3doc</code> 又让文档与相关源代码一起出现在开发环境里。工程师能够在同一次变更中更新实现和说明，再通过熟悉的工具提交评审。作者也承认，到写书时，这种同步修改仍在推广之中。</p>
+          <figure class="concept-figure"><a href="../diagrams/exports/ch10-document-feedback.svg" target="_blank" rel="noopener"><img src="../diagrams/exports/ch10-document-feedback.svg" width="720" height="402" alt="读者遇到问题后提交缺陷，由责任人修订代码和文档，经过评审更新权威文档，再回到读者使用。"></a><figcaption>图 10-1：沿箭头顺时针阅读。上半圈让使用问题到达维护者，下半圈把修订送回读者；箭头表示工作交接。读者负责报告可观察的现象，无须先知道正确答案。点击<a href="../diagrams/exports/ch10-document-feedback.svg" target="_blank" rel="noopener">查看大图</a>。</figcaption></figure>
+          <p>这段经历说明，文档治理不只是选择一种编辑工具。源代码管理带来的历史记录、明确责任和评审，加上容易使用的反馈通道，共同形成了维护能力。小团队可以用轻量方式实现同样的关系：让人知道正式说明在哪里、谁负责、发现问题该找哪里，并把相关修改放进日常开发节奏。</p>
+          <aside class="key-point"><p class="key-point-label">核心观点</p><p>让文档借用现有工程工作流：有责任人，有主要依据，错误可跟踪，修改可评审，并尽量与代码一起更新。把反馈送到能修复它的人手里，文档才会在使用中改善。</p></aside>
+        </section>
+
+        <section id="audience">
+          <h2><span class="section-number">03</span>先看读者站在哪里</h2>
+          <p>工程师很容易写出只适合自己的文档。作者知道项目缩写、默认环境和曾经发生过的讨论，写作时便自然略过它们。对作者而言流畅的一句话，读者可能要补齐好几个前提才能理解。团队越大，默认知识越难共享，这种差距也越容易把人挡在门外。</p>
+          <p>本章建议在写作前识别主要读者。经验水平、领域知识和当前目的，是三个不同的维度。一位资深工程师初次接触结算系统，可能很熟悉并发与存储，却不知道“结算日”在这个业务中的含义；一位刚入职的同事可能熟悉业务规则，却还不会使用团队的构建工具。把两者都简单归为“新人”，写作就会补错背景。</p>
+          <p>读者的目的也会改变所需内容。接口调用者要知道如何得到正确结果，接手维护的人要理解内部约束，设计评审者则需要看目标、备选方案与权衡。同一项目的材料可以互相链接，但不应要求每一类读者先理解其他人的全部工作，才到达自己需要的信息。</p>
+          <p>书中还区分了两种阅读状态。<strong>定向查找者（seekers）</strong>大致知道要找什么，正在确认某个接口或说明是否适用。他们受益于一致性：相似位置使用相似标题，接口注释以相似方式描述行为，返回值和错误容易扫描。<strong>探索者（stumblers）</strong>尚不清楚该使用哪一个部件，更需要清楚的入口和概览，先理解这套东西解决什么问题、适合什么场景。</p>
+          <p>同一个人也会在两种状态之间切换：熟练调用者遇到陌生子系统时，就会从定向查找转为探索。因此，一份好的文件开头可以用简短概览说明用途和范围，后面的接口说明再保持稳定结构。概览帮助人找到方向，结构帮助人快速定位；两者共同服务于阅读过程。</p>
+          <p>面向使用者和面向提供者的资料，尤其值得分开。使用者需要了解公开行为、前提和限制，通常不需要遍历内部实现的历史。提供者则需要知道数据结构为什么这样安排、哪些旧方案曾被放弃。把后者大量塞进 API 参考，容易让真正的使用约定被淹没；把必要的限制也一起移走，又会让调用者失去正确使用所需的信息。</p>
+          <p>兼顾不同读者时，原书建议保持简短、清楚。这种简短需要先把内容写完整，再删去重复与旁枝，而不是把前提省略到只剩专家看得懂。为术语给出一次解释，把深入材料放在合适位置，让熟悉的人能够跳过背景，可以比一味压缩句子更有效地减少阅读负担。</p>
+          <p>写作水平也由此有了一个可接近的目标。作者不必先追求漂亮文风，可以先想起自己尚未掌握这些知识时的处境，把当时缺少的说明补出来，再通过真实读者的反馈修订。对工程文档来说，能否准确建立共同理解，通常比辞藻更重要。</p>
+        </section>
+
+        <section id="reference">
+          <h2><span class="section-number">04</span>参考文档：让接口的承诺清楚可查</h2>
+          <p>本章把常见文档分成五类：参考文档用于查明使用约定；设计文档记录方案和理由；教程带人完成一条实际路径；概念文档建立整体理解；入口页负责把人引到适合的材料。每类文档都有主要任务。先确定这份材料要帮助读者做什么，再决定放哪些内容，可以避免一个页面同时承担所有工作。</p>
+          <p>参考文档是工程师最经常编写的一类，代码注释就是重要组成部分。作者在这里区分 API 注释和实现注释。前者面向使用接口的人，需要说明可依赖的行为；后者面向维护实现的人，可以解释某个局部选择的原因。两种注释都需要清楚，但它们所回答的问题不同。</p>
+          <p>以一个假设的异步报表导出服务为例：它的一个接口接收结算日，返回任务 ID。如果注释只有“启动导出”，调用者仍然不知道返回后能否立刻下载文件、数据来自实时查询还是结算快照、快照尚未生成时会发生什么。对于这种接口，下面的说明就比重复函数名更接近一份可用的约定：</p>
+          <pre><code class="language-text">基于给定结算日的快照创建导出任务，返回任务 ID。
+该日快照未就绪时返回“快照未就绪”错误，不创建任务。
+任务 ID 表示已受理；生成是否完成须通过任务状态接口查询。</code></pre>
+          <p>这几句把操作、返回结果、错误与副作用放在同一语境里，帮助调用者决定什么时候调用、如何继续。至于内部为什么选用某种队列，通常可以留在设计记录里；如果某个内部限制会影响调用者允许提交的请求，则应把影响写进公开约定。</p>
+          <p>原书用 Abseil 字符串工具的注释说明不同层级的分工。文件级说明介绍这组代码的用途，例如提供字符串拼接与追加操作，帮助尚未选定接口的人判断是否找对了位置。类级说明介绍对象承担的角色，例如 <code>AlphaNum</code> 如何作为参数类型参与字符串转换。函数级说明则直接描述动作和结果，便于已经知道需求的人逐个扫描。</p>
+          <p>三层说明各有分工：文件概览建立范围，类说明解释对象，函数说明交代具体行为，各自把读者带到下一步。原章围绕 C++ 介绍这些规范，同时指出其他语言也有相应做法；具体注释格式应当与项目语言和已有规范配合。</p>
+          <p>函数说明的一个重要细节，是让读者容易看见“做什么”。书中用拼接、删除、创建这类动作来展示一致的开头，并以创建客户记录的例子说明，参数、结果和重复记录时的错误往往可以在一段自然语言中交代清楚。强行拆成许多固定字段，可能只是把同一件事切碎。</p>
+          <p>参考信息还应尽量保持单一来源。若源代码旁已经有准确说明，再维护一份手工复制的接口清单，就多了一次同步负担。原书记述，Google 的 Code Search 让工程师很容易找到定义及其注释，因此在其内部，另建一份生成式参考页面的收益有限。可以普遍借鉴的是减少相互竞争的接口描述，让读者容易到达被维护的那一份。</p>
+        </section>
+
+        <section id="design-and-concepts">
+          <h2><span class="section-number">05</span>设计文档保存理由，概念文档建立全貌</h2>
+          <p>设计文档让关键讨论发生在实现还容易改变的时候。原书记述，Google 的大多数团队要求重要项目先有获批的设计文档，通常使用团队认可的模板，在协作工具中收集意见，也可能在会议上讨论。它在某种意义上像一次发生在编码之前的评审：先检查目标和方案之间是否接得起来，再投入大量实现。</p>
+          <p>一份有用的设计文档，需要说明目标、实施策略和关键决策的权衡。把几个可行方案放在一起，交代各自的强项和代价，往往比只陈述最终方案更能帮助评审。模板中的安全、隐私、国际化、存储等考虑，也为相关专家提供了明确的参与位置，避免等到系统将要上线时才发现基础条件尚未讨论。</p>
+          <p>延续前面的假设导出服务。同步查询业务库的方案容易直接实现，但可能让导出结果随查询时刻变化；读取结算快照能让结果与指定结算日对应，却要处理快照尚未就绪、任务排队以及生成文件的过程。设计文档应把选择快照所服务的目标写出来，例如让不同部门基于同一口径对账，并保留方案比较和必要代价。将来若有人想简化成实时查询，就能看到自己正在改变哪个产品承诺。</p>
+          <p>文档获批后，这些内容还会成为历史记录和交付时的参照。上线前重新阅读目标，可以检查实现是否仍然解决最初的问题。如果业务需求已经改变，应当更新文档或调整产品，让两者重新对应。把设计记录保存下来，也能避免维护者只看见最终结构，却不知道哪些约束使它成为当时的合理选择。</p>
+          <p>概念文档承担另一项任务：帮助读者在跨越多个接口时建立整体认识。参考文档可以逐项解释“创建任务”“读取状态”和“下载文件”，但读者可能仍然不知道一条请求在系统中怎样前进、数据何时固定、哪些状态意味着可以继续操作。把这些关系连起来，才形成了可以推理的系统模型。</p>
+          <p>在这个假设服务中，一份概念说明可以顺着数据的一生展开：结算快照准备好后，创建请求记录任务；工作进程生成文件；文件可用后，状态接口给出完成结果；调用者再发起下载。读者由此理解“创建成功”和“文件就绪”属于不同阶段。之后遇到某个具体错误，再回到参考文档查明准确行为，就有了清楚的位置感。图 10-2 把这条路径画了出来：任务被受理与文件就绪之间隔着生成文件的阶段，调用者在这段时间只能查询状态。</p>
+          <figure class="concept-figure"><a href="../diagrams/exports/ch10-export-lifecycle.svg" target="_blank" rel="noopener"><img src="../diagrams/exports/ch10-export-lifecycle.svg" width="720" height="400" alt="假设导出服务中一次导出请求的阶段：提交请求后，快照就绪则创建任务并返回任务 ID，表示已受理；工作进程生成文件期间只能查询状态；文件就绪后才能下载。快照未就绪时返回错误，不创建任务。"></a><figcaption>图 10-2：从左往右读，实线是正常路径，虚线是快照未就绪时的分支。返回任务 ID 只说明请求已被受理，状态变为完成后才能下载。点击<a href="../diagrams/exports/ch10-export-lifecycle.svg" target="_blank" rel="noopener">查看大图</a>。</figcaption></figure>
+          <p>原书指出，概念文档常常难以写进某个单独函数的注释，因为它解释的是多个 API 或模块的配合。作者借单元测试和集成测试作类比：局部注释解释单个部件，概念文档把关系连起来。Abseil 的 <code>StrFormat</code> 也有单独的概念材料，用来解释仅靠接口罗列难以传达的知识。</p>
+          <p>概念解释通常优先讲常见路径和关键关系，参考文档则需要认真覆盖具体限制与边界。作者甚至说，为了清晰，概念文档常常要牺牲完整性，有时还要牺牲严格的准确性；他随即解释，这不是要故意写错，而是聚焦常见用法，把罕见用法和副作用留给参考文档。据此，概念文档可以说明自己介绍的范围；会改变读者主要判断的前提，则仍要写明。</p>
+          <aside class="key-point"><p class="key-point-label">核心观点</p><p>设计文档帮助人理解为什么这样选择，概念文档帮助人理解各部分怎样配合，参考文档帮助人确认具体行为。把这些任务分开，再互相连接，读者就能按需要从全貌走到细节。</p></aside>
+        </section>
+
+        <section id="tutorials">
+          <h2><span class="section-number">06</span>教程要带人完成一次真实动作</h2>
+          <p>教程的目标很具体：让尚不熟悉环境的人，沿着明确路径完成一件事。原书把项目的第一份教程比作“Hello World”：它不必覆盖所有能力，却应当让读者真正建立连接、启动一个服务，或得到一个可观察的结果。这种成功能把陌生系统从一堆名称，变成读者实际操作过的东西。</p>
+          <p>教程最容易遗漏的内容，恰好是老成员已经不再注意的准备工作。账号需要什么权限，命令在哪个目录执行，依赖是否已安装，测试环境和生产环境是否不同，这些都应当明确。可以依赖已有准备，但要在开头指出前提并引向相应说明。读者不应到中途失败后，才得知第一步之前还缺少一项设置。</p>
+          <p>所以，新加入团队时往往是记录教程的好时机。此时权限和环境问题仍然鲜明，作者可以把自己实际做过的操作全部记下，再在完成后整理出顺畅路径。领域专家负责确认正确性，新成员保留尚未习惯的障碍，两者结合，比专家凭记忆写一份“应该很简单”的教程更容易发现缺口。</p>
+          <p>原书对一份不好的教程作了逐步改写。原稿把下载、复制、执行脚本列成操作，又把服务器自动认证、初始化数据库各列为一步，最后把“执行 SQL 测试”和“输入这条 SQL”拆开。读者看到编号时，本来期待每一步都需要自己采取一个动作；混入自动过程后，就难以判断应该等待、点击，还是再输入命令。</p>
+          <p>改写后，服务器认证和初始化的说明被放到执行脚本那一步下面，作为操作后将发生的事情；真正的一次 SQL 输入也被合并成一步。用户输入单独排版，响应则在相应位置解释。变化的价值，在于让编号稳定地代表用户动作，让系统行为帮助读者确认进度。原书示例中的命令另有两处需要更正（<code>curl -I</code> 只请求响应头，<code>foobar.sh</code> 仍要靠 <code>PATH</code> 查找），见文末纠错说明。图 10-3 把改写前后从第 3 步起的部分并排对照：系统自动完成的两步并入了第 3 步的说明，重复的两步合成一步。</p>
+          <figure class="concept-figure"><a href="../diagrams/exports/ch10-tutorial-steps.svg" target="_blank" rel="noopener"><img src="../diagrams/exports/ch10-tutorial-steps.svg" width="720" height="430" alt="原书教程示例改写前后对照：改写前 7 步中，第 4、5 步是系统自动完成的认证和初始化，第 6、7 步是同一个动作；改写后系统过程并入第 3 步的说明，重复的两步合成一步，共 4 步，每个编号都对应一次用户动作。"></a><figcaption>图 10-3：左列是改写前，右列是改写后，两版相同的第 1、2 步未画出。实线框是用户要做的动作，虚线框和虚线箭头是系统自动发生的事；箭头指向每一步在新版中的位置。图中省略了具体命令。点击<a href="../diagrams/exports/ch10-tutorial-steps.svg" target="_blank" rel="noopener">查看大图</a>。</figcaption></figure>
+          <p>在假设的导出服务里，教程可以选用已有的小型测试快照，明确需要的测试账号权限，并带读者提交一次任务、查看状态、下载结果。提交后得到任务 ID，应说明这表示请求已被接收；状态还在生成中时，告诉读者继续查看状态；状态完成时，再进行下载。整个过程围绕同一个结算日和同一任务展开，读者能够把前一步的结果用于下一步。</p>
+          <p>至于所有错误状态、完整参数清单和数据保留策略，可以在相应位置链接到参考或概念材料。这样教程维持一条能走通的主线，参考资料又为遇到不同条件的人提供后续路径。教程的完整性，首先体现在所选路径所需的前提与动作没有缺失，而不在于把整个系统都装进来。</p>
+          <p>检验教程时，最有信息量的办法之一，是让一位符合目标读者条件的人真正照着做。作者默默补上一条命令，或口头提醒某项权限，往往正说明教程还少了一部分。把这些补充写回去，后来的读者才可能在没有作者陪同的情况下完成同样的过程。</p>
+        </section>
+
+        <section id="navigation-and-authority">
+          <h2><span class="section-number">07</span>入口负责指路，文档集建立可信的位置</h2>
+          <p>团队页面经常从几个实用链接开始，逐渐积累成一个巨大的杂物间：安装步骤、接口解释、内部值班安排、若干篇“请先阅读”和已经失效的链接都在同一页。添加内容很容易，删除和重新组织却没有明确时机。后来的人需要先理解这页是怎样长出来的，才能找到自己的入口。</p>
+          <p>本章给入口页安排了一个克制的职责：说明用途，然后把人引向其他页面。它像交通指挥，不必自己承载完整教程或设计论证。安装有独立说明，就链接过去；链接多到跨越许多屏幕，就按主题组织。读者到达入口后，应该迅速知道接下来去哪里，而不是先阅读团队的全部历史。</p>
+          <p>尤其要分开产品使用者的入口和团队成员的入口。使用者常从开始使用、查询接口、理解行为这几条路径进入；维护者还需要设计记录和内部实现材料。两套内容可以互相连接，但主路径应当各自清楚。这个区别与第三节的读者分析一致，也让每个页面的职责更容易稳定下来。</p>
+          <figure class="concept-figure"><a href="../diagrams/exports/ch10-document-paths.svg" target="_blank" rel="noopener"><img src="../diagrams/exports/ch10-document-paths.svg" width="720" height="466" alt="产品使用者通过使用入口进入教程、参考和概念文档；维护者通过团队入口进入设计与实现说明。"></a><figcaption>图 10-4：分上下两条路径看：上排按使用任务分流，下排按维护需要分流，箭头表示导航。分类以假设的导出服务为例。点击<a href="../diagrams/exports/ch10-document-paths.svg" target="_blank" rel="noopener">查看大图</a>。</figcaption></figure>
+          <p>可信的文档集还需要解决跨项目知识放在哪里的问题。原书的 Developer Guide Library 案例指出，C++ 风格指南长期保持得较好，一个原因是有一组明确关心并维护它的工程师，而且大家认可同一份指南。与此同时，横跨多个 API 的 C++ 开发知识，又很难自然放进某一个 API 的代码目录里：并没有一个所有人都会去寻找的总 C++ 源目录。</p>
+          <p>Google 因而把这类资料组织成按主题划分的独立 Developer Guides，仍然放在版本管理下，统一导航和外观，常由技术写作者参与管理。既有文档中有价值的内容可以合入这套资料，竞争版本则逐步退役。C++ 风格指南也被纳入更大的 C++ Developer Guide，稳定的 <code>go/cpp</code> 短链接帮助读者认出共同入口。</p>
+          <p>这个过程形成了一种有用的循环：读者知道有人维护，更愿意报告错误；贡献者知道内容该放在哪里，更愿意提交修订；内容因此更完整、更可靠，又使大家更愿意使用共同入口。第三章讨论的<a href="ch03.html">知识共享</a>，在这里进一步落成了文档集的组织方式。短链接和检索降低寻找成本，责任与修订机制保证找到之后有路可走。</p>
+          <p>因此，“文档与代码放在一起”是一种很有效的安排，也需要服从内容边界。与单个模块紧密相关的说明适合靠近源码，跨多个模块的主题指南可以有独立位置。共同要求是主要依据明确、所有权清楚，读者无须在若干份看似同等权威的材料之间自行猜测。</p>
+        </section>
+
+        <section id="reviews-and-writers">
+          <h2><span class="section-number">08</span>用评审发现知识之间的空隙</h2>
+          <p>文档写完之后，作者容易认为意思已经足够清楚，因为阅读时会自动补齐脑中的背景。评审的价值，是把另一个人的知识状态带进来。本章区分技术评审、读者评审和写作评审，分别着重准确性、清晰性和一致性。它们关注不同问题，可以由不同人承担，也可以在一次轻量评审中结合。</p>
+          <p>技术评审通常由熟悉领域的人完成。评审者能够判断接口行为是否写对，错误路径有没有遗漏，设计描述与实际实现是否相符。在假设导出服务中，专家会检查“快照未就绪时不创建任务”是否确实成立。如果程序实际上已经留下一个任务，文档承诺就必须与实现一起重新确认。</p>
+          <p>读者评审请接近目标读者、尚不熟悉领域的人参与。他可能不会立即看出实现是否符合所有约定，却能发现教程省略权限申请、缩写没有解释，或者“完成后获取结果”没有指出从哪里获取。在同一个假设案例里，新成员会追问自己已经拿到任务 ID，为何还不能下载，这正好暴露“受理”与“完成”的区别尚未被讲清。</p>
+          <p>写作评审再从整体组织与表达上检查。相同状态是否用了不同名称，标题能否引导阅读，一段话是否混合了操作和历史讨论，术语与格式是否一致，都会影响理解成本。准确的内容如果很难找到，读者仍可能无法使用；写作评审帮助正确的信息以可用的形态出现。</p>
+          <p>三类评审的界线有时会模糊。对外发布、读者众多的材料，值得获得更完整的视角；小范围材料哪怕只请一位读者看过，也比没人评审好。日常使用中的缺陷报告同样能持续带来读者评审，只要这些问题有人接收并写回文档。</p>
+          <p>技术写作者在这里有特别的价值。书中回顾，过去有时因为项目重要，就为团队配置技术写作者，希望工程师少花时间写文档；这种安排却可能制造错误激励，让工程师把文档看作可以移交出去的负担。作者更看重技术写作者帮助跨越团队与 API 边界的能力：某团队知道自己的系统，却未必知道另一个团队需要怎样使用它。</p>
+          <p>继续看假设导出服务，快照团队可能只解释快照生成，任务团队只解释队列，文件团队只解释下载。每份局部说明都可以正确，接入者却仍不知道它们怎样形成一条完整路径。技术写作者可以站在不熟悉领域的使用者一侧，发现这些接缝，组织共同概念和导航，并要求各团队澄清隐含前提。工程师仍负责自己最熟悉的事实与接口说明，专业写作能力则用于最难跨越的知识边界。</p>
+          <aside class="key-point"><p class="key-point-label">核心观点</p><p>专家能检查事实，目标读者能暴露隐含前提，写作评审能改善组织与一致性。让这些视角进入文档，常常比作者独自反复润色更容易发现真正妨碍使用的地方。</p></aside>
+        </section>
+
+        <section id="writing-and-lifecycle">
+          <h2><span class="section-number">09</span>让文档完成自己的工作，也有机会退役</h2>
+          <p>本章最后的写作哲学部分，作者事先说明，这部分更多是技术写作的最佳实践和个人观点，而非“Google 的做法”。其中一条实用建议，是在进入“如何做”以前，先用开头交代读者、任务和目的，也让人能够判断文档适用的时间与存放位置。这样，读者在投入操作前就知道自己是否找对了材料。</p>
+          <p>例如，假设教程的开头可以说明：“本文面向首次接入导出服务的工程师，带你在测试环境中基于已有快照生成并下载一份报表；需要测试账号和相应快照的访问权限。”几句话便建立了范围。正文随后展开路径，结尾再总结完成了什么、下一步可以去哪里，文章就有了可跟随的方向。</p>
+          <p>这种开头、展开、收束的关系，也解释了为什么技术写作需要适度重复。先说将要理解的重点，读者才知道细节朝哪里去；在解释后回收重点，又能把分散内容组织起来。这和在各处复制同一套接口参数不同：前者帮助建立理解，后者增加维护中的同步成本。</p>
+          <p>文档质量也不能只看字数或覆盖数量。作者讨论完整性、准确性与清晰性之间的权衡：参考文档需要覆盖边界，概念文档需要突出模型，入口页需要组织路线，教程需要把选定路径带通。把所有细节加入概览，可能使整体关系消失；为了让参考表面上简单而省略关键行为，又会让调用者作出错误判断。文档的主要任务，应当引导这些选择。</p>
+          <p>时间继续向前，曾经准确的说明也会逐渐过时。系统变更时随代码更新，是最自然的一次维护机会；对没有频繁代码变更提醒的资料，还可以定期复核。原书介绍 Google 使用文档新鲜度日期，记录责任人和上次审阅时间；文档在一段时间内（书中举例为三个月）没有更新，元数据就会发邮件提醒。</p>
+          <p>可以这样理解：这种日期把维护责任变得可见，并给“需要再看一遍”一个触发点。修改时间只能说明文件发生过变化，真正复核过内容则是另一件事。维护者需要确认示例、链接和主要约定仍然成立，再更新审阅记录。作者也记述，把最近审阅者直接展示出来，有助于这项做法被更多人采用。</p>
+          <p>对于已经失去用途的文档，维护还包括合并、标为过时或移除。若仍有新的权威材料，应当指出去处。一个明确写着“此流程已失效，请改用新说明”的页面，能帮助尚未更新书签的人停止错误操作。无人负责的旧文档，也可以先补上可确认的失效提示，再继续寻找接手者；让它保持貌似有效的外观，会使后来的人再次付出同样代价。</p>
+          <p>这里需要区分历史记录和当前操作依据。一份旧设计文档可以保留，因为它解释过去的权衡；一份旧安装教程若仍被当作当前步骤传播，就容易误导。保留历史的价值，在于明确它描述的是哪个时期、什么条件下的选择，并让今天的使用者容易找到当前说明。</p>
+          <aside class="key-point"><p class="key-point-label">核心观点</p><p>好文档有明确任务，也有维护和退役的过程。用相关变更与定期复核保持可信，用清楚的过时标记和新入口处理旧材料，让过去的记录不妨碍今天的行动。</p></aside>
+        </section>
+
+        <p>原章结尾承认，写书时 Google 的文档还没有像测试那样深入工程工作流。文档的效果通常由读者在稍后才能判断，也难以完全自动验证。正因如此，日常责任、反馈和维护过程尤其重要。工程师留下可使用的说明，组织让这份工作容易完成、值得完成，知识才会随系统一起积累，而不是每遇到一位新读者都重新从头解释。</p>
+
+        <details id="sources" class="source-note">
+          <summary>来源、主题对应与核查说明</summary>
+          <p>依据《Software Engineering at Google》（2020）Abseil 官方公开英文 HTML 版<a href="https://abseil.io/resources/swe-book/html/ch10.html">第 10 章 Documentation</a>，Tom Manshreck 撰写、Riona MacNamara 编辑；核查日期 2026-11-06。</p>
+          <ul>
+            <li>01：<a href="https://abseil.io/resources/swe-book/html/ch10.html#what_qualifies_as_documentationquestion">What Qualifies as Documentation?</a>、<a href="https://abseil.io/resources/swe-book/html/ch10.html#why_is_documentation_neededquestion_mar">Why Is Documentation Needed?</a>。脚注 1 补充：文档写成后仍需维护和修订。</li>
+            <li>02：<a href="https://abseil.io/resources/swe-book/html/ch10.html#documentation_is_like_code">Documentation Is Like Code</a>、<a href="https://abseil.io/resources/swe-book/html/ch10.html#callout_the_google_wiki">Case Study: The Google Wiki</a>。脚注 3 记述，停用 GooWiki 时约 90% 的文档在此前几个月里无人浏览或更新；这个比例衡量的是活跃度，并非错误率。</li>
+            <li>03：<a href="https://abseil.io/resources/swe-book/html/ch10.html#know_your_audience">Know Your Audience</a>、<a href="https://abseil.io/resources/swe-book/html/ch10.html#types_of_audiences">Types of Audiences</a>。</li>
+            <li>04：<a href="https://abseil.io/resources/swe-book/html/ch10.html#documentation_types">Documentation Types</a>、<a href="https://abseil.io/resources/swe-book/html/ch10.html#reference_documentation">Reference Documentation</a>，及 <a href="https://abseil.io/resources/swe-book/html/ch10.html#file_comments">File comments</a>、<a href="https://abseil.io/resources/swe-book/html/ch10.html#class_comments">Class comments</a>、<a href="https://abseil.io/resources/swe-book/html/ch10.html#function_comments">Function comments</a>。</li>
+            <li>05：<a href="https://abseil.io/resources/swe-book/html/ch10.html#design_docs">Design Docs</a>、<a href="https://abseil.io/resources/swe-book/html/ch10.html#conceptual_documentation">Conceptual Documentation</a>。</li>
+            <li>06：<a href="https://abseil.io/resources/swe-book/html/ch10.html#tutorials">Tutorials</a>、<a href="https://abseil.io/resources/swe-book/html/ch10.html#example_a_bad_tutorial">Example: A bad tutorial</a>、<a href="https://abseil.io/resources/swe-book/html/ch10.html#example_a_bad_tutorial_made_better">Example: A bad tutorial made better</a>。图 10-3 据这两个示例绘制，省略了具体命令。</li>
+            <li>07：<a href="https://abseil.io/resources/swe-book/html/ch10.html#landing_pages">Landing Pages</a>、<a href="https://abseil.io/resources/swe-book/html/ch10.html#callout_the_developer_guide_library">Case Study: The Developer Guide Library</a>。</li>
+            <li>08：<a href="https://abseil.io/resources/swe-book/html/ch10.html#documentation_reviews">Documentation Reviews</a>、<a href="https://abseil.io/resources/swe-book/html/ch10.html#when_do_you_need_technical_writersquest">When Do You Need Technical Writers?</a>。</li>
+            <li>09：<a href="https://abseil.io/resources/swe-book/html/ch10.html#documentation_philosophy">Documentation Philosophy</a>，及 <a href="https://abseil.io/resources/swe-book/html/ch10.html#whocomma_whatcomma_whencomma_wherecomma">WHO, WHAT, WHEN, WHERE, and WHY</a>、<a href="https://abseil.io/resources/swe-book/html/ch10.html#the_beginningcomma_middlecomma_and_end">The Beginning, Middle, and End</a>、<a href="https://abseil.io/resources/swe-book/html/ch10.html#the_parameters_of_good_documentation">The Parameters of Good Documentation</a>、<a href="https://abseil.io/resources/swe-book/html/ch10.html#deprecating_documents">Deprecating Documents</a>；结尾对应 <a href="https://abseil.io/resources/swe-book/html/ch10.html#conclusion-id00014">Conclusion</a> 与 <a href="https://abseil.io/resources/swe-book/html/ch10.html#tlsemicolondrs-id00112">TL;DRs</a>。</li>
+          </ul>
+          <p>命令纠错：原书“Example: A bad tutorial made better”在“下载包”一步给出 <code>curl -I http://example.com</code> → <code>-I</code> 在 HTTP 下发起 HEAD 请求，只取得响应头，不会下载包，示例也没有给出真实的包地址（<a href="https://raw.githubusercontent.com/curl/curl/master/docs/cmdline-opts/head.md">curl 官方 <code>--head</code> / <code>-I</code> 选项说明</a>）→ 实际教程应写出真实包地址，使用取得响应正文的下载方式，并说明保存位置；本文只借这个示例讨论步骤组织。</p>
+          <p>执行前提补充：同一示例用 <code>cd ~; foobar.sh</code> 执行脚本 → 在 Bash 中，不含斜杠的命令名按 <code>PATH</code> 查找，进入脚本所在目录并不保证能按裸文件名执行（<a href="https://www.gnu.org/software/bash/manual/html_node/Command-Search-and-Execution.html">GNU Bash 命令查找与执行说明</a>）→ 教程应写明脚本路径与执行条件；脚本在当前目录且有执行权限时，可写作 <code>./foobar.sh</code>。</p>
+          <p>异步导出服务及其接口约定、教程开头和评审情境均为本笔记假设的例子；Google 内部的案例与做法均依据原章叙述。本文按主题重组原章，而非逐段翻译；图示为本笔记原创示意图。</p>
+        </details>
+
+        <nav class="chapter-pagination" aria-label="章节翻页"><a class="page-link prev" href="ch09.html" rel="prev"><span class="page-label">← 上一章 · 第 9 章</span><span class="page-title">代码评审</span></a><a class="page-link next" href="ch11.html" rel="next"><span class="page-label">下一章 · 第 11 章 →</span><span class="page-title">测试概览</span></a><a class="pagination-home" href="../index.html">书籍概览与目录</a></nav>
+      </article>
+    </div>
+  </main>
+  <footer class="site-footer"><div class="container footer-inner"><span>个人书架 / 中文读书笔记</span><a href="#main">回到顶部 ↑</a></div></footer>
+</body>
+</html>

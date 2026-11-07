@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>第 18 章｜构建系统与构建理念 · Software Engineering at Google · 架构提升读书笔记</title>
+  <meta name="description" content="《Software Engineering at Google》第十八章读书笔记：从任务与产物模型，理解动作契约、增量构建、远程缓存与执行、细粒度模块、严格依赖及外部版本管理。">
+  <link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+  <script src="../../../assets/theme.js"></script>
+  <script src="../../../assets/reader.js" defer></script>
+  <link rel="stylesheet" href="../../../assets/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header reader-header"><div class="container header-inner">
+    <a class="brand" href="../../../index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5.5C8.5 3.8 5.8 3.6 2.5 4.5v14c3.3-.9 6-.7 9.5 1 3.5-1.7 6.2-1.9 9.5-1v-14c-3.3-.9-6-.7-9.5 1Zm0 0v14"/></svg>书架</a>
+    <a class="reader-book-title" href="../index.html" lang="en">Software Engineering at Google</a>
+    <div class="theme-control" role="group" aria-label="外观" hidden><button type="button" data-theme-value="system" title="跟随系统"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path class="fill" d="M12 4a8 8 0 0 1 0 16Z"/></svg><span class="sr-only">跟随系统</span></button><button type="button" data-theme-value="light" title="浅色"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.6"/><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21M5.6 5.6l1.6 1.6M16.8 16.8l1.6 1.6M5.6 18.4l1.6-1.6M16.8 7.2l1.6-1.6"/></svg><span class="sr-only">浅色</span></button><button type="button" data-theme-value="dark" title="深色"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.5 14.6A7.8 7.8 0 0 1 9.4 4.5a7.8 7.8 0 1 0 10.1 10.1Z"/></svg><span class="sr-only">深色</span></button></div>
+  </div></header>
+  <main id="main" class="container reader-container">
+    <nav class="breadcrumb" aria-label="当前位置"><ol><li><a href="../../../index.html">书架</a></li><li><a href="../index.html">书籍概览</a></li><li aria-current="page">第 18 章</li></ol></nav>
+    <div class="reading-layout">
+      <aside class="toc"><nav aria-label="本页目录"><h2>本页目录</h2><ul>
+        <li><a href="#build-as-contract">01　构建，是团队的约定</a></li>
+        <li><a href="#task-model">02　任务图与数据依赖</a></li>
+        <li><a href="#artifact-model">03　声明需要的产物</a></li>
+        <li><a href="#action-contract">04　完整的动作输入</a></li>
+        <li><a href="#incremental-builds">05　可信的增量构建</a></li>
+        <li><a href="#remote-cache">06　远程缓存</a></li>
+        <li><a href="#remote-execution">07　远程执行</a></li>
+        <li><a href="#module-boundaries">08　模块粒度与可见性</a></li>
+        <li><a href="#strict-dependencies">09　严格依赖声明</a></li>
+        <li><a href="#external-inputs">10　外部依赖与信任</a></li>
+        <li><a href="#one-version">11　单一版本与组合风险</a></li>
+        <li><a href="#investment-and-tradeoffs">12　投入与取舍</a></li>
+      </ul><p class="toc-note"><a href="../index.html">← 书籍概览</a></p></nav></aside>
+      <article class="article">
+        <header class="article-header">
+          <p class="eyebrow">READING NOTES / CHAPTER 18</p>
+          <h1>第 18 章｜构建系统与构建理念</h1>
+          <p class="article-deck"><span lang="en">Build Systems and Build Philosophy</span> · 架构提升读书笔记</p>
+        </header>
+        <p>构建看起来像开发工作之间的一小段等待：运行编译器，得到程序，接着测试。项目一旦有了许多模块、开发者和机器，这段等待背后就出现了一整套协作问题。同一份代码在不同电脑上能否得到一致结果，改了一处库以后究竟需要重做什么，其他人已经完成的计算能否放心复用，都取决于构建系统掌握了多少真实信息。</p>
+        <p>本章的主线，是把构建从“执行一串命令”推进到“依据明确输入，生成明确产物”。这个变化让增量构建、并行执行和共享缓存建立在同一个模型上，也解释了 Google 为什么愿意限制构建脚本的自由。下文以原章的 Blaze／Bazel 经验为基础，用原创的报表程序情境和小型演示补足推理；2020 年的实现描述与今天的使用条件会分开说明。</p>
+        <details class="mobile-toc"><summary>本页目录 · 12 个小节</summary><nav aria-label="移动端本页目录"><ul>
+          <li><a href="#build-as-contract">01　构建，是整个团队反复使用的约定</a></li>
+          <li><a href="#task-model">02　任务依赖图，解决了顺序，却未必描述了数据</a></li>
+          <li><a href="#artifact-model">03　从执行步骤，转向声明需要的产物</a></li>
+          <li><a href="#action-contract">04　动作要可复用，输入就必须完整</a></li>
+          <li><a href="#incremental-builds">05　增量构建，先判断哪些旧结果仍有依据</a></li>
+          <li><a href="#remote-cache">06　远程缓存，把一个人的计算变成团队的结果</a></li>
+          <li><a href="#remote-execution">07　远程执行，让未做过的工作也能并行展开</a></li>
+          <li><a href="#module-boundaries">08　模块粒度，决定系统能在哪里停下来</a></li>
+          <li><a href="#strict-dependencies">09　直接使用谁，就把依赖写到谁</a></li>
+          <li><a href="#external-inputs">10　外部依赖，把变化与信任一起带进构建</a></li>
+          <li><a href="#one-version">11　一个版本的价值，在于降低组合的复杂度</a></li>
+          <li><a href="#investment-and-tradeoffs">12　投入多少，取决于真正需要承担的规模</a></li>
+        </ul></nav></details>
+
+        <section id="build-as-contract">
+          <h2><span class="section-number">01</span>构建，是整个团队反复使用的约定</h2>
+          <p>原书给构建系统提出两个目标：<strong>快</strong>，让开发者用一个命令及时得到结果；<strong>正确</strong>，让不同开发者在不同机器上，对相同输入得到相同结果。这里的正确指构建过程忠实、一致，没有混入过期产物或机器上的偶然状态；程序是否满足业务需求，仍要靠测试、评审和实际运行判断。</p>
+          <p>这两个目标很容易在简陋工具中相互挤压。每次都从头编译，比较容易避开旧文件，却浪费大量时间；直接复用上次的输出，虽然快，却可能遗漏已经变化的头文件、生成器或编译选项。作者想解决的，是让系统知道什么时候复用有依据，什么时候必须重建，从而同时获得速度与可信度。</p>
+          <p>假设一个团队维护报表应用。应用既包含 Java 服务，又需要把接口描述生成代码，还依赖外部压缩库。只有一个文件时，直接运行编译器就够了；加入生成代码以后，就要先运行生成器，再编译调用方；库更新之后，还要确认链接和测试使用了新的版本。编译器负责一种语言中的转换，却无法独自管理整个产品的准备、生成、编译、打包和测试关系。</p>
+          <p>团队最初可以写一份脚本，依次完成这些步骤。脚本暂时减少了手工操作，但构建所需的信息还可能散落在某位同事的电脑里：手动下载的 JAR、特殊位置的 JDK、几个月前设置的环境变量。新同事入职、电脑损坏或 CI 换了一台机器时，团队才会发现，版本库保存了业务代码，却没有完整保存“怎样把它变成可用程序”。</p>
+          <p>原章把这种问题继续推到组织层面：在 Google，构建系统还支撑评审时验证、提交前检查、底层库跨代码库测试以及大规模变更。同一套输入和目标描述可以被人和自动化工具使用，才不必为开发、测试和发布各维护一套相近却逐渐偏离的流程。这也与<a href="ch11.html#suite-at-scale">第十一章的规模化测试</a>相连：再多的测试，首先也要能可靠地构建和找到自己的依赖。</p>
+          <aside class="key-point"><p class="key-point-label">核心观点</p><p>构建系统保存的，不只是命令顺序，还应包括生成结果所依赖的条件。把这些条件从个人电脑移进可检查、可版本化的模型，团队才有共同的构建起点。</p></aside>
+        </section>
+
+        <section id="task-model">
+          <h2><span class="section-number">02</span>任务依赖图，解决了顺序，却未必描述了数据</h2>
+          <p>比长脚本前进一步，是把工作拆成任务，声明任务之间的依赖。原章用 Ant 举例：<code>dist</code> 打包任务依赖 <code>compile</code>，<code>compile</code> 又依赖准备目录和时间戳的 <code>init</code>。用户只需请求 <code>dist</code>，系统便能沿依赖图找到必要任务，再按 <code>init → compile → dist</code> 的次序执行；独立的 <code>clean</code> 不会因为存在于文件中就自动运行。</p>
+          <p>这样的<strong>任务式构建系统（task-based build system）</strong>比手工脚本更容易组织和组合。多个模块可以有各自的构建描述，共用任务也可以集中维护。Ant 的术语还需要留意：原章脚注专门说明，它把这里讨论的任务称作 <code>target</code>，把任务内部的具体命令称作 <code>task</code>。只看单词，容易把不同工具的模型混为一谈。</p>
+          <p>任务图告诉系统“B 必须先于 A 完成”，却可能没有说明“A 究竟使用 B 的哪一个输出”。假设生成器原来把代码写到 <code>generated/</code>，后来维护者把输出移到 <code>build/generated/</code>。依赖关系仍然是先生成、后编译，图本身没有变，编译任务却可能找不到文件。更隐蔽的情况是，目录中恰好残留了旧文件，构建居然成功，只是使用了过期内容。</p>
+          <p>并行也面临同样的信息缺口。若 A 同时依赖 B、C，而 B、C 在图上互不依赖，调度器看起来可以同时启动它们。但两段脚本可能偷偷修改同一个状态文件，或向同一个目录写入同名产物。先后次序一变，结果就变了。没有输入、输出和副作用的约束，图上没有边，只能说明“未声明顺序”，无法证明“可以安全并行”。</p>
+          <p>增量构建需要更强的信息。一个任务表面上只编译几个源文件，实际却可能读取间接包含的 C++ 头文件、当前时间或网络下载内容。只监视直接源文件会漏掉变化；为了保险每次都重跑，又放弃了增量收益。原书描述的常见结局是，工程师逐渐习惯在构建前运行 <code>clean</code>，用清空状态代替理解失效条件。构建虽然还能完成，大家已经不再相信它对“哪些结果仍有效”的判断。</p>
+          <p>图 18-1 把这几处信息缺口放回同一步“先生成、再编译”：任务图只记下先后，路径约定留在脚本里；产物图的边本身就是那份生成的源码，系统据此知道该交接哪个文件，判断复用和并行也就有了依据。</p>
+          <figure class="concept-figure"><a href="../diagrams/exports/ch18-task-vs-artifact.svg" target="_blank" rel="noopener"><img src="../diagrams/exports/ch18-task-vs-artifact.svg" width="720" height="470" alt="同一步先生成、再编译的对照：任务式构建只声明生成任务先于编译任务，输出路径的约定留在脚本里，路径改了图却不变，编译找不到文件或读到旧文件；产物式构建中，连接生成动作与编译动作的边就是那份生成的源码，系统知道交接哪份文件。"></a><figcaption>图 18-1：左列是只声明先后的任务式构建，右列是下一节展开的产物式构建。实线箭头是图中声明的边，虚线是只存在于脚本里的路径约定，底部框是各自带来的结果。点击<a href="../diagrams/exports/ch18-task-vs-artifact.svg" target="_blank" rel="noopener">查看大图</a>。</figcaption></figure>
+          <p>作者用任务式与产物式两类模型突出这个差别，实际工具却不整齐地落在两个极端：例如 Gradle 允许为任务声明输入、输出，并据此做最新状态检查、本地或远程缓存和并行调度。因此，本章批评的准确对象是<strong>任意脚本加上不完整的契约</strong>；判断一个工具，要看它实际知道并约束了什么。</p>
+        </section>
+
+        <section id="artifact-model">
+          <h2><span class="section-number">03</span>从执行步骤，转向声明需要的产物</h2>
+          <p><strong>产物（artifact）</strong>是构建过程中可以被明确引用的结果，例如目标文件、JAR、生成的源码或最终可执行文件。产物式构建把常见需求整理成规则：这里是一项 Java 库，输入哪些源文件，依赖哪些库；那里是一项程序，入口是什么，需要链接哪些结果。应用开发者描述“我要什么”，规则与构建引擎负责安排具体动作。</p>
+          <p>原章用 Blaze 及其开源实现 Bazel 说明这种安排，Google 在 2015 年开放了 Bazel。两者共享本章讨论的构建理念；后文的 ObjFS、Forge 则是 Google 的内部系统。</p>
+          <p>把书里的 Java 构建示例缩成结构片段，可以看到几个主要字段。下面保留原章的规则调用形式，用来解释目标之间的关系；它省略了 Java 源码、规则加载和外部依赖设置，不能直接当作 Bazel 工程运行。</p>
+          <pre><code class="language-python">java_binary(
+    name = "report_app",
+    srcs = ["ReportApp.java"],
+    deps = [":report_lib"],
+)
+
+java_library(
+    name = "report_lib",
+    srcs = ["Report.java", "Formatter.java"],
+    deps = ["//common:codec"],
+    visibility = ["//reports:__subpackages__"],
+)</code></pre>
+          <p><code>name</code> 给目标命名，<code>srcs</code> 列出源码输入，<code>deps</code> 表达其他构建目标，<code>visibility</code> 规定哪些包可以依赖这个目标。<code>:report_lib</code> 是当前包内的相对标签；<code>//common:codec</code> 指向同一仓库另一个包中的目标。原章的 <code>@仓库名//包:目标</code> 则用于引用外部仓库。标签把依赖连到受系统管理的目标，而不只是约定某个脚本碰巧会在某个目录留下文件。</p>
+          <p>这里还要区分三个层次。<strong>目标（target）</strong>是用户请求和模块引用的单位；<strong>规则（rule）</strong>把一类目标的属性展开成构建逻辑；<strong>动作（action）</strong>是实际执行和缓存的低层单位，例如一次编译、一次归档或一次文件生成。一个目标可以生成多个动作和多个产物，因此“一个目标就是一个文件”只适合作为很粗的入门直觉。</p>
+          <p>请求构建报表应用时，引擎只加载目标及其传递依赖所需的 <code>BUILD</code> 文件，而非整个工作区，建立所需图后，再把选定配置下的目标分析为动作。没有前置依赖的动作可以先就绪；其余动作等输入产物准备好后再运行。原章把这个过程简化为依次构建目标；理解时还应保留动作这一层，因为调度与结果缓存需要知道实际命令、输入和输出。</p>
+          <p>这也说明了函数式类比的价值。构建可以近似看成“源码、工具和配置经过一组转换，得到产物”的函数。若同一组完整输入对应同一结果，就可以记住计算结果，也可以把互不影响的计算交给不同执行者。</p>
+        </section>
+
+        <section id="action-contract">
+          <h2><span class="section-number">04</span>动作要可复用，输入就必须完整</h2>
+          <p>把动作视作函数，可以写成一个理解缓存正确性的概念关系：<code>输出 = F(输入文件、工具、命令与选项、受控环境、平台条件)</code>。真正重要的是，任何会改变输出的因素，都要成为可识别的输入，或被限制为不会变化的环境条件。</p>
+          <p>例如报表源码没有变，但生成器升级后会对字段排序，生成的代码就可能变化。如果缓存只看接口描述文件，系统会错把旧代码当成有效结果。Java 编译器、链接器、代码生成器也一样：它们与业务源码共同决定输出，应纳入依赖和配置管理。仅仅从 <code>PATH</code> 找到一个叫 <code>javac</code> 的程序，并不足以让两台电脑上的构建等价。</p>
+          <p>原章用<strong>工具链（toolchain）</strong>处理平台差异。规则可以声明自己需要某类工具链，再由配置根据执行平台和目标平台选择实现。执行平台回答“这个编译器在哪里运行”，目标平台回答“编译出的程序给什么环境运行”；交叉编译时二者可以不同。这样，平台差异进入模型，而不是藏在一段只对某台机器成立的路径判断里。所选工具及必要环境仍要在配置中实际固定，宿主机上的工具不会因为换用 Bazel 就自动受控。</p>
+          <p>三个经常相邻出现的概念也各有侧重。<strong>确定性</strong>关注相同完整输入是否得到相同输出；<strong>环境自足（hermeticity）</strong>关注动作是否摆脱未声明的外部状态；<strong>可复现性</strong>关注换一次执行、换一台兼容机器，是否仍能按相同输入得到一致结果。输入声明不全会破坏跨机器复用；即使输入全部声明，动作内部读取未固定的随机值，也仍可能缺少确定性。三者需要规则、工具和执行环境共同配合。</p>
+          <p>需要新语言或自定义生成器时，产物式系统仍然可以扩展。规则作者在集中位置声明输入、输出以及如何产生动作，应用开发者调用已有规则。灵活性被集中到较少、可审查的地方，避免每个目录都重新实现编译、环境探测和失效判断。自定义动作如果调用时间、网络或未受控工具，照样会破坏契约，规则机制只是让约束有了落点。</p>
+          <p><strong>沙箱（sandbox）</strong>帮助执行这些约束。构建器为动作安排独立工作目录，把已知输入放入其中，并只收集声明的输出。遗漏生成文件时，动作更可能当场失败，而不是偶然读到同事上次构建留下的文件；两个动作也不该靠写入共享目录交换信息，而应通过图中的明确产物连接。</p>
+          <p>原文说动作无法读取任何未声明文件，并描述了网络限制，这说得过满。当前 Bazel 官方文档指出，沙箱不会普遍隐藏宿主环境，知道绝对路径的进程仍可能读取宿主文件；写入和网络限制取决于平台、沙箱策略及配置。沙箱是发现隐藏依赖、隔离工作区的重要机制，但不能当作默认隔绝全部外界的保证；对共享缓存和远程执行来说，这个区别直接影响正确性。</p>
+          <aside class="key-point"><p class="key-point-label">核心观点</p><p>增量和缓存的依据，是完整、受控的动作输入加上确定的转换。声明式语法、工具链与沙箱分别帮助建立这份契约，任何一个机制都不能单独替代它。</p></aside>
+        </section>
+
+        <section id="incremental-builds">
+          <h2><span class="section-number">05</span>增量构建，先判断哪些旧结果仍有依据</h2>
+          <p>可靠的增量构建会先检查现有结果是否仍对应当前动作，再决定哪些工作需要执行。原章的 Java 例子说明：只改程序自己的源文件，底层库可以复用；若改了公共库，则需要沿使用它的路径检查上层产物，完全不在该路径上的库继续复用。</p>
+          <p>在报表示例中，应用 <code>app</code> 使用报表库 <code>report</code>，报表库又使用 <code>common</code> 和 <code>codec</code>。下图箭头表示产物流向，右侧使用左侧结果，因此与“谁依赖谁”的读法方向相反。修改 <code>common</code> 后，它及其下游进入重新检查范围，<code>codec</code> 仍有复用依据。</p>
+          <figure class="concept-figure"><a href="../diagrams/exports/ch18-incremental-graph.svg" target="_blank" rel="noopener"><img src="../diagrams/exports/ch18-incremental-graph.svg" width="720" height="390" alt="common 的源码变化后，沿产物流向检查 report 和 app；独立且输入未变的 codec 可以复用。虚线框表示受影响的检查范围。"></a><figcaption>图 18-2：虚线框表示本次需要重新判断的目标，实线箭头表示产物被下游使用。重新判断之后，有匹配缓存或规则能做更细有效性判断的动作，仍可以复用。点击<a href="../diagrams/exports/ch18-incremental-graph.svg" target="_blank" rel="noopener">查看大图</a>。</figcaption></figure>
+          <p>这里的“沿路径检查”是保守的依赖分析直觉。实际编译规则可以利用接口摘要、依赖发现和其他信息减少工作；上游源码变化但输出相同，也可能让部分下游继续有效。反过来，少声明了一个真实依赖，就会把本应失效的动作遗漏。完整依赖图首先服务于正确性，进一步优化才是在这个基础上减少执行。</p>
+          <p>下面这个可运行的 Python 3 演示是笔记自拟的极简缓存模型，只用内存字典保存结果，把“源内容、工具身份和选项都参与复用判断”变成可观察的过程。</p>
+          <pre><code class="language-python">from hashlib import sha256
+import json
+
+cache = {}
+
+def build(source, tool, flags):
+    spec = {"source": source, "tool": tool, "flags": flags}
+    key = sha256(json.dumps(spec, sort_keys=True).encode("utf-8")).hexdigest()
+    if key in cache:
+        return "HIT", cache[key]
+    output = source.upper() if "--upper" in flags else source
+    cache[key] = output
+    return "MISS", output
+
+print(build("report", "compiler-v1", []))
+print(build("report", "compiler-v1", []))
+print(build("report", "compiler-v1", ["--upper"]))
+print(build("report", "compiler-v2", ["--upper"]))</code></pre>
+          <p>运行结果是：</p>
+          <pre><code class="language-text">('MISS', 'report')
+('HIT', 'report')
+('MISS', 'REPORT')
+('MISS', 'REPORT')</code></pre>
+          <p>第一次计算后，完全相同的请求命中缓存；增加选项后必须重新判断，不能沿用小写输出；工具身份变化后也生成另一个键，即使这份简化实现碰巧产生相同文本。演示里的工具字符串代表已固定的工具身份，真实构建需要可靠描述工具内容及相关环境，不能只相信一个可能被覆盖的文件名。</p>
+          <p>若从键中删掉 <code>flags</code>，第三次请求就可能取回第一次的 <code>report</code>，而不是所需的 <code>REPORT</code>。这是遗漏真实输入造成的错误命中。若把每次请求的当前时间也塞进键，则每次都可能失效，虽然保守，却失去复用。好的模型既要捕获真实影响因素，也要避免加入与输出无关、不断变化的信息。</p>
+        </section>
+
+        <section id="remote-cache">
+          <h2><span class="section-number">06</span>远程缓存，把一个人的计算变成团队的结果</h2>
+          <p>本地增量只能复用本机已有结果。<strong>远程缓存（remote caching）</strong>进一步让开发机与 CI 共享动作输出：本机没有合适结果时，先查共享缓存；命中便下载；未命中才执行，并按权限把成功结果上传。修改业务入口时，稳定底层库可能已经被同事或 CI 构建过，不必由每个人重新计算。</p>
+          <p>复用不能只按目标名进行。两位同事都在构建 <code>report</code>，一个修改了格式规则，另一个修改了错误处理，产物应该共存而不互相覆盖。系统需要依据动作描述和输入摘要识别结果，使不同输入拥有不同身份，同一组有效输入才共享结果。分支名或提交号也不是足够精确的替代物：不同提交可能拥有同一份底层输入，同一个提交也可能在不同平台配置下构建。</p>
+          <p>当前 Bazel 官方文档把远程缓存分成两部分：<strong>动作缓存（action cache）</strong>把动作哈希映射到结果元数据；<strong>内容寻址存储（content-addressable store，CAS）</strong>按内容摘要保存输出文件。前者回答“这项计算的结果是什么”，后者回答“去哪里取这些字节”。元数据连接动作与输出文件名、内容摘要等信息。</p>
+          <figure class="concept-figure"><a href="../diagrams/exports/ch18-cache-contract.svg" target="_blank" rel="noopener"><img src="../diagrams/exports/ch18-cache-contract.svg" width="720" height="420" alt="完整动作输入生成动作键，动作缓存查到结果元数据后，再依据输出摘要从 CAS 取回产物。相同动作键只有在输入完整、执行确定且缓存可信时才可安全复用。"></a><figcaption>图 18-3：从左向右读，先确定计算身份，再查结果记录，最后取回输出字节。未命中时需要执行动作并写入相应记录；图中省去这条写入路径，聚焦缓存命中为什么有依据。点击<a href="../diagrams/exports/ch18-cache-contract.svg" target="_blank" rel="noopener">查看大图</a>。</figcaption></figure>
+          <p>这些摘要解决的是身份与内容一致性问题。缓存中的结果仍须来自符合契约的执行者；若动作偷偷读取本机配置，两台机器可能用同一个键产生不同输出，错误就会通过共享缓存放大。当前 Bazel 文档也特别提醒，使用工作区外、未追踪的编译器会造成错误共享。因此，远程缓存上线之前，应先让工具、环境和规则具备跨机器复用条件，再决定谁拥有写入权限。只让可信 CI 写入、开发机只读，是官方文档列出的可选安排。</p>
+          <p>远程缓存还要满足经济条件：查询和传输的代价应小于省下的计算。一个很小的文本生成动作，访问远端可能比本地执行更慢；大型编译产物则可能受带宽限制。原章明确要求考虑网络延迟，并用实验确认缓存真的提升了性能，衡量标准是端到端的构建耗时。缓存是加速层，丢失后通常应能重新计算，而不是成为保存唯一构建依据的地方。</p>
+        </section>
+
+        <section id="remote-execution">
+          <h2><span class="section-number">07</span>远程执行，让未做过的工作也能并行展开</h2>
+          <p>远程缓存擅长消除重复计算，但缓存冷启动，或一次底层改动使大量结果失效时，仍然会留下很多新工作。<strong>远程执行（remote execution）</strong>把这些动作交给计算集群，突破单台开发机的 CPU、内存和磁盘限制。两者相互配合，却解决不同问题：一个复用已经算出的结果，一个为尚未完成的动作安排执行资源。</p>
+          <p>沿用报表情境，客户端需要把这次构建真正使用的源码输入提供给远端，包括尚未提交的本地修改。远程机器若只是拉取仓库主干，就会构建另一份程序。构建描述和输入被确定后，调度器把就绪动作分配给兼容的工作机；各工作机读取输入，执行动作，把结果放入共享存储；依赖这些结果的动作随后才能就绪，最后把用户需要的产物取回。</p>
+          <p>原章画出的是集中式协调模型，具体产品可以有不同的客户端与服务端分工。无论谁负责分析图，执行前置关系都不能丢失。生成源码的动作尚未完成，编译动作就不能假定文件已经出现；一台工作机的临时目录，也不能成为另一台工作机的隐式输入。前面建立的完整输入、明确输出、受控环境与确定性，在这里共同成为分布式协议能够成立的条件。</p>
+          <p>增加工作机能缩短可并行的部分，却无法消除依赖链。笔记补充一个理想化下界帮助理解（忽略图分析、排队和传输开销）：若未复用动作的总计算量为 <code>W</code>，有 <code>P</code> 个等速工作机，最长依赖链耗时为 <code>L</code>，那么仅计算时间就满足 <code>T(P) ≥ max(W / P, L)</code>。即使资源很多，必须连续发生的生成、编译和链接，也不能同时结束。</p>
+          <p>书中把“拆成足够小的单位”视为扩展的前提，并说这样就能以愿意支付的资源换取构建速度。这句话要连同关键路径和系统开销一起理解：细粒度图提供可调度空间，足够资源才能利用这个空间，网络与存储还必须跟得上。</p>
+          <p>Google 的历史案例把上述部件接起来。自 2008 年起，其分布式构建同时使用远程缓存与远程执行。ObjFS 用分布式 Bigtable 后端保存输出，开发机上的 <code>objfsd</code> 通过 FUSE 呈现文件，真正访问内容时再按需下载。这样，工程师可以看到完整输出布局，却不必先把自己不会使用的大量中间文件搬到本地。书中报告，与把全部输出存到本地磁盘时相比，构建速度约为两倍。</p>
+          <p>Forge 负责远程执行。Blaze 中的 Distributor 把动作请求发给 Scheduler；调度器查动作结果缓存，命中便返回，未命中则排队；Executor 集群读取任务，执行后把结果写入 ObjFS，供后续动作或最终用户使用。这套流程最重要的经验，是计算、身份和数据流彼此对齐。</p>
+          <aside class="key-point"><p class="key-point-label">核心观点</p><p>远程缓存节省重复工作，远程执行分摊新工作。两者都依赖明确的动作契约；更多机器能利用并行性，却不能消除关键路径、数据传输和错误依赖。</p></aside>
+        </section>
+
+        <section id="module-boundaries">
+          <h2><span class="section-number">08</span>模块粒度，决定系统能在哪里停下来</h2>
+          <p>拥有支持缓存和并行的引擎后，模块组织仍会决定收益。如果整个报表产品只有一个巨大的编译目标，改一处格式代码也可能让整个目标的动作失效。系统无法凭空知道你希望把稳定的数据协议和频繁修改的页面逻辑分开复用，因为构建描述没有提供这个边界。</p>
+          <p>把协议、编码、报表逻辑和应用入口分成合理目标后，稳定部分有了独立身份，变更也能沿更精确的依赖关系传播。测试目标同样受益：构建图可以帮助找到可能受影响的测试，避免每次都无差别启动所有测试。前提是测试依赖和运行数据都已完整声明。</p>
+          <p>原章认为细粒度目标更适合大规模系统，也介绍了 Java 等语言中的 <strong>1:1:1 规则</strong>：一个目录通常对应一个语言包、一个构建目标和一个 <code>BUILD</code> 文件。它描述的是目录、包和构建单位的对齐：一个包可以有多个协作的类，并不要求每个源文件独占一个目标；语言惯例较弱时，同一个 <code>BUILD</code> 也常定义多个目标。本章说的“模块”指构建目标，与后来 Bzlmod 的可版本化模块是两回事。</p>
+          <p>细粒度也有代价。依赖列表更长，新增引用往往要同步修改构建文件；极小动作还会增加图分析、调度、进程启动与传输的相对开销。选择边界时，应让它对应有意义的代码关系和复用单位，而非无限拆细。Google 的应对包括用工具自动维护部分 <code>BUILD</code> 描述，保留细粒度带来的系统收益，同时减少开发者反复补列表的劳动。</p>
+          <p>模块边界还包括<strong>可见性（visibility）</strong>。依赖表达“我需要谁”，可见性表达“谁可以依赖我”。公共库面向广泛调用者，团队内部实现通常限制到团队拥有的包，需要协调的接口则向明确的使用范围开放。若内部辅助模块默认对全仓库公开，今天的一次便利引用，明天就可能成为阻碍重构的真实依赖。</p>
+          <p>因此，较小目标与较窄可见性相互配合：前者让系统识别更多独立单位，后者控制这些单位之间可以形成的关系。构建可见性的主要价值，是让内部实现能够继续演化，而不必承担未计划的全组织兼容承诺。</p>
+        </section>
+
+        <section id="strict-dependencies">
+          <h2><span class="section-number">09</span>直接使用谁，就把依赖写到谁</h2>
+          <p>原章把内部依赖放在同一仓库、同一提交快照中构建。库与调用方没有各自独立发布版本，重现一次构建时，二者都取自相同仓库状态。这个前提使依赖关系本身更加重要：版本统一，并不会自动阻止调用方绕过模块边界。</p>
+          <p>书中给出的典型结构是 A 依赖 B，B 又依赖 C。底层工具可能把 C 一并放进 A 的编译或链接环境，于是 A 可以直接引用 C 中的类型，却只在构建文件里写了 B。图对“构建 B 需要 C”的表达没有问题，遗漏的是“A 自己也在使用 C”。</p>
+          <p>假设 A 是报表入口，B 是报表服务库，C 是通用编码库。A 直接调用 C 的编码函数，但借 B 的依赖把 C 带进来。后来 B 改用另一种内部表示，不再需要 C。维护者删除 B 到 C 的边后，B 自身仍然正确，A 却无法构建。B 的内部实现关系因此被迫承担对 A 的兼容责任，维护者为了不破坏别人，只好长期保留本可移除的依赖。</p>
+          <p>Google 的解决方法是原章所称的严格传递依赖模式：检查目标是否引用了未直接声明的依赖，发现后报错，并提供辅助补齐依赖的办法。“严格”约束的是<strong>直接使用应有显式声明</strong>：A 仍可能因为 B 的运行需要而携带 C，但 A 若自己使用 C，就要明确声明这份关系，或通过规则支持的显式导出契约获得访问。</p>
+          <p>修正后的图包含 A 到 B，以及 A 到 C 两条独立依赖。B 此后可以删除自己的 C 依赖，A 依然知道该从哪里获得编码库。构建文件稍长，却把本来隐藏在构建环境里的事实变成了可以维护的信息。图 18-4 把修正前后放到同一次重构下对照：左列的 A 借 B 间接用到 C，B 一删边，A 就失败；右列的 A 直接声明 C，B 可以放心删除。</p>
+          <figure class="concept-figure"><a href="../diagrams/exports/ch18-strict-deps.svg" target="_blank" rel="noopener"><img src="../diagrams/exports/ch18-strict-deps.svg" width="720" height="462" alt="同一次重构中 B 删除对 C 的依赖：隐式写法里 A 只声明依赖 B，却借 B 直接调用 C，B 删边后 A 构建失败；显式写法里 A 同时声明依赖 B 和 C，B 删边后 A 照常构建。"></a><figcaption>图 18-4：箭头 X → Y 表示 X 依赖 Y。实线是 BUILD 中声明的依赖，虚线是未声明的直接使用，交叉线标出 B 重构时删除的边；只有左列的 A 会因此失败。点击<a href="../diagrams/exports/ch18-strict-deps.svg" target="_blank" rel="noopener">查看大图</a>。</figcaption></figure>
+          <p>当前 Bazel Java 规则还支持明确的 <code>exports</code>，这种有意公开的契约应与偶然捎带的传递依赖分开看待；其他语言和规则的严格依赖能力需要分别确认。</p>
+          <p>把 Google 全库的目标改成明确声明依赖，花了数年时间。脚注还特别说明，实际移除多余依赖是另一项工作：显式声明先使依赖可见、可分析，维护者随后才能安全删除冗余边，缩小构建范围。此后，自动检测并补齐缺失依赖的工具降低了持续成本。</p>
+          <aside class="key-point"><p class="key-point-label">核心观点</p><p>隐式传递依赖把上游实现细节变成了下游契约。让直接使用关系显式化，增加的是一次可见的声明成本，换来的是以后能独立重构和删依赖的空间。</p></aside>
+        </section>
+
+        <section id="external-inputs">
+          <h2><span class="section-number">10</span>外部依赖，把变化与信任一起带进构建</h2>
+          <p>外部依赖不随本仓库的提交天然固定。原章主要讨论从产物仓库下载已构建库的情形；现行 Bazel 也支持获取外部源码再参与构建。无论哪种形式，如果依赖声明指向“最新版本”，即使自己的源码没有变化，第二天取回的字节也可能不同。构建即使当场成功，也可能产生难以追踪的行为或性能差异。重现上周的故障时，仅回退自己的代码就不够了。</p>
+          <p>作者因此主张把外部版本明确记录在版本控制中。这里“手动管理”的关键，是每次升级都有一份可检查、可回滚的仓库变更：工具可以发现更新、解析传递依赖和生成清单，再由团队审查并提交；日常构建使用已经确定的解析结果，避免每次运行都重新接受外界的最新选择。</p>
+          <p>版本号表达维护者的命名，<strong>密码学哈希</strong>进一步固定文件内容。若声明了预期 SHA-256，下载字节与其不符时应该拒绝，而不是为了“让构建通过”随手接受新哈希。升级依赖时，版本与内容身份进入同一次受审查变更；回到旧仓库状态时，也能重新指向那时认可的内容。远端若已不再提供这些字节，正确行为可能是明确失败，而不是悄悄改用新版本。</p>
+          <p>原文说 Bazel 要求工作区为每个外部依赖记录哈希。当前官方 <code>http_archive</code> 文档中，<code>sha256</code>／<code>integrity</code> 仍是可选属性，文档同时警告，省略它们会带来安全和环境自足风险。所以，把完整性信息纳入仓库是团队要主动落实的约束，依赖机制、锁定文件和仓库策略都要实际配置。</p>
+          <p>哈希还需要一个信任前提：仓库里保存的预期值应来自团队认可的获取与审核过程。它能够发现“后来取到的文件与已经认可的文件不同”，却无法证明最初认可的依赖没有恶意逻辑、漏洞或不合适的许可证。若攻击者同时修改了文件与团队接受的预期值，单独的哈希比对也无法判断这次修改是否正当。原章说哈希能完全阻止这类安全问题，更准确的说法是：它防止未被接受的内容替换。</p>
+          <p><strong>镜像（mirror）</strong>解决另一部分问题。把批准的依赖保存到组织控制的存储，可以减少公共仓库中断、删除历史版本或临时返回异常文件造成的构建失败。限制正式构建只从受控来源取依赖，还能让引入途径集中可查。镜像承担内容保留和可用性责任，哈希承担内容一致性检查；两者互相补充，镜像本身也需要权限、维护和可信的导入过程。</p>
+          <p><strong>依赖入库（vendoring）</strong>则把依赖源码或二进制直接放进自己的版本库。原章介绍，Google 将第三方库纳入根目录的 <code>third_party</code>，使其与主代码树一起管理。收益是历史输入更容易随仓库取得，也便于统一修改；代价是仓库体积、更新维护和工具能力。原文强调，Google 能这样做，是因为其版本控制系统专为超大规模单一仓库定制；普通项目是否 vendor 少量依赖，可按依赖规模和仓库能力判断。</p>
+        </section>
+
+        <section id="one-version">
+          <h2><span class="section-number">11</span>一个版本的价值，在于降低组合的复杂度</h2>
+          <p>明确写出版本后，仍可能出现同一库多个版本共存的问题。假设报表应用 A 直接使用编码库 v1，服务库 B 后来引入同一个编码库 v2，A 又依赖 B。于是同一个最终程序的两条路径，对同一个库提出了不同要求。这就是本章讨论的<strong>菱形依赖（diamond dependency）</strong>冲突。</p>
+          <p>在 Java 这类共享类路径的场景中，两个版本可能提供相同的类名，却有不同的方法和行为。若最终只选 v1，B 使用的新方法可能缺失；若选 v2，A 依赖的旧行为又未必保持。构建工具可以按照规则挑出一个版本，但“选出了一个确定版本”和“两条路径都兼容这个版本”是两件事。冲突也可能延迟到运行时才显现。</p>
+          <p>Google 因而采用<strong>单一版本规则（One-Version Rule）</strong>：内部代码库通常对同一个第三方依赖统一使用一个选定版本。新增使用者沿用这个共同选择，不必为每一条新依赖重新考虑任意版本组合。升级则成为跨调用方协调和验证的工作，各个目录不再悄悄分叉。</p>
+          <p>这一政策的含义沿用<a href="ch16.html#one-version">第十六章的单一版本与升级过渡解释</a>：受控升级期间可以短暂保留新旧两版，同时禁止新增旧版使用、逐步迁移并最终清理。</p>
+          <p>这项政策需要共同仓库、测试和升级投入支持。单独进程、隔离加载环境或经过重命名的依赖可能允许多个版本共存，因为它们建立了额外的隔离条件，与同一个链接或类加载环境中的混用不同。原章的取舍以 Google 的统一代码库为背景。</p>
+          <p>外部库还会继续声明自己的依赖。自动递归解析让“加入一个库”非常方便，却也可能引入几十项间接依赖，以及其中互相冲突的版本要求。原章主张在全局清单中确定每项外部依赖的版本，并用工具生成初始清单，再把后续变化纳入显式更新。最有价值的控制点是最终解析结果可见、可复核、可重现；自动发现依赖与受控升级完全可以并存。</p>
+          <p>这部分的 Bazel 描述已经过时。原文说 Bazel 不自动下载传递外部依赖，并以 <code>WORKSPACE</code> 为中心说明配置；当前的 Bzlmod 改用 <code>MODULE.bazel</code>，会传递解析 Bazel 模块依赖，并按最小版本选择算法处理版本要求，语言包管理器也可通过模块扩展接入。算法名里的“最小”并非挑最旧的版本：同一兼容性级别的模块，通常选择足以满足图中要求的最高所需版本。</p>
+          <p>原章说 Maven／Gradle 遇到这类冲突时，无法预知最终会得到哪个版本；实际上 Maven 官方文档给出了“最近定义优先，同深度先声明优先”等调解规则，还支持集中管理版本。工具可以自动做出确定选择，团队仍需确认这个选择与兼容性政策一致。现代解析机制改变了依赖图的维护方式，本章关心的升级可追踪、内容固定和组合风险依然存在。</p>
+          <p>还有一种容易混淆的“优化”：为了不反复编译，把自己的内部库发布成带版本的外部二进制，让其他模块下载。原章指出，这会增加发布、上传和升级责任，也让不同组件对应不同源码时点。若目的仅是节省重复计算，远程缓存更直接：保留同一源码快照的内部依赖关系，以动作输入识别可复用结果，无需额外发明一套内部版本发布流程。</p>
+        </section>
+
+        <section id="investment-and-tradeoffs">
+          <h2><span class="section-number">12</span>投入多少，取决于真正需要承担的规模</h2>
+          <p>整章的取舍以规模为前提。一个短期单文件程序，直接调用编译器可能已经足够；某些语言工具本身就覆盖了许多构建职责。任务式工具也可以显著改善组织、依赖解析和自动化。如果现有构建速度、可靠性和维护成本都合适，为了更换模型而迁移，未必值得。</p>
+          <p>随着模块、开发者和机器增多，隐藏状态的代价会上升：新同事反复配置环境，CI 与本地互相不一致，清缓存成为日常仪式，底层小改动触发漫长等待。这些具体问题，才构成投入更完整构建模型的理由。已有项目迁移时，通常还要整理规则、依赖、生成文件和工具链，工作远不止把命令换成 <code>bazel</code>。</p>
+          <p>Google 倾向于新项目从一开始就使用产物式系统，是因为后期迁移成本会随代码和习惯一起增长。这个判断来自其统一基础设施和长期规模需求。对其他团队，更可迁移的原则是尽早保存真实输入、建立清楚边界，把重复计算与不一致问题交给能够理解它们的工具，再按测量结果决定是否需要远程缓存和执行集群。</p>
+          <p>最终，限制局部自由释放了系统层面的选择。工程师少写一段任意读写环境的构建脚本，系统就多一份并行、复用和换机器执行的依据；依赖多一条准确声明，维护者就少一份对隐含关系的猜测。值得信赖的构建把人从清理旧状态、寻找版本和解释机器差异中解放出来，让每一次反馈都更接近正在修改的那份代码。</p>
+        </section>
+
+        <details id="sources" class="source-note">
+          <summary>来源、主题对应与整理说明</summary>
+          <p>依据《Software Engineering at Google》（2020）Abseil 官方公开英文 HTML 版<a href="https://abseil.io/resources/swe-book/html/ch18.html">第 18 章 Build Systems and Build Philosophy</a>，Erik Kuefler 撰写、Lisa Carey 编辑；核查日期 2026-11-06。</p>
+          <ul>
+            <li>01：<a href="https://abseil.io/resources/swe-book/html/ch18.html#purpose_of_a_build_system">Purpose of a Build System</a>、<a href="https://abseil.io/resources/swe-book/html/ch18.html#but_all_i_need_is_a_compilerexclamation">But All I Need Is a Compiler!</a>、<a href="https://abseil.io/resources/swe-book/html/ch18.html#shell_scripts_to_the_rescuequestion_mar">Shell Scripts to the Rescue?</a>。</li>
+            <li>02：<a href="https://abseil.io/resources/swe-book/html/ch18.html#task-based_build_systems">Task-Based Build Systems</a> 及其并行、增量、维护三个子节；Ant 的术语差异见脚注 3。图 18-1 左列的路径问题，对应原章 <a href="https://abseil.io/resources/swe-book/html/ch18.html#difficulty_maintaining_and_debugging_sc">Difficulty maintaining and debugging scripts</a> 列出的第一类常见错误。</li>
+            <li>03：<a href="https://abseil.io/resources/swe-book/html/ch18.html#artifact-based_build_systems">Artifact-Based Build Systems</a>、<a href="https://abseil.io/resources/swe-book/html/ch18.html#a_functional_perspective">A functional perspective</a>、<a href="https://abseil.io/resources/swe-book/html/ch18.html#getting_concrete_with_bazel">Getting concrete with Bazel</a>。</li>
+            <li>04：<a href="https://abseil.io/resources/swe-book/html/ch18.html#tools_as_dependencies">Tools as dependencies</a>、<a href="https://abseil.io/resources/swe-book/html/ch18.html#extending_the_build_system">Extending the build system</a>、<a href="https://abseil.io/resources/swe-book/html/ch18.html#isolating_the_environment">Isolating the environment</a>。</li>
+            <li>05—06：Getting concrete with Bazel 与 <a href="https://abseil.io/resources/swe-book/html/ch18.html#remote_caching">Remote caching</a>。</li>
+            <li>07：<a href="https://abseil.io/resources/swe-book/html/ch18.html#distributed_builds">Distributed Builds</a>、<a href="https://abseil.io/resources/swe-book/html/ch18.html#remote_execution">Remote execution</a>、<a href="https://abseil.io/resources/swe-book/html/ch18.html#distributed_builds_at_google">Distributed builds at Google</a>。2008 年、ObjFS／Forge 的组成与约两倍的速度，均为原章记述的当时情况。</li>
+            <li>08：<a href="https://abseil.io/resources/swe-book/html/ch18.html#using_fine-grained_modules_and_the_oneo">Using Fine-Grained Modules and the 1:1:1 Rule</a>、<a href="https://abseil.io/resources/swe-book/html/ch18.html#minimizing_module_visibility">Minimizing Module Visibility</a>。</li>
+            <li>09：<a href="https://abseil.io/resources/swe-book/html/ch18.html#internal_dependencies">Internal dependencies</a> 及脚注 6。图 18-4 以原章 <a href="https://abseil.io/resources/swe-book/html/ch18.html#transitive_dependencies">Figure 18-5</a> 的 A→B→C 结构为基础，补画了 B 删除依赖时两种写法的对照。</li>
+            <li>10：<a href="https://abseil.io/resources/swe-book/html/ch18.html#making_external_dependencies_determinis">Making external dependencies deterministic</a>、<a href="https://abseil.io/resources/swe-book/html/ch18.html#security_and_reliability_of_external_de">Security and reliability of external dependencies</a>。</li>
+            <li>11：<a href="https://abseil.io/resources/swe-book/html/ch18.html#automatic_versus_manual_dependency_mana">Automatic versus manual dependency management</a>、<a href="https://abseil.io/resources/swe-book/html/ch18.html#the_one-version_rule">The One-Version Rule</a>、<a href="https://abseil.io/resources/swe-book/html/ch18.html#transitive_external_dependencies">Transitive external dependencies</a>、<a href="https://abseil.io/resources/swe-book/html/ch18.html#caching_build_results_using_external_de">Caching build results using external dependencies</a>。</li>
+            <li>12：<a href="https://abseil.io/resources/swe-book/html/ch18.html#timecomma_scalecomma_trade-offs">Time, Scale, Trade-Offs</a>、<a href="https://abseil.io/resources/swe-book/html/ch18.html#conclusion-id00022">Conclusion</a>。</li>
+          </ul>
+          <p>对原章表述的校正：</p>
+          <ul>
+            <li>任务式系统：原章将任意脚本任务的限制推广到任务式系统 → <a href="https://docs.gradle.org/current/userguide/incremental_build.html">Gradle Incremental build</a> 与 <a href="https://docs.gradle.org/current/userguide/build_cache.html">Build Cache</a> 说明任务可以声明输入、输出，并据此做最新状态检查、并行调度及本地／远程缓存 → 本文按工具实际知道并约束了什么来区分，不按工具名称作绝对划分。</li>
+            <li><code>BUILD</code> 加载范围：原章称首次构建会解析工作区内每个 <code>BUILD</code> → <a href="https://bazel.build/run/build">Build programs with Bazel</a> 的 Loading phase 说明只加载请求目标及其传递依赖所需的文件 → 正文按目标的依赖闭包解释加载与分析。</li>
+            <li>沙箱：原章称沙箱内动作不能读取任何未声明文件，并以 LXC 描述 Linux 隔离 → <a href="https://bazel.build/docs/sandboxing">Bazel Sandboxing</a> 说明宿主文件仍可能按绝对路径读取，写入和可选的网络限制随平台与配置不同 → 本文保留沙箱发现隐藏依赖的用途，不把它写成默认完全隔离。</li>
+            <li>跨机器一致：原章概括 Bazel 能保证跨机器结果一致 → <a href="https://bazel.build/remote/caching">Bazel Remote Caching</a> 明列工作区外工具未被追踪等风险，并解释动作缓存与 CAS → 安全复用还需完整输入、受控工具、确定性执行及可信缓存。</li>
+            <li>外部依赖哈希：原章称 Bazel 要求每项外部依赖都有哈希，并称哈希可完全阻止安全问题 → <a href="https://bazel.build/rules/lib/repo/http#http_archive-sha256">HTTP repository rules</a> 把 <code>sha256</code>／<code>integrity</code> 列为可选但强烈建议填写的属性 → 本文区分配置约束、内容完整性与依赖可信性；哈希不能证明已认可的内容本身安全。</li>
+            <li>外部依赖机制：原章用 <code>WORKSPACE</code> 说明配置，并称 Bazel 不自动下载传递外部依赖 → <a href="https://bazel.build/external/migration">Bzlmod Migration Guide</a> 与 <a href="https://bazel.build/external/overview">External dependencies overview</a> 说明 <code>MODULE.bazel</code>、传递模块解析及外部源码依赖，指南记载 Bazel 8 默认禁用旧机制、Bazel 9 将其移除 → 原书示例按历史模型阅读，不作为当前版本的安装教程；外部依赖也不限于预编译产物。</li>
+            <li>Maven 版本冲突与语法：原章说多版本传递依赖无法预知最终版本 → <a href="https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html">Maven Dependency Mechanism</a> 给出版本调解及集中管理规则 → 确定性解析不等于兼容性得到证明。原章还说 Maven／Gradle 改用了无 XML 的语法 → 据 <a href="https://maven.apache.org/guides/introduction/introduction-to-the-pom.html">Introduction to the POM</a>，Maven POM 仍是 XML → 这一合并表述不适用于 Maven，本文未沿用。</li>
+          </ul>
+          <p><code>deps</code>、多个隐式产物与显式 <code>exports</code> 的区别依据 <a href="https://bazel.build/reference/be/java#java_library">Bazel Java Rules</a>。BUILD 片段只做结构说明，未在 Bazel 中实际构建；缓存演示已用 Python 3 运行，输出与正文一致，从键中删去 <code>flags</code> 时确实出现错误命中。</p>
+          <p>报表应用、模块拆分、依赖调整与缓存程序均为本笔记的假设例子，Google 内部的案例与数据均依据原章叙述；<code>T(P)</code> 下界是笔记补充的理想化调度解释。图示均为本笔记原创示意图。本文压缩了原章的长 Ant XML 与命令展开，按主题重组，并非逐段翻译。</p>
+        </details>
+
+        <nav class="chapter-pagination" aria-label="章节翻页"><a class="page-link prev" href="ch17.html" rel="prev"><span class="page-label">← 上一章 · 第 17 章</span><span class="page-title">代码搜索</span></a><a class="page-link next" href="ch19.html" rel="next"><span class="page-label">下一章 · 第 19 章 →</span><span class="page-title">Critique：Google 的代码评审工具</span></a><a class="pagination-home" href="../index.html">书籍概览与目录</a></nav>
+      </article>
+    </div>
+  </main>
+  <footer class="site-footer"><div class="container footer-inner"><span>个人书架 / 中文读书笔记</span><a href="#main">回到顶部 ↑</a></div></footer>
+</body>
+</html>

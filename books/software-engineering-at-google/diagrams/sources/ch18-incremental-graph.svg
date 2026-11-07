@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="390" viewBox="0 0 720 390" role="img" aria-labelledby="title desc">
+  <title id="title">一次公共库变更的增量检查范围</title>
+  <desc id="desc">实线箭头表示产物从被依赖方流向使用方。common 和 codec 都流向 report，report 再流向 app。common 的源码变化后，common、report、app 用虚线框表示需要重新检查；codec 输入未变，可以复用。检查不代表每个动作都必须执行。</desc>
+  <!-- Original editable hand-written SVG; web export is an identical copy. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 15px; fill: var(--muted); }
+    .label { font-size: 20px; font-weight: 600; text-anchor: middle; }
+    .body { font-size: 16px; text-anchor: middle; }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.3; }
+    .check { fill: var(--focus); stroke: var(--accent); stroke-width: 1.8; stroke-dasharray: 7 4; }
+    .flow { fill: none; stroke: var(--line); stroke-width: 1.8; marker-end: url(#arrow); }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker></defs>
+  <rect width="720" height="390" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="28" y="40">沿依赖检查，保留仍然有效的结果</text>
+  <text class="sub" x="28" y="69">箭头：产物流向；右侧目标使用左侧产物</text>
+  <rect class="check" x="32" y="105" width="176" height="84" rx="7"/>
+  <text class="label" x="120" y="137">common</text>
+  <text class="body" x="120" y="168">源码已变化</text>
+  <rect class="node" x="32" y="235" width="176" height="84" rx="7"/>
+  <text class="label" x="120" y="267">codec</text>
+  <text class="body" x="120" y="298">输入未变 · 可复用</text>
+  <rect class="check" x="273" y="170" width="176" height="84" rx="7"/>
+  <text class="label" x="361" y="202">report</text>
+  <text class="body" x="361" y="233">重新检查</text>
+  <rect class="check" x="514" y="170" width="176" height="84" rx="7"/>
+  <text class="label" x="602" y="202">app</text>
+  <text class="body" x="602" y="233">重新检查</text>
+  <path class="flow" d="M208 147H242V193H264"/>
+  <path class="flow" d="M208 277H242V231H264"/>
+  <path class="flow" d="M449 212H505"/>
+  <text class="sub" x="28" y="355">虚线框：本次受影响的检查范围；匹配缓存仍可避免执行</text>
+  <text class="sub" x="28" y="379">未声明的真实依赖会让检查遗漏，进而错误复用旧结果</text>
+</svg>

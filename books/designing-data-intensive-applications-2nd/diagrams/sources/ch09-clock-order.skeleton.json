@@ -1,0 +1,203 @@
+[
+  {
+    "type": "text",
+    "id": "title",
+    "x": 24,
+    "y": 20,
+    "text": "LWW：更大的时间戳，未必是后一次写",
+    "fontSize": 25,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "subtitle",
+    "x": 24,
+    "y": 66,
+    "text": "上方实线表示因果依赖；下方虚线表示复制，不表示到达先后。",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "rectangle",
+    "id": "n1",
+    "x": 24,
+    "y": 142,
+    "width": 296,
+    "height": 118,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.5,
+    "strokeWidth": 1.5,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "节点 1：A 写入\nx = 1\n时间戳 42.004",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "n3",
+    "x": 514,
+    "y": 142,
+    "width": 310,
+    "height": 118,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.5,
+    "strokeWidth": 1.5,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "节点 3：收到 1 后加一\nx = 2\n时间戳 42.003",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "causal",
+    "x": 326,
+    "y": 201,
+    "width": 182,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        182,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.4,
+    "strokeStyle": "solid",
+    "start": {
+      "id": "n1"
+    },
+    "end": {
+      "id": "n3"
+    }
+  },
+  {
+    "type": "text",
+    "id": "causal-label",
+    "x": 346,
+    "y": 166,
+    "text": "先复制 x = 1",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "rectangle",
+    "id": "n2",
+    "x": 228,
+    "y": 392,
+    "width": 394,
+    "height": 118,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.5,
+    "strokeWidth": 1.5,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "节点 2 比较 LWW\n42.004 > 42.003\n保留 1，丢掉后来的加一",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "copy1",
+    "x": 172,
+    "y": 266,
+    "width": 142,
+    "height": 120,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        142,
+        120
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.4,
+    "strokeStyle": "dashed",
+    "start": {
+      "id": "n1"
+    },
+    "end": {
+      "id": "n2"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "copy3",
+    "x": 669,
+    "y": 266,
+    "width": 142,
+    "height": 120,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        -142,
+        120
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.4,
+    "strokeStyle": "dashed",
+    "start": {
+      "id": "n3"
+    },
+    "end": {
+      "id": "n2"
+    }
+  },
+  {
+    "type": "text",
+    "id": "c1",
+    "x": 70,
+    "y": 322,
+    "text": "x=1 / 42.004",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "c3",
+    "x": 646,
+    "y": 322,
+    "text": "x=2 / 42.003",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "note",
+    "x": 24,
+    "y": 554,
+    "text": "B 明确依赖 A；收敛到同一个值，仍可能丢失因果上更新的结果。",
+    "fontSize": 19,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  }
+]

@@ -1,0 +1,347 @@
+[
+  {
+    "type": "text",
+    "id": "title",
+    "x": 24,
+    "y": 18,
+    "text": "全部请求成功，独立双写仍可能分歧",
+    "fontSize": 25,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "subtitle",
+    "x": 24,
+    "y": 62,
+    "text": "同一键 X；甲想写 A，乙想写 B。箭头表示各系统的应用先后。",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "text",
+    "id": "dual",
+    "x": 24,
+    "y": 116,
+    "text": "① 应用分别写两边",
+    "fontSize": 21,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "db-name",
+    "x": 24,
+    "y": 182,
+    "text": "数据库",
+    "fontSize": 21,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "rectangle",
+    "id": "db-a",
+    "x": 174,
+    "y": 160,
+    "width": 184,
+    "height": 74,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "甲写 A",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "db-b",
+    "x": 448,
+    "y": 160,
+    "width": 184,
+    "height": 74,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "乙写 B",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "db-order",
+    "x": 364,
+    "y": 197,
+    "width": 78,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        78,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "text",
+    "id": "db-final",
+    "x": 660,
+    "y": 184,
+    "text": "最终 B",
+    "fontSize": 21,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "idx-name",
+    "x": 24,
+    "y": 304,
+    "text": "索引",
+    "fontSize": 21,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "rectangle",
+    "id": "idx-b",
+    "x": 174,
+    "y": 282,
+    "width": 184,
+    "height": 74,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "乙写 B",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "idx-a",
+    "x": 448,
+    "y": 282,
+    "width": 184,
+    "height": 74,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "甲写 A",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "idx-order",
+    "x": 364,
+    "y": 319,
+    "width": 78,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        78,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "text",
+    "id": "idx-final",
+    "x": 660,
+    "y": 306,
+    "text": "最终 A",
+    "fontSize": 21,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "pause",
+    "x": 174,
+    "y": 384,
+    "text": "甲在数据库写成功后暂停；乙先完成索引写入。",
+    "fontSize": 19,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "line",
+    "id": "separator",
+    "x": 24,
+    "y": 440,
+    "width": 760,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        760,
+        0
+      ]
+    ],
+    "strokeColor": "#66645d",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "text",
+    "id": "cdc-name",
+    "x": 24,
+    "y": 476,
+    "text": "② CDC 从权威提交记录传播",
+    "fontSize": 21,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "rectangle",
+    "id": "db-log",
+    "x": 24,
+    "y": 546,
+    "width": 236,
+    "height": 110,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "数据库\n提交顺序 A → B",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "cdc-log",
+    "x": 302,
+    "y": 546,
+    "width": 196,
+    "height": 110,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "变更流\nA → B",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "index",
+    "x": 540,
+    "y": 546,
+    "width": 244,
+    "height": 110,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "索引依次应用\n最终 B",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "capture",
+    "x": 266,
+    "y": 601,
+    "width": 30,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        30,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "arrow",
+    "id": "propagate",
+    "x": 504,
+    "y": 601,
+    "width": 30,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        30,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "text",
+    "id": "note",
+    "x": 24,
+    "y": 704,
+    "text": "CDC 路径是异步传播，不是跨系统共同事务。\n下游仍需守住同键顺序、重试和删除语义。",
+    "fontSize": 19,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  }
+]

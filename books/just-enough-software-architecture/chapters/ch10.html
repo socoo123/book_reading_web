@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>第 10 章｜代码模型 · Just Enough Software Architecture · 架构提升读书笔记</title>
+  <meta name="description" content="《Just Enough Software Architecture》第十章读书笔记：模型—代码差距、一致性管理、架构显式编码与九组设计意图模式，并核查邮件流水线的阻塞、关闭与线程启动代码。">
+  <link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+  <script src="../../../assets/theme.js"></script>
+  <script src="../../../assets/reader.js" defer></script>
+  <link rel="stylesheet" href="../../../assets/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header reader-header"><div class="container header-inner">
+    <a class="brand" href="../../../index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5.5C8.5 3.8 5.8 3.6 2.5 4.5v14c3.3-.9 6-.7 9.5 1 3.5-1.7 6.2-1.9 9.5-1v-14c-3.3-.9-6-.7-9.5 1Zm0 0v14"/></svg>书架</a>
+    <a class="reader-book-title" href="../index.html" lang="en">Just Enough Software Architecture</a>
+    <div class="theme-control" role="group" aria-label="外观" hidden><button type="button" data-theme-value="system" title="跟随系统"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path class="fill" d="M12 4a8 8 0 0 1 0 16Z"/></svg><span class="sr-only">跟随系统</span></button><button type="button" data-theme-value="light" title="浅色"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.6"/><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21M5.6 5.6l1.6 1.6M16.8 16.8l1.6 1.6M5.6 18.4l1.6-1.6M16.8 7.2l1.6-1.6"/></svg><span class="sr-only">浅色</span></button><button type="button" data-theme-value="dark" title="深色"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.5 14.6A7.8 7.8 0 0 1 9.4 4.5a7.8 7.8 0 1 0 10.1 10.1Z"/></svg><span class="sr-only">深色</span></button></div>
+  </div></header>
+  <main id="main" class="container reader-container">
+    <nav class="breadcrumb" aria-label="当前位置"><ol><li><a href="../../../index.html">书架</a></li><li><a href="../index.html">书籍概览</a></li><li aria-current="page">第 10 章</li></ol></nav>
+    <div class="reading-layout">
+      <aside class="toc"><nav aria-label="本页目录"><h2>本页目录</h2><ul>
+        <li><a href="#four-sources-of-gap">01　从组件走到类，不只是换一种画法</a></li>
+        <li><a href="#rules-and-enumerations">02　列出结构，与规定所有结构都必须遵守的规则</a></li>
+        <li><a href="#managing-consistency">03　一致性要按用途管理，不必把所有图永久画到最细</a></li>
+        <li><a href="#intent-and-model-in-code">04　能工作的解法，还没有交代为什么这样解</a></li>
+        <li><a href="#what-code-should-reveal">05　从三个视图类型，看代码通常隐藏了什么</a></li>
+        <li><a href="#patterns-structure">06　先让组件、连接器和端口有可以指认的位置</a></li>
+        <li><a href="#patterns-behavior">07　把协议、属性、风格和不变量接到这些位置上</a></li>
+        <li><a href="#patterns-module-boundaries">08　依赖与访问限制，不能只靠文件夹看起来整齐</a></li>
+        <li><a href="#patterns-runtime-structure">09　集中装配，让静态定义更容易对应到运行实例</a></li>
+        <li><a href="#email-pipeline">10　邮件处理案例：把密集计算放进可辨认的流水线</a></li>
+        <li><a href="#packages-and-filter">11　包结构和 Filter，把架构角色带进代码</a></li>
+        <li><a href="#pipe-code-check">12　Pipe 的意图很清楚，印刷实现却没有兑现它</a></li>
+        <li><a href="#run-versus-start">13　装配代码里写了 run，并没有启动独立线程</a></li>
+        <li><a href="#intent-must-stay-trustworthy">14　让架构线索可信，比把架构名词写满代码更重要</a></li>
+      </ul><p class="toc-note"><a href="../index.html">← 书籍概览</a></p></nav></aside>
+      <article class="article">
+        <header class="article-header">
+          <p class="eyebrow">READING NOTES / CHAPTER 10</p>
+          <h1>第 10 章｜代码模型</h1>
+          <p class="article-deck"><span lang="en">The Code Model</span> · 让实现保留架构的线索，也检验这些线索是否可信</p>
+        </header>
+        <p><a href="ch09.html">第 9 章</a>把设计组织为边界承诺、内部结构和不同视图。代码模型（code model）继续把这些决定落实到可以执行的具体程度。源代码既是最终交付物，也是开发者表达解决方案的媒介；架构模型只有能够对应到实现，才有助于构造真正的软件。然而，能在代码中找到同名的包、类和方法，并不意味着已经找回了设计。</p>
+        <p>一个类可以实现某个组件的一部分，一个队列可以承担某条连接器的工作，但“所有过滤器只能通过管道通信”“访问这份数据之前必须持锁”，并不只是另一张类清单。本章先解释模型与代码为什么天然不同，再讨论怎样管理两者的一致性，最后用邮件处理系统说明：如何把架构意图留在代码里，以及为什么还要检查这些提示是否与实际行为相符。</p>
+        <details class="mobile-toc"><summary>本页目录 · 14 个小节</summary><nav aria-label="移动端本页目录"><ul>
+          <li><a href="#four-sources-of-gap">01　从组件走到类，不只是换一种画法</a></li>
+          <li><a href="#rules-and-enumerations">02　列出结构，与规定所有结构都必须遵守的规则</a></li>
+          <li><a href="#managing-consistency">03　一致性要按用途管理，不必把所有图永久画到最细</a></li>
+          <li><a href="#intent-and-model-in-code">04　能工作的解法，还没有交代为什么这样解</a></li>
+          <li><a href="#what-code-should-reveal">05　从三个视图类型，看代码通常隐藏了什么</a></li>
+          <li><a href="#patterns-structure">06　先让组件、连接器和端口有可以指认的位置</a></li>
+          <li><a href="#patterns-behavior">07　把协议、属性、风格和不变量接到这些位置上</a></li>
+          <li><a href="#patterns-module-boundaries">08　依赖与访问限制，不能只靠文件夹看起来整齐</a></li>
+          <li><a href="#patterns-runtime-structure">09　集中装配，让静态定义更容易对应到运行实例</a></li>
+          <li><a href="#email-pipeline">10　邮件处理案例：把密集计算放进可辨认的流水线</a></li>
+          <li><a href="#packages-and-filter">11　包结构和 Filter，把架构角色带进代码</a></li>
+          <li><a href="#pipe-code-check">12　Pipe 的意图很清楚，印刷实现却没有兑现它</a></li>
+          <li><a href="#run-versus-start">13　装配代码里写了 run，并没有启动独立线程</a></li>
+          <li><a href="#intent-must-stay-trustworthy">14　让架构线索可信，比把架构名词写满代码更重要</a></li>
+        </ul></nav></details>
+
+        <section id="four-sources-of-gap">
+          <h2><span class="section-number">01</span>从组件走到类，不只是换一种画法</h2>
+          <p>模型—代码差距（model-code gap）首先来自两种描述使用不同的词汇。模块与包有时只差一个名称；组件、连接器、端口与类、方法、字段之间，却往往还差着概念。某个方法调用可能发生在同一组件内部，也可能跨越组件边界。单看“调用了另一个对象的方法”，很难知道它承担哪一种架构角色。</p>
+          <p>因此，把架构图和源代码都转成 UML，也不会自动消除差距。表示法相同，不等于表示的知识相同。代码生成的类图能忠实列出实际定义，却未必说明哪些类共同实现一个组件，哪些调用构成一条事件连接器，以及哪些原本可以调用的地方被架构有意禁止了。</p>
+          <p>第二个差别是抽象程度，而且有两层含义。一个架构元素可以聚合许多代码元素，例如 <a href="ch09.html#yinzer-internals">Yinzer 的联系关系（Contacts）组件</a>由十几个类共同实现；同一个元素的架构说明，也通常只保留少量与当前推理有关的细节，而代码还要继续决定方法、字段、数据结构和执行步骤。架构与代码不是两个完全分离的世界，中间有重叠，但它们选择保留的细节不同。</p>
+          <p>第三个差别是设计承诺的完整程度。设计模型可以先决定采用某种交互方式，或者要求账户查询在 0.25 秒内完成，却暂不决定全部算法与数据结构。代码最终必须补足足以执行的选择。补足不等于兑现：写出了查询算法，并不能只凭它能够运行，就证明这个时间目标在目标负载下成立。</p>
+          <p>这也延续了<a href="ch07.html#design-to-code">第 7 章的精化关系</a>。更具体的实现应当保留既有承诺，但“更具体”与“已经证明符合”是不同的判断。代码可以是源代码本身，也可以是与之同等具体、直接对应实际程序元素的表示；它不因被画成图，就自动回到较高层的设计模型。</p>
+        </section>
+
+        <section id="rules-and-enumerations">
+          <h2><span class="section-number">02</span>列出结构，与规定所有结构都必须遵守的规则</h2>
+          <p>作者认为更深的一层差别，是外延（extensional）与内涵（intensional）的区别。这里可以先不用术语记忆：前者通过列举具体元素说明“有什么”，后者通过一般规则说明“凡是这样的元素，都必须怎样”。</p>
+          <p>例如，“系统包含客户端、订单处理组件和订单存储组件”是在列举组成；“所有过滤器之间的通信都必须经过管道”则在约束所有相关交互，包括以后新加的过滤器。前一种结构通常比较容易对应到实现中的类、对象和装配代码；后一种规则不会因为眼前几个对象刚好这样连接，就自动在程序中留下一个能约束未来修改的声明。</p>
+          <p>书中另一个例子是避免使用厂商专有 API。检查当前代码，可以发现它现在有没有调用某个 API；但没有调用，可能是架构为了可移植性作出的重要决定，也可能只是当前功能碰巧用不到。从现有调用清单里，无法可靠地恢复“今后也不得使用”的意图，更无法仅靠清单知道为什么不许使用。</p>
+          <p>图 10-1 因而把两种对应分开。左侧结构能够通过精化落实到代码，右侧规则则需要额外的表达和检查。组件有自己的实现类，是有用线索；所有跨组件通信都遵守某个限制，是另外一项需要证据的主张。</p>
+          <figure class="concept-figure"><a href="../diagrams/exports/ch10-model-code-gap.svg" target="_blank" rel="noopener"><img src="../diagrams/exports/ch10-model-code-gap.svg" width="720" height="480" alt="设计模型中的组件和连接器可以精化为实现类、队列与装配代码；所有通信只能经过管道这样的通则，需要另外用命名、接口、注释或检查工具保留。已有代码没有旁路，不等于规则已经被声明和保证。"></a><figcaption>图 10-1：实线箭头表示结构的精化对应，虚线箭头表示把规则意图带入实现的额外工作，不代表后一条路径天然无法检查。原创解释图，依据 §10.1、§10.4 与图 10.2—10.3。点击<a href="../diagrams/exports/ch10-model-code-gap.svg" target="_blank" rel="noopener">查看大图</a>。</figcaption></figure>
+          <p>原书用“代码只有外延元素”突出这个问题，也说通则无法直接写进过程式代码。这是对主流语言中架构表达能力的概括，不宜扩大成“程序绝对不能表达任何普遍条件”。本章后面就讨论了断言、契约、类型约束、注解和静态分析。更准确的阅读方式是：普通类与方法定义没有自动承载所有架构规则，尤其是跨许多对象、组件和未来修改的一般约束。</p>
+          <p>差距因此不全是坏事。模型之所以帮助人处理复杂性，正因为它省略细节、表达通则；程序之所以能够执行，正因为它补足具体步骤。为了消灭差距而放弃组件、连接器等抽象，只会把理解负担重新扔回一片类与调用之中。</p>
+          <p>生成代码和模型驱动工程可以在适用领域减少人工映射；语言也可以增加组件、端口等一等概念。作者对模型驱动工程成熟度的判断属于 2010 年背景，不是今天所有工具的调查结论。无论使用什么工具，都应知道它生成或检查了哪些对应，没有表示的意图仍需另行保留。</p>
+          <aside class="key-point"><p class="key-point-label">核心观点</p><p>模型—代码差距不等于模型已经过时。抽象与具体之间本来就有差别；真正需要防止的是：代码不再遵守设计承诺，团队却仍依据旧模型作判断。</p></aside>
+        </section>
+
+        <section id="managing-consistency">
+          <h2><span class="section-number">03</span>一致性要按用途管理，不必把所有图永久画到最细</h2>
+          <p>即使最初模型与实现对应得很好，两者仍会分别演进。开发者添加功能、修复缺陷，模型也会因设计讨论和计划而修改。差距说明它们表达的知识不同，偏离（divergence）则说明这些表达随时间出现了不一致。把两个问题混为一谈，容易误以为只要从代码重新生成一张图，就恢复了全部设计知识。</p>
+          <p>是否必须立刻同步，取决于变化是否影响模型正在支持的判断。新增离线统计功能，未必使线上性能模型失效；多线程代码里很小的一次访问变化，却可能破坏原来的并发模型。重要的不是改动行数，而是模型所依赖的前提是否还成立。</p>
+          <p>原书列出六种常见处理策略，既包括有意识的选择，也包括团队实际上经常发生的情况：</p>
+          <div class="table-scroll"><table><thead><tr><th>策略</th><th>实际含义与代价</th></tr></thead><tbody>
+            <tr><td>忽略偏离</td><td>继续展示旧图，靠熟悉系统的人口头补充变化；知识负担留在人脑中。</td></tr>
+            <tr><td>按需建模</td><td>需要讨论时现场画出当前认识，平时主要依靠开发者记忆。</td></tr>
+            <tr><td>只维护高层模型</td><td>保存变化较慢的主要边界，局部细节在需要时补画。</td></tr>
+            <tr><td>在生命周期节点同步</td><td>在迭代结束、发布或部署等节点核对；若一直延期，策略就只剩愿望。</td></tr>
+            <tr><td>危机时同步</td><td>设计难题、协作阻塞或评审迫使团队重建模型，此时通常最缺时间。</td></tr>
+            <tr><td>持续同步</td><td>尽量随变化更新；细节很多时成本高，适当工具或较高层模型可以降低负担。</td></tr>
+          </tbody></table></div>
+          <p>按需建模不一定低效。如果参与者有共同理解，只为一次局部问题画小图，可以避免维护大量无用材料。但它也要求关键知识确实有人掌握，并能在需要时重建。只维护高层模型同样是合理取舍：客户端—服务器边界可能经历许多方法修改仍然成立，不过模型越粗，能够回答的问题也越有限。</p>
+          <p>危机时恢复模型的困难，不只是缺少逆向工程工具。工具可以找到定义、依赖和调用，却很难告诉团队“哪些调用是架构禁止的”“这个看似多余的隔离层为什么存在”。这些恰好是现有实现不一定完整保存的意图。等到负责者离开或系统出问题时才寻找，往往已经失去最容易取得的解释。</p>
+          <p>作者把选择归结为三件事：工具能够降低多少同步成本，模型包含多细的内容，以及谁在什么时候需要多准确的对应。用于安全判断的模型，通常不能容忍关键访问路径遗漏；列出架构驱动因素的说明，即使部分细节稍旧，也可能仍有价值。模型是帮助解决问题的工具，不是为了保持文档整齐而独立存在的产品。</p>
+        </section>
+
+        <section id="intent-and-model-in-code">
+          <h2><span class="section-number">04</span>能工作的解法，还没有交代为什么这样解</h2>
+          <p>设计意图（design intent）包括开发者对问题的理解、选择某条路径的原因，以及希望未来修改继续保留的性质。作者把解法比作迷宫里一条走得通的路线：路线告诉人怎样抵达终点，却没有交代其他路径为什么被放弃。源代码完整表达了如何执行，也不必然完整表达当初如何判断。</p>
+          <p>在代码里留下意图，并不是什么全新的习惯。变量叫 <code>totalExpenses</code> 比叫 <code>t</code> 更容易理解；一个双击事件通过 <code>highlightText</code> 完成文字高亮，也比把反色操作直接埋进事件处理器，更容易显露“反色是为了高亮”的目的。多一个有意义的方法，增加了少量组织成本，却使效果与意图之间有了稳定联系。</p>
+          <p>契约式设计（design by contract）更进一步，把前置条件、后置条件和对象不变量写出来。调用者能够依赖对外承诺，暂时不打开内部实现。这与边界／内部模型的关系相通：边界越可信，使用者越不必承担内部全部复杂度。相反，名叫查询的方法如果暗中修改状态，读者就不得不继续追进“盒子”里面检查。</p>
+          <p>本章把这些做法分成软机制与硬机制。命名、注释和有意义的组织方式依赖人理解，是软机制；类型、访问控制、契约检查和分析规则能够让机器检查某些承诺，是硬机制。同一个类层次也可以同时发挥两种作用：编译器检查继承与方法兼容，读者则从 <code>Filter</code> 这个名字理解它的架构角色。机器并没有因此理解“过滤器只能通过管道通信”。</p>
+          <p>模型入码原则（model-in-code principle）概括了这一思路：把模型表达在源代码中，有助于理解和演进。普通面向对象程序经常把领域中的账户、地址映射到相应类型；架构显式编码风格（architecturally-evident coding style）则进一步让组件、连接器、风格和约束也显露出来。它需要做一些对“仅仅能运行”而言并非必需的工作，目的是降低后来者重新推断的负担。</p>
+          <p>这不是要求领域类型与类一一对应，也不是声称每多一个包装类就更好。作者承认当时缺乏验证该原则的受控实验，更多依据长期实践与理解成本的推理；“名词比动词稳定”也不是已经普遍证明的定律。应当关心的是，新增表达是否确实让当前的重要知识更容易找到、检查和修改。</p>
+          <p>模型入码还让一种技术债更容易辨认：团队现在对问题的理解变了，代码却仍体现旧理解。原书借 Cunningham 的思路，把这种错位视为技术债的重要来源。它不等于所有技术债的唯一定义；这里的启发是，修正工作可以从“代码越来越难看”走向“哪一部分表示已经不符合我们现在的认识”。</p>
+        </section>
+
+        <section id="what-code-should-reveal">
+          <h2><span class="section-number">05</span>从三个视图类型，看代码通常隐藏了什么</h2>
+          <p><a href="ch09.html#viewtypes-and-instances">模块视图类型</a>最接近源代码，类、接口和数据结构通常比较清楚，但架构层面的类型仍容易不见。一个组件由哪组类组成，某个接口是在对外提供能力，还是在表达对环境的需要，都可能只存在于开发者脑中。依赖限制和合法调用顺序，也不一定能从方法签名直接读出。</p>
+          <p>运行时视图类型更难恢复。看到一个类型，不知道会创建几个实例；找到一段初始化代码，也不知道是否还有另一处分支会创建额外实例。为了恢复运行结构，读者不得不在脑中执行循环、条件和配置加载，再把对象归回组件边界。若组件内部调用与跨边界调用使用完全相同的机制，推断难度还会增加。</p>
+          <p>协议又多加了一层时间状态。<a href="ch12.html#port-instances-protocols">协议（protocol）</a>不只是“有哪些方法”，还包括“当前状态允许调用哪些方法”。如果端口与协议状态都没有显式表示，读者既要模拟对象执行，又要同时记住连接现在处于打开、关闭还是其他状态。一次协议错误可能不是某个方法单独写错，而是合法方法出现在了不合法的顺序中。</p>
+          <p>分配视图类型通常更不能仅凭应用源码推断。同一份程序可以部署在不同机器上，而机器、网络和位置会影响性能等性质。部署说明、清单或配置能够补充这些信息，但必须把它们纳入阅读范围；应用代码中没有写出两台机器，并不说明系统只能部署到一台机器。</p>
+          <p>这三种缺口决定了后面模式的目标：让关键元素可辨认，让通信责任有归处，让静态定义与实际实例之间有容易追踪的对应。不是把每张设计图机械地翻译成一个新类，而是选择那些反复需要恢复、又容易被无意破坏的知识。</p>
+        </section>
+
+        <section id="patterns-structure">
+          <h2><span class="section-number">06</span>先让组件、连接器和端口有可以指认的位置</h2>
+          <p>§10.7 提供的是一组非正式模式，主要面向 Java、C++、C# 一类静态类型面向对象语言。它们常用的手法是具体化（reification）：给一个原本只存在于理解中的概念，安排对象、类型或注解作为表示。下面按九组问题展开；其中把原书分别讨论的模块依赖与模块访问限制合为一组，保留图 10.6 的全部类别，而不是把原表误说成只有九行。</p>
+          <h3>第一类：组件类型与模块—组件对齐</h3>
+          <p>可以用 <code>FooComponent</code> 这样的命名，或者一个 <code>Component</code> 标记接口／基类，让组件类型从大量普通类中显露出来。它的作用不是把组件强行缩成一个类，而是为“一组类共同承担的架构角色”提供一个入口。开发者可以通过类型层次找到组件清单，也能把跨组件的初始化检查、不变量说明和端口引用放到合适位置。</p>
+          <p>组件内部的小对象仍然可以直接协作；跨边界时则通过组件提供的端口或连接器寻找外部能力。这样，普通对象不必自己猜测对外通信应走哪里。只有标记而没有相应组织约定，仍然只是命名提示，不能保证边界真的受到保护。</p>
+          <p>原书还建议让模块边界尽量与组件边界对齐：一个组件由完整模块组成，比从许多模块各取一小片更容易理解。组件可以有自己的子模块，交换数据类型则另有位置。复用库会打破整齐的包含关系，因此“对齐”不是把标准库复制进每个组件，而是让项目能够控制的边界尽量清楚，并显露外部依赖。</p>
+          <h3>第二类：连接器类型</h3>
+          <p>方法调用、共享变量和事件通知既可以用于组件内部，也可以用于组件之间。把跨组件机制表示成 <code>EventBroadcastConnector</code> 或 <code>Pipe</code> 之类的类型，就给“这是一条架构通信路径”留下了可辨认的对象。连接器内部仍然可以调用方法、操作队列或发送网络消息，概念不会因为实现机制普通而消失。</p>
+          <p>更重要的收益，是通信责任能够集中。例如，共享内存的同步规则不再由每个业务组件各自实现，而由连接器统一承担。这样有利于修改通信机制和检查协议，但从本地改为分布式仍会带来失败、延迟等语义变化，不能只因有了连接器类就保证替换透明。若内部对象仍可绕过连接器任意对外通信，这种集中责任就没有真正成立。</p>
+          <h3>第三类：端口类型</h3>
+          <p><a href="ch12.html#ports-types-interfaces">提供端口</a>可以用接口表示，让使用者看到组件对外提供什么；所需端口也可以表示成一个对象或字段，例如 <code>requiredInventoryPort</code>，显露组件依赖环境提供库存能力。这里“所需”是一种架构角色，不是 Java 中另一个与 <code>interface</code> 对称的关键字。</p>
+          <p>显式端口可以把外部能力分组，给协议与约束提供自然位置；提供端口的对象也可以像 Facade 一样遮住内部实现。但简单场景未必需要额外端口类。若已有一个清楚的连接器就能表达交互，再增加三层转发只会增加阅读成本。后面的邮件示例正是有意识地没有为端口另建对象。</p>
+        </section>
+
+        <section id="patterns-behavior">
+          <h2><span class="section-number">07</span>把协议、属性、风格和不变量接到这些位置上</h2>
+          <h3>第四类：协议</h3>
+          <p>有了端口或连接器，协议就不必散落在许多调用者的记忆里。可以在对象中保存协议状态，用状态模式组织转换，遇到非法顺序时记录或拒绝；也可以用注解配合分析工具检查。比较轻量的做法，是至少把合法调用顺序写在端口的文档中，使交互经过同一个位置。</p>
+          <p>例如，一个有关闭状态的管道，必须说明关闭以后还允许不允许读取剩余数据，等待中的读者如何知道已经结束。单独存在 <code>read</code>、<code>write</code>、<code>close</code> 三个方法，并不构成完整协议；布尔字段也只有在操作围绕它正确协作时，才能实现所声明的状态规则。</p>
+          <h3>第五类：属性</h3>
+          <p>连接器是否异步、某个模块依赖哪个语言版本、一个组件需要多少内存，都是模型可能关心的属性。把属性放在注解中，可以供人阅读，也可能供工具分析；把 <code>asynchronous</code> 或 <code>blocking</code> 放进名字，则能直接提示调用者是否需要等待。</p>
+          <p>名字承载一两个关键性质时有帮助，把许多属性塞进一个方法名却会变得笨重。更不能用名字代替实现证据：<code>blockingRead</code> 应当具有清楚的等待语义，<code>AsynchronousSend</code> 也不能仅靠命名就避免阻塞。属性表达越具体，越容易对照实际行为检查。</p>
+          <h3>第六类：风格与模式</h3>
+          <p><code>Visitor</code>、<code>Filter</code>、<code>Client</code> 等名字能唤起共享的设计词汇，减少每次从头解释的成本。用 <code>Filter</code> 基类和 <code>infrastructure.pipeAndFilterStyle</code> 这样的包名，还可以让读者发现一组元素共同属于管道—过滤器风格，而不是偶然出现几个相似名称。</p>
+          <p>但是，风格带来的不只是名字，还有组合约束。过滤器只经管道通信、按适当粒度处理输入，与“有一个 Filter 类”不是同一件事。继承能暴露角色，额外分析或接口限制才能检查部分规则；某些规则仍需通过设计说明与评审理解。</p>
+          <h3>第七类：不变量与约束</h3>
+          <p>一种有力办法，是把约束放进 API 形状中。原书以哈希表为例：要求键和值一起加入，比先加键、以后再补值，更容易维持配对关系。这种设计能排除部分错误，但维护者还需要知道它保护的是什么，才不至于在扩展 API 时重新开出旁路。</p>
+          <p>注释、断言以及 JML、Spec# 一类契约表达，也能留下约束。难点在于架构不变量经常跨多个对象，未必有一个局部方法适合完整检查；有些性质甚至还没有被精确定义。管道—过滤器要求“增量处理”时，到底是每次读一条写一条，还是分成两批就算增量？在没有说明处理粒度与目的之前，加一个断言也无法替团队消除这种含糊。</p>
+        </section>
+
+        <section id="patterns-module-boundaries">
+          <h2><span class="section-number">08</span>依赖与访问限制，不能只靠文件夹看起来整齐</h2>
+          <p>第八类把模块依赖与模块访问限制放在一起，但它们保护的对象不同。依赖规则关心“模块 A 是否允许依赖 B”，访问限制关心“B 内部哪些东西可以被外面使用”。一个类被标为公开，可能只是为了供同一大模块的其他包调用，不代表设计愿意把它变成所有模块都能依赖的稳定接口。</p>
+          <p>语言支持不足时，团队会用注释、<code>InternalFoo</code> 等名字传递限制，也可以用外部分析检查依赖，或把边界约束的执行交给 OSGi 一类框架。这仍然是软硬机制的区别：名字告诉维护者“不应使用”，框架或分析规则才可能在其覆盖范围内拦下违规。工具能检查什么，应当与项目声称的边界一致。</p>
+          <p>本节有明显的时代信息。原书在 2010 年预计 Java 7 将支持模块；最终交付的 Java 平台模块系统是在 Java 9，通过模块声明提供依赖与导出边界等能力。今天阅读时，不应继续沿用“Java 只能靠包名和外部框架表达模块”的笼统说法；但模块声明也不会自动变成所有运行时通信和架构风格规则的验证器。</p>
+          <p>真正值得保留的是判断方法：先说明希望禁止哪一种依赖、隐藏哪一类内部细节，再看语言与工具能否表达。包目录整齐只回答代码被放在哪里，不能单独回答所有允许与禁止的关系。</p>
+        </section>
+
+        <section id="patterns-runtime-structure">
+          <h2><span class="section-number">09</span>集中装配，让静态定义更容易对应到运行实例</h2>
+          <p>第九类处理模块到运行时的映射。若系统在启动时装配，之后配置相对稳定，可以把三种工作集中起来：创建组件与连接器实例，建立连接，启动处理。它们可以分成清楚的方法，不必挤进一个大函数；关键是读者能沿一个入口找到这套安排，而不必在业务逻辑的许多角落搜索。</p>
+          <p>声明式配置可以进一步减少“在脑中执行初始化”的负担。框架读取配置后执行创建、连接和启动，这属于<a href="ch02.html#hoisting-mechanism">第 2 章的架构提升</a>：用统一机制承担原先分散的工作。配置不必然比代码更正确，但元素与连接有了更直接的表示，框架也可能在创建时检查相应规则。</p>
+          <p>动态架构不能只靠一段启动代码说明。节点会加入、离开，连接会建立、解除时，运行配置本来就在变化。作者建议把变化操作保持简单，并明确风格限制哪些配置合法。读者于是可以理解“由这些有限动作在这些约束下变化”，而不是面对一个任何对象都能随时重连的无限猜测题。</p>
+          <p>这些模式还有共同的反面：把真正行为埋在错误位置，原书称为“埋藏的宝藏”（Buried treasure）。名叫 <code>getX()</code> 的方法暗中启动重要工作，或者标出一处职责却把实际实现散到无关位置，都会诱导读者作出错误推断。改名有时足够，有时必须重新分配职责；显式表达的价值建立在提示可信，而不是标签丰富之上。</p>
+          <p>组件框架已经用清单、模块和生命周期表达了某些意图时，不必再机械叠加同样的标记类。框架也会限制可采用的组织方式，应与目标风格相合。即使所有提示都认真保留，重要决策的理由、哪些细节可改、跨组件不变量等内容，仍可能需要代码之外的简短说明；本章从未承诺把完整架构塞回源码。</p>
+        </section>
+
+        <section id="email-pipeline">
+          <h2><span class="section-number">10</span>邮件处理案例：把密集计算放进可辨认的流水线</h2>
+          <p>§10.8 的系统处理重复性来信，例如询问包裹追踪号码的邮件。能够足够有把握地理解请求，就自动作答；理解不了，就交给人工。这是用于讲解架构表达的邮件应答系统，独立于 <a href="ch09.html#constraints-and-styles">Yinzer 的通知邮件机制</a>。原书没有给出分类准确率或处理量测试，也不是在描述现代生成式模型服务。</p>
+          <p>输入先经过清理，去除 HTML 等标记，得到纯文本；随后进行标注，识别主题、发件人、段落、句子、词、账户号、姓名与追踪号等内容。再由多个特征分析环节识别重要信息，最后把分析结果交给分类器，决定是否能够自动处理。</p>
+          <p>其中，特征分析可能有较重的计算成本，数据又天然沿若干处理阶段流动，因此作者选择<a href="ch14.html#pipe-and-filter">管道—过滤器风格</a>，以支持这部分分析并行进行。图 10-2 保留原图的分发、分析与汇合关系，区分“数据怎样流动”与后面需要核查的“线程实际上有没有启动”。</p>
+          <figure class="concept-figure"><a href="../diagrams/exports/ch10-email-pipeline.svg" target="_blank" rel="noopener"><img src="../diagrams/exports/ch10-email-pipeline.svg" width="720" height="604" alt="邮件从输入清理流向内容标注与 MUX 分发，再进入多个特征分析环节，经过 deMUX 汇合后由分类器决定转人工或自动答复。箭头表示数据流，图没有承诺具体分发、关联或线程实现。"></a><figcaption>图 10-2：方框表示处理组件，箭头表示管道中的数据流；省略端口小方块与外层绑定。两个特征分析框代表可扩展的一组分析环节，不表示只有两个线程，也不表示已经测得加速。依据原书图 10.7 原创重绘。点击<a href="../diagrams/exports/ch10-email-pipeline.svg" target="_blank" rel="noopener">查看大图</a>。</figcaption></figure>
+          <p>从图中能得到的是职责与数据路径，不是一个完整并发实现。原书没有给出 MUX／deMUX 的代码，因而邮件怎样分发、各结果怎样对应到同一封信、何时认为已经收齐，都不能只凭汇合线自动推出。管道也没有天然规定消息复制和所有权；这些事项会影响并行分析能否安全成立。</p>
+        </section>
+
+        <section id="packages-and-filter">
+          <h2><span class="section-number">11</span>包结构和 Filter，把架构角色带进代码</h2>
+          <p>原书图 10.8 先通过包结构区分风格基础设施与具体系统，再把组件实现和交换数据类型分开。按原图层次，可以读成：</p>
+          <pre><code class="language-text">Email_Answering_System
+├── infrastructure
+│   └── pipeAndFilterStyle
+└── system
+    ├── components
+    └── interchange
+</code></pre>
+          <p>这使维护者能先找到风格实现，再找到实际处理环节和在它们之间流动的数据。组件包还可以继续按具体组件划分，但目录树并没有表达全部依赖。例如 <code>Pipe</code> 会使用标准库的 <code>java.util.concurrent</code>，这份实现不属于项目自有基础设施目录；<code>interchange</code> 不应反过来依赖组件实现的规则，也不能只靠目录树成立。</p>
+          <p>图 10.9 的 <code>Filter</code> 继承一个空的 <code>Component</code> 基类，并实现 <code>Runnable</code>。空基类主要表达“这是组件”，没有提供业务复用代码；<code>Filter</code> 则提供 <code>run()</code>，把具体工作留给子类实现的 <code>work()</code>。这是模板方法模式：共同入口集中某些执行约定，各处理阶段只实现自己的转换逻辑。</p>
+          <p>这种组织既有提示，也有机制。IDE 可以查找所有 Filter 子类，读者可以看到过滤器家族；共同入口可以统一一部分处理方式。但原页 <code>run()</code> 只是调用 <code>work()</code>，捕获异常后执行 <code>System.exit(1)</code>。它没有创建或启动线程，也没有强制子类必须增量处理、必须只通过管道通信；<code>Runnable</code> 表示任务可交给线程执行，不表示任务自己已经拥有线程。</p>
+          <p>原书希望把并发关注点提升到共同基础设施，让业务过滤器专注自己的工作。这是一项架构意图，不能误写成图 10.9 已经完成的全部保证。原例还把普通异常和中断都汇入进程退出路径，这是一种很粗的示例级失败策略，不宜直接当作过滤器的通用生命周期方案。</p>
+        </section>
+
+        <section id="pipe-code-check">
+          <h2><span class="section-number">12</span>Pipe 的意图很清楚，印刷实现却没有兑现它</h2>
+          <p>显式连接器比一片普通方法调用更容易辨认。图 10.10 把 <code>Pipe&lt;T&gt;</code> 做成继承 <code>Connector</code> 的最终类，内部使用 <code>LinkedBlockingQueue&lt;T&gt;</code>。架构意图是把安全入队、出队和结束协议集中在这一处，使过滤器不必各自实现并发通信。然而，原页的实际代码与文字描述有数处冲突，必须分开阅读。</p>
+          <h3>空队列返回 null，不是等待后续输入</h3>
+          <p>下面是图 10.10 的局部原代码摘录，不是笔记给出的正确实现：</p>
+          <pre><code class="language-java">public T blockingRead() throws InterruptedException {
+    if (myPipe.isEmpty()) return null;
+    T t = myPipe.take();
+    return t;
+}
+public void close() throws InterruptedException {
+    this.isClosed = true;
+}
+</code></pre>
+          <p>注释说没有数据时读取会阻塞，代码却先在队列为空时返回 <code>null</code>。因此，一条仍然打开、稍后可能收到邮件的管道，会立即向读者返回“现在没有值”。若调用者把它解释为流已结束，可能过早退出；若不断重试，则把等待责任重新交给了调用者。这两种后果取决于调用者，原书没有给出完整工作循环，不能假定其中一种已经发生。</p>
+          <p>Java 官方定义中，<code>take()</code> 才是必要时等待元素的操作；原例的空队列分支恰好绕过了它。多读者时还有另一种问题：<code>isEmpty()</code> 与 <code>take()</code> 不是一个原子操作，检查时非空，元素仍可能先被别的读者取走，随后这次 <code>take()</code> 就进入等待。所以这个方法也不能被准确理解为一个可靠的非阻塞 <code>poll()</code>。</p>
+          <h3>关闭状态没有与等待和写入构成完整协议</h3>
+          <p><code>close()</code> 只改普通布尔字段。它没有向队列插入结束信号，也没有唤醒等待中的 <code>take()</code>；Java 的 <code>BlockingQueue</code> 本身并不提供关闭操作。因而，简单删掉空队列判断、直接改为 <code>take()</code>，虽然补上等待，却仍可能在输入结束时一直等待，不能算完整修复。</p>
+          <p>跨线程调用时，<code>isClosed</code> 也没有 <code>volatile</code> 或其他完整同步安排，其他线程不保证可靠观察到这次状态变化。更进一步，写方法先检查 <code>isClosed()</code>、再调用 <code>put()</code>；另一个线程可以在这两步之间关闭管道。即使只把字段改为 <code>volatile</code>，也没有让“检查是否开放并完成写入”成为同一个原子协议动作。若要求关闭成为不再接受写入的边界，就必须明确这类并发操作如何排序。</p>
+          <p>正文还声称关闭以后读或写都会抛异常，但读方法根本没有检查关闭状态：队列有数据仍可读出，队列为空仍返回 <code>null</code>。关闭后排空旧数据本身可以是合理协议，只是它与“关闭后读取抛异常”不是同一份承诺。修正前应先决定：读者何时得到结束，旧数据能否排空，谁负责宣告所有写者结束，以及关闭与在途写入怎样协调，再选择相应机制。</p>
+          <p>这里不另写一套通用并发管道库。结束标记、显式同步与条件等待等办法都需要明确各自适用的读写者数量和生命周期；没有这些前提，给出一个看似简短的替代类，只会把遗漏藏到另一处。当前足以确认的纠错是：原示例并未实现它宣称的阻塞与关闭语义，线程安全队列也不会自动使整个包装协议正确。</p>
+          <h3>安全传递引用，不等于替业务管理消息所有权</h3>
+          <p>原书自己已经提醒：连接器没有复制消息。发送者把某个对象入队以后，如果仍持有引用并修改它，就可能干扰接收者。官方队列的内存一致性保证覆盖入队前的动作与另一个线程取得该元素后的动作，不替发送后无约束的并发修改建立安全协议。不可变消息、明确的所有权转移或适当复制，是需要另行选择的设计，不是队列名称的附赠保证。</p>
+          <p>还有一个容量边界。原例使用无参 <code>LinkedBlockingQueue</code>，默认容量为 <code>Integer.MAX_VALUE</code>，并没有配置一个实用的小容量上限。<code>put()</code> 的 API 确实允许因满而等待，但不能据此声称原系统已经有合适的背压或内存预算；积压可能先消耗大量内存。这是容量设计的缺口，不是该队列没有遵守自己的 API。</p>
+          <p>这些检查不是在否定“把并发责任集中到连接器”的思路。恰恰因为所有过滤器都依赖同一基础设施，集中实现的契约必须先成立。架构提升减少重复处理，也使共享缺陷具有更广的影响；架构意图与实现验证需要在同一处接上。</p>
+        </section>
+
+        <section id="run-versus-start">
+          <h2><span class="section-number">13</span>装配代码里写了 run，并没有启动独立线程</h2>
+          <p>图 10.11 把创建管道、创建过滤器和启动过滤器放到相邻方法，确实使运行结构更容易阅读。但它的启动片段实际写的是：</p>
+          <pre><code class="language-java">filterCleanup.run();
+filterTagging.run();
+</code></pre>
+          <p>结合图 10.9，<code>Filter.run()</code> 只是普通方法：在当前调用线程里执行 <code>work()</code>，返回之后才会执行下一句。若第一个工作过程持续等待输入或一直运行，第二个甚至还不会开始。类实现了 <code>Runnable</code>，并不会改变直接调用方法的语义，因此原片段与“每个过滤器在自己的线程中执行”的描述不一致。</p>
+          <p>若要实现书中所说的一过滤器一线程，最小的启动修正可以写成下面这样。<strong>这是笔记补充的启动片段</strong>，假定两项过滤器实例及其管道已创建并正确连接，不是完整邮件程序：</p>
+          <pre><code class="language-java">Thread cleanupThread = new Thread(filterCleanup, "email-cleanup");
+Thread taggingThread = new Thread(filterTagging, "email-tagging");
+cleanupThread.start();
+taggingThread.start();
+</code></pre>
+          <p>Java 的 <code>Thread.start()</code> 才会安排新线程执行任务，与启动它的线程并发运行；它不保证任务立刻开始，也不保证两个任务实际同时占用不同处理器。完整系统还要安排等待结束、中断与失败处理。尤其不能把这个启动修正理解成前面 Pipe 关闭与消息共享问题也一起解决了。</p>
+          <p>笔记已在 Java 21.0.2 中用最小替身任务检查线程身份：直接 <code>run()</code> 记录的是调用线程，通过 <code>new Thread(...).start()</code> 记录的是新建线程。另复现原 Pipe，确认开放空队列返回 <code>null</code>、关闭后仍能取出已有数据、同一线程顺序执行的关闭后写入会被拒绝。可见性与复合操作风险依据语言规范与允许的交错分析，不把一次运行没有遇到竞态当作安全证明。</p>
+          <p>装配的组织方式与执行的正确性由此得到清楚区分：集中初始化帮助人看懂实例与连接，但并不保证没有其他地方创建实例，也不保证启动方法真的启动了线程。两者都需要与代码实际语义对应。</p>
+        </section>
+
+        <section id="intent-must-stay-trustworthy">
+          <h2><span class="section-number">14</span>让架构线索可信，比把架构名词写满代码更重要</h2>
+          <p>本章的三条线索最终汇合。模型—代码差距解释为什么只读源代码经常找不回全部架构；一致性管理决定哪些对应必须及时核对；架构显式编码则把值得长期保留的一部分知识带到维护者每天接触的位置，减少重新恢复的成本。</p>
+          <p>邮件示例既展示这种方法的价值，也展示它的边界。包名、Filter 和 Pipe 让风格与职责清楚可见，集中装配帮助读者把类型接到实例；但 <code>blockingRead</code>、关闭状态和 <code>run()</code> 的实际行为，又提醒我们提示可能与承诺分离。能一眼找到问题发生在哪里，本身是显式结构的收益；名字清楚不能替代问题已被修复的证据。</p>
+          <aside class="key-point"><p class="key-point-label">核心观点</p><p>架构显式编码的目标，是让重要角色、规则和责任既容易辨认，又与实现相符。能由 API 或工具约束的部分交给机制，需要人理解的理由留下清楚说明；只保留对当前理解与演进真正有帮助的表达。</p></aside>
+          <p>因此，不必为每个架构词汇都创建一个类，也不必要求所有图永久与所有实现细节逐行同步。先识别当前风险和重要承诺，再决定哪些放进类型与接口，哪些集中到基础设施，哪些需要独立说明和检查。下一章会继续讨论<a href="ch11.html#effective-encapsulation">封装与划分</a>；有了本章的视角，就能把“边界应该清楚”进一步追问成“代码让谁看见了什么，又实际阻止了什么”。</p>
+        </section>
+
+        <details id="sources" class="source-note">
+          <summary>来源、原书对应与核查说明</summary>
+          <p>依据 George Fairbanks，<em>Just Enough Software Architecture: A Risk-Driven Approach</em>，Marshall &amp; Brainerd，2010 年 8 月首次印刷，ISBN <code>978-0-9846181-0-1</code>。已完整通读用户全书 PDF 第 10 章章首与 §10.1—§10.9；本章没有另列编号脚注。全章正文为 PDF 页序 185—212／印刷页 167—194，最后一页仍有正文。中文标题与术语为笔记译法；书目信息见<a href="https://www.georgefairbanks.com/book/">作者官网</a>。核查日期：2026-11-06。</p>
+          <ul>
+            <li>01—02：§10.1（印刷页 167—171），图 10.1—10.3。四种差别、内涵／外延区分、厂商 API 与 Contacts 映射均据原文；“代码能表达某些约束”的限定同时对照 §10.4、§10.7，不把作者的架构表达概括扩大成语言逻辑能力的绝对结论。图 10.3 已回看 PDF 页序 188／印刷页 170。</li>
+            <li>03：§10.2（171—173），图 10.4—10.5。保留六种同步策略及工具、细节程度、容忍偏离三个选择因素。性能模型与离线统计、多线程小改动来自原书，未补造维护成本统计。</li>
+            <li>04：§10.3—§10.5（174—178）。设计意图、命名、契约、软硬机制、模型入码与技术债据此展开。原书对受控实验、名词稳定性的保留也予以保留；未把领域驱动设计简化为普遍反对纸面文档的规则，未另行通读所引延伸著作。</li>
+            <li>05：§10.6（178—180）。模块／运行时／分配视图类型的表达缺口，与第 9 章术语一致；部署配置为补充阅读范围的解释，不归称为单靠应用源码已经表达的事实。</li>
+            <li>06—09：§10.7（180—187），图 10.6；原表 PDF 页序 199／印刷页 181 已回看，实际有十行。本文将模块依赖与模块访问限制合为一组，按九类组织，同时保留正文的模块—组件对齐、运行时映射、反模式、框架及局限。原书连接器段落把可用标记接口举为 <code>Component</code>，与其角色及本章后例的 <code>Connector</code> 不一致；本文按连接器角色说明，不复制这个容易混淆的名字。未把替换连接器解释为分布式语义天然透明。</li>
+            <li>10—11：§10.8（187—190），图 10.7—10.9；已回看 PDF 页序 205、207、208／印刷页 187、189、190。核对 MUX／deMUX、各处理阶段、包结构、Filter 的模板方法与异常处理。原书没有给出完整邮件处理、分发与汇合实现，未补造吞吐量、分类准确率和线程配置。</li>
+            <li>12：§10.8、图 10.10，PDF 页序 209—210／印刷页 191—192 原页已回看。原注释承诺空时阻塞 → 原代码在空时直接返回 <code>null</code> → 不能把它当作可靠阻塞读取。原正文称关闭后读写均抛异常 → 读方法没有关闭检查 → 应先澄清排空与结束协议。普通关闭字段、关闭与写入的非原子组合、无结束通知，是另行按 Java 语义确认的实现缺陷；不声称已提供修复后的 Pipe 库。</li>
+            <li>13：图 10.9、图 10.11，PDF 页序 208、211／印刷页 190、193 已回看。原文称每过滤器独立线程 → 启动片段却直接调用普通 <code>run()</code> → 笔记以 <code>Thread.start()</code> 说明最小启动修正，并明确不是整套并发实现的修复。</li>
+            <li>14：§10.9（193—194）及全章收束。两图均为原创解释图，可编辑源为 <code>ch10-model-code-gap.svg</code>、<code>ch10-email-pipeline.svg</code>，保存在本书 <code>diagrams/sources/</code>，与网页导出副本一致。</li>
+          </ul>
+          <p>补充核查依据，均核查于 2026-11-06：</p>
+          <ul>
+            <li><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/BlockingQueue.html">Oracle Java SE 21：BlockingQueue</a>，<code>take()</code>／<code>put()</code> 的等待、队列不接受 <code>null</code>、不内置关闭操作，以及入队／取出间的内存一致性保证。</li>
+            <li><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/LinkedBlockingQueue.html">Oracle Java SE 21：LinkedBlockingQueue</a>，无参构造默认容量为 <code>Integer.MAX_VALUE</code>；不把它解释为有实际内存预算的背压配置。</li>
+            <li><a href="https://docs.oracle.com/javase/specs/jls/se21/html/jls-17.html#jls-17.4.5">Java Language Specification SE 21，§17.4.5</a>，数据竞争、happens-before 与 <code>volatile</code> 可见性；可见性不等于多步操作原子性。</li>
+            <li><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Thread.html#start()">Oracle Java SE 21：Thread</a>，<code>start()</code> 安排独立执行，与普通调用 <code>Runnable.run()</code> 区分。最小运行在 Java 21.0.2 验证原 Pipe 的三种读取／关闭情形、顺序关闭后写入拒绝和 <code>run()</code>／<code>start()</code> 的线程身份；不是并发正确性的穷举证明。</li>
+            <li><a href="https://openjdk.org/jeps/261">OpenJDK JEP 261：Module System</a>，明确交付版本为 Java 9；用于校正 §10.7 对 Java 7 模块支持的历史预期，不将后来的模块系统归入 2010 年原书已有能力。</li>
+          </ul>
+        </details>
+
+        <nav class="chapter-pagination" aria-label="章节翻页"><a class="page-link prev" href="ch09.html" rel="prev"><span class="page-label">← 上一章 · 第 9 章</span><span class="page-title">设计模型</span></a><a class="page-link next" href="ch11.html" rel="next"><span class="page-label">下一章 · 第 11 章 →</span><span class="page-title">封装与划分</span></a><a class="pagination-home" href="../index.html">书籍概览与目录</a></nav>
+        <p class="source-note"><a href="../guide.html">全书导航：术语、案例与来源</a></p>
+      </article>
+    </div>
+  </main>
+  <footer class="site-footer"><div class="container footer-inner"><span>个人书架 / 中文读书笔记</span><a href="#main">回到顶部 ↑</a></div></footer>
+</body>
+</html>

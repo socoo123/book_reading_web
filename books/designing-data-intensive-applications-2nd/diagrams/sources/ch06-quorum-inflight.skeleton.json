@@ -1,0 +1,326 @@
+[
+  {
+    "type": "text",
+    "id": "title",
+    "x": 20,
+    "y": 20,
+    "text": "未完成写：两次 quorum 读仍可能倒退",
+    "fontSize": 25,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "sub",
+    "x": 20,
+    "y": 62,
+    "text": "n=3，w=2，r=2；读响应前不等待写回修复。",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "text",
+    "id": "head-A",
+    "x": 315,
+    "y": 104,
+    "text": "A",
+    "fontSize": 23,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "head-B",
+    "x": 485,
+    "y": 104,
+    "text": "B",
+    "fontSize": 23,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "head-C",
+    "x": 655,
+    "y": 104,
+    "text": "C",
+    "fontSize": 23,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "row-0",
+    "x": 20,
+    "y": 161,
+    "text": "① 写仅到 A\n尚未取得两个确认",
+    "fontSize": 19,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "rectangle",
+    "id": "A-0",
+    "x": 275,
+    "y": 152,
+    "width": 125,
+    "height": 75,
+    "strokeColor": "#386d74",
+    "backgroundColor": "transparent",
+    "fillStyle": "solid",
+    "roughness": 0.7,
+    "strokeWidth": 1.5,
+    "strokeStyle": "dashed",
+    "label": {
+      "text": "A = 1",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "B-0",
+    "x": 445,
+    "y": 152,
+    "width": 125,
+    "height": 75,
+    "strokeColor": "#386d74",
+    "backgroundColor": "transparent",
+    "fillStyle": "solid",
+    "roughness": 0.7,
+    "strokeWidth": 1.5,
+    "strokeStyle": "dashed",
+    "label": {
+      "text": "B = 0",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "C-0",
+    "x": 615,
+    "y": 152,
+    "width": 125,
+    "height": 75,
+    "strokeColor": "#386d74",
+    "backgroundColor": "transparent",
+    "fillStyle": "solid",
+    "roughness": 0.7,
+    "strokeWidth": 1.5,
+    "strokeStyle": "dashed",
+    "label": {
+      "text": "C = 0",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "step-0",
+    "x": 110,
+    "y": 238,
+    "width": 0,
+    "height": 47,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        47
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid",
+    "endArrowhead": "arrow"
+  },
+  {
+    "type": "text",
+    "id": "row-1",
+    "x": 20,
+    "y": 311,
+    "text": "② R1 读取 A、B\n返回 1；修复未完成",
+    "fontSize": 19,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "rectangle",
+    "id": "A-1",
+    "x": 275,
+    "y": 302,
+    "width": 125,
+    "height": 75,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.7,
+    "strokeWidth": 1.5,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "A = 1",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "B-1",
+    "x": 445,
+    "y": 302,
+    "width": 125,
+    "height": 75,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.7,
+    "strokeWidth": 1.5,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "B = 0",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "C-1",
+    "x": 615,
+    "y": 302,
+    "width": 125,
+    "height": 75,
+    "strokeColor": "#386d74",
+    "backgroundColor": "transparent",
+    "fillStyle": "solid",
+    "roughness": 0.7,
+    "strokeWidth": 1.5,
+    "strokeStyle": "dashed",
+    "label": {
+      "text": "C = 0",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "step-1",
+    "x": 110,
+    "y": 388,
+    "width": 0,
+    "height": 47,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        47
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid",
+    "endArrowhead": "arrow"
+  },
+  {
+    "type": "text",
+    "id": "row-2",
+    "x": 20,
+    "y": 461,
+    "text": "③ 随后 R2 读 B、C\n返回 0",
+    "fontSize": 19,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "rectangle",
+    "id": "A-2",
+    "x": 275,
+    "y": 452,
+    "width": 125,
+    "height": 75,
+    "strokeColor": "#386d74",
+    "backgroundColor": "transparent",
+    "fillStyle": "solid",
+    "roughness": 0.7,
+    "strokeWidth": 1.5,
+    "strokeStyle": "dashed",
+    "label": {
+      "text": "A = 1",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "B-2",
+    "x": 445,
+    "y": 452,
+    "width": 125,
+    "height": 75,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.7,
+    "strokeWidth": 1.5,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "B = 0",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "C-2",
+    "x": 615,
+    "y": 452,
+    "width": 125,
+    "height": 75,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.7,
+    "strokeWidth": 1.5,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "C = 0",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "text",
+    "id": "legend",
+    "x": 20,
+    "y": 565,
+    "text": "实线格：本次读响应　虚线格：未入本次读 / 尚未完成写",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "text",
+    "id": "why",
+    "x": 20,
+    "y": 610,
+    "text": "新写只有一份；不能套用“写已在 w 个副本完成”的前提。",
+    "fontSize": 19,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  }
+]

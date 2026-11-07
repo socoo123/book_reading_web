@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>第 16 章｜版本控制与分支管理 · Software Engineering at Google · 架构提升读书笔记</title>
+  <meta name="description" content="《Software Engineering at Google》第十六章读书笔记：理解版本控制、单一事实来源、主干开发与发布分支，以及 Piper、One-Version、依赖分叉和虚拟单仓库背后的协作成本。">
+  <link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+  <script src="../../../assets/theme.js"></script>
+  <script src="../../../assets/reader.js" defer></script>
+  <link rel="stylesheet" href="../../../assets/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header reader-header"><div class="container header-inner">
+    <a class="brand" href="../../../index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5.5C8.5 3.8 5.8 3.6 2.5 4.5v14c3.3-.9 6-.7 9.5 1 3.5-1.7 6.2-1.9 9.5-1v-14c-3.3-.9-6-.7-9.5 1Zm0 0v14"/></svg>书架</a>
+    <a class="reader-book-title" href="../index.html" lang="en">Software Engineering at Google</a>
+    <div class="theme-control" role="group" aria-label="外观" hidden><button type="button" data-theme-value="system" title="跟随系统"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path class="fill" d="M12 4a8 8 0 0 1 0 16Z"/></svg><span class="sr-only">跟随系统</span></button><button type="button" data-theme-value="light" title="浅色"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.6"/><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21M5.6 5.6l1.6 1.6M16.8 16.8l1.6 1.6M5.6 18.4l1.6-1.6M16.8 7.2l1.6-1.6"/></svg><span class="sr-only">浅色</span></button><button type="button" data-theme-value="dark" title="深色"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.5 14.6A7.8 7.8 0 0 1 9.4 4.5a7.8 7.8 0 1 0 10.1 10.1Z"/></svg><span class="sr-only">深色</span></button></div>
+  </div></header>
+  <main id="main" class="container reader-container">
+    <nav class="breadcrumb" aria-label="当前位置"><ol><li><a href="../../../index.html">书架</a></li><li><a href="../index.html">书籍概览</a></li><li aria-current="page">第 16 章</li></ol></nav>
+    <div class="reading-layout">
+      <aside class="toc"><nav aria-label="本页目录"><h2>本页目录</h2><ul>
+        <li><a href="#history-and-atomicity">01　可追踪的工程历史</a></li>
+        <li><a href="#centralized-and-distributed">02　集中式与分布式</a></li>
+        <li><a href="#source-of-truth">03　单一事实来源</a></li>
+        <li><a href="#work-in-progress">04　在制工作与分支成本</a></li>
+        <li><a href="#trunk-based-development">05　小步集成与主干稳定</a></li>
+        <li><a href="#release-branches">06　发布分支的时间切片</a></li>
+        <li><a href="#piper-and-policy">07　Piper 的工具与约定</a></li>
+        <li><a href="#one-version">08　One-Version 与依赖组合</a></li>
+        <li><a href="#migration-and-compatibility">09　升级过渡与长期兼容</a></li>
+        <li><a href="#monorepo-and-virtual">10　单仓库与虚拟单仓库</a></li>
+      </ul><p class="toc-note"><a href="../index.html">← 书籍概览</a></p></nav></aside>
+      <article class="article">
+        <header class="article-header">
+          <p class="eyebrow">READING NOTES / CHAPTER 16</p>
+          <h1>第 16 章｜版本控制与分支管理</h1>
+          <p class="article-deck"><span lang="en">Version Control and Branch Management</span> · 架构提升读书笔记</p>
+        </header>
+        <p>保存一份代码很容易，让许多人在不同时间修改它，并持续知道哪些修改已经成为共同成果，才是版本控制要解决的工程问题。一个修复可能已经保存在某位同事的电脑里，却还没有进入团队主干；一个新功能可能在自己的分支上测试通过，却还没有和别人正在改变的系统一起运行。这些差别，决定了项目能否可靠地继续向前。</p>
+        <p>Titus Winters 在本章讨论的重点，是版本控制工具之上的协作约定：以哪里为准，在什么时候集成，依赖哪个版本，以及哪些旧版本值得继续维护。Google 的超大单仓库是其中一种实现。贯穿全章的原则则更普遍：让共同开发尽早收敛到清楚的状态，减少团队长期承担的平行版本与组合选择。</p>
+        <details class="mobile-toc"><summary>本页目录 · 10 个小节</summary><nav aria-label="移动端本页目录"><ul>
+          <li><a href="#history-and-atomicity">01　把文件的时间，变成可追踪的工程历史</a></li>
+          <li><a href="#centralized-and-distributed">02　集中式与分布式，改变的是提交发生在哪里</a></li>
+          <li><a href="#source-of-truth">03　单一事实来源，让“完成”有共同含义</a></li>
+          <li><a href="#work-in-progress">04　未提交的工作，也在积累分支成本</a></li>
+          <li><a href="#trunk-based-development">05　用小步集成维护主干的稳定</a></li>
+          <li><a href="#release-branches">06　发布分支保留的是已交付的时间切片</a></li>
+          <li><a href="#piper-and-policy">07　Piper 的规模，来自工具与约定共同配合</a></li>
+          <li><a href="#one-version">08　One-Version 让依赖重新能够自由组合</a></li>
+          <li><a href="#migration-and-compatibility">09　升级可以过渡，长期兼容需要单独付费</a></li>
+          <li><a href="#monorepo-and-virtual">10　单仓库是一种实现，统一协作才是目标</a></li>
+        </ul></nav></details>
+
+        <section id="history-and-atomicity">
+          <h2><span class="section-number">01</span>把文件的时间，变成可追踪的工程历史</h2>
+          <p><strong>版本控制系统（Version Control System，VCS）</strong>记录文件的修订，以及理解这些修订所需的历史和元数据。保存这些内容的受管理集合称为<strong>仓库（repository）</strong>；工程师实际编辑、编译和测试的那份文件则通常位于工作副本或工作区。对于 Git 这样的分布式系统，本地通常同时有仓库和工作区，两者的职责仍然不同。</p>
+          <p>原书把普通文件系统概括为“文件名对应内容”，把版本控制进一步概括为“文件名、时间和分支共同确定内容”。这是帮助理解的模型：我们需要的不仅是文件现在的样子，还包括某次发布时的样子、某个实验方向的样子，以及它们如何演变到今天。实际使用时，通常用明确的修订标识定位历史，而不依赖一台机器的墙上时钟去判断谁更新。</p>
+          <p>作者从没有 VCS 的协作推导出它的必要性。小团队起初可以互相发送项目副本，很快就会遇到“最终版”“最终修改版”“某人的最终版”之间谁为准的问题。把文件搬到共享目录，虽然统一了存放位置，却会让一个人尚未完成的编辑直接影响另一个人的构建。接着，团队会约定谁能改哪个文件，再想办法记录改了哪里、怎样合并。沿着这条路走下去，其实正在重新发明版本控制。</p>
+          <p>早期按文件加锁的办法能避免两个人同时写，却会把并行工作变成等待。现代系统更多依赖独立工作副本、基准修订和合并：先允许各人推进，再把变化接回共同历史。与此同时，一个逻辑修改经常跨越多个文件，例如同时调整接口定义、实现和调用方。<strong>原子提交（atomic commit）</strong>使这组修改作为整体被接受或拒绝，避免公共仓库只留下其中半组。</p>
+          <p>这里要把两种保证分开。原子性回答“这一批修改是否一起进入仓库”，并发检查与合并回答“怎样保留双方的修改”。原章开头把两者连在一起讲，读起来容易像是原子提交本身就能防止覆盖。实际上，VCS 记录共同基线，具体系统再用过期检查、合并和引用更新规则处理并发；一个人错误地解决冲突，仍然可能把别人的逻辑改丢。提交成功，也不代表程序行为正确。</p>
+          <p>当项目跨越时间，历史还提供了其他价值：追踪缺陷何时引入，理解某个取舍的理由，核对第三方代码的来源，关联评审与变更。作者也注意到提交这一动作对人的影响——写清楚这次做了什么，会促使工程师把散乱编辑整理成可理解的工作单元。版本控制由此既记录合作，也给合作提供节奏。</p>
+        </section>
+
+        <section id="centralized-and-distributed">
+          <h2><span class="section-number">02</span>集中式与分布式，改变的是提交发生在哪里</h2>
+          <p><strong>集中式 VCS</strong>把正式提交汇入一个中央仓库，工程师通过工作副本与它协作。Subversion 是原书使用的代表之一。<strong>分布式 VCS（DVCS）</strong>则允许多个仓库各自形成提交历史；以 Git 为例，克隆后可以在本地提交，再把提交推送到另一个仓库。两者最重要的概念差别，是哪里具有接受提交、保存历史的能力。</p>
+          <p>这与服务器用了几台机器无关。一个中央版本控制服务可以由许多机器共同实现，依然向用户提供集中式提交模型；许多人各自拥有 Git 仓库，也可以共同约定一个托管仓库为正式入口。工具的数据与操作模型，和组织的权威安排，是两个不同维度。</p>
+          <p>分布式模型对离线工作、跨组织协作很有帮助。工程师不必先取得同一台中央服务器的提交权限，就能保存实验、交换修改，或者形成下游发行版。其历史也不必是一条直线：两边可以从共同祖先分别前进，随后再合并。因此，要判断某份代码是否包含另一份代码的全部工作，需要查看祖先关系与实际差异，提交日期说明不了问题。</p>
+          <p>原书认为，现代 VCS 的基本能力相当，选择时更应关注工作流、性能、维护成本和已有经验。它给普通场景的朴素建议是优先考虑 Git，特殊需求再用数据评估。Google 自己使用定制系统，是因为其代码规模、使用者规模与历史依赖都很特殊。</p>
+          <p>原章担心 DVCS 要把完整历史和全部文件传到本地，这一点要结合今天的工具来读。Git 已提供浅克隆、部分克隆和稀疏检出，分别用来减少取得的历史、暂缓下载部分对象、缩小工作区中检出的文件范围。三者作用不同，也消除不了大型仓库的全部成本，但完整下载已不再是使用 Git 的必要前提。</p>
+          <p>另一个术语细节是 <strong>Git 的 <code>HEAD</code> 不等于主干</strong>。它通常指向当前检出的分支，在分离头指针状态下直接指向某个提交。原书泛指主线最新状态时混用 head、default、trunk；下文统一用“主干”表示团队约定的主要集成线，用具体修订表示某次确定的状态。</p>
+        </section>
+
+        <section id="source-of-truth">
+          <h2><span class="section-number">03</span>单一事实来源，让“完成”有共同含义</h2>
+          <p>VCS 能回答某个仓库包含哪些提交，却不会替组织决定哪些修改已经被正式接受。<strong>单一事实来源（Source of Truth）</strong>补上的就是这个约定：对于当前协作范围，明确哪一个仓库的哪一条主干，是大家开始新工作与交付集成结果的共同依据。</p>
+          <p>原书用一个没有这个约定的团队设想说明后果。工程师互相拉取修改，各自都有精细的历史记录；到了发布时，仍有人需要逐一确认每个人最近几周完成了什么、候选版本有没有包含所有相关工作。工具知道“这个提交在不在这里”，与组织知道“应该完成的修改是不是都已经到这里”，是两件事。人数增加后，靠记忆、聊天和签字维持后一件事，会不断增加协调劳动。</p>
+          <p>假设报表团队约定中央仓库的 <code>main</code> 是共同主干。小林在本地完成超时修复，只表示工作已经保存；通过评审与必要测试、进入这个仓库的 <code>main</code>，才表示修复已经成为团队后续开发的基础。发布工具和新同事因此有明确入口，不用先询问谁的电脑上有最新版本。至于这一修订能否直接部署，还要由发布验证和交付策略决定。</p>
+          <p>这个约定允许有层次。原书以 Linux 内核为例：某个发行版组织可以有自己接受补丁的正式仓库，上游维护者也有自己的权威来源。下游工程师先把修改送入本组织的集成线，再按流程向上游提交，并不制造矛盾。重要的是在每个协作边界内，提交去向和接受标准都清楚，不让开发者在几个同样“正式”的入口之间猜测。</p>
+          <p>主干叫什么并不关键。某个项目确实可以把名为 <code>development</code> 的分支当作正式集成线，只是需要把默认配置、文档和工具都对齐。真正降低成本的，是大家共享同一个完成定义。</p>
+          <aside class="key-point"><p class="key-point-label">核心观点</p><p>版本控制保存修改的事实，组织约定修改何时成为共同事实。明确一个协作范围内的权威仓库与主干，能把逐人确认的工作，转化成围绕共同状态的协作。</p></aside>
+        </section>
+
+        <section id="work-in-progress">
+          <h2><span class="section-number">04</span>未提交的工作，也在积累分支成本</h2>
+          <p>谈分支策略时，作者首先扩大了“分支”的观察范围：<strong>任何尚未集成的在制工作，都相当于一条分支</strong>。Git 中保存在本地分支上的一串提交如此，集中式系统中几天未提交的工作区也是如此。它们都从过去的某个状态出发，随后与共同主干分别变化，最终需要处理差异。</p>
+          <p>因此，判断团队是否频繁集成，要把本地工作也算进去：服务器上只有一条分支，工程师却可能把大量修改在本地放了两周，整合问题只是更难看见。作者用把 <code>Widget</code> 重命名为 <code>OldWidget</code> 说明这一点：修改主干上的所有引用是一种任务；连同公开开发分支一起修改是另一种；再追踪每个人未提交的修改，则会把范围扩大到一个难以穷尽的集合。</p>
+          <p>主干上的一次统一重构，可能完全正确；某位工程师后来提交旧基线上的代码，却会重新引入旧名字或旧假设。VCS 有时能暴露文本冲突，有时两个改动触及不同位置，自动合并照常成功。后者仍可能出现语义冲突。假设一边把超时单位改为毫秒，另一边在另一处继续按秒传值：合并成功只说明文本组合到了一起，程序行为却已经错了。</p>
+          <p>长期开发分支通常起于合理担忧：功能还没完成，先隔离起来，保护主干。问题是，隔离期间主干和其他分支持续变化。等整个功能合并时，接口、测试、配置和业务行为一起涌入，失败可能来自任何一个改动或它们的组合。由一个合并协调员处理多个作者的工作，还失去了作者对细节最清楚的优势。</p>
+          <p>原书描述了一种会自我强化的循环：一次大合并破坏稳定，于是组织进一步放慢合并、增加排期会议；等待使分支继续变大，下一次合并也更复杂。其他团队还可能基于尚未合并的分支开发，形成更多依赖顺序。最终，不少人忙于协调何时才能组合已有工作，却没有增加新的产品能力。减少这种成本，要改变集成单位和反馈速度。</p>
+          <p>图 16-1 把这个循环画了出来：只要对大合并的应对是继续放慢合并，箭头就会绕回起点；跳出循环的出口在另一个方向，也就是下一节的小步集成。</p>
+          <figure class="concept-figure"><a href="../diagrams/exports/ch16-merge-spiral.svg" target="_blank" rel="noopener"><img src="../diagrams/exports/ch16-merge-spiral.svg" width="720" height="344" alt="长期开发分支的自我强化循环：大合并破坏稳定，组织放慢合并、增加排期会议，分支因此继续变大，下一次合并更复杂，又再次破坏稳定；另一种应对是改变集成单位和反馈速度，小步进入主干。"></a><figcaption>图 16-1：从右上角的“大合并破坏稳定”读起，实线箭头按顺时针构成循环，循环中间是它的代价；虚线箭头指向循环之外的另一种应对。放慢合并看似降低了风险，实际让下一次合并更大。点击<a href="../diagrams/exports/ch16-merge-spiral.svg" target="_blank" rel="noopener">查看大图</a>。</figcaption></figure>
+        </section>
+
+        <section id="trunk-based-development">
+          <h2><span class="section-number">05</span>用小步集成维护主干的稳定</h2>
+          <p><strong>主干开发（trunk-based development）</strong>让工程师把工作拆成小增量，频繁集成到共同主干。原书偏好的形式几乎没有独立开发分支，但它同时承认短命分支。核心是缩短与共同状态分离的时间，避免把整个功能完成当成第一次集成的条件。</p>
+          <p>小步集成把一个困难问题拆得更容易理解。某次小修改失败时，作者还记得上下文，候选原因集中，回退与修复也较小。与之配合的基础设施包括自动化测试、持续集成（CI）、代码评审，以及主干失败后及时恢复的工作习惯。<a href="ch11.html#write-run-react">第十一章的“写、运行、响应”</a>在这里从个人测试循环扩展到团队：反馈需要引起行动，公共主干才能继续成为可信的起点。</p>
+          <p>假设报表团队要增加定时导出，工作涉及计划记录、调度、执行与界面。把它们全部放在一个月后的大合并里，最后才能知道它与现有队列是否兼容。按主干开发推进，可以先提交不改变现有行为的计划数据结构及测试，再加入默认关闭的调度路径，再逐步接入执行和界面。每一步都与当时主干一起构建、验证，功能对用户开放则由另一个决定控制。</p>
+          <p>原书建议在运行时关闭尚未完成的功能；这里还应区分三层状态：代码进入主干，代码被构建和测试，功能对用户启用。开关主要隔离最后一层的行为，无法遮住编译错误、模块初始化副作用或破坏性的结构变更；上面例子中新增的数据结构，也必须与现有读取逻辑兼容。这样的小步拆解需要设计，但它让集成风险沿工作过程逐次暴露。</p>
+          <p>若一个新基础组件尚未准备好让所有团队使用，作者还建议通过依赖可见性控制限制调用方，或将新旧组件设计成可以安全共存。把它藏在长期分支里，同时允许其他项目依赖它，会让那些项目也进入同一条平行开发线；提早进入主干、限制使用范围，则仍保留共同的集成基础。</p>
+          <p>本章援引 DORA 研究，认为主干开发与良好交付表现具有预测性关联。DORA 官方说明今天仍以至少每日集成、分支通常只存在数小时来描述这种实践，研究支持的是小批量、短分离和快速反馈这一组做法。若测试缓慢、评审长期排队，小提交也会重新积成大批次；<a href="ch09.html#small-changes">第九章的小变更与评审效率</a>因此也是分支策略的组成部分。</p>
+          <aside class="key-point"><p class="key-point-label">核心观点</p><p>主干开发依靠小增量、快速验证和及时修复来维持共同状态。缩短集成间隔，才能把大规模合并时的集中风险，转成作者仍然理解上下文时的一次次小反馈。</p></aside>
+        </section>
+
+        <section id="release-branches">
+          <h2><span class="section-number">06</span>发布分支保留的是已交付的时间切片</h2>
+          <p>开发分支与<strong>发布分支（release branch）</strong>可能使用完全相同的 VCS 技术，承担的工作却不同。开发分支积累未来要进入主干的新工作；发布分支保留某次发布的代码基础，只接受有限的维护，最终结束支持。前者的终点是集成回主干，后者的终点是退出维护。</p>
+          <p>原书给出的常见方式是：从主干选定一个修订创建发布分支，后续功能继续在主干发展；发现需要修复已发布版本的严重缺陷时，从主干选择必要修复，带到发布分支。<strong>择取提交（cherry-pick）</strong>表示有选择地移植某项修改，主干上之后的其他功能不会一起带过去。以 Git 为例，择取的结果是目标分支上的一个新提交，有自己的提交标识。</p>
+          <figure class="concept-figure"><a href="../diagrams/exports/ch16-release-flow.svg" target="_blank" rel="noopener"><img src="../diagrams/exports/ch16-release-flow.svg" width="720" height="388" alt="主干持续向前，发布分支从确定修订分出，只择取必要修复，随后结束维护；发布分支不整体合回主干。"></a><figcaption>图 16-2：横向实线表示各条线随提交前进，斜实线表示从主干建立发布分支，向下虚线只表示择取修复 F。F′ 是在发布分支上适配后的对应修复，末端方块表示维护结束。图中未画开发短分支。点击<a href="../diagrams/exports/ch16-release-flow.svg" target="_blank" rel="noopener">查看大图</a>。</figcaption></figure>
+          <p>假设团队已经交付月度客户端，下一版功能在主干开发时，线上发现导出任务可能重复执行。工程师在主干修复并补充测试，再判断这个修复是否适用于旧客户端。如果主干修复依赖刚引入的新接口，就需要为旧版适配，并在发布分支上重新验证。本次维护不会把主干上尚未交付的新功能混进旧版。</p>
+          <p>原书不建议把这样的发布分支最终整体合回主干。它保存的是过去的发布线，主干才是后续开发基础；若两边都出现修复，要明确追踪必要修复的去向，避免只在旧版本解决问题。从主干择取到发布分支是本书采用的方向；也有团队先在发布分支修复，再及时把修复带回主干。</p>
+          <p>当服务一天可以多次从主干部署时，直接修复并重新部署可能比维护发布分支更简单。对于月度交付、客户现场设备或不能同时升级的客户端，保留确切发布状态仍有实际价值。分支的维护成本来自必须支持旧版的业务承诺；删除分支名称本身不会消除这份承诺。</p>
+        </section>
+
+        <section id="piper-and-policy">
+          <h2><span class="section-number">07</span>Piper 的规模，来自工具与约定共同配合</h2>
+          <p>书中记述，Google 当时绝大多数自有代码位于一个<strong>单仓库（monorepo）</strong>，约五万名工程师共享，Chromium、Android 等大型开源项目是重要例外。其版本控制系统 <strong>Piper</strong> 是自研的集中式 VCS，底层以分布式微服务运行。这再次说明，“集中式”描述提交与权威模型，不要求服务只部署在一台服务器上。</p>
+          <p>到本书写作时，Piper 存储超过 80 TB 的内容和元数据，每个工作日处理约六万到七万次提交，其中既有人提交的，也有半自动化流程提交的。作者还举例说，创建主干工作区、加一个文件、完成一次未经评审的提交，总共约需 15 秒，可见底层交互可以很轻。</p>
+          <p>这种体验的重要前提是，工程师不必先把整个仓库传到本机。组织越大，单个人实际编辑的文件占比往往越小；让所有人重复传输其余文件与漫长历史，会把共享规模变成每个人的负担。中央存储、按需访问与分布式构建的组合，把这部分工作留给更适合承担它的基础设施。</p>
+          <p>统一仓库也没有取消责任边界。原书描述的 <code>OWNERS</code> 文件按目录列出有权批准相应修改的工程师，并结合祖先目录的所有者形成审批规则。调整团队分工时可以更新文本规则，不必为了改变审批责任就搬迁仓库。这里的所有权管的是谁能批准修改；谁能读取哪些代码，是另一类权限问题。</p>
+          <p>自研也带来长期成本。原章脚注举出一个很具体的迁移障碍：内部工具和脚本已经依赖单调递增的修订号，并假定数值顺序代表提交的时间顺序。切换到使用提交哈希与图结构的系统，就要处理这些隐含依赖。这是<a href="ch01.html#hyrum">第一章 Hyrum 定律</a>在开发基础设施中的表现——即使某种性质不属于原先想承诺的接口，也可能早已被大量使用者依赖。</p>
+          <p>因此，这个案例值得学习的是把日常操作做便宜、把共同策略做明确，以及正视定制的维护负担。自研版本控制系统是五万人规模下的选择；对一般团队，原书的建议仍是优先使用 Git。</p>
+        </section>
+
+        <section id="one-version">
+          <h2><span class="section-number">08</span>One-Version 让依赖重新能够自由组合</h2>
+          <p>有了单一主干，还可能在同一仓库里放入几份互不兼容的同名库。为解决这个层次的问题，Google 的 <strong>One-Version（单一版本）规则</strong>进一步要求：当开发者为已有组件增加依赖时，应有一个明确的可选版本。它把“提交到哪里”的收敛，扩展成“依赖什么”的收敛。</p>
+          <p>原书设想某团队发现 Abseil 或 Guava 这样的基础库有缺陷，没有在共同版本上修复，而是复制一份，在不改库名和符号名的情况下修改，再邀请附近团队使用。这个行为对眼前团队很方便，却使仓库出现两种互不保证兼容的基础。起初，分别使用两份库的项目都可以正常工作；等某个项目要同时使用两边的上层组件，问题才集中出现。</p>
+          <p>假设报表模块依赖共同的基础库 L，计费模块依赖私改的 L 分叉，两者仍导出相同名字。综合服务接入两个模块后，通过<strong>传递依赖</strong>同时接触两份 L。链接器或类加载器可能拒绝重复定义，也可能选中与某个调用方预期不一致的实现，造成难以定位的运行问题；具体表现取决于语言、构建方式与隔离机制。</p>
+          <figure class="concept-figure"><a href="../diagrams/exports/ch16-dependency-diamond.svg" target="_blank" rel="noopener"><img src="../diagrams/exports/ch16-dependency-diamond.svg" width="720" height="440" alt="综合服务分别依赖报表模块与计费模块，两条路径到达同名但不兼容的 L 与 L 分叉；统一修复并迁移到共同版本后，两条路径可以汇合。"></a><figcaption>图 16-3：箭头统一从使用者指向它依赖的组件。左侧的虚线框标出两份具有相同名称、但不保证兼容的基础库；右侧表示将修复纳入共同版本并完成迁移后的状态。菱形依赖本身很常见，出问题的是两条路径要求不同的同名基础。点击<a href="../diagrams/exports/ch16-dependency-diamond.svg" target="_blank" rel="noopener">查看大图</a>。</figcaption></figure>
+          <p>困难由此越过了库维护者的边界。报表团队每新增一个依赖，都可能需要知道它来自哪个“版本阵营”；计费团队修复自己的分叉，也无法保证另一边同步。原书把这种后果描述为代码库被分区：跨区复用需要额外判断，原本普通的组合操作变成全局兼容性问题。仓库在物理上是一个，协作上却已经分裂。</p>
+          <p>One-Version 让组织把修复尽量汇入共同基础，再由测试与迁移维护使用者。这样，每个应用无须重新解决整套版本组合。对于内部有意分叉的组件，作者要求重新打包或重命名，并使原版与分叉能够安全地进入同一项目。独立名字把差异公开出来，也迫使接口边界承担相应设计。</p>
+          <p>原书还讨论 <strong>shading（依赖重定位）</strong>，即通过改写包名等方式，把一份依赖变成内部私有副本。Maven Shade Plugin 这类工具确实可以搬移类并改写字节码；原章说类型难以 shading，困难在于跨边界共享的类型：假设报表返回 <code>common.Money</code>，计费只接受重定位后的 <code>billing.privatecopy.Money</code>，两者不会因为字段相同就自动成为同一种类型。</p>
+          <p>这样的类型可称为<strong>公共词汇类型（vocabulary type）</strong>：多个组件用它表达共同概念。若重定位的依赖严格封装在内部，边界只暴露共同接受的类型，隔离能够有效工作；若私有类型穿过公共接口，就需要显式转换或重新设计边界。这种工程工作有时值得做，但它没有免费消除版本差异。作者的主张，是在组织内部尽量通过共同版本减少必须处理的差异。</p>
+          <aside class="key-point"><p class="key-point-label">核心观点</p><p>单一事实来源统一修改的落点，One-Version 统一已有依赖的选择。它们减少的是团队之间反复判断“哪几份代码能够组合”的劳动；单仓库本身不会自动提供这份兼容性。</p></aside>
+        </section>
+
+        <section id="migration-and-compatibility">
+          <h2><span class="section-number">09</span>升级可以过渡，长期兼容需要单独付费</h2>
+          <p>One-Version 的“单一”约束的是开发者新增依赖时的可选项。原章正文和脚注都承认，大型第三方库升级常常无法连同所有使用者在一个原子提交中完成：可以先加入新版本，禁止新调用方继续依赖旧版本，再逐步迁移既有使用者，最终删除旧版，回到只有一个版本的稳态。这与<a href="ch15.html#migrate-and-prevent-backsliding">第十五章的迁移与防止回退</a>是同一条演进路径。</p>
+          <p>图 16-4 按时间顺序画出这个过程。上排的仓库里有一段时间新旧两版并存；下排新增依赖时能选的版本，每个阶段都只有一个。</p>
+          <figure class="concept-figure"><a href="../diagrams/exports/ch16-upgrade-window.svg" target="_blank" rel="noopener"><img src="../diagrams/exports/ch16-upgrade-window.svg" width="720" height="400" alt="一次升级的四个阶段：升级前仓库只有旧版；加入新版后两版并存，但新增依赖只能选新版；迁移既有使用者期间仍是两版并存、只能选新版；删除旧版后回到只有新版的稳态。"></a><figcaption>图 16-4：从左往右是时间顺序。上排是仓库里存放的版本，下排是新增依赖时可选的版本，方块中的文字标明新旧。上排的两版并存只出现在受控的过渡期，下排始终只有一个选项。点击<a href="../diagrams/exports/ch16-upgrade-window.svg" target="_blank" rel="noopener">查看大图</a>。</figcaption></figure>
+          <p>假设整个组织升级日期解析库。已有服务还在迁移期内，并不妨碍规定“新增使用一律采用新版”。公共构建规则可以阻止旧版继续扩大使用范围，迁移负责人再根据测试结果逐一调整已有调用方。只要两版可能进入同一运行单元，还需要处理上一节讨论的命名、类型和行为冲突。过渡政策给演变指明了方向，组合是否安全仍要靠这些处理和测试来保证。</p>
+          <p>这个解释也把版本控制与依赖管理连接起来。自己的代码通常可以共同修改、共同测试，控制粒度较细；外部依赖由其他组织决定何时发布、如何改变，自己只有有限控制。对第三方依赖，单一版本指的是仓库里有一个经过引入和验证的版本，升级再走上面的迁移流程。</p>
+          <p>长期开发分支的少数例外，原书主要归因于跨时间兼容要求。例如，一年前写出的持久化文件，今天的新程序仍须读取；一端已经升级的服务，还须与未升级客户端交互。即使源码主干只有一份，运行世界中也可能同时存在多个年代的程序和数据。此时兼容性是实际产品约束，要靠格式设计、协议演变与相应测试来满足。</p>
+          <p>原书说，在当时约一千个使用主仓库的团队中，只有寥寥几个维护长期开发分支；脚注说精确数字难以统计，但几乎肯定少于十个。它也说明内部生产任务至少每六个月必须重新构建与部署一次，通常更频繁；这个“构建时间上限”（build horizon）给潜在的版本时间差设了上限。面向外部的 Cloud 接口则是另一种情境。</p>
+          <p>这些安排共同表达一种工程态度：跨时间承诺值得郑重对待，维护范围需要可见、有限并有人承担。让长期开发分支成为罕见且有明确理由的例外，可以保留必要弹性，同时避免整个组织默认进入多条平行时间线。</p>
+        </section>
+
+        <section id="monorepo-and-virtual">
+          <h2><span class="section-number">10</span>单仓库是一种实现，统一协作才是目标</h2>
+          <p>单仓库使很多有益约定比较自然。公共主干和依赖图集中在一起，代码搜索、测试调度与大规模修改工具有一致入口；工程师可以看到其他团队怎样使用组件，基础设施的一次改进也容易覆盖更多项目。跨目录修改能够在同一个仓库中形成一个提交，有利于协同调整接口与调用方。</p>
+          <p>这些收益仍以工具能处理规模为前提。一次普通操作若要等待几小时，工程师自然会减少操作次数、积累更多在制工作。原书认为，Google 较早投入可扩展的版本控制，才避免把仓库增长直接转化为每个人的等待。反过来，权限、保密、法律和隐私要求各异时，把所有内容放进一个物理仓库，也会增加定制与持续维护成本。</p>
+          <p>作者因此没有把单仓库宣布为唯一答案。多个较小仓库可以更自然地划分访问权限，容纳独立项目；对于组织中紧密协作的部分，则可以追求<strong>虚拟单仓库（Virtual Monorepo，VMR）</strong>的体验：共同理解各项目的主干，知道采用的是哪组修订，能够描述依赖关系，并在更新时验证相关组合。物理存储分开，逻辑协作仍然尽量一致。</p>
+          <p>原书举出 Git submodule、构建系统的外部依赖和子项目机制，作为拼接这种体验的工具线索，同时承认当时尚未看到特别顺畅的完整实现。需要补充的是，Git submodule 在上层仓库记录的是子仓库的具体提交：它能表达一组版本，但跟随各项目主干、跨仓库协同提交，以及这组版本的兼容与升级，都还要另行安排。</p>
+          <p>顺着作者的原则还可以再区分一点：固定一个经过验证的精确修订，与让每个团队长期自行选择旧版本，是两件事。前者帮助复现一个确定构建；后者使组织承担越来越多平行组合。一个虚拟单仓库完全可以记录精确的全局快照，同时持续推动各组件主干变化进入下一份经过验证的快照。</p>
+          <p>开源世界的多仓库也有自己的合理背景：项目通常分属不同组织，优先保证自治、开放协作与有限资源下的可参与性。公司内部有共同目标、计算资源和协调权限，可以采用不同取舍。把开源项目的组织关系，直接复制成公司内部每个小团队之间的关系，未必能得到相同收益。</p>
+          <p>本章最后对未来十到二十年作出预测：版本控制会更能承受大仓库，同时也更善于连接多个仓库，依赖管理可能提供一组共同兼容的版本。作者设想的方向，要减少的仍然是时间这一维度的复杂性——让许多组件不必各自停留在互不协调的过去，再把组合责任交给每一个使用者。</p>
+          <aside class="key-point"><p class="key-point-label">核心观点</p><p>选择单仓库或多仓库，可以服从规模、权限与工作方式；共同状态、明确依赖和持续集成则需要主动建设。追求的是代码容易组合、修改容易汇合，而不只是仓库数量少。</p></aside>
+        </section>
+
+        <p>把全章连起来看，版本控制先让代码拥有可追踪的历史，单一事实来源再给团队一个共同起点；小步主干开发减少尚未汇合的工作，发布分支保留必须维护的过去，One-Version 则减少依赖组合中的平行版本。工具让这些操作成为可能，政策决定组织会不会持续把复杂度收回来。</p>
+
+        <details id="sources" class="source-note">
+          <summary>来源、小节对应与核查说明</summary>
+          <p>依据《Software Engineering at Google》（2020）Abseil 官方公开英文 HTML 版<a href="https://abseil.io/resources/swe-book/html/ch16.html">第 16 章 <span lang="en">Version Control and Branch Management</span></a>，Titus Winters 撰写、Lisa Carey 编辑；核查日期 2026-11-06。</p>
+          <ul>
+            <li>01：<a href="https://abseil.io/resources/swe-book/html/ch16.html#what_is_version_controlquestion_markone">What Is Version Control?</a>、<a href="https://abseil.io/resources/swe-book/html/ch16.html#why_is_version_control_importantquestio">Why Is Version Control Important?</a>。</li>
+            <li>02：<a href="https://abseil.io/resources/swe-book/html/ch16.html#centralized_vcs_versus_distributed_vcs">Centralized VCS Versus Distributed VCS</a>，含集中式、分布式两小节；head、trunk 等主线称呼见章首对 VCS 的基础解释。</li>
+            <li>03：<a href="https://abseil.io/resources/swe-book/html/ch16.html#source_of_truth">Source of Truth</a>、<a href="https://abseil.io/resources/swe-book/html/ch16.html#scenario_no_clear_source_of_truth">Scenario: no clear source of truth</a>。</li>
+            <li>04：<a href="https://abseil.io/resources/swe-book/html/ch16.html#work_in_progress_is_akin_to_a_branch">Work in Progress Is Akin to a Branch</a>、<a href="https://abseil.io/resources/swe-book/html/ch16.html#dev_branches">Dev Branches</a>、<a href="https://abseil.io/resources/swe-book/html/ch16.html#how_did_we_become_addicted_to_dev_branc">How did we become addicted to dev branches?</a>；图 16-1 的循环据最后这一段整理。</li>
+            <li>05：<a href="https://abseil.io/resources/swe-book/html/ch16.html#dev_branches">Dev Branches</a>、<a href="https://abseil.io/resources/swe-book/html/ch16.html#left_parenthesisnearlyright_parenthesis">(Nearly) No Long-Lived Branches</a>。</li>
+            <li>06：<a href="https://abseil.io/resources/swe-book/html/ch16.html#release_branches">Release Branches</a>、<a href="https://abseil.io/resources/swe-book/html/ch16.html#what_about_release_branchesquestion_mar">What About Release Branches?</a>。</li>
+            <li>07：<a href="https://abseil.io/resources/swe-book/html/ch16.html#version_control_at_google">Version Control at Google</a>及<a href="https://abseil.io/resources/swe-book/html/ch16.html#ch01fn154">脚注 6</a>。</li>
+            <li>08：<a href="https://abseil.io/resources/swe-book/html/ch16.html#one_version">One Version</a>、<a href="https://abseil.io/resources/swe-book/html/ch16.html#scenario_multiple_available_versions">Scenario: Multiple Available Versions</a>、<a href="https://abseil.io/resources/swe-book/html/ch16.html#the_quotation_markone_versionquotation">The “One-Version” Rule</a>。Abseil、Guava 的分叉是作者设想的情境，不是具体事故。</li>
+            <li>09：<a href="https://abseil.io/resources/swe-book/html/ch16.html#ch01fn157">脚注 9</a>、<a href="https://abseil.io/resources/swe-book/html/ch16.html#ch01fn159">脚注 11</a>、<a href="https://abseil.io/resources/swe-book/html/ch16.html#left_parenthesisnearlyright_parenthesis">(Nearly) No Long-Lived Branches</a>及脚注 13、14，<a href="https://abseil.io/resources/swe-book/html/ch16.html#version_control_versus_dependency_manag">Version Control Versus Dependency Management</a>。单一版本政策允许受控的升级期内短暂存在两个版本：脚注 9 说升级时仓库里可能同时有两版，但新增依赖不应有选择；脚注 11 给出先加入新版、禁止新用户依赖旧版、逐步迁移的做法；One Version 一节说第三方包“在稳态下”只有一个版本。图 16-4 据此绘制。</li>
+            <li>10：<a href="https://abseil.io/resources/swe-book/html/ch16.html#monorepos">Monorepos</a>、<a href="https://abseil.io/resources/swe-book/html/ch16.html#future_of_version_control">Future of Version Control</a>、<a href="https://abseil.io/resources/swe-book/html/ch16.html#conclusion-id00020">Conclusion</a>。未来十到二十年的走向是 2020 年作者的预测。</li>
+          </ul>
+          <p>措辞澄清与外部依据：</p>
+          <ul>
+            <li>原子提交与并发控制：原章开头把原子性与“避免覆盖”连在一起描述 → 原子性保证整批修改一起被接受或拒绝，防止覆盖靠的是提交前的过期检查与合并（<a href="https://svnbook.red-bean.com/en/1.7/svn.basic.in-action.html">Subversion Book：Revisions 与工作副本</a>，1.7 版的基本概念）→ 正文分开解释两种保证。</li>
+            <li>主线术语：原书用 head、default、trunk 泛称默认主线 → Git 的 <code>HEAD</code> 是指向当前分支或某个提交的引用（<a href="https://git-scm.com/docs/gitglossary">Git glossary</a>，也用于核对 commit、cherry-pick、submodule 的含义）→ 正文统一用“主干”，并单独说明 <code>HEAD</code>。</li>
+            <li>完整本地副本：原章认为 DVCS 模型要把整个代码库下载到本地 → <a href="https://git-scm.com/docs/git-clone">git-clone 官方文档</a>提供三种作用不同的方式：<code>--depth</code> 浅克隆截断取得的历史，<code>--filter</code> 部分克隆让服务器只发送部分对象、其余按需再取，<code>--sparse</code> 稀疏检出只缩小工作树中出现的文件，单独使用时并不减少下载的历史 → 正文说明完整下载已非必要前提，同时三者不能互相替代。</li>
+            <li>shading 与类型：原章说用 shading 处理可在包之间传递的类型“在理论和实践上都行不通”，提供词汇类型的库多版本并存“会失败” → 措辞偏强：类本身可以重定位（<a href="https://maven.apache.org/plugins/maven-shade-plugin/examples/class-relocation.html">Maven Shade Plugin：Relocating Classes</a>），重定位后的类型与原类型是不同类型（<a href="https://docs.oracle.com/javase/specs/jls/se25/html/jls-4.html#jls-4.3.4">JLS §4.3.4</a>），只要私有副本不穿过公共接口，隔离仍能工作 → 正文把困难限定在跨边界共享的类型，需要显式转换或重新设计边界。</li>
+            <li>DORA 研究：原章引用 DORA，称主干开发与高绩效组织有预测性关系 → <a href="https://dora.dev/capabilities/trunk-based-development/">DORA 官方主干开发说明</a>把它与每日集成、短命分支、快速测试和评审一起描述 → 正文把它当作对这组做法的经验支持，不作为“减少分支”这一单一因素带来稳定的因果证明。该页面也描述了先在发布分支修复、再尽快合回主干的做法，所以正文把原书的择取方向写成本书采用的策略之一。</li>
+          </ul>
+          <p>报表团队、定时导出、月度客户端、超时单位、L 库、<code>Money</code> 类型与日期解析库升级均为笔记假设的情境。本文按主题重组原章，不是逐段翻译；图示为本笔记原创示意图。</p>
+        </details>
+
+        <nav class="chapter-pagination" aria-label="章节翻页"><a class="page-link prev" href="ch15.html" rel="prev"><span class="page-label">← 上一章 · 第 15 章</span><span class="page-title">弃用</span></a><a class="page-link next" href="ch17.html" rel="next"><span class="page-label">下一章 · 第 17 章 →</span><span class="page-title">代码搜索</span></a><a class="pagination-home" href="../index.html">书籍概览与目录</a></nav>
+      </article>
+    </div>
+  </main>
+  <footer class="site-footer"><div class="container footer-inner"><span>个人书架 / 中文读书笔记</span><a href="#main">回到顶部 ↑</a></div></footer>
+</body>
+</html>

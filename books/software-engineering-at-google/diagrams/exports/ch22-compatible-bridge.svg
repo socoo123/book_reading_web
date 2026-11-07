@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="440" viewBox="0 0 720 440" role="img" aria-labelledby="title desc">
+  <title id="title">兼容桥让调用者能够独立迁移</title>
+  <desc id="desc">前提是原类型与新类型的必要行为差异已经处理，旧名 scoped_ptr 已成为 std::unique_ptr 的别名。旧名和新名指向共同类型，旧写法和新写法的调用者可以使用同一个 API。迁移顺序是建立兼容桥、逐批更新引用、最后删除旧别名。</desc>
+  <!-- Original editable hand-written SVG; web export is an identical copy. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 15px; fill: var(--muted); }
+    .label { font-size: 18px; font-weight: 600; text-anchor: middle; }
+    .body { font-size: 16px; text-anchor: middle; }
+    .note { font-size: 14px; fill: var(--muted); text-anchor: middle; }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.3; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .flow { fill: none; stroke: var(--line); stroke-width: 1.8; marker-end: url(#arrow); }
+    .divider { stroke: var(--line); stroke-width: 1; stroke-dasharray: 4 4; }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker></defs>
+  <rect width="720" height="440" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="28" y="40">保留两种写法，共用一个类型</text>
+  <text class="sub" x="28" y="69">前提：行为差异已处理，旧类已安全改为新版类型的别名</text>
+  <rect class="node" x="28" y="96" width="255" height="68" rx="7"/>
+  <text class="label" x="155" y="124">旧名 scoped_ptr&lt;T&gt;</text>
+  <text class="note" x="155" y="149">别名，不是另一个独立类型</text>
+  <rect class="node" x="437" y="96" width="255" height="68" rx="7"/>
+  <text class="label" x="565" y="124">新名 std::unique_ptr&lt;T&gt;</text>
+  <text class="note" x="565" y="149">标准独占所有权类型</text>
+  <path class="flow" d="M283 130H325V190"/>
+  <path class="flow" d="M437 130H395V190"/>
+  <rect class="focus" x="218" y="198" width="284" height="70" rx="7"/>
+  <text class="label" x="360" y="227">同一个 API 参数类型</text>
+  <text class="body" x="360" y="252">调用者可分别使用旧名或新名</text>
+  <path class="divider" d="M28 295H692"/>
+  <text class="sub" x="28" y="324">阶段顺序：桥梁先就位，引用再分批更新</text>
+  <rect class="node" x="28" y="344" width="190" height="54" rx="7"/>
+  <text class="body" x="123" y="377">① 建立兼容桥</text>
+  <rect class="node" x="265" y="344" width="190" height="54" rx="7"/>
+  <text class="body" x="360" y="377">② 逐批改引用</text>
+  <rect class="node" x="502" y="344" width="190" height="54" rx="7"/>
+  <text class="body" x="597" y="377">③ 删除旧别名</text>
+  <path class="flow" d="M218 371H256"/>
+  <path class="flow" d="M455 371H493"/>
+  <text class="note" x="360" y="424">迁移期间，每一步都保持当前主干可构建、可验证</text>
+</svg>

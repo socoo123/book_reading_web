@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="610" viewBox="0 0 720 610" role="img" aria-labelledby="title desc">
+  <title id="title">共享模型与事件总线承担不同职责</title>
+  <desc id="desc">上方编辑、编译与方法列表部件只经共享模型协作，连线包含读取、更新和通知。下方员工登记部件发布 NewEmployee 事件，经总线分发给设备采购与账号开通两个订阅者，不要求总线保存共享业务模型。</desc>
+  <!-- Original editable SVG; the exported web copy is identical. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; } .sub { font-size: 16px; fill: var(--muted); }
+    .group { font-size: 20px; font-weight: 600; } .label { font-size: 20px; font-weight: 600; text-anchor: middle; }
+    .detail { font-size: 15px; fill: var(--muted); text-anchor: middle; }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.3; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.5; }
+    .interaction { fill: none; stroke: var(--line); stroke-width: 1.7; }
+    .event { fill: none; stroke: var(--line); stroke-width: 1.7; marker-end: url(#arrow); }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker></defs>
+  <rect width="720" height="610" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="30" y="35">都有通知，不代表中心承担相同职责</text>
+  <text class="sub" x="30" y="64">上：共享状态是协作中心　　下：事件契约连接独立部件</text>
+  <text class="group" x="30" y="105">模型居中</text>
+  <rect class="node" x="35" y="125" width="180" height="64" rx="6"/><text class="label" x="125" y="153">源代码编辑</text><text class="detail" x="125" y="177">修改中心模型</text>
+  <rect class="node" x="270" y="125" width="180" height="64" rx="6"/><text class="label" x="360" y="153">编译部件</text><text class="detail" x="360" y="177">产生解析结果</text>
+  <rect class="node" x="505" y="125" width="180" height="64" rx="6"/><text class="label" x="595" y="153">方法列表视图</text><text class="detail" x="595" y="177">展示当前状态</text>
+  <path class="interaction" d="M125 189V268H255M360 189V238M595 189V268H465"/>
+  <text class="sub" x="141" y="219">更新</text><text class="sub" x="375" y="219">通知／更新</text><text class="sub" x="505" y="219">读取／通知</text>
+  <rect class="focus" x="255" y="238" width="210" height="65" rx="6"/><text class="label" x="360" y="265">共享模型</text><text class="detail" x="360" y="289">源代码与解析状态</text>
+  <path d="M30 339H690" stroke="var(--line)" stroke-width="1"/>
+  <text class="group" x="30" y="375">发布—订阅</text>
+  <path class="event" d="M210 478H260M450 478H475V435H500M450 478H475V530H500"/>
+  <rect class="node" x="30" y="444" width="180" height="68" rx="6"/><text class="label" x="120" y="471">员工登记</text><text class="detail" x="120" y="495">发布 NewEmployee</text>
+  <rect class="focus" x="270" y="444" width="180" height="68" rx="6"/><text class="label" x="360" y="471">事件总线</text><text class="detail" x="360" y="495">依照订阅分发</text>
+  <rect class="node" x="510" y="405" width="180" height="60" rx="6"/><text class="label" x="600" y="440">设备采购</text>
+  <rect class="node" x="510" y="500" width="180" height="60" rx="6"/><text class="label" x="600" y="535">账号开通</text>
+  <text class="sub" x="30" y="542">发布者不等待订阅者回复</text>
+  <text class="sub" x="30" y="590">下方箭头表示事件，不是请求—响应；业务部件名称为假设性说明。</text>
+</svg>

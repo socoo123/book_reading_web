@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="425" viewBox="0 0 720 425" role="img" aria-labelledby="title desc">
+  <title id="title">购物车端口的简化协议</title>
+  <desc id="desc">先调用newCart进入购物车存在状态，再任意多次addItem或removeItem，最后checkout结束这次协议。操作名是状态转移标签，图中未展开超时和失败路径。</desc>
+  <!-- Original editable SVG; based on the simplified protocol in Figure 12.20. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 16px; fill: var(--muted); }
+    .label { font-size: 20px; font-weight: 600; text-anchor: middle; }
+    .detail { font-size: 16px; text-anchor: middle; fill: var(--muted); }
+    .operation { font-size: 18px; text-anchor: middle; }
+    .state { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .transition { fill: none; stroke: var(--line); stroke-width: 1.8; marker-end: url(#arrow); }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker></defs>
+  <rect width="720" height="425" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="30" y="38">端口不仅有哪些操作，还规定何时可以调用</text>
+  <text class="sub" x="30" y="67">Store.pCart 的简化协议 · 未展开超时与失败</text>
+  <circle cx="70" cy="230" r="7" fill="var(--text)"/>
+  <path class="transition" d="M84 230H248"/>
+  <text class="operation" x="164" y="211">newCart()</text>
+  <text class="detail" x="70" y="264">开始</text>
+  <rect class="state" x="260" y="190" width="200" height="80" rx="13"/>
+  <text class="label" x="360" y="223">购物车存在</text>
+  <text class="detail" x="360" y="250">Cart Exists</text>
+  <path class="transition" d="M316 190V151Q360 116 404 151V178"/>
+  <text class="operation" x="360" y="123">addItem(Item)</text>
+  <path class="transition" d="M316 270V304Q360 339 404 304V282"/>
+  <text class="operation" x="360" y="365">removeItem(Item)</text>
+  <path class="transition" d="M472 230H620"/>
+  <text class="operation" x="546" y="211">checkout()</text>
+  <circle cx="636" cy="230" r="11" fill="none" stroke="var(--line)" stroke-width="1.5"/>
+  <circle cx="636" cy="230" r="7" fill="var(--text)"/>
+  <text class="detail" x="636" y="264">本次协议结束</text>
+  <text class="sub" x="30" y="403">箭头是合法状态转移；终点不表示商店组件停止运行。</text>
+</svg>

@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="344" viewBox="0 0 720 344" role="img" aria-labelledby="title desc">
+  <title id="title">长期开发分支的自我强化循环</title>
+  <desc id="desc">四个方框按顺时针构成循环：大合并破坏稳定，失败难以定位；组织放慢合并、增加排期会议；分支因此继续变大，其他团队还基于它开发；下一次合并更复杂，改动与依赖顺序更多，又回到大合并破坏稳定。循环中间写着代价：协调越来越多，产品能力没有增加。从“大合并破坏稳定”引出一条虚线，指向循环之外的另一种应对：改变集成单位，小增量进入主干，快速验证、及时修复，见第 05 节。</desc>
+  <!-- Original editable hand-written SVG; web export is an identical copy. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 15px; fill: var(--muted); }
+    .label { font-size: 18px; font-weight: 600; text-anchor: middle; }
+    .body { font-size: 16px; text-anchor: middle; }
+    .cost { font-size: 16px; fill: var(--muted); text-anchor: middle; }
+    .note { font-size: 14px; fill: var(--muted); text-anchor: middle; }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.3; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .flow { fill: none; stroke: var(--line); stroke-width: 1.8; marker-end: url(#arrow); }
+    .exit { stroke-dasharray: 5 5; }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker></defs>
+  <rect width="720" height="344" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="28" y="40">长期开发分支的自我强化循环</text>
+  <text class="sub" x="28" y="69">实线：只靠放慢合并应对时形成的循环　　虚线：改变集成单位，跳出循环</text>
+
+  <rect class="node" x="28" y="96" width="190" height="76" rx="7"/>
+  <text class="label" x="123" y="128">下一次合并更复杂</text>
+  <text class="body" x="123" y="156">改动与依赖顺序更多</text>
+
+  <rect class="node" x="274" y="96" width="190" height="76" rx="7"/>
+  <text class="label" x="369" y="128">大合并破坏稳定</text>
+  <text class="body" x="369" y="156">失败难以定位</text>
+
+  <rect class="node" x="274" y="240" width="190" height="76" rx="7"/>
+  <text class="label" x="369" y="272">放慢合并</text>
+  <text class="body" x="369" y="300">增加排期会议</text>
+
+  <rect class="node" x="28" y="240" width="190" height="76" rx="7"/>
+  <text class="label" x="123" y="272">分支继续变大</text>
+  <text class="body" x="123" y="300">其他团队基于它开发</text>
+
+  <path class="flow" d="M218 134H266"/>
+  <path class="flow" d="M369 172V232"/>
+  <path class="flow" d="M274 278H226"/>
+  <path class="flow" d="M123 240V180"/>
+
+  <text class="cost" x="246" y="201">协调越来越多</text>
+  <text class="cost" x="246" y="225">产品能力没有增加</text>
+
+  <path class="flow exit" d="M464 134H512"/>
+  <rect class="focus exit" x="520" y="96" width="172" height="220" rx="7"/>
+  <text class="label" x="606" y="166">改变集成单位</text>
+  <text class="body" x="606" y="200">小增量进入主干</text>
+  <text class="body" x="606" y="228">快速验证、及时修复</text>
+  <text class="note" x="606" y="270">见第 05 节</text>
+</svg>

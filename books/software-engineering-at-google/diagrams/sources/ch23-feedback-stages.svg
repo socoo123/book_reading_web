@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="400" viewBox="0 0 720 400" role="img" aria-labelledby="title desc">
+  <title id="title">同一变化在不同阶段补上验证证据</title>
+  <desc id="desc">从左向右依次是提交前、提交后、发布候选和生产探测。提交前强调快速可靠，提交后覆盖更广集成，发布候选检查产物和配置，生产探测观察真实环境及后端。每阶段失败都需要记录、负责人和恢复路径。</desc>
+  <!-- Original editable hand-written SVG; web export is an identical copy. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 15px; fill: var(--muted); }
+    .label { font-size: 19px; font-weight: 600; text-anchor: middle; }
+    .body { font-size: 16px; text-anchor: middle; }
+    .note { font-size: 14px; fill: var(--muted); text-anchor: middle; }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.3; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .flow { fill: none; stroke: var(--line); stroke-width: 1.8; marker-end: url(#arrow); }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker></defs>
+  <rect width="720" height="400" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="28" y="40">同一变化，逐阶段补上验证证据</text>
+  <text class="sub" x="28" y="70">前段优先快速可靠，后段补充更广、更真实的组合</text>
+  <rect class="node" x="24" y="110" width="145" height="170" rx="7"/>
+  <text class="label" x="96" y="151">提交前</text>
+  <text class="body" x="96" y="196">快速、可靠</text>
+  <text class="body" x="96" y="226">本项目重点</text>
+  <rect class="node" x="199" y="110" width="145" height="170" rx="7"/>
+  <text class="label" x="271" y="151">提交后</text>
+  <text class="body" x="271" y="196">更广泛集成</text>
+  <text class="body" x="271" y="226">受影响的下游</text>
+  <rect class="node" x="374" y="110" width="145" height="170" rx="7"/>
+  <text class="label" x="446" y="151">发布候选</text>
+  <text class="body" x="446" y="196">产物与配置</text>
+  <text class="body" x="446" y="226">实际部署组合</text>
+  <rect class="node" x="549" y="110" width="145" height="170" rx="7"/>
+  <text class="label" x="621" y="151">生产探测</text>
+  <text class="body" x="621" y="196">真实运行环境</text>
+  <text class="body" x="621" y="226">持续变化后端</text>
+  <path class="flow" d="M173 195H191"/>
+  <path class="flow" d="M348 195H366"/>
+  <path class="flow" d="M523 195H541"/>
+  <rect class="focus" x="24" y="308" width="670" height="48" rx="7"/>
+  <text class="body" x="360" y="338">共同前提：失败有记录、有负责人、有恢复路径</text>
+  <text class="note" x="360" y="383">绿色仅对应本轮已覆盖的版本、环境和性质；各阶段均可反馈并暂停推进</text>
+</svg>

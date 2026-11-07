@@ -1,0 +1,260 @@
+[
+  {
+    "type": "text",
+    "id": "title",
+    "x": 24,
+    "y": 20,
+    "text": "确定性模拟测试：控制环境，检查真实代码",
+    "fontSize": 25,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "subtitle",
+    "x": 24,
+    "y": 66,
+    "text": "实线：本次执行与记录；虚线：保留条件后重放失败历史。",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "rectangle",
+    "id": "seed",
+    "x": 24,
+    "y": 132,
+    "width": 254,
+    "height": 108,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.5,
+    "strokeWidth": 1.5,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "种子 + 初始状态\n版本 + 故障计划",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "env",
+    "x": 494,
+    "y": 132,
+    "width": 330,
+    "height": 108,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.5,
+    "strokeWidth": 1.5,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "确定性环境\n网络／时钟／磁盘／调度",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "control",
+    "x": 284,
+    "y": 186,
+    "width": 204,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        204,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.4,
+    "strokeStyle": "solid",
+    "start": {
+      "id": "seed"
+    },
+    "end": {
+      "id": "env"
+    }
+  },
+  {
+    "type": "text",
+    "id": "control-label",
+    "x": 330,
+    "y": 154,
+    "text": "决定事件顺序",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "rectangle",
+    "id": "code",
+    "x": 494,
+    "y": 340,
+    "width": 330,
+    "height": 100,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.5,
+    "strokeWidth": 1.5,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "实际协议代码\n生成操作与响应历史",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "execute",
+    "x": 658,
+    "y": 246,
+    "width": 0,
+    "height": 88,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        88
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.4,
+    "strokeStyle": "solid",
+    "start": {
+      "id": "env"
+    },
+    "end": {
+      "id": "code"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "check",
+    "x": 24,
+    "y": 340,
+    "width": 254,
+    "height": 100,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.5,
+    "strokeWidth": 1.5,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "性质检查器\n例如：接受代次不回退",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "history",
+    "x": 488,
+    "y": 390,
+    "width": 204,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        -204,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.4,
+    "strokeStyle": "solid",
+    "start": {
+      "id": "code"
+    },
+    "end": {
+      "id": "check"
+    }
+  },
+  {
+    "type": "text",
+    "id": "history-label",
+    "x": 340,
+    "y": 356,
+    "text": "检查历史",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "arrow",
+    "id": "replay",
+    "x": 150,
+    "y": 334,
+    "width": 0,
+    "height": 88,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        -88
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.4,
+    "strokeStyle": "dashed",
+    "start": {
+      "id": "check"
+    },
+    "end": {
+      "id": "seed"
+    }
+  },
+  {
+    "type": "text",
+    "id": "replay-label",
+    "x": 170,
+    "y": 278,
+    "text": "失败重放",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "note",
+    "x": 24,
+    "y": 496,
+    "text": "随机选择用于发现新路径；相同受控输入用于复现同一条路径。",
+    "fontSize": 19,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "limit",
+    "x": 24,
+    "y": 532,
+    "text": "模拟通过不等于全部执行已证明，也不代替真实硬件性能测试。",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  }
+]

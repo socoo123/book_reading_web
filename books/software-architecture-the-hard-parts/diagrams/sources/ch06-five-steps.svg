@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="700" viewBox="0 0 720 700" role="img" aria-labelledby="title desc">
+  <title id="title">数据迁移五步与边界变化</title>
+  <desc id="desc">先识别域，再将表分到同库不同 schema；第三步仅访问本域，通过服务跨域协作；第四步向新服务器复制但业务仍连旧库；第五步切换并退出旧路径。逻辑隔离先于物理隔离。</desc>
+  <style>
+    :root{--surface:#fcfbf8;--text:#292824;--muted:#66645d;--line:#969187;--soft:#f0ece4;--accent:#386d74}
+    @media(prefers-color-scheme:dark){:root:not([data-theme='light']){--surface:#252524;--text:#e6e3dc;--muted:#b6b1a7;--line:#8c8982;--soft:#353534;--accent:#94c8cf}}
+    :root[data-theme='dark']{--surface:#252524;--text:#e6e3dc;--muted:#b6b1a7;--line:#8c8982;--soft:#353534;--accent:#94c8cf}
+    .bg{fill:var(--surface)}text{fill:var(--text);font-family:system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;font-size:17px}.heading{font-size:21px;font-weight:600}.small{font-size:15px;fill:var(--muted)}.box{fill:var(--soft);stroke:var(--line);stroke-width:1.4}.milestone{fill:var(--soft);stroke:var(--accent);stroke-width:2}.edge{fill:none;stroke:var(--accent);stroke-width:2;marker-end:url(#arrow)}.arrow{fill:var(--accent)}.num{font-size:27px;font-weight:600;fill:var(--accent)}
+  </style>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path class="arrow" d="M0 0 8 4 0 8Z"/></marker></defs>
+  <rect class="bg" width="720" height="700"/>
+  <text class="heading" x="28" y="37">先分责任，再搬数据，最后切换连接</text>
+  <text class="small" x="28" y="65">每步下行阅读：数据位置 → 服务访问 → 事务含义</text>
+  <rect class="box" x="28" y="83" width="664" height="96" rx="10"/><text class="num" x="49" y="123">1</text><text x="90" y="113" font-weight="600">分析并识别数据域</text><text x="90" y="141">同一数据库；服务仍可跨表访问</text><text class="small" x="90" y="164">先建立候选归属，现有提交范围尚未因此改变</text>
+  <path class="edge" d="M65 179V200"/>
+  <rect class="box" x="28" y="204" width="664" height="96" rx="10"/><text class="num" x="49" y="244">2</text><text x="90" y="234" font-weight="600">表移入对应 schema</text><text x="90" y="262">仍在同一库；可暂留跨 schema 路径与同义词</text><text class="small" x="90" y="285">逻辑分组本身不必破坏本地事务</text>
+  <path class="edge" d="M65 300V321"/>
+  <rect class="milestone" x="28" y="325" width="664" height="96" rx="10"/><text class="num" x="49" y="365">3</text><text x="90" y="355" font-weight="600">服务仅直接访问本域</text><text x="90" y="383">仍在同一服务器；跨域协作改为服务契约</text><text class="small" x="90" y="406">各服务独立提交时，跨域流程不再自动属于同一事务</text>
+  <path class="edge" d="M65 421V442"/>
+  <rect class="box" x="28" y="446" width="664" height="96" rx="10"/><text class="num" x="49" y="486">4</text><text x="90" y="476" font-weight="600">复制到独立服务器（本图所选路线）</text><text x="90" y="504">旧库仍承接业务；新库持续追平数据</text><text class="small" x="90" y="527">复制不是双库事务；目标存在不等于切换完成</text>
+  <path class="edge" d="M65 542V563"/>
+  <rect class="milestone" x="28" y="567" width="664" height="96" rx="10"/><text class="num" x="49" y="607">5</text><text x="90" y="597" font-weight="600">切换连接，退出旧路径</text><text x="90" y="625">服务使用各域新库；确认后结束旧库依赖</text><text class="small" x="90" y="648">各域分别管理本地事务、容量与维护</text>
+  <text class="small" x="360" y="688" text-anchor="middle">箭头只表示迁移顺序；第 3 步是访问隔离，第 5 步是运行隔离</text>
+  <script><![CDATA[try { const t = localStorage.getItem('reading-notes-theme'); if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t); } catch {}]]></script>
+</svg>

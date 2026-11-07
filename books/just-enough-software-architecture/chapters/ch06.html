@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>第 6 章｜工程师使用模型 · Just Enough Software Architecture · 架构提升读书笔记</title>
+  <meta name="description" content="《Just Enough Software Architecture》第六章读书笔记：用列车相遇与网站查询解释抽象、模型推理及有效性，核算请求延迟，区分延迟与吞吐量，并说明为什么应当先问题、后模型。">
+  <link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+  <script src="../../../assets/theme.js"></script>
+  <script src="../../../assets/reader.js" defer></script>
+  <link rel="stylesheet" href="../../../assets/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header reader-header"><div class="container header-inner">
+    <a class="brand" href="../../../index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5.5C8.5 3.8 5.8 3.6 2.5 4.5v14c3.3-.9 6-.7 9.5 1 3.5-1.7 6.2-1.9 9.5-1v-14c-3.3-.9-6-.7-9.5 1Zm0 0v14"/></svg>书架</a>
+    <a class="reader-book-title" href="../index.html" lang="en">Just Enough Software Architecture</a>
+    <div class="theme-control" role="group" aria-label="外观" hidden><button type="button" data-theme-value="system" title="跟随系统"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path class="fill" d="M12 4a8 8 0 0 1 0 16Z"/></svg><span class="sr-only">跟随系统</span></button><button type="button" data-theme-value="light" title="浅色"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.6"/><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21M5.6 5.6l1.6 1.6M16.8 16.8l1.6 1.6M5.6 18.4l1.6-1.6M16.8 7.2l1.6-1.6"/></svg><span class="sr-only">浅色</span></button><button type="button" data-theme-value="dark" title="深色"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.5 14.6A7.8 7.8 0 0 1 9.4 4.5a7.8 7.8 0 1 0 10.1 10.1Z"/></svg><span class="sr-only">深色</span></button></div>
+  </div></header>
+  <main id="main" class="container reader-container">
+    <nav class="breadcrumb" aria-label="当前位置"><ol><li><a href="../../../index.html">书架</a></li><li><a href="../index.html">书籍概览</a></li><li aria-current="page">第 6 章</li></ol></nav>
+    <div class="reading-layout">
+      <aside class="toc"><nav aria-label="本页目录"><h2>本页目录</h2><ul>
+        <li><a href="#model-roundtrip">01　绕到模型里，是为了找到更容易推理的路</a></li>
+        <li><a href="#train-abstraction">02　列车相遇：抽象同时提供洞见和解题杠杆</a></li>
+        <li><a href="#website-performance">03　网站为什么变快：先找出真正起作用的关系</a></li>
+        <li><a href="#eliding-details">04　省略细节的条件，是没有丢掉当前答案所依赖的东西</a></li>
+        <li><a href="#modeling-skills">05　会读模型、会写模型，还不等于会借助它推理</a></li>
+        <li><a href="#question-first">06　先提出问题，再决定模型要长什么样</a></li>
+      </ul><p class="toc-note"><a href="../index.html">← 书籍概览</a></p></nav></aside>
+      <article class="article">
+        <header class="article-header">
+          <p class="eyebrow">READING NOTES / CHAPTER 06</p>
+          <h1>第 6 章｜工程师使用模型</h1>
+          <p class="article-deck"><span lang="en">Engineers Use Models</span> · 抽象怎样让复杂问题变得可理解、可推理</p>
+        </header>
+        <p><a href="ch05.html">第 5 章</a>讨论了何时值得建模、怎样让架构工作服从风险。本章进入全书第二部分，先回答一个更基础的问题：一个省略了大量现实细节的模型，为什么反而能够帮助工程师解决问题？这个问题想清楚以后，后面较细的模型、概念和记法，才不会变成需要逐项完成的文档任务。</p>
+        <p>作者从父亲的经历说起。父亲做了多年工程师，却很少在工作中直接使用微积分；公司仍要求招聘的工程师学过微积分，看重的是这类训练带来的能力：把复杂问题变成可以分析的抽象表达，在其中求解，再把结果带回现实。这段经历引出的主线，也是本章对软件建模的要求——模型应当增强解决问题的能力，而不只是留下一个看起来专业的产物。</p>
+        <details class="mobile-toc"><summary>本页目录 · 6 个小节</summary><nav aria-label="移动端本页目录"><ul>
+          <li><a href="#model-roundtrip">01　绕到模型里，是为了找到更容易推理的路</a></li>
+          <li><a href="#train-abstraction">02　列车相遇：抽象同时提供洞见和解题杠杆</a></li>
+          <li><a href="#website-performance">03　网站为什么变快：先找出真正起作用的关系</a></li>
+          <li><a href="#eliding-details">04　省略细节的条件，是没有丢掉当前答案所依赖的东西</a></li>
+          <li><a href="#modeling-skills">05　会读模型、会写模型，还不等于会借助它推理</a></li>
+          <li><a href="#question-first">06　先提出问题，再决定模型要长什么样</a></li>
+        </ul></nav></details>
+
+        <section id="model-roundtrip">
+          <h2><span class="section-number">01</span>绕到模型里，是为了找到更容易推理的路</h2>
+          <p>有些问题可以直接解决。想确认一个小函数在某个输入下的返回值，阅读几行代码可能已经足够；为了这件事另建一套架构模型，反而增加了工作。但当需要协调的对象和关系越来越多，人就很难同时把所有细节放在脑中。</p>
+          <p>§6.1 用程序规模解释这种变化。几个类还可以逐个理解；一组协作的类可以用设计模式来说明；系统再扩大，就需要能组织更大范围关系的抽象。这里的<strong>抽象（abstraction）</strong>，可以理解为：围绕当前问题，保留有关的性质和关系，让其他细节暂时退到背景。它不单是给许多类起一个总称，还要让人在这个层次上能够作出有意义的判断。</p>
+          <p>这样的选择也能提高沟通效率。两个人当然可以一起读几十万行代码，但如果只有几个小时解释系统，先画出主要参与者和协作关系，通常更有助于建立整体认识。接收者随后进入代码时，知道各段实现放在什么位置、为什么相连，局部事实才容易组织起来。模型不是替代所有代码阅读，而是改变阅读与思考的起点。</p>
+          <p>章首的图 6.1 把这种工作方式画成一条绕路：从现实问题抽取出模型中的问题，在模型里推理，最后把结果解释为现实中的答案或设计选择。原书称它为<strong>交换图（commuting diagram）</strong>，并将其在软件工程中的推广归于 Mary Shaw。图强调两条路径所要到达的结果应当相符；它并没有保证任意一种抽象都能得到正确答案。</p>
+          <figure class="concept-figure"><a href="../diagrams/exports/ch06-model-roundtrip.svg" target="_blank" rel="noopener"><img src="../diagrams/exports/ch06-model-roundtrip.svg" width="720" height="432" alt="从现实问题向上抽象为模型问题，在模型中推理，再向下解释为现实中的选择；底部虚线表示简单问题也可以直接解决。"></a><figcaption>图 6-1：实线箭头依次表示抽象、模型内推理和回到现实解释；底部虚线是可能的直接解题路径。沿实线绕行的收益，是把难题变成更容易处理的关系；结果能否用于现实，仍取决于保留的信息与假设。依据原书图 6.1 重绘并补充说明。点击<a href="../diagrams/exports/ch06-model-roundtrip.svg" target="_blank" rel="noopener">查看大图</a>。</figcaption></figure>
+          <p>读这张图时，尤其要留意最后一段向下的箭头。模型中能计算出一个数，与现实中应当作出什么决定，是相连但不同的两件事。计算所依据的对象、单位和条件，都需要在返回时恢复含义；否则，推理可能在模型内部完全正确，却回答了另一个问题。<a href="ch15.html#analysis-roundtrip">第 15 章的六步分析过程</a>会进一步展开这段往返，说明简化、转换和解释分别承担什么责任。</p>
+        </section>
+
+        <section id="train-abstraction">
+          <h2><span class="section-number">02</span>列车相遇：抽象同时提供洞见和解题杠杆</h2>
+          <p>§6.2 给出一道熟悉的应用题：两列车在同一条轨道上相向而行，相距 3000m，速度分别为 10m/s 和 20m/s，多久相遇？如果直接告诉我们方程 <code>10t + 20t = 3000</code>，代数并不难；真正需要学习的，是怎样从故事得到这个方程，以及解出来后怎样解释它。</p>
+          <p>令 <code>t</code> 表示从题目所述时刻开始经过的秒数。两车在这段时间分别走过 <code>10t</code> 米与 <code>20t</code> 米；相遇时，两段路程相加正好覆盖原来的间距。因此有 <code>30t = 3000</code>，得到 <code>t = 100</code>，也就是 100 秒后相遇。核对一下，两车分别走过 1000m 和 2000m，合计 3000m，结果与题意一致。</p>
+          <p>这个过程里的关键，是把“两个物体相向移动”转成“间距以两者速度之和缩短”。模型提供了<strong>洞见（insight）</strong>：真正有关的是间距、速度和时间之间的关系。代数又提供了求解的<strong>杠杆（leverage）</strong>：一旦写出正确关系，就能借助已有的运算规则得到结果，不必继续在列车故事的所有细节里打转。</p>
+          <p>与此同时，我们已经作了简化。按这道题通常的理想化理解，两车持续保持给定速度，把相遇理解为两个位置点重合，不考虑制动、停站和车身长度。列车颜色可以放心省略，因为改变颜色不会改变这个方程的答案；若问题改成“考虑制动后会不会碰撞”，制动能力与开始制动的时刻就不能再省略。细节有没有必要，必须连同问题一起判断。</p>
+          <p>软件架构很少像这道代数题一样，拥有普遍适用、容易求解的完整规则。作者没有许诺用一套模型自动算出最佳架构。他强调的是同一种收益：把系统中的关键关系显露出来以后，开发者才更有机会识别入侵路径、发现瓶颈、估计延迟，而不仅是确认功能有没有实现。</p>
+        </section>
+
+        <section id="website-performance">
+          <h2><span class="section-number">03</span>网站为什么变快：先找出真正起作用的关系</h2>
+          <p>§6.3 讲到作者听过的一场可扩展网站演讲。演讲者介绍自己从技术 X 切换到技术 Y 的过程，谈了新语言更紧凑、接口更好、扩展性更强等许多优点，最后展示了改善后的吞吐量。若只把这些事实并排记下来，很容易形成一个含混结论：Y 整体更先进，所以网站更快。</p>
+          <p>作者从中提取出的关键差别要具体得多。两种技术都使用关系数据库，但 X 按层次组织数据，一次页面请求平均需要 20 次查询；Y 使用扁平的数据组织，一次只需 1 次查询。按作者对这段经历的解释，吞吐量差异基本可以追到这项数据表示选择及其造成的访问次数差异。这里没有给出足以复核的产品名称和完整基准数据，不能把它扩写成某两类技术的普遍排名。</p>
+
+          <h3>先把一次请求的时间写清楚</h3>
+          <p>原书图 6.2 只保留客户端、服务器和数据库三个参与者，旁边写出客户端所经历的延迟：消息传输时间，加服务器处理时间，再加单次数据库查询处理时间乘查询次数。用简短符号表示，就是 <code>L = T传输 + T服务端 + n × T查询</code>。这里的服务器处理项不重复包含已经单列的数据库查询代价，查询项相加则对应逐次累积的等待。</p>
+          <p>书中代入的是便于说明的合理设想值，并非该网站公布的测量：传输 10ms、服务器处理 10ms、单次查询 25ms。在这套简化口径下，X 得到 <code>10 + 10 + 20 × 25 = 520ms</code>，Y 得到 <code>10 + 10 + 1 × 25 = 45ms</code>。两者相差 475ms，差别全部来自查询项。10ms 是公式中的传输总项，这次计算不再自行把它乘以往返次数。</p>
+          <figure class="concept-figure"><a href="../diagrams/exports/ch06-query-latency.svg" target="_blank" rel="noopener"><img src="../diagrams/exports/ch06-query-latency.svg" width="720" height="426" alt="同一个客户端—服务器—数据库模型中，传输与服务器处理各为10ms，单次查询为25ms；查询次数从20变为1，模型延迟从520ms变为45ms。"></a><figcaption>图 6-2：上方箭头表示一次页面请求涉及的调用方向，不是完整的交互时序；下方用同一组示意代价比较两种查询次数。这里计算的是单次请求延迟，不是每秒完成请求数。依据原书 §6.3 与图 6.2 重绘、复算；假设查询代价串行累加，忽略缓存与排队。点击<a href="../diagrams/exports/ch06-query-latency.svg" target="_blank" rel="noopener">查看大图</a>。</figcaption></figure>
+          <p>这就解释了模型为什么有用。面对许多技术差异，模型先把它们整理到几个影响结果的量里；一旦看到数据库项占了 X 的 500ms，就知道在这些前提下，围绕访问方式调查，比围绕语言语法简洁与否争论更有方向。若把其中的 10ms 服务器处理时间稍微压低，仍然无法消除那 20 次查询带来的主要等待。</p>
+
+          <h3>延迟分析不等于吞吐量分析</h3>
+          <p>这里需要明确一个原书叙述中的指标边界：正文以吞吐量改善引出问题，图 6.2 的公式却明确计算 <strong>客户端延迟（latency）</strong>。延迟回答“一次请求用了多久”，常用毫秒；<strong>吞吐量（throughput）</strong>回答“单位时间完成多少工作”，例如每秒完成多少请求。上面的 520ms 与 45ms，不能直接改写成吞吐量提升了多少倍，也不能把它们的倒数当作这个并发网站的处理能力。</p>
+          <p>减少查询次数既可能缩短一次请求的等待，也可能减少数据库承担的工作，从而帮助吞吐量。但要量化系统容量，还需要知道资源瓶颈、并发执行方式和负载等条件。原书的简图没有提供这些信息。本笔记据此保留作者关于结构性访问差异的解释，同时把这组算式限定为延迟的示意估算，不把它当作吞吐量证明。</p>
+          <p>同样，这个例子允许暂时省略编程语言，是因为当前模型把有关处理代价压缩进了时间参数，并将主要差异放在查询次数上；它没有证明语言在所有性能问题中都不重要。模型的力量来自抓住本次问题的主要关系，结论的适用范围也停在这些前提上。</p>
+        </section>
+
+        <section id="eliding-details">
+          <h2><span class="section-number">04</span>省略细节的条件，是没有丢掉当前答案所依赖的东西</h2>
+          <p>§6.4 强调，省略不是模型偶然存在的缺陷，而是模型能够被使用的原因。把现实的全部细节原封不动带进来，往往也把原来的认知负担带了进来。原书借用 Box 与 Draper 关于模型并不完全真实却仍可能有用的提醒，重点正在于有用性：简化后的表达能否支持眼下的推理。</p>
+          <p>书中再次使用纽约到洛杉矶的路线模型。若要寻找最短驾驶路线，路牌由木材、混凝土还是金属制成，通常可以不管；但如果只记录高速公路，而最短路线必须经过某条较小的道路，模型就已经把正确答案排除了。在仅有高速公路的网络里找出最短路，最多能证明它是这个网络里的最短路，不能直接声称它是现实路网的最短路。</p>
+          <p>反过来，把停车场、前院、林间道路等所有似乎能行驶的平面都塞进去，又会让模型巨大、难解，还需要分辨哪些路径实际允许通行。更多细节并不会无成本地换来更好的答案。工程师面对的是模型完整性与可用性之间的张力：有时必须接受较粗模型可能带来的近似或次优结果，才能在有限时间里得到足以支持选择的认识。</p>
+          <p>回到网站，原书明确说它忽略了缓存和排队。若问题只是解释为什么重复数据库访问值得调查，这种粗模型已经有帮助；若要承诺目标负载下的响应时间，就不能继续假装省略项没有作用。缓存可能使部分查询不再到达数据库，排队可能增加等待；如果查询可以并行，简单的 <code>n × T查询</code> 也未必等于关键路径上的耗时。</p>
+          <p>因此，模型有效性不是一个脱离用途的“准确／不准确”标签。它取决于要回答的问题、使用的条件，以及允许的误差。同一张图可能足够用来判断先调查哪里，却不足以支持精确的上线承诺；这与模型内部算术有没有算错，是两个不同层面的检查。</p>
+          <p>作为对本章方法的应用，可以先通过请求追踪确认查询次数，再对关键耗时项作小范围测量；若观察显示排队或缓存改变了判断，就补上相关关系，而不必立即把整个系统所有细节都画出。这是本笔记对验证方式的解释，不是原书网站已经做过的试验，也没有在此声称获得了新的性能数据。</p>
+          <aside class="key-point"><p class="key-point-label">核心观点</p><p>模型内的推理正确，还需要模型保留了当前问题所依赖的事实，才能把结论带回现实。应该省略的是不影响这次判断的细节；一旦用途或条件改变，原来合理的省略就可能需要重新审视。</p></aside>
+        </section>
+
+        <section id="modeling-skills">
+          <h2><span class="section-number">05</span>会读模型、会写模型，还不等于会借助它推理</h2>
+          <p>§6.5 把建模能力区分为三个层次：读懂模型、写出模型、用模型增强推理。原书图 6.3 用金字塔表达这种区分：阅读是基础，设计者应当进一步追求推理能力。它不是一份给出各层人数比例的统计图，也不是要求每位利益相关方都承担相同的建模职责。</p>
+          <p>读懂模型，意味着能够正确理解它表达了什么。书中以定制住宅为例，购房者需要看懂蓝图，才能在设计不符合需要时指出问题；软件的利益相关方同样需要理解与自己有关的表达，才能参与判断。若大家把一个箭头分别理解为“会调用”“一定同步等待”和“部署在一起”，看着同一张图也没有形成共同认识。</p>
+          <p>写出模型，则要把想法记录成别人能够阅读、语法正确的表达。设计者与执笔者可以不是同一个人：原书用设计师和绘图员说明这一点。因而，熟悉某种图形工具、会画规范的框与箭头，虽然是有用能力，却不能单凭这一点断言已经完成了设计判断。</p>
+          <p>用模型增强推理，要再多走一步。房屋设计者在蓝图上检查开门会不会挡住柜子，计算卧室需要多少墙面材料；图纸替他保存尺寸与位置，标准表达又使冲突更容易显露。他不只是把已经想好的房屋画下来，也在借助画出的内容发现问题、比较选择，形成原先尚未想到的结果。</p>
+          <p>软件中的对应情形，正是前面的延迟估算：模型让人把调用次数与时间相连，发现主要等待可能集中在哪里，继而判断修改哪个关系更值得调查。即使只用白板或纸笔，也已经在增强推理；即使产出一套格式漂亮的文档，如果没有据此解释系统、发现问题或改善设计，也未必达到这一层。</p>
+          <p>§6.8 把这项区分带回培训：应当明确课程要帮助人阅读、书写还是借助模型推理。对团队而言，最实在的变化，是讨论不再止于“图是否画完”，而开始关心“这张图让我们看出了什么，为什么这个结论成立”。这也延续了<a href="ch05.html#distribute-skills">第 5 章关于分布架构能力的讨论</a>。</p>
+        </section>
+
+        <section id="question-first">
+          <h2><span class="section-number">06</span>先提出问题，再决定模型要长什么样</h2>
+          <p>§6.6 将整章收束成一句原则：<strong>先问题，后模型（question first and model second）</strong>。先知道希望模型回答什么，才有依据选择抽象层次、保留哪些元素，以及省略哪些细节。若顺序反过来，只因为熟悉某种画法就先画，最后可能得到一个过度庞大、或者恰好缺少关键关系的模型。</p>
+          <p>前面的网站可以说明差别。若要解释响应时间为何受查询次数影响，就需要保留调用路径、次数和时间代价。假设问题改成“用户能否读取不属于自己的数据”，就要检查身份、授权、数据去向与可信边界；把 25ms 写得再精确，也不能补出缺失的权限关系。这是同一个系统中的两个问题，不宜因为已经有一张图，就认定它能同时回答。</p>
+          <p>先明确问题，并不要求一开始就知道答案。恰恰相反，问题可以来自尚未确认的风险，例如“这条处理路径是否可能超过延迟目标”。把这个疑问说具体，模型才有一个可用的方向；分析过程中发现原来问得不对，或者少了一个条件，再调整问题与模型。它与<a href="ch03.html#risk-loop">第 3 章的风险驱动闭环</a>相接：风险帮助选择要问什么，问题帮助选择用什么模型，而模型应当产生支持后续判断的证据。</p>
+          <p>作者用木工“多量一次，再下锯”的提醒，说明这条原则虽然朴素，却容易被跳过。先造出一个模型，偶尔也可能碰巧有用；但在投入之前确认它要回答什么，通常比事后努力给模型寻找用途更可靠。选择一种模型，也意味着暂时放下了其他模型，以及它们能够保留的不同细节。</p>
+          <aside class="key-point"><p class="key-point-label">核心观点</p><p>建模的出发点是一个需要回答的问题，终点是对现实更有依据的判断。抽象层次、记法和细节多少，都应服务于这段推理，而不是成为独立的完成目标。</p></aside>
+          <p>本章没有要求今后每次设计都严格走一套绘图步骤。它建立的是阅读后续章节时的尺度：模型有没有让问题更清楚，有没有提供可用的推理关系，结论又在哪些条件下成立。<a href="ch07.html#three-primary-models">第 7 章</a>将建立软件架构的共同概念，把领域模型、设计模型和代码模型放进相互关联的框架；这些概念的价值，仍要通过本章这条“从问题出发，再带着答案返回”的路径来体现。</p>
+        </section>
+
+        <details id="sources" class="source-note">
+          <summary>来源、原书对应与核查说明</summary>
+          <p>依据 George Fairbanks，<cite lang="en">Just Enough Software Architecture: A Risk-Driven Approach</cite>，Marshall &amp; Brainerd，2010 年 8 月首次印刷，ISBN <code>978-0-9846181-0-1</code>。已完整通读用户全书 PDF 第 6 章 <span lang="en">Engineers Use Models</span> 的章首及 §6.1—§6.8，本章无独立脚注。章节范围为全书 PDF 页序 121—128；正文为 121—127／印刷页 103—109，第 128 页为空白。已逐页回看上述原页，并核对图 6.1、图 6.2、图 6.3。核查日期：2026-11-06。中文标题与术语为笔记译法；<a href="https://www.georgefairbanks.com/book/">作者官网</a>提供书目信息。</p>
+          <ul>
+            <li>01：章首、§6.1 <span lang="en">Scale and complexity require abstraction</span>，印刷页 103—104，及图 6.1。交换图的含义与模型使用过程来自原书；对返回现实时需恢复单位、对象和条件的说明为笔记解释。</li>
+            <li>02：§6.2 <span lang="en">Abstractions provide insight and leverage</span>，印刷页 105。原题为 3000m、10m/s 与 20m/s，方程为 <code>10x + 20x = 3000</code>；本笔记改用 <code>t</code> 表示时间并复算为 100 秒。匀速、点位置及制动问题的讨论是对理想化前提的解释，不是补充的实测列车案例。</li>
+            <li>03：§6.3 <span lang="en">Reasoning about system qualities</span>、图 6.2，印刷页 105—106。查询次数与设想时间值均已对照原页；520ms、45ms 与 475ms 为本笔记按公式复算的结果，不是原书报告的基准测量。原文以吞吐量讨论案例，图中的公式明确写的是 <span lang="en">Client experienced latency</span>；本笔记区分两项指标，不将延迟比值或倒数当作并发系统吞吐量。</li>
+            <li>04：§6.4 <span lang="en">Models elide details</span>，印刷页 106—107，并结合 §6.3 明确省略缓存与排队的说明。最短路限定于模型网络、并行查询影响累加公式，以及通过追踪和测量核对前提，均为笔记解释或应用建议，没有补造试验结果。Box 与 Draper 的论述按本章转述，未将其原著列为已独立通读资料。</li>
+            <li>05：§6.5 <span lang="en">Models can amplify reasoning</span>、图 6.3，印刷页 107—108；培训目标的讨论对应 §6.8 <span lang="en">Further reading</span>，印刷页 109。住宅、绘图员与设计师的例子来自原书；同一箭头产生不同理解的情境为笔记解释。</li>
+            <li>06：§6.6 <span lang="en">Question first and model second</span>、§6.7 <span lang="en">Conclusion</span>，印刷页 108—109。权限问题为笔记假设，用来说明模型随问题变化；与风险驱动闭环的联系是对前文的衔接。</li>
+          </ul>
+          <p>补充指标核查：<a href="https://sre.google/sre-book/monitoring-distributed-systems/#xref_monitoring_golden-signals">Google SRE，Monitoring Distributed Systems — The Four Golden Signals</a>将延迟定义为服务一次请求所用的时间，并分别讨论每秒请求数等负载指标。这里只借此核对时间与速率的区别，不把后来资料当作 2010 年原书内容；核查日期 2026-11-06。</p>
+          <p>本文按论证重组为六节，不是逐段翻译。两张网页图为依据原书图 6.1、图 6.2 重绘的解释图，补入了中文说明与复算值，并非原图截图；原书图 6.3 已回看，正文用文字解释，不另复制金字塔。可编辑 SVG 为 <code>ch06-model-roundtrip.svg</code> 与 <code>ch06-query-latency.svg</code>，保存在本书 <code>diagrams/sources/</code>，与 <code>diagrams/exports/</code> 中网页副本一致。</p>
+        </details>
+
+        <nav class="chapter-pagination" aria-label="章节翻页"><a class="page-link prev" href="ch05.html" rel="prev"><span class="page-label">← 上一章 · 第 5 章</span><span class="page-title">建模建议</span></a><a class="page-link next" href="ch07.html" rel="next"><span class="page-label">下一章 · 第 7 章 →</span><span class="page-title">软件架构的概念模型</span></a><a class="pagination-home" href="../index.html">书籍概览与目录</a></nav>
+        <p class="source-note"><a href="../guide.html">全书导航：术语、案例与来源</a></p>
+      </article>
+    </div>
+  </main>
+  <footer class="site-footer"><div class="container footer-inner"><span>个人书架 / 中文读书笔记</span><a href="#main">回到顶部 ↑</a></div></footer>
+</body>
+</html>

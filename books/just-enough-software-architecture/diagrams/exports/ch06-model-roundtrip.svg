@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="432" viewBox="0 0 720 432" role="img" aria-labelledby="title desc">
+  <title id="title">通过模型求解，再把结果带回现实</title>
+  <desc id="desc">左下的现实问题向上抽象为模型中的问题，向右在模型中推理，再向下解释为现实中的答案或设计选择。底部虚线表示简单问题可以直接解决。模型结论能否用于现实，仍取决于保留的信息与假设。</desc>
+  <!-- Editable explanatory redraw based on Fairbanks, Figure 6.1. Export is identical. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 16px; fill: var(--muted); }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.2; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .label { font-size: 20px; font-weight: 600; text-anchor: middle; }
+    .detail { font-size: 16px; text-anchor: middle; fill: var(--muted); }
+    .direction { font-size: 16px; text-anchor: middle; }
+    .arrow { fill: none; stroke: var(--accent); stroke-width: 1.8; marker-end: url(#arrow); }
+    .direct { fill: none; stroke: var(--line); stroke-width: 1.6; stroke-dasharray: 6 5; marker-end: url(#direct-arrow); }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--accent)"/></marker>
+    <marker id="direct-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker>
+  </defs>
+  <rect width="720" height="432" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="30" y="38">绕到模型里，让关键关系更容易处理</text>
+  <text class="sub" x="30" y="67">从左下出发，沿实线向上、向右，再返回现实</text>
+
+  <rect class="focus" x="34" y="102" width="242" height="82" rx="7"/>
+  <text class="label" x="155" y="138">模型中的问题</text>
+  <text class="detail" x="155" y="166">保留相关性质与关系</text>
+  <path class="arrow" d="M287 143H431"/>
+  <text class="direction" x="360" y="126">在模型中推理</text>
+  <rect class="focus" x="444" y="102" width="242" height="82" rx="7"/>
+  <text class="label" x="565" y="138">模型中的结果</text>
+  <text class="detail" x="565" y="166">计算、比较或发现问题</text>
+
+  <path class="arrow" d="M155 277V196"/>
+  <text class="direction" x="92" y="241">抽象 ↑</text>
+  <path class="arrow" d="M565 196V277"/>
+  <text class="direction" x="635" y="233">↓ 解释</text>
+  <text class="direction" x="635" y="257">并核对前提</text>
+
+  <rect class="node" x="34" y="290" width="242" height="82" rx="7"/>
+  <text class="label" x="155" y="326">现实中的问题</text>
+  <text class="detail" x="155" y="354">需要理解、预测或选择</text>
+  <path class="direct" d="M287 331H431"/>
+  <text class="detail" x="360" y="313">也可能直接解决</text>
+  <rect class="node" x="444" y="290" width="242" height="82" rx="7"/>
+  <text class="label" x="565" y="326">现实中的答案或选择</text>
+  <text class="detail" x="565" y="354">仍受模型的适用条件约束</text>
+
+  <text class="sub" x="30" y="409">图形不保证答案正确；恰当的抽象与对应关系才是关键。</text>
+</svg>

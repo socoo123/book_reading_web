@@ -1,0 +1,336 @@
+[
+  {
+    "type": "text",
+    "id": "title",
+    "x": 20,
+    "y": 20,
+    "text": "本地完成编辑，联网后传播与合并",
+    "fontSize": 25,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "sub",
+    "x": 20,
+    "y": 62,
+    "text": "实线：设备内部操作　虚线：可延后的网络同步",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "rectangle",
+    "id": "phone",
+    "x": 20,
+    "y": 120,
+    "width": 330,
+    "height": 355,
+    "strokeColor": "#386d74",
+    "backgroundColor": "transparent",
+    "fillStyle": "solid",
+    "roughness": 0.7,
+    "strokeWidth": 1.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "rectangle",
+    "id": "laptop",
+    "x": 410,
+    "y": 120,
+    "width": 330,
+    "height": 355,
+    "strokeColor": "#386d74",
+    "backgroundColor": "transparent",
+    "fillStyle": "solid",
+    "roughness": 0.7,
+    "strokeWidth": 1.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "text",
+    "id": "phone-label",
+    "x": 40,
+    "y": 140,
+    "text": "手机 · 可写副本",
+    "fontSize": 20,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "laptop-label",
+    "x": 430,
+    "y": 140,
+    "text": "电脑 · 可写副本",
+    "fontSize": 20,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "rectangle",
+    "id": "ui1",
+    "x": 65,
+    "y": 195,
+    "width": 240,
+    "height": 60,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.7,
+    "strokeWidth": 1.5,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "界面",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "ui2",
+    "x": 455,
+    "y": 195,
+    "width": 240,
+    "height": 60,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.7,
+    "strokeWidth": 1.5,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "界面",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "data1",
+    "x": 65,
+    "y": 365,
+    "width": 240,
+    "height": 75,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.7,
+    "strokeWidth": 1.5,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "持久本地数据\n与待同步修改",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "data2",
+    "x": 455,
+    "y": 365,
+    "width": 240,
+    "height": 75,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.7,
+    "strokeWidth": 1.5,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "持久本地数据\n与待同步修改",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "edit1",
+    "x": 185,
+    "y": 261,
+    "width": 0,
+    "height": 98,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        98
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid",
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "ui1"
+    },
+    "end": {
+      "id": "data1"
+    },
+    "startArrowhead": "arrow"
+  },
+  {
+    "type": "arrow",
+    "id": "edit2",
+    "x": 575,
+    "y": 261,
+    "width": 0,
+    "height": 98,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        98
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid",
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "ui2"
+    },
+    "end": {
+      "id": "data2"
+    },
+    "startArrowhead": "arrow"
+  },
+  {
+    "type": "text",
+    "id": "local1",
+    "x": 205,
+    "y": 284,
+    "text": "编辑↓\n刷新↑",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "text",
+    "id": "local2",
+    "x": 595,
+    "y": 284,
+    "text": "编辑↓\n刷新↑",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "rectangle",
+    "id": "relay",
+    "x": 240,
+    "y": 585,
+    "width": 280,
+    "height": 75,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.7,
+    "strokeWidth": 1.5,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "同步中转服务",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "sync1",
+    "x": 185,
+    "y": 446,
+    "width": 90,
+    "height": 133,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        90,
+        133
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "dashed",
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "data1"
+    },
+    "end": {
+      "id": "relay"
+    },
+    "startArrowhead": "arrow"
+  },
+  {
+    "type": "arrow",
+    "id": "sync2",
+    "x": 575,
+    "y": 446,
+    "width": 90,
+    "height": 133,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        -90,
+        133
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "dashed",
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "data2"
+    },
+    "end": {
+      "id": "relay"
+    },
+    "startArrowhead": "arrow"
+  },
+  {
+    "type": "text",
+    "id": "s1",
+    "x": 30,
+    "y": 515,
+    "text": "发送 / 接收\n断网后再继续",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "text",
+    "id": "s2",
+    "x": 590,
+    "y": 515,
+    "text": "发送 / 接收\n到达后合并",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "text",
+    "id": "legend",
+    "x": 20,
+    "y": 704,
+    "text": "本地保存 ≠ 已同步其他设备；中转不预设唯一排序主节点。",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  }
+]

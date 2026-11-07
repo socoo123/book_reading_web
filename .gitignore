@@ -1,0 +1,10 @@
+# Original books and locally extracted source material
+originals/
+*.pdf
+
+# Local editor, OS and generated files
+.vscode/
+.DS_Store
+_site/
+__pycache__/
+*.pyc

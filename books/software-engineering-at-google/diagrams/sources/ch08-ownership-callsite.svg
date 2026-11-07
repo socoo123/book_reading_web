@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="410" viewBox="0 0 720 410" role="img" aria-labelledby="title desc">
+  <title id="title">所有权能不能在调用点读出来</title>
+  <desc id="desc">同一次归档调用的两种接口对照，每行从左往右依次是调用点写法、读者能判断什么、答案在哪里。上行：参数是裸指针 Report*，调用写成 Archive(report)，读者看不出对象只是被临时使用还是被接管保存，只能离开调用点去查文档、找实现，甚至问原作者。下行：参数是按值传入的 unique_ptr&lt;Report&gt;，调用写成 Archive(std::move(report))，参数类型表明接管，调用处写明 move，读者在调用点就能判断所有权已经移交，不必打开 Archive 的实现。虚线框表示读者必须离开调用点才能找到答案。</desc>
+  <!-- Original editable hand-written SVG; web export is an identical copy. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 15px; fill: var(--muted); }
+    .label { font-size: 18px; font-weight: 600; text-anchor: middle; }
+    .body { font-size: 16px; fill: var(--muted); text-anchor: middle; }
+    .code { font-size: 16px; font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace; text-anchor: middle; }
+    .note { font-size: 14px; fill: var(--muted); text-anchor: middle; }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.3; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .away { stroke-dasharray: 5 4; }
+    .flow { fill: none; stroke: var(--line); stroke-width: 1.8; marker-end: url(#arrow); }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker></defs>
+  <rect width="720" height="410" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="28" y="40">所有权能不能在调用点读出来</text>
+  <text class="sub" x="28" y="69">同一次归档调用：上行参数是裸指针，下行参数是按值传入的 unique_ptr</text>
+  <text class="note" x="173" y="104">调用点写法</text>
+  <text class="note" x="442" y="104">读者能判断什么</text>
+  <text class="note" x="628" y="104">答案在哪里</text>
+
+  <rect class="node" x="28" y="118" width="290" height="108" rx="7"/>
+  <text class="label" x="173" y="152">参数是 Report*</text>
+  <text class="code" x="173" y="192">Archive(report);</text>
+  <path class="flow" d="M324 172H350"/>
+  <rect class="node" x="358" y="118" width="168" height="108" rx="7"/>
+  <text class="label" x="442" y="152">看不出是否移交</text>
+  <text class="body" x="442" y="182">临时使用，</text>
+  <text class="body" x="442" y="208">还是接管保存？</text>
+  <path class="flow" d="M532 172H556"/>
+  <rect class="node away" x="564" y="118" width="128" height="108" rx="7"/>
+  <text class="label" x="628" y="152">离开调用点</text>
+  <text class="body" x="628" y="182">查文档、找实现</text>
+  <text class="body" x="628" y="208">甚至问原作者</text>
+
+  <rect class="focus" x="28" y="246" width="290" height="108" rx="7"/>
+  <text class="label" x="173" y="280">参数是 unique_ptr&lt;Report&gt;</text>
+  <text class="code" x="173" y="320">Archive(std::move(report));</text>
+  <path class="flow" d="M324 300H350"/>
+  <rect class="focus" x="358" y="246" width="168" height="108" rx="7"/>
+  <text class="label" x="442" y="280">所有权已移交</text>
+  <text class="body" x="442" y="310">参数按值接管</text>
+  <text class="body" x="442" y="336">调用处写明 move</text>
+  <path class="flow" d="M532 300H556"/>
+  <rect class="focus" x="564" y="246" width="128" height="108" rx="7"/>
+  <text class="label" x="628" y="280">留在调用点</text>
+  <text class="body" x="628" y="310">不必打开</text>
+  <text class="body" x="628" y="336">Archive 实现</text>
+
+  <text class="note" x="360" y="388">虚线框：读者必须离开调用点才能找到答案</text>
+</svg>

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 520" role="img" aria-labelledby="title desc">
+  <title id="title">现有单体与共享数据边界</title><desc id="desc">Sysops Squad 多种职责在一个单体部署边界中，业务数据位于一个数据库 schema。内部归组不代表目标服务边界，报表使用较多数据库视图。</desc>
+  <defs><style>
+    :root{--surface:#fcfbf8;--text:#292824;--muted:#65635d;--box:#f0eee8;--line:#68675f}
+    @media(prefers-color-scheme:dark){:root:not([data-theme='light']){--surface:#252524;--text:#e6e3dc;--muted:#b5b1a8;--box:#323430;--line:#aaa89e}}
+    :root[data-theme='dark']{--surface:#252524;--text:#e6e3dc;--muted:#b5b1a8;--box:#323430;--line:#aaa89e}
+    .bg{fill:var(--surface)}.box{fill:var(--box);stroke:var(--line);stroke-width:1.5}.boundary{fill:none;stroke:var(--line);stroke-width:2}.flow{fill:none;stroke:var(--line);stroke-width:2.5;marker-end:url(#arrow)}.head{font:600 20px system-ui,sans-serif;fill:var(--text)}.label{font:16px system-ui,sans-serif;fill:var(--text)}.note{font:14px system-ui,sans-serif;fill:var(--muted)}.tip{fill:var(--line)}
+  </style><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="tip" d="M0 0 10 5 0 10Z"/></marker></defs>
+  <rect class="bg" width="720" height="520"/><text class="head" x="28" y="35">当前基线：职责分组，不等于独立部署</text>
+  <rect class="boundary" x="28" y="58" width="664" height="228" rx="12"/><text class="head" x="48" y="88">一个单体部署边界</text>
+  <rect class="box" x="48" y="108" width="624" height="38" rx="6"/><text class="label" x="360" y="133" text-anchor="middle">统一用户界面</text>
+  <rect class="box" x="48" y="160" width="196" height="44" rx="6"/><text class="label" x="146" y="188" text-anchor="middle">客户／合同／账务</text>
+  <rect class="box" x="262" y="160" width="196" height="44" rx="6"/><text class="label" x="360" y="188" text-anchor="middle">工单／分派／投递</text>
+  <rect class="box" x="476" y="160" width="196" height="44" rx="6"/><text class="label" x="574" y="188" text-anchor="middle">知识库／问卷</text>
+  <rect class="box" x="48" y="218" width="196" height="44" rx="6"/><text class="label" x="146" y="246" text-anchor="middle">登录／用户／专家</text>
+  <rect class="box" x="262" y="218" width="196" height="44" rx="6"/><text class="label" x="360" y="246" text-anchor="middle">报表 Reporting</text>
+  <text class="note" x="476" y="236">报表使用较多视图</text><text class="note" x="476" y="258">需与数据库团队协作</text>
+  <path class="flow" d="M360 286V348"/><text class="note" x="377" y="324">总体数据依赖</text>
+  <rect class="boundary" x="28" y="354" width="664" height="126" rx="12"/><text class="head" x="48" y="386">一个数据库 schema · 24 张表</text>
+  <text class="label" x="48" y="418">客户与偏好　／　合同与账务　／　用户与专家</text>
+  <text class="label" x="48" y="447">工单与历史　／　知识库　　　／　问卷与反馈</text>
+  <text class="note" x="28" y="506">内部归组只帮助阅读；未展示逐组件访问关系，也不是拆分后的目标架构。</text>
+  <script><![CDATA[try { const t = localStorage.getItem('reading-notes-theme'); if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t); } catch {}]]></script>
+</svg>

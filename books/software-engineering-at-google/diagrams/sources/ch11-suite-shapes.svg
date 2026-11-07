@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="440" viewBox="0 0 720 440" role="img" aria-labelledby="title desc">
+  <title id="title">三种测试套件形状与缺陷暴露位置</title>
+  <desc id="desc">三列分别是金字塔、冰淇淋筒和沙漏，每列自上而下为端到端、集成、单元三层，横条长短示意各层测试用例的相对数量。金字塔按用例数量约为端到端 5%、集成 15%、单元 80%，多数逻辑缺陷在单元层暴露，上层确认组合能一起工作。冰淇淋筒有大量端到端测试，集成和单元测试很少，简单缺陷也要到完整系统才发现，反馈又慢又难查。沙漏有大量端到端和单元测试，集成层很薄，组件契约问题只能靠端到端兜底，常见原因是紧耦合。虚线框标出薄弱的一层。</desc>
+  <!-- Original editable hand-written SVG; web export is an identical copy. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 15px; fill: var(--muted); }
+    .label { font-size: 18px; font-weight: 600; text-anchor: middle; }
+    .layer { font-size: 16px; font-weight: 600; }
+    .body { font-size: 16px; text-anchor: middle; }
+    .note { font-size: 14px; fill: var(--muted); text-anchor: middle; }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.3; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .thin { stroke-dasharray: 5 4; }
+    .flow { fill: none; stroke: var(--line); stroke-width: 1.8; marker-end: url(#arrow); }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker></defs>
+  <rect width="720" height="440" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="28" y="40">套件形状决定缺陷在哪一层暴露</text>
+  <text class="sub" x="28" y="69">横条长短示意各层测试用例的相对数量；虚线框表示薄弱的一层</text>
+
+  <text class="layer" x="28" y="156">端到端</text>
+  <text class="layer" x="28" y="206">集成</text>
+  <text class="layer" x="28" y="256">单元</text>
+
+  <text class="label" x="194" y="110">金字塔：推荐</text>
+  <rect class="focus" x="164" y="130" width="60" height="40" rx="5"/>
+  <text class="body" x="194" y="156">约 5%</text>
+  <rect class="focus" x="140" y="180" width="108" height="40" rx="5"/>
+  <text class="body" x="194" y="206">约 15%</text>
+  <rect class="focus" x="110" y="230" width="168" height="40" rx="5"/>
+  <text class="body" x="194" y="256">约 80%</text>
+  <path class="flow" d="M194 280V302"/>
+  <text class="body" x="194" y="330">多数逻辑缺陷</text>
+  <text class="body" x="194" y="354">在单元层暴露</text>
+  <text class="note" x="194" y="382">上层确认组合能一起工作</text>
+
+  <text class="label" x="401" y="110">冰淇淋筒：反模式</text>
+  <rect class="node" x="317" y="130" width="168" height="40" rx="5"/>
+  <text class="body" x="401" y="156">大量</text>
+  <rect class="node thin" x="357" y="180" width="88" height="40" rx="5"/>
+  <text class="body" x="401" y="206">较少</text>
+  <rect class="node thin" x="375" y="230" width="52" height="40" rx="5"/>
+  <text class="body" x="401" y="256">很少</text>
+  <path class="flow" d="M401 280V302"/>
+  <text class="body" x="401" y="330">简单缺陷也要</text>
+  <text class="body" x="401" y="354">到完整系统才发现</text>
+  <text class="note" x="401" y="382">反馈又慢又难查</text>
+
+  <text class="label" x="608" y="110">沙漏：反模式</text>
+  <rect class="node" x="532" y="130" width="152" height="40" rx="5"/>
+  <text class="body" x="608" y="156">大量</text>
+  <rect class="node thin" x="582" y="180" width="52" height="40" rx="5"/>
+  <text class="body" x="608" y="206">很少</text>
+  <rect class="node" x="524" y="230" width="168" height="40" rx="5"/>
+  <text class="body" x="608" y="256">大量</text>
+  <path class="flow" d="M608 280V302"/>
+  <text class="body" x="608" y="330">组件契约问题</text>
+  <text class="body" x="608" y="354">只能靠端到端兜底</text>
+  <text class="note" x="608" y="382">常见原因：紧耦合</text>
+
+  <text class="note" x="360" y="420">金字塔的比例按测试用例数量计算，各团队需按自身情况调整</text>
+</svg>

@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="520" viewBox="0 0 720 520" role="img" aria-labelledby="title desc">
+  <title id="title">让技术回答对应的失败问题</title>
+  <desc id="desc">三行从左到右将风险、技术和证据相连。领域关系理解不一致，用领域模型和专家核对；共享资源失效，用部署视图和故障情境；并发死锁，用运行时模型和协议分析。每种技术支持特定范围的判断，不能只凭图形符号认定风险消失。</desc>
+  <!-- Original, editable hand-written SVG. The export is an identical web copy. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 16px; fill: var(--muted); }
+    .column { font-size: 17px; font-weight: 600; text-anchor: middle; fill: var(--muted); }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.2; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .label { font-size: 18px; text-anchor: middle; }
+    .technique { font-weight: 600; }
+    .evidence { font-size: 17px; text-anchor: middle; }
+    .arrow { fill: none; stroke: var(--line); stroke-width: 1.8; marker-end: url(#arrow); }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker></defs>
+  <rect width="720" height="520" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="30" y="40">让技术回答对应的失败问题</text>
+  <text class="sub" x="30" y="69">从需要的判断倒推证据，再选择模型和活动</text>
+  <text class="column" x="125" y="111">担心的失败</text>
+  <text class="column" x="363" y="111">采用的技术</text>
+  <text class="column" x="598" y="111">支持的判断</text>
+
+  <rect class="node" x="30" y="132" width="190" height="92" rx="7"/>
+  <text class="label" x="125" y="169">业务概念的含义</text>
+  <text class="label" x="125" y="197">和关系没有对齐</text>
+  <path class="arrow" d="M228 178H254"/>
+  <rect class="focus" x="262" y="132" width="202" height="92" rx="7"/>
+  <text class="label technique" x="363" y="169">领域模型</text>
+  <text class="label technique" x="363" y="197">与专家核对</text>
+  <path class="arrow" d="M472 178H498"/>
+  <rect class="node" x="506" y="132" width="184" height="92" rx="7"/>
+  <text class="evidence" x="598" y="169">明确概念与关系</text>
+  <text class="evidence" x="598" y="197">修正理解分歧</text>
+
+  <rect class="node" x="30" y="246" width="190" height="92" rx="7"/>
+  <text class="label" x="125" y="283">共享资源失效</text>
+  <text class="label" x="125" y="311">使多个部分停摆</text>
+  <path class="arrow" d="M228 292H254"/>
+  <rect class="focus" x="262" y="246" width="202" height="92" rx="7"/>
+  <text class="label technique" x="363" y="283">部署视图</text>
+  <text class="label technique" x="363" y="311">与故障情境</text>
+  <path class="arrow" d="M472 292H498"/>
+  <rect class="node" x="506" y="246" width="184" height="92" rx="7"/>
+  <text class="evidence" x="598" y="283">看见共同依赖</text>
+  <text class="evidence" x="598" y="311">判断影响范围</text>
+
+  <rect class="node" x="30" y="360" width="190" height="92" rx="7"/>
+  <text class="label" x="125" y="397">并发协议可能</text>
+  <text class="label" x="125" y="425">进入死锁</text>
+  <path class="arrow" d="M228 406H254"/>
+  <rect class="focus" x="262" y="360" width="202" height="92" rx="7"/>
+  <text class="label technique" x="363" y="397">运行时模型</text>
+  <text class="label technique" x="363" y="425">与协议分析</text>
+  <path class="arrow" d="M472 406H498"/>
+  <rect class="node" x="506" y="360" width="184" height="92" rx="7"/>
+  <text class="evidence" x="598" y="397">检查等待关系</text>
+  <text class="evidence" x="598" y="425">核对协议约束</text>
+  <text class="sub" x="30" y="490">结论范围取决于模型、分析方法与假设；图形符号本身不是证据。</text>
+</svg>

@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>第 17 章｜代码搜索 · Software Engineering at Google · 架构提升读书笔记</title>
+  <meta name="description" content="《Software Engineering at Google》第十七章读书笔记：理解代码搜索如何连接语义导航、版本历史与开发工具，以及索引、延迟、检索排序、完整性和工作区搜索之间的取舍。">
+  <link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+  <script src="../../../assets/theme.js"></script>
+  <script src="../../../assets/reader.js" defer></script>
+  <link rel="stylesheet" href="../../../assets/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header reader-header"><div class="container header-inner">
+    <a class="brand" href="../../../index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5.5C8.5 3.8 5.8 3.6 2.5 4.5v14c3.3-.9 6-.7 9.5 1 3.5-1.7 6.2-1.9 9.5-1v-14c-3.3-.9-6-.7-9.5 1Zm0 0v14"/></svg>书架</a>
+    <a class="reader-book-title" href="../index.html" lang="en">Software Engineering at Google</a>
+    <div class="theme-control" role="group" aria-label="外观" hidden><button type="button" data-theme-value="system" title="跟随系统"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path class="fill" d="M12 4a8 8 0 0 1 0 16Z"/></svg><span class="sr-only">跟随系统</span></button><button type="button" data-theme-value="light" title="浅色"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.6"/><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21M5.6 5.6l1.6 1.6M16.8 16.8l1.6 1.6M5.6 18.4l1.6-1.6M16.8 7.2l1.6-1.6"/></svg><span class="sr-only">浅色</span></button><button type="button" data-theme-value="dark" title="深色"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.5 14.6A7.8 7.8 0 0 1 9.4 4.5a7.8 7.8 0 1 0 10.1 10.1Z"/></svg><span class="sr-only">深色</span></button></div>
+  </div></header>
+  <main id="main" class="container reader-container">
+    <nav class="breadcrumb" aria-label="当前位置"><ol><li><a href="../../../index.html">书架</a></li><li><a href="../index.html">书籍概览</a></li><li aria-current="page">第 17 章</li></ol></nav>
+    <div class="reading-layout">
+      <aside class="toc"><nav aria-label="本页目录"><h2>本页目录</h2><ul>
+        <li><a href="#reading-through-questions">01　连续的阅读问答</a></li>
+        <li><a href="#search-intents">02　五种工作意图</a></li>
+        <li><a href="#global-view-and-common-address">03　全局视图与共同地址</a></li>
+        <li><a href="#latency-and-freshness">04　响应与索引延迟</a></li>
+        <li><a href="#index-before-matching">05　索引与精确匹配</a></li>
+        <li><a href="#retrieval-and-ranking">06　检索与排序</a></li>
+        <li><a href="#trust-and-completeness">07　信任与完整性</a></li>
+        <li><a href="#history-and-workspaces">08　历史与工作区</a></li>
+      </ul><p class="toc-note"><a href="../index.html">← 书籍概览</a></p></nav></aside>
+      <article class="article">
+        <header class="article-header">
+          <p class="eyebrow">READING NOTES / CHAPTER 17</p>
+          <h1>第 17 章｜代码搜索</h1>
+          <p class="article-deck"><span lang="en">Code Search</span> · 架构提升读书笔记</p>
+        </header>
+        <p>维护一个陌生模块时，写代码往往开始得很晚。工程师先要找到入口，弄清一个方法真正调用了什么，再看看别人怎样使用同一个 API；遇到异常，还要把当前行为和某次历史变更接起来。这些工作看似只是“找东西”，实际是在为下一次修改建立足够可靠的认识。</p>
+        <p>本章的 Code Search 是 Google 内部的代码搜索与浏览工具。Alexander Neubeck 和 Ben St. John 讲述了它怎样从类似 <code>grep</code> 的搜索，发展成贯通源码、语义关系、版本历史和其他开发工具的阅读入口。贯穿全章的设计方向很清楚：让工程师在读代码时，能够用很少的操作回答下一个问题，并继续原来的思路。</p>
+        <details class="mobile-toc"><summary>本页目录 · 8 个小节</summary><nav aria-label="移动端本页目录"><ul>
+          <li><a href="#reading-through-questions">01　让读代码成为连续的问答</a></li>
+          <li><a href="#search-intents">02　同一个搜索框，承接五种工作意图</a></li>
+          <li><a href="#global-view-and-common-address">03　一份全局视图，一个共同的代码地址</a></li>
+          <li><a href="#latency-and-freshness">04　快得能接住思路，新得能跟上修改</a></li>
+          <li><a href="#index-before-matching">05　先用索引缩小工作，再做精确匹配</a></li>
+          <li><a href="#retrieval-and-ranking">06　排好结果之前，先把好候选找出来</a></li>
+          <li><a href="#trust-and-completeness">07　让“没有找到”成为可以使用的结论</a></li>
+          <li><a href="#history-and-workspaces">08　让历史与工作区保持在正确的版本里</a></li>
+        </ul></nav></details>
+
+        <section id="reading-through-questions">
+          <h2><span class="section-number">01</span>让读代码成为连续的问答</h2>
+          <p>最初的文本搜索解决的是“哪些地方出现了这段文字”。Google 把内部的类 <code>grep</code> 工具与面向外部代码搜索的排序、界面经验结合起来，后来接入 Kythe/Grok，加入定义跳转和交叉引用，工具的重心也随之向理解代码移动。</p>
+          <p><strong>交叉引用（cross-reference）</strong>记录程序元素之间的关系，例如某个调用引用了哪个函数、某个类型在哪些位置被使用。它与搜索同名字符串有重要差别：两个类都可以有 <code>Read</code> 方法，注释里也可能提到 <code>Read</code>，但它们未必指向同一个程序元素。原书介绍的 Kythe 依靠编译与构建信息辨认这些关系，从而把一次点击带到真正相关的定义或使用处。</p>
+          <p>在文件阅读界面里，一个函数调用可以通向定义，导入的文件名可以通向源文件，注释中的缺陷编号可以通向问题记录。点击符号能查看使用位置，悬停局部变量能高亮它在函数中的其他出现处。源码不再只是一页需要反复复制关键词的文字，而成为可以沿关系继续阅读的材料。</p>
+          <p>假设报表服务偶尔把尚未生成的数据导出为空文件。接手者先从错误日志进入请求处理函数，发现它调用 <code>ReadSnapshot</code>；沿定义阅读，才知道返回的空集合既可能代表没有记录，也可能经过调用方包装，掩盖了“数据尚未就绪”。接着查看其他调用处，找到一个区分这两种情形的实现，再打开它的测试确认预期行为。每一步的发现，都决定下一步该读什么。</p>
+          <p>如果每次都要记住符号、返回搜索框、筛选同名结果，工程师就要不断重建上下文。定义、引用、相关测试和历史能直接到达时，操作退到背景，注意力得以停留在数据含义和控制流程上。书中把这个方向概括为用一次点击回答下一个关于代码的问题；它说明了为什么代码搜索的价值不能只用“能搜到多少文件”衡量。</p>
+          <p>文本搜索与语义导航因此各有位置。前者可以查错误信息、配置、注释以及缺少语言分析支持的文件；后者适合确认符号身份和程序结构。两者配合，工程师不必一开始就知道准确的文件位置和完整名称，也能逐步探索。</p>
+          <aside class="key-point"><p class="key-point-label">核心观点</p><p>代码搜索最重要的产物，是帮助工程师形成可以继续工作的理解。文本匹配提供入口，语义关系把入口接成阅读路径；每少一次重新定位，就少一次中断思路。</p></aside>
+        </section>
+
+        <section id="search-intents">
+          <h2><span class="section-number">02</span>同一个搜索框，承接五种工作意图</h2>
+          <p>本章引用的 2015 年研究，将搜索背后的问题概括为 Where、What、How、Why，以及 Who and When。这项研究观察了 Google 23 个团队的 27 位开发者，结合约两周的日志和即时问卷；下面的百分比，是其中 259 条可以归类的自由回答在五类问题中的分布。</p>
+          <p><strong>Where：代码在哪里，约占 16%。</strong> 工程师已经知道自己要找什么，例如函数定义、某个配置或 API 的使用处，只缺具体位置。此时最重要的是迅速消除一个小缺口。相关性排序把常见目标放到前面，路径、语言和符号类别等条件则帮助定位较特殊的目标。搜索结果还可以直接分享给同事：原书举例，在评审中附上 <code>cool_hash.h</code>，提醒对方考虑已有的专用哈希表。一个链接让建议有了可立即检查的对象。</p>
+          <p><strong>What：这段代码做什么，约占四分之一。</strong> 这类阅读更具探索性。接手者可能需要顺着调用层级理解请求怎样流动，也可能要在头文件、实现、测试和构建文件之间切换。只找到一行匹配无法回答整个问题，工具需要让相关文件之间的移动足够轻便。查看测试尤其有价值：实现展示当前过程，测试往往展示维护者希望保留的行为。</p>
+          <p><strong>How：这件事怎样做，约占三分之一，是样本中最多的一类。</strong> 原书以远程文件读取为例：开发者可能已找到相应 API，接下来需要了解连接怎样可靠建立、特定错误怎样处理；也可能连应该使用哪个库都还不知道，例如想找到合适的整数指纹计算实现。搜索把问题带到候选库，交叉引用再展示真实调用方式。笔记进一步强调，阅读调用例子时应把初始化、错误处理和资源释放一起看进去，才能理解这段用法赖以成立的条件。</p>
+          <p>在前面的假设报表服务里，另一个调用处之所以有帮助，正是因为它展示了如何区分“没有记录”和“尚未就绪”。直接复制一行读取调用，会丢掉例子真正有价值的部分。搜索降低了发现经验的成本，判断这份经验是否适用于当前任务，仍然需要阅读周围的契约和测试。</p>
+          <p><strong>Why：代码为何这样表现，约占 16%。</strong> 调试时，工程师通常带着一个预期进入源码：某个修复应当生效，某个条件应当走另一条分支。搜索需要帮助他对照这个预期与实际实现。这里的关键还包括时间：线上二进制可能来自几周或几个月前，刚失败的开发测试则可能包含几分钟前的修改。只有进入相应版本，源码才能成为解释这次行为的证据。</p>
+          <p><strong>Who and When：谁在何时作了修改，约占 8%。</strong> 行历史、提交和评审可以帮助还原变更过程，也能提供进一步咨询或邀请评审的人选。不过原书脚注提醒，大量机器生成的变更会降低朴素 <code>blame</code> 的价值。最后碰过一行的人，可能只是执行机械迁移；理解设计原因，往往要继续查看相关评审和更早的上下文。这也接上了<a href="ch09.html#change-descriptions">第九章对变更说明的讨论</a>：今天写清理由，后来的人才有机会重建判断。</p>
+          <p>这五种意图说明，查询字符串相同，合适的结果也可能不同。搜索一个函数名，可能想去定义、找调用示例、确认谁改过它，或者分析一次故障。工具需要为这些方向分别保留入口。</p>
+        </section>
+
+        <section id="global-view-and-common-address">
+          <h2><span class="section-number">03</span>一份全局视图，一个共同的代码地址</h2>
+          <p>很多项目在本地 IDE 里就能完成这些工作。Google 单独建设 Web 工具，首先来自规模约束：全量代码库已经无法放进一台工作站；即使还放得下，每位开发者各自建立完整索引，也会重复消耗时间和机器资源。把公共索引集中构建一次，后续优化就能同时服务所有使用者。</p>
+          <p>集中索引还改变了可见范围。为了缩短本地索引时间，工程师往往只打开自己的项目；搜索的边界也就跟着项目配置缩小。原书所说的“零配置”全局视图，不要求先准备另一个团队的项目描述或构建环境，降低了阅读陌生模块、发现已有库和查找 API 使用处的门槛。</p>
+          <p>专注阅读也允许界面作出不同选择。在编辑器中，点击通常意味着移动输入光标；在代码浏览器里，同样的动作可以立即展示符号关系。书中观察到，工程师经常一边使用编辑器，一边开着多个 Code Search 标签页。两种工具服务于同一个任务中的不同阶段，搜索、交叉引用与语法高亮 API 还可以通过插件接回 Vim、Emacs、IntelliJ 等环境，减少重复实现。</p>
+          <p>更深一层的价值是，团队得到一个可以共同引用的代码地址。文档、评审、缺陷报告和复盘都能指向它；日志中的文件名和行号、崩溃报告中的栈帧，也能连接到产生这些信息的源码。原书描述的日志工具在掌握具体修订时直接链接该版本；只有文件名等有限信息时，则先搜索，唯一匹配就打开相应行，多个匹配就展示各自片段。</p>
+          <p>版本信息决定了链接能说明什么。延续假设案例，一条生产错误来自修订 R 的报表二进制，而主干已经把 <code>ReadSnapshot</code> 重构掉了。如果日志链接只打开最新文件，同事可能看到完全不同的分支；携带构建修订的链接，才能让大家检查同一份历史材料。普通讨论可以指向持续更新的符号，事故证据则适合固定到产生事件的版本。</p>
+          <p>文档也有类似的两种需求。原书介绍，可以让搜索链接按类名或函数名寻找实现，降低文件目录调整造成的失效；还可以把主干上的最新代码片段嵌入文档。这与<a href="ch10.html#docs-in-workflow">第十章把文档放进开发流程</a>的方向一致。笔记补充一点：动态嵌入免去了复制片段的同步负担，周围的解释文字仍要有人维护。</p>
+          <p>当代码浏览器已经是日常阅读入口，其他分析结果也有了共同的展示面。书中以标记未调用代码为例，说明分析工具可以直接把结果呈现在文件旁边，开发者无需再学习一个独立界面。于是 Code Search 同时成为知识的入口和工具的连接点，价值随接入的上下文一同增长。</p>
+        </section>
+
+        <section id="latency-and-freshness">
+          <h2><span class="section-number">04</span>快得能接住思路，新得能跟上修改</h2>
+          <p>阅读是连续操作。一次搜索、一次跳转、一次展开引用，各多等一点，累计起来会占用可观时间；等待较长时，注意力还可能转向别的任务。本章因此把频繁操作的端到端延迟目标放在 200 毫秒以下。“端到端”指从用户发出操作到界面可用的整段过程，后端服务的耗时只是其中一段。</p>
+          <p>作者用一个量级估算说明投入的理由。按每天一百万次查询、每次增加一秒计算，总等待时间是约 278 小时；若以每个工作日八小时折算，约为 35 个全职工作日。这是把分散的等待加总得到的机会成本。</p>
+          <p>导航方式同样影响这份延迟。目录树很深时，逐层展开需要多次交互；输入文件名的一部分，通过建议直接跳转，可能更快。上下文还能帮助排序：当前文件属于哪个项目、用户近期在看哪些目录，都能让相近目标更容易出现。Code Search 仍保留目录树，只是把搜索也变成了日常导航方式。</p>
+          <p>另一种延迟发生在索引写入阶段：<strong>索引延迟</strong>是代码变化到搜索反映这次变化之间的时间。刚加入的函数找不到、已经迁走的调用仍然出现，都会扰乱工程师对系统状态的理解。连续重构尤其依赖新鲜结果：第一轮修改之后，第二轮应以新代码为基础，否则开发者会反复处理已经消失的内容，或者漏掉刚产生的目标。</p>
+          <p>本章记录了两类性质不同的索引。文本搜索索引可以在提交后只更新触及的文件，平行维护变化；语义交叉引用则受构建上下文和依赖传播影响，修改一个公共声明可能改变许多其他文件中的关系。Google 当时需要大范围构建或分析来抽取语义图，再合并、处理为适合查询的形式，因此按天生成交叉引用索引。脚注以当时 Chromium 的分布式索引构建约六小时说明其成本。</p>
+          <p>于是，一份新文件可能已经能被文本搜索找到，但其中某个符号的“查找引用”仍对应较旧的分析结果。图 17-1 把两条更新路径并排画出：文本索引在提交后很快可见，交叉引用要等下一次每日生成，右侧就是这段时间差里同时查到的两种结果。</p>
+          <figure class="concept-figure"><a href="../diagrams/exports/ch17-index-freshness.svg" target="_blank" rel="noopener"><img src="../diagrams/exports/ch17-index-freshness.svg" width="720" height="380" alt="同一次提交走两条索引路径：文本索引只重建触及的文件，提交后中位数不到 10 秒可见；交叉引用索引需大范围构建分析，当时每天生成一次。于是同一时刻，文本搜索已能找到新文件，查找引用仍对应上次分析。"></a><figcaption>图 17-1：从左往右读，箭头是同一次提交的两条更新路径，框内写明各自的更新方式与周期；右侧框是同一时刻分别用文本搜索和查找引用得到的结果，两者此时对应不同时间点的代码。点击<a href="../diagrams/exports/ch17-index-freshness.svg" target="_blank" rel="noopener">查看大图</a>。</figcaption></figure>
+          <p>原书坦承，这类时间差会带来少见但反复发生的问题；在调试历史版本时，当时只保留一个版本的语义索引也构成限制：历史文件可以搜索和浏览，语义导航却未必对应同一版本。</p>
+          <p>原书说交叉引用索引“无法增量更新”，指的是 Google 当时的规模与实现。可以带走的工程事实是：文本变动的影响面通常容易按文件界定，语义关系的影响面则可能沿依赖扩散。<a href="ch18.html">下一章的构建系统</a>会继续讨论显式依赖对重复工作的影响。</p>
+          <aside class="key-point"><p class="key-point-label">核心观点</p><p>响应速度决定能否连贯探索，索引新鲜度决定探索的是哪一份代码。文本命中、语义引用和历史版本各有更新与覆盖范围，工具应让使用者能够理解这些范围。</p></aside>
+        </section>
+
+        <section id="index-before-matching">
+          <h2><span class="section-number">05</span>先用索引缩小工作，再做精确匹配</h2>
+          <p>到本书写作时，Code Search 的运行指标如下；几项数字的口径各不相同，分开看才能明白系统在优化什么：</p>
+          <div class="table-scroll"><table><thead><tr><th scope="col">书中指标</th><th scope="col">数值与含义</th></tr></thead><tbody>
+            <tr><td>索引内容量</td><td>约 1.5 TB，描述搜索语料规模</td></tr>
+            <tr><td>查询处理量</td><td>约每秒 200 次查询</td></tr>
+            <tr><td>服务端搜索延迟</td><td>中位数低于 50 毫秒，只计服务端处理</td></tr>
+            <tr><td>文本索引延迟</td><td>从提交到文本索引可见，中位数低于 10 秒</td></tr>
+          </tbody></table></div>
+          <p>作者用这些数字估算：即使内存扫描很快，逐查询扫描整个代码库依然昂贵。</p>
+          <p>按书中 RE2 在内存中每核每秒约处理 100 MB 的假设，一个核在 50 毫秒里只能扫描约 5 MB。要在同一窗口扫完约 1,500,000 MB，就需要约 30 万核并行。即使用特定条件下每核每秒约 1 GB 的子串算法，单次查询也约需 3 万核；每秒 200 次请求、每次持续 0.05 秒，平均约有 10 次同时执行，又回到约 30 万核的量级。这个粗算略去了提前停止、路径过滤、通信和排序等因素，用来显示全量重复扫描的代价有多大。</p>
+          <p><strong>倒排索引（inverted index）</strong>把这个问题反过来：不再每次询问所有文件“你有没有目标”，而是预先记录“哪些文件包含这个片段”，查询时先取这些文件作为候选。自然语言搜索常以词为单位，但源码对标点、空白、大小写和标识符片段都很敏感。<code>function()</code> 与 <code>function(x)</code>、<code>r</code> 与 <code>R</code> 含义不同；只记得 <code>CamelCase</code> 的中间一部分时，按普通单词切分也未必找得到。</p>
+          <p>原书介绍了从三元组索引、后缀数组，到稀疏 n-gram 索引的演变。<strong>n-gram</strong> 在这里指按字符或字节切出的连续片段，三元组就是长度为三的片段；它不要求识别源码里的自然语言单词。下面用一个简化的 ASCII 三元组例子解释基本思想。</p>
+          <p>假设查询正则为 <code>Read.*File</code>，要求先出现 <code>Read</code>，随后在同一行出现 <code>File</code>。任何匹配都必然包含 <code>Rea</code>、<code>ead</code>、<code>Fil</code>、<code>ile</code>。索引先对这些片段的文件集合求交集，再在候选内容上运行完整正则。文件甲含 <code>ReadRemoteFile</code>，会匹配；文件乙只含 <code>File ... Read</code>，虽然同样拥有所有必需片段，却不满足顺序，最后会被排除。</p>
+          <figure class="concept-figure"><a href="../diagrams/exports/ch17-index-candidates.svg" target="_blank" rel="noopener"><img src="../diagrams/exports/ch17-index-candidates.svg" width="720" height="416" alt="正则查询先提取必需的三元组，用倒排索引取得候选，再运行完整正则；ReadRemoteFile 通过，File ... Read 被过滤。"></a><figcaption>图 17-2：先从左到右看查询如何变成较小的匹配工作，再看下方两个候选的不同结局。片段共存只是必要条件，完整正则决定最终是否命中。点击<a href="../diagrams/exports/ch17-index-candidates.svg" target="_blank" rel="noopener">查看大图</a>。</figcaption></figure>
+          <p>这种候选过滤允许“多带进来一些”，然后精确去伪；只要必要条件提取正确，真正的匹配就不会在候选阶段被排除。有的正则几乎提取不出有用限制，就可能退化为大范围扫描。原书指出，复杂正则只占用户查询的一小部分，实践中用子串索引近似缩小候选的效果很好。</p>
+          <p>索引演进还包含组织层面的选择。自定义后缀数组不仅要实现检索，也要解决索引构建、分发和更新；转向可复用 Google 通用搜索技术栈的 n-gram 方案，就能借用倒排索引构建、编码、服务以及快速更新的既有能力。原书报告，当时的稀疏 n-gram 方案比暴力扫描高效 500 倍以上。</p>
+          <p>存储介质又会改变最优方案。索引从内存迁到更便宜的闪存后，访问延迟提高，原来大量读取片段列表的方式可能变得昂贵。增加索引体积，以减少每次查询读取的列表数量和大小，反而可能更合算。要优化的是构建、存储、读取和查询的总成本，索引文件最小的方案未必最省。</p>
+        </section>
+
+        <section id="retrieval-and-ranking">
+          <h2><span class="section-number">06</span>排好结果之前，先把好候选找出来</h2>
+          <p>索引让查询可行，排序让查询好用。小仓库中一个短名称也许只匹配几处；大型代码库中，它可能出现数千甚至数百万次。让工程师反复加条件，直到只剩几个结果，会把机器节省的工作转嫁给人。相关性排序的任务，是在意图还不完全明确时，尽早呈现最有帮助的目标。</p>
+          <p>原书把评分信号分为两类。<strong>与查询无关的信号</strong>描述文件本身，例如浏览次数、被其他文件引用的情况，可以提前计算。常被查看的基础库更可能是大家要找的公共入口；引用关系还可以像网页链接一样，用来估计全局重要性。Google 早期用正则和启发式猜测 <code>include/import</code> 对应的真实路径，后来改用 Kythe 图中的引用信息，提高了关系提取的可靠性。</p>
+          <p>这些信号也会受工具自身影响。一个文件越靠前，越容易得到浏览，浏览又进一步抬高排序；刚加入的文件缺少历史，容易处于劣势。大规模迁移还可能加入转发层，稀释新位置的引用重要性，同时失去旧路径积累的浏览量。原书给出的务实办法是，在这类较少发生的过渡期手工提高相关文件的权重。</p>
+          <p><strong>与查询有关的信号</strong>则衡量这次输入怎样匹配候选，需要在线快速计算。原书以 <code>Point</code> 为例：完整标识符边界附近的匹配，比散落在 <code>appointed</code> 中的子串更有意义。文件名、符号名，以及查询里暗示的项目路径，也值得更高权重。默认搜索还可以匹配带作用域的限定名称，例如 <code>absl::Monitor::Alert</code>；这种完整名称即使没有作为连续文本写在源码里，也能通过语义信息被找到。</p>
+          <p>但评分无法挽救一个没有进入候选集合的文件。假设某个类有一万处使用，只在一个文件中定义；检索层先拿到固定数量的调用处就停止，那么定义文件即使理应获得最高分，也没有参与排序的机会。这里的<strong>检索（retrieval）</strong>是取得候选的阶段，和随后为候选评分、排序是两件紧密配合的事。</p>
+          <p>本章介绍的<strong>补充检索（supplemental retrieval）</strong>，会把原查询改写出更有针对性的检索，例如另外寻找符号定义和文件名匹配，再把这些候选加入原集合。这样既保留一般内容匹配，又让“数量少但很关键”的结果有机会出现。额外候选也带来计算成本，可以结合阶段性评分，只对最有希望的对象继续完整计算。</p>
+          <p>结果多样性解决的则是另一类问题：用户尚未说明语言或用途时，第一页不宜全被一种结果占满。一个函数名可能同时对应 Java 与 Python 实现，也可能让人想看定义、测试或当前工作区中的修改。作者承认 Code Search 在多样性上不如 Web 搜索做得好，但它的建议列表会在文件名、定义和当前工作区结果之间作适当搭配。</p>
+          <p>这套过程的目标是让常见问题容易表达，同时给罕见目标保留精确约束的办法。它也解释了为什么“查得快”与“第一眼有用”需要一起设计：快速送来一大批偏题结果，仍然会让人付出筛选时间。</p>
+          <aside class="key-point"><p class="key-point-label">核心观点</p><p>检索决定哪些对象有资格被比较，排序决定它们怎样呈现。相关性既依赖评分信号，也依赖关键候选没有在前一阶段被丢掉；意图不明确时，还需要给不同类型的答案留下位置。</p></aside>
+        </section>
+
+        <section id="trust-and-completeness">
+          <h2><span class="section-number">07</span>让“没有找到”成为可以使用的结论</h2>
+          <p>搜索的完整性至少有两层：需要的文件有没有进入索引，以及已经索引的匹配有没有完整返回。找到一个可用例子时，前几个相关结果通常足够；迁移一个 API 时，开发者需要的却可能是全部调用处。两个任务对“完成”的含义不同。</p>
+          <p>第一层涉及语料范围。本章提到，二进制、图片、音视频通常只保留文件名，不搜索内容；混淆后的生成 JavaScript、极大的文本文件，也可能因可读性或稳定性限制受到排除。危险在于，一旦某个文件根本没有被索引，系统很难针对某次具体查询告诉用户“这里恰好漏掉一个相关结果”。开发者可能据此判断旧 API 已无人使用，却在实际修改后才发现遗漏。</p>
+          <p>因此 Google 宁可多索引一些，上限设得相当高，主要用来防止滥用、保证系统稳定，而非节省资源。书中还区分了两类“生成文件”：已经存在于仓库中的生成文本，可以讨论是否纳入；只在构建时产生、没有存进仓库的输出，当时没有全部纳入，因为这样做还要接入生成工具、配置和构建流程，显著增加复杂性与延迟。</p>
+          <p>第二层涉及返回方式。普通搜索可以优先处理高重要性文件，把少数相关结果迅速交给用户。分析工具、批量替换和重构则需要遍历完整结果，第一页再相关也只是样本。原书将代码分片，并在片内按优先级组织；常见查询优先查高优先级部分，明确请求全部结果时，再从各片取全。工具还可以使用字母顺序，而不必接受面向人的相关性次序。</p>
+          <p>于是，作者选择增加实现和 API 的复杂度，以同时支持快速找到少量目标和完整枚举，而没有让所有交互查询都承担全量返回的成本。脚注还提醒，匹配单个常见字母或空格之类的巨大结果，需要额外的系统保护，避免响应过大或拖垮服务。</p>
+          <p>回到假设的 <code>ReadSnapshot</code> 迁移：先用普通搜索找到定义和几个代表性调用，适合理解接口；随后围绕确定的符号和仓库版本枚举全部使用，才适合估计修改范围。如果还有动态注册、字符串配置等调用形式，就需要文本搜索补充相应入口。所以“找一个”和“找全”要用不同的完成标准。</p>
+          <aside class="key-point"><p class="key-point-label">核心观点</p><p>工程师需要知道，搜索是在给出相关样本，还是在枚举某个范围内的全部匹配。索引范围、版本与返回方式足够明确，“没有找到”才有条件成为下一步判断的依据。</p></aside>
+        </section>
+
+        <section id="history-and-workspaces">
+          <h2><span class="section-number">08</span>让历史与工作区保持在正确的版本里</h2>
+          <p>只搜索仓库最新状态，实现会简单很多。版本控制系统靠压缩把历史存得很小，一旦为它们建立可检索的倒排索引，这份紧凑就保不住了；分布式版本控制的图结构也难以高效索引。Google 的实现利用了 Piper 的线性历史，与<a href="ch16.html">第十六章的版本控制背景</a>直接相关。</p>
+          <p>历史索引带来的好处很具体。工程师可以搜索某个快照、已经删除的实现以及特定作者的代码，也能在故障中查看产生二进制的源码。原书还提到一种行为变化：以前，为了以后还能找到旧实现，人们会把它移到标记为废弃的目录；历史已经可搜索时，就可以从当前代码中真正删除，让主干保留更清楚的有效内容。</p>
+          <p>为承受这份成本，Google 使用定制压缩方案。书中报告，索引完整历史使资源消耗达到只索引当前内容时的约 2.5 倍。这说明针对版本结构作专门设计，能够让一项原本看似过重的能力进入可接受范围。</p>
+          <p>历史索引也支撑了未提交工作区搜索。工作区通常只相对某个同步点修改少量文件，生命周期短，内容却频繁变化。为每个工作区复制整个全局索引不划算。原书的实现是在第一次请求时载入工作区数据，监听文件变化，对这一小份差异直接扫描；没有改动的内容，则从工作区同步到的历史快照中搜索。内存不足时移除最近最少使用的工作区数据。</p>
+          <p>图 17-3 把这件事简化成三个文件。工作区从修订 R 开始，修改 B、新增 D、删除 C；应当搜索到的逻辑视图就是 A、B′、D。</p>
+          <figure class="concept-figure"><a href="../diagrams/exports/ch17-workspace-snapshot.svg" target="_blank" rel="noopener"><img src="../diagrams/exports/ch17-workspace-snapshot.svg" width="720" height="388" alt="基线修订 R 含 A、B、C，工作区把 B 改为 B′、新增 D、删除 C，搜索视图应为 A、B′、D，而不是混入当前 HEAD。"></a><figcaption>图 17-3：两条箭头表示两份信息共同确定搜索视图。未改的 A 来自历史修订 R，改动覆盖或隐藏旧文件；团队主干继续前进，不会自动改变这个工作区的基线。点击<a href="../diagrams/exports/ch17-workspace-snapshot.svg" target="_blank" rel="noopener">查看大图</a>。</figcaption></figure>
+          <p>如果把未改文件拿自最新主干，结果就会混合两个时间点，出现开发者工作区里实际没有的内容；如果忘记隐藏旧版 B 或已删除的 C，又会把过时匹配带回来。这个例子解释了为什么原书要求工作区索引精确反映当前工作区：它服务于接下来就要进行的编辑和测试，而不仅是偶尔翻阅资料。</p>
+          <p>把版本、差异和阅读入口接起来后，代码搜索就能伴随从探索、修改到排障的多个阶段。不过，前文所说的语义索引时效限制依然存在；理解不同索引各自负责什么，才能用好这些能力。</p>
+        </section>
+
+        <p>本章最后把视线收回到一般团队。小项目已有足够快的 IDE、<code>grep</code> 或符号导航时，没有必要复制 Google 的分布式实现；统一一份索引配置、分享搜索方法、让文档和故障记录能链接代码，也可能已经明显改善工作。规模决定采用什么实现，帮助人理解代码则决定这些投入有没有价值。工具还需要被团队知道和使用，正如原书把 Code Search 纳入新人培训：能力进入日常工作，才会形成持续回报。</p>
+
+        <details id="sources" class="source-note">
+          <summary>来源、主题对应与核查说明</summary>
+          <p>依据《Software Engineering at Google》（2020）Abseil 官方公开英文 HTML 版<a href="https://abseil.io/resources/swe-book/html/ch17.html">第 17 章 Code Search</a>，Alexander Neubeck 与 Ben St. John 撰写、Lisa Carey 编辑；核查日期 2026-11-06。</p>
+          <ul>
+            <li>01：<a href="https://abseil.io/resources/swe-book/html/ch17.html#code_search">章首</a>、<a href="https://abseil.io/resources/swe-book/html/ch17.html#the_code_search_u">The Code Search UI</a>，以及脚注 3 对 Kythe 与同名符号消歧的说明。</li>
+            <li>02：<a href="https://abseil.io/resources/swe-book/html/ch17.html#how_do_googlers_use_code_searchquestion">How Do Googlers Use Code Search?</a> 下 Where、What、How、Why、Who and When 五节，及脚注 5、6。</li>
+            <li>03：<a href="https://abseil.io/resources/swe-book/html/ch17.html#why_a_separate_web_toolquestion_mark">Why a Separate Web Tool?</a> 下 Scale、Zero Setup Global Code View、Specialization、Integration with Other Developer Tools、API Exposure。</li>
+            <li>04：<a href="https://abseil.io/resources/swe-book/html/ch17.html#search_query_latency">Search Query Latency</a>、<a href="https://abseil.io/resources/swe-book/html/ch17.html#index_latency">Index Latency</a>、<a href="https://abseil.io/resources/swe-book/html/ch17.html#scale">Scale</a> 及脚注 8。约 35 个工作日为一百万秒按每天八小时折算；书中随后据此估算的后端人力与盈亏平衡点，依赖当时的查询量与工程成本，正文未展开。200 毫秒是书中的设计目标，不宜当作精确的人类注意力阈值。图 17-1 中“中位数不到 10 秒”出自 <a href="https://abseil.io/resources/swe-book/html/ch17.html#search_index">Search Index</a> 一节，“每天一次”出自 Scale 一节与脚注 8。</li>
+            <li>05：<a href="https://abseil.io/resources/swe-book/html/ch17.html#search_index">Search Index</a>、<a href="https://abseil.io/resources/swe-book/html/ch17.html#expressiveness_token_versus_substring_v">Expressiveness: Token Versus Substring Versus Regex</a> 及脚注 11、17、18。表中数据是原书写作时报告的中位数；约 30 万核按十进制单位复算（1.5 TB 记作 1,500,000 MB），描述的是假想的暴力方案，并非实际部署规模。“500 倍以上”为原书报告，本章没有给出测量条件。</li>
+            <li>06：<a href="https://abseil.io/resources/swe-book/html/ch17.html#ranking">Ranking</a> 下 Query independent signals、Query dependent signals、Retrieval、Result diversity，及脚注 13、14。</li>
+            <li>07：<a href="https://abseil.io/resources/swe-book/html/ch17.html#completeness_repository_at_head">Completeness: Repository at Head</a>、<a href="https://abseil.io/resources/swe-book/html/ch17.html#completeness_all_versus_most-relevant_r">Completeness: All Versus Most-Relevant Results</a> 及脚注 15、16。</li>
+            <li>08：<a href="https://abseil.io/resources/swe-book/html/ch17.html#completeness_head_versus_branches_versu">Completeness: Head Versus Branches Versus All History Versus Workspaces</a>、<a href="https://abseil.io/resources/swe-book/html/ch17.html#search_index">Search Index</a>、<a href="https://abseil.io/resources/swe-book/html/ch17.html#conclusion-id00021">Conclusion</a> 与 TL;DRs。完整历史索引的“约 2.5 倍”对应原文 “increased the resource consumption by a factor of just 2.5”，按总量倍数理解。</li>
+          </ul>
+          <p><strong>问卷比例的口径。</strong> 第 02 节的五类比例出自原书脚注 5 引用的 2015 年论文：Caitlin Sadowski、Kathryn T. Stolee、Sebastian Elbaum，<a href="https://research.google/pubs/how-developers-search-for-code-a-case-study/">How Developers Search for Code: A Case Study</a>（<a href="https://research.google.com/pubs/archive/43835.pdf">官方存档全文</a>第 3 节、第 4.1 节及表 1、第 6 节）。研究邀请 40 人，27 人参与、来自 23 个团队，记录约两周（文中也写作 15 天）；五类比例来自 259 条纳入分类的自由回答，计数依次为 How 87、What 67、Where 41、Why 42、Who and When 22。原书写作 “About 16% of Code Searches” 等 → 这些比例是问卷回答的分布，不是全部查询或工时的占比，也不能直接代表全部 Google 工程师或其他组织 → 正文沿用书中的约数，并说明它们按 259 条回答计算。论文引言与方法部分对总问卷数有 396／394 的出入，本文不依赖该总数。</p>
+          <p><strong>相关资料。</strong> Kythe 的作用对照 <a href="https://www.kythe.io/docs/kythe-overview.html">Kythe 官方概览</a>：利用构建与编译信息，生成语言无关的语义图。三元组索引的机制对照原章脚注 18 引用的 Russ Cox 文章 <a href="https://swtch.com/~rsc/regexp/regexp4.html">Regular Expression Matching with a Trigram Index</a>（2012），它介绍的是旧外部 Google Code Search 的三元组方案。</p>
+          <p><strong>旧外部产品年份差异。</strong> 原书<a href="https://abseil.io/resources/swe-book/html/ch17.html#ch01fn166">脚注 2</a>写外部 Google Code Search 于 2013 年关闭 → Cox 2012 年 1 月的文章说明该服务于 2011 年 10 月宣布关闭、写作时已不在线，2015 年论文第 3 节记其公开服务期为 2006—2012 年，两者都与 2013 年不符 → 正文不沿用该年份，也不推定准确停服日。这里说的是旧外部产品，不是本章介绍的内部工具。</p>
+          <p><strong>recall 措辞。</strong> 原书 Expressiveness 一节说三元组索引 “relatively low recall accuracy”，随后解释需要把非匹配项过滤掉 → 按 Cox 文章描述的机制，三元组约束是匹配的必要条件，偏宽的候选带来的是假阳性；只要索引范围完整、约束提取正确，真实匹配不会在候选阶段丢失，而 “recall” 一词容易被读成漏检 → 第 05 节按“候选精确度有限，需完整匹配去伪”解释。</p>
+          <p><strong>交叉引用的增量更新。</strong> 原书称交叉引用索引 “Incrementality isn’t possible” → 这是对 Google 当时规模与构建流程的描述，原章没有论证语义索引在原理上都无法增量更新 → 第 04 节把它限定在该语境中，只保留“语义影响面可能沿依赖扩散”这一工程事实。</p>
+          <p>报表故障、<code>ReadSnapshot</code> 迁移、<code>Read.*File</code> 候选和 A／B／C／D 工作区均为笔记的假设例子。本文按理解路径重组原章，而非逐段翻译；图示均为本笔记原创示意图。</p>
+        </details>
+
+        <nav class="chapter-pagination" aria-label="章节翻页"><a class="page-link prev" href="ch16.html" rel="prev"><span class="page-label">← 上一章 · 第 16 章</span><span class="page-title">版本控制与分支管理</span></a><a class="page-link next" href="ch18.html" rel="next"><span class="page-label">下一章 · 第 18 章 →</span><span class="page-title">构建系统与构建理念</span></a><a class="pagination-home" href="../index.html">书籍概览与目录</a></nav>
+      </article>
+    </div>
+  </main>
+  <footer class="site-footer"><div class="container footer-inner"><span>个人书架 / 中文读书笔记</span><a href="#main">回到顶部 ↑</a></div></footer>
+</body>
+</html>

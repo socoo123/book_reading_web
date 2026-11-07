@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="388" viewBox="0 0 720 388" role="img" aria-labelledby="title desc">
+  <title id="title">主干向前开发，发布分支只维护已交付版本</title>
+  <desc id="desc">主干从 A 经过 B、C、修复 F 继续到 D。发布分支从 B 分出，在主干修复 F 后择取对应修复 F′，最终结束维护。实线表示提交前进和建立分支，虚线表示择取修复，不表示把整个主干合入发布分支。</desc>
+  <!-- Original editable hand-written SVG; the web export is an identical copy. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 15px; fill: var(--muted); }
+    .label { font-size: 17px; font-weight: 600; }
+    .node-label { font-size: 17px; font-weight: 600; text-anchor: middle; }
+    .note { font-size: 14px; fill: var(--muted); text-anchor: middle; }
+    .line { fill: none; stroke: var(--line); stroke-width: 2; marker-end: url(#arrow); }
+    .pick { fill: none; stroke: var(--accent); stroke-width: 2; stroke-dasharray: 6 5; marker-end: url(#pick-arrow); }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.5; }
+    .fix { fill: var(--focus); stroke: var(--accent); stroke-width: 1.7; }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker>
+    <marker id="pick-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--accent)"/></marker>
+  </defs>
+  <rect width="720" height="388" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="28" y="39">同一条开发主干，有限维护旧发布</text>
+  <text class="sub" x="28" y="67">图示采用原书的策略：先在主干修复，再按需移植到发布分支</text>
+  <text class="label" x="28" y="129">主干</text>
+  <path class="line" d="M117 130H675"/>
+  <circle class="node" cx="136" cy="130" r="19"/>
+  <circle class="node" cx="250" cy="130" r="19"/>
+  <circle class="node" cx="364" cy="130" r="19"/>
+  <circle class="fix" cx="478" cy="130" r="19"/>
+  <circle class="node" cx="592" cy="130" r="19"/>
+  <text class="node-label" x="136" y="136">A</text>
+  <text class="node-label" x="250" y="136">B</text>
+  <text class="node-label" x="364" y="136">C</text>
+  <text class="node-label" x="478" y="136">F</text>
+  <text class="node-label" x="592" y="136">D</text>
+  <text class="note" x="478" y="100">修复并验证</text>
+  <text class="note" x="620" y="174">继续开发 →</text>
+  <text class="label" x="28" y="255">发布线</text>
+  <path class="line" d="M258 149 316 250H646"/>
+  <text class="note" x="220" y="203">建立发布分支</text>
+  <circle class="node" cx="336" cy="250" r="19"/>
+  <text class="node-label" x="336" y="256">R</text>
+  <text class="note" x="336" y="290">已交付基础</text>
+  <path class="pick" d="M478 151V226"/>
+  <text class="sub" x="490" y="202">择取必要修复</text>
+  <circle class="fix" cx="478" cy="250" r="19"/>
+  <text class="node-label" x="478" y="256">F′</text>
+  <text class="note" x="478" y="290">适配并重新验证</text>
+  <rect class="node" x="646" y="239" width="22" height="22" rx="2"/>
+  <text class="note" x="638" y="290">结束维护</text>
+  <text class="sub" x="28" y="338">实线：提交前进／建立分支　　虚线：只移植某项修复</text>
+  <text class="sub" x="28" y="366">发布线最终退役，不把整条发布分支合回主干；图中省略开发短分支。</text>
+</svg>

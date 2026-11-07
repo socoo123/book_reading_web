@@ -1,0 +1,473 @@
+[
+  {
+    "type": "text",
+    "id": "title",
+    "x": 24,
+    "y": 18,
+    "text": "2PC：先持久承诺，再持久决定",
+    "fontSize": 25,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "subtitle",
+    "x": 24,
+    "y": 62,
+    "text": "简化成功路径；P、Q 已经完成尚未提交的业务读写。",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "text",
+    "id": "ptitle",
+    "x": 62,
+    "y": 110,
+    "text": "参与者 P",
+    "fontSize": 21,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "ctitle",
+    "x": 350,
+    "y": 110,
+    "text": "协调者 C",
+    "fontSize": 21,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "qtitle",
+    "x": 652,
+    "y": 110,
+    "text": "参与者 Q",
+    "fontSize": 21,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "line",
+    "id": "p-life",
+    "x": 120,
+    "y": 146,
+    "width": 0,
+    "height": 584,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        584
+      ]
+    ],
+    "strokeColor": "#66645d",
+    "roughness": 0.5,
+    "strokeStyle": "dashed"
+  },
+  {
+    "type": "line",
+    "id": "c-life",
+    "x": 414,
+    "y": 146,
+    "width": 0,
+    "height": 584,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        584
+      ]
+    ],
+    "strokeColor": "#66645d",
+    "roughness": 0.5,
+    "strokeStyle": "dashed"
+  },
+  {
+    "type": "line",
+    "id": "q-life",
+    "x": 710,
+    "y": 146,
+    "width": 0,
+    "height": 584,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        584
+      ]
+    ],
+    "strokeColor": "#66645d",
+    "roughness": 0.5,
+    "strokeStyle": "dashed"
+  },
+  {
+    "type": "arrow",
+    "id": "prep-p",
+    "x": 408,
+    "y": 178,
+    "width": 282,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        -282,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "arrow",
+    "id": "prep-q",
+    "x": 420,
+    "y": 178,
+    "width": 284,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        284,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "text",
+    "id": "prep-label1",
+    "x": 204,
+    "y": 150,
+    "text": "① prepare",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "prep-label2",
+    "x": 508,
+    "y": 150,
+    "text": "① prepare",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "rectangle",
+    "id": "p-durable",
+    "x": 24,
+    "y": 230,
+    "width": 192,
+    "height": 90,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 3,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "② 持久保存\nPREPARED",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "q-durable",
+    "x": 614,
+    "y": 230,
+    "width": 192,
+    "height": 90,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 3,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "② 持久保存\nPREPARED",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "yes-p",
+    "x": 126,
+    "y": 362,
+    "width": 282,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        282,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "dashed"
+  },
+  {
+    "type": "arrow",
+    "id": "yes-q",
+    "x": 704,
+    "y": 362,
+    "width": 284,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        -284,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "dashed"
+  },
+  {
+    "type": "text",
+    "id": "yeslabel1",
+    "x": 208,
+    "y": 332,
+    "text": "③ YES",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "yeslabel2",
+    "x": 522,
+    "y": 332,
+    "text": "③ YES",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "rectangle",
+    "id": "c-durable",
+    "x": 294,
+    "y": 406,
+    "width": 240,
+    "height": 94,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 3,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "④ 收齐 YES 后\n持久决定 COMMIT",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "commit-p",
+    "x": 408,
+    "y": 548,
+    "width": 282,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        -282,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "arrow",
+    "id": "commit-q",
+    "x": 420,
+    "y": 548,
+    "width": 284,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        284,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "text",
+    "id": "commitlabel1",
+    "x": 178,
+    "y": 518,
+    "text": "⑤ COMMIT",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "commitlabel2",
+    "x": 510,
+    "y": 518,
+    "text": "⑤ COMMIT",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "rectangle",
+    "id": "p-done",
+    "x": 24,
+    "y": 598,
+    "width": 192,
+    "height": 90,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "⑥ 记录提交\n释放事务资源",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "q-done",
+    "x": 614,
+    "y": 598,
+    "width": 192,
+    "height": 90,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "⑥ 记录提交\n释放事务资源",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "ack-p",
+    "x": 126,
+    "y": 728,
+    "width": 282,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        282,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "dashed"
+  },
+  {
+    "type": "arrow",
+    "id": "ack-q",
+    "x": 704,
+    "y": 728,
+    "width": 284,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        -284,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "dashed"
+  },
+  {
+    "type": "text",
+    "id": "acklabel1",
+    "x": 218,
+    "y": 698,
+    "text": "完成响应",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "acklabel2",
+    "x": 520,
+    "y": 698,
+    "text": "完成响应",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "legend",
+    "x": 24,
+    "y": 780,
+    "text": "粗框：持久化边界　　实线：请求　　虚线：响应／时间线\n参与者答 YES 后、协调者作决定后，都不能随意反悔。",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  }
+]

@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="490" viewBox="0 0 720 490" role="img" aria-labelledby="title desc">
+  <title id="title">风险与功能进入同一条工作路径</title>
+  <desc id="desc">产品负责人提供功能与业务价值，工程团队提供风险情境与技术依据，二者汇入共同排序的功能与风险待办。团队按排序推进迭代，迭代后评估剩余风险，通过虚线反馈到待办。</desc>
+  <!-- Original, editable hand-written SVG. The export is an identical web copy. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 16px; fill: var(--muted); }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.2; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .label { font-size: 19px; font-weight: 600; text-anchor: middle; }
+    .detail { font-size: 16px; text-anchor: middle; fill: var(--muted); }
+    .arrow { fill: none; stroke: var(--line); stroke-width: 1.8; marker-end: url(#arrow); }
+    .feedback { fill: none; stroke: var(--accent); stroke-width: 1.8; stroke-dasharray: 6 5; marker-end: url(#feedback-arrow); }
+    .feedback-label { font-size: 16px; fill: var(--accent); text-anchor: middle; }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker>
+    <marker id="feedback-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--accent)"/></marker>
+  </defs>
+  <rect width="720" height="490" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="30" y="40">风险与功能进入同一条工作路径</text>
+  <text class="sub" x="30" y="69">共同排序的前提：讲清技术风险的业务后果</text>
+
+  <rect class="node" x="30" y="96" width="300" height="86" rx="7"/>
+  <text class="label" x="180" y="131">产品负责人</text>
+  <text class="detail" x="180" y="160">功能与业务价值</text>
+  <rect class="node" x="390" y="96" width="300" height="86" rx="7"/>
+  <text class="label" x="540" y="131">工程团队</text>
+  <text class="detail" x="540" y="160">风险情境与技术依据</text>
+  <path class="arrow" d="M180 190V202L255 218"/>
+  <path class="arrow" d="M540 190V202L465 218"/>
+
+  <rect class="focus" x="150" y="226" width="420" height="92" rx="7"/>
+  <text class="label" x="360" y="262">共同排序的功能与风险待办</text>
+  <text class="detail" x="360" y="291">明确工作、验收条件与优先级</text>
+  <path class="arrow" d="M360 326V352"/>
+  <rect class="node" x="150" y="360" width="420" height="66" rx="7"/>
+  <text class="label" x="360" y="386">按共同排序推进迭代</text>
+  <text class="detail" x="360" y="412">交付功能 · 验证风险</text>
+
+  <path class="feedback" d="M578 393H642V272H578"/>
+  <rect x="591" y="319" width="103" height="45" fill="var(--bg)"/>
+  <text class="feedback-label" x="642" y="336">评估后</text>
+  <text class="feedback-label" x="642" y="358">剩余风险</text>
+  <text class="sub" x="30" y="464">实线：工作推进　　虚线：迭代后的风险反馈</text>
+</svg>

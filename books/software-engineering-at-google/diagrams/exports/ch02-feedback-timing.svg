@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="386" viewBox="0 0 720 386" role="img" aria-labelledby="title desc">
+  <title id="title">早反馈让关键假设在实现前得到确认</title>
+  <desc id="desc">两条从左向右的流程。晚反馈先独自实现，再让接口与测试定型，最后才发现报表需要按日快照，虚线向回表示修改既有工作。早反馈先展示草图，确认按日快照，再实现和验证。此图不表示具体工期比例。</desc>
+  <!-- Original, editable hand-written SVG. The export is an identical web copy. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 15px; fill: var(--muted); }
+    .label { font-size: 18px; font-weight: 600; }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.2; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .node-text { font-size: 17px; text-anchor: middle; }
+    .arrow { fill: none; stroke: var(--line); stroke-width: 1.8; marker-end: url(#arrow); }
+    .return { fill: none; stroke: var(--accent); stroke-width: 1.8; stroke-dasharray: 6 5; marker-end: url(#return-arrow); }
+    .return-label { font-size: 15px; fill: var(--accent); }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker>
+    <marker id="return-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--accent)"/></marker>
+  </defs>
+  <rect width="720" height="386" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="32" y="39">同一个关键假设，什么时候被发现？</text>
+  <text class="sub" x="32" y="67">例：导出的数据应来自按日快照，而不是实时查询</text>
+
+  <text class="label" x="32" y="129">晚反馈</text>
+  <rect class="node" x="128" y="94" width="146" height="66" rx="7"/>
+  <text class="node-text" x="201" y="122">独自实现<tspan x="201" dy="24">实时查询</tspan></text>
+  <path class="arrow" d="M282 127H307"/>
+  <rect class="node" x="316" y="94" width="146" height="66" rx="7"/>
+  <text class="node-text" x="389" y="122">接口与测试<tspan x="389" dy="24">逐步定型</tspan></text>
+  <path class="arrow" d="M470 127H495"/>
+  <rect class="focus" x="504" y="94" width="184" height="66" rx="7"/>
+  <text class="node-text" x="596" y="122">才确认需求：<tspan x="596" dy="24">要按日快照</tspan></text>
+  <path class="return" d="M596 168V202H201V168"/>
+  <rect x="267" y="188" width="263" height="24" fill="var(--bg)"/>
+  <text class="return-label" x="399" y="205" text-anchor="middle">回头改数据路径、接口和测试</text>
+
+  <text class="label" x="32" y="276">早反馈</text>
+  <rect class="node" x="128" y="242" width="146" height="66" rx="7"/>
+  <text class="node-text" x="201" y="270">先展示草图<tspan x="201" dy="24">说明数据假设</tspan></text>
+  <path class="arrow" d="M282 275H307"/>
+  <rect class="focus" x="316" y="242" width="146" height="66" rx="7"/>
+  <text class="node-text" x="389" y="270">共同确认<tspan x="389" dy="24">按日快照</tspan></text>
+  <path class="arrow" d="M470 275H495"/>
+  <rect class="node" x="504" y="242" width="184" height="66" rx="7"/>
+  <text class="node-text" x="596" y="270">再实现与验证<tspan x="596" dy="24">从确认后的约定出发</tspan></text>
+  <text class="sub" x="32" y="348">实线：工作向前推进　　虚线：晚发现后的返工</text>
+  <text class="sub" x="32" y="373">反馈提前，通常需要改动的既有工作更少；不代表具体工期比例。</text>
+</svg>

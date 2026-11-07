@@ -1,0 +1,328 @@
+[
+  {
+    "type": "text",
+    "id": "title",
+    "x": 24,
+    "y": 18,
+    "text": "快照是一份基线，日志接着推进它",
+    "fontSize": 25,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "subtitle",
+    "x": 24,
+    "y": 62,
+    "text": "笔记假设；数字是同一源日志位置，不是墙上时钟。",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "rectangle",
+    "id": "snapshot",
+    "x": 24,
+    "y": 142,
+    "width": 212,
+    "height": 132,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "一致快照 S100\nA = 10\nB = 20",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "line",
+    "id": "cut",
+    "x": 270,
+    "y": 106,
+    "width": 0,
+    "height": 214,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        214
+      ]
+    ],
+    "strokeColor": "#66645d",
+    "roughness": 0.5,
+    "strokeStyle": "dashed"
+  },
+  {
+    "type": "text",
+    "id": "cut-label",
+    "x": 248,
+    "y": 334,
+    "text": "切点 100",
+    "fontSize": 19,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "rectangle",
+    "id": "e101",
+    "x": 302,
+    "y": 156,
+    "width": 136,
+    "height": 104,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "101\nA → 11",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "e102",
+    "x": 474,
+    "y": 156,
+    "width": 136,
+    "height": 104,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "102\n删除 B",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "e103",
+    "x": 646,
+    "y": 156,
+    "width": 136,
+    "height": 104,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "103\nC → 30",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "l1",
+    "x": 444,
+    "y": 208,
+    "width": 24,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        24,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "arrow",
+    "id": "l2",
+    "x": 616,
+    "y": 208,
+    "width": 24,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        24,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "text",
+    "id": "keep",
+    "x": 320,
+    "y": 296,
+    "text": "复制期间保留 100 之后的变化",
+    "fontSize": 19,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "arrow",
+    "id": "load",
+    "x": 130,
+    "y": 280,
+    "width": 0,
+    "height": 160,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        160
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "rectangle",
+    "id": "base",
+    "x": 24,
+    "y": 446,
+    "width": 212,
+    "height": 110,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "① 装载 S100\n{A:10, B:20}",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "apply",
+    "x": 302,
+    "y": 446,
+    "width": 220,
+    "height": 110,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "② 顺序应用\n101 → 102 → 103",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "result",
+    "x": 588,
+    "y": 446,
+    "width": 196,
+    "height": 110,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "③ 当前结果\n{A:11, C:30}",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "a1",
+    "x": 242,
+    "y": 500,
+    "width": 54,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        54,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "arrow",
+    "id": "a2",
+    "x": 528,
+    "y": 500,
+    "width": 54,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        54,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "text",
+    "id": "failure",
+    "x": 24,
+    "y": 608,
+    "text": "错误衔接：装载 S100 后直接读 104，会漏掉三次变化。\n错误混合：先应用 A=11，再装入旧快照 A=10，会倒退。",
+    "fontSize": 19,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "legend",
+    "x": 24,
+    "y": 696,
+    "text": "虚线：快照切点　　上排箭头：源日志顺序　　下排：目标重建步骤",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  }
+]

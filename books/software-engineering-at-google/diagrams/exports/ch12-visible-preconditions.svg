@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="394" viewBox="0 0 720 394" role="img" aria-labelledby="title desc">
+  <title id="title">相同的拒绝结果，需要不同而明确的前提</title>
+  <desc id="desc">两行从左到右展示前提、动作、期望。第一行关闭账户且余额150，购买100的商品被拒绝，排除余额不足的原因。第二行开放账户但余额50，购买同一价格商品被拒绝，排除账户关闭的原因。金额为笔记假设数据。</desc>
+  <!-- Original editable hand-written SVG; the export is an identical web copy. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='light'] { color-scheme: light; }
+    :root[data-theme='dark'] { color-scheme: dark; --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 15px; fill: var(--muted); }
+    .column { font-size: 15px; fill: var(--muted); text-anchor: middle; }
+    .label { font-size: 18px; font-weight: 600; text-anchor: middle; }
+    .body { font-size: 17px; text-anchor: middle; }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.2; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.5; }
+    .arrow { fill: none; stroke: var(--line); stroke-width: 1.8; marker-end: url(#arrow); }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker></defs>
+  <rect width="720" height="394" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="28" y="39">把要验证的原因，写进当前测试的前提</text>
+  <text class="sub" x="28" y="69">假设：关闭账户或余额不足，均不能购买商品</text>
+  <text class="column" x="160" y="101">前提</text>
+  <text class="column" x="422" y="101">动作</text>
+  <text class="column" x="623" y="101">期望</text>
+  <rect class="focus" x="28" y="118" width="264" height="86" rx="7"/>
+  <text class="label" x="160" y="150">关闭账户</text>
+  <text class="body" x="160" y="181">余额 150（足够）</text>
+  <path class="arrow" d="M300 161H329"/>
+  <rect class="node" x="337" y="118" width="170" height="86" rx="7"/>
+  <text class="body" x="422" y="151">购买商品</text>
+  <text class="body" x="422" y="181">价格 100</text>
+  <path class="arrow" d="M515 161H546"/>
+  <rect class="node" x="554" y="118" width="138" height="86" rx="7"/>
+  <text class="label" x="623" y="168">拒绝购买</text>
+  <rect class="focus" x="28" y="238" width="264" height="86" rx="7"/>
+  <text class="label" x="160" y="270">开放账户</text>
+  <text class="body" x="160" y="301">余额 50（不足）</text>
+  <path class="arrow" d="M300 281H329"/>
+  <rect class="node" x="337" y="238" width="170" height="86" rx="7"/>
+  <text class="body" x="422" y="271">购买商品</text>
+  <text class="body" x="422" y="301">价格 100</text>
+  <path class="arrow" d="M515 281H546"/>
+  <rect class="node" x="554" y="238" width="138" height="86" rx="7"/>
+  <text class="label" x="623" y="288">拒绝购买</text>
+  <text class="sub" x="28" y="366">上行排除余额不足；下行排除账户关闭。相同结果保护不同规则。</text>
+</svg>

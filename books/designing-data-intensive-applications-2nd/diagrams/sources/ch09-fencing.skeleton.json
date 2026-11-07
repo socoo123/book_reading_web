@@ -1,0 +1,250 @@
+[
+  {
+    "type": "text",
+    "id": "title",
+    "x": 24,
+    "y": 20,
+    "text": "隔离令牌：授权在服务端，拒绝在资源端",
+    "fontSize": 25,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "subtitle",
+    "x": 24,
+    "y": 66,
+    "text": "按 ①—⑤ 读；每次资源操作的检查与修改必须原子、持久。",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "rectangle",
+    "id": "locks",
+    "x": 280,
+    "y": 120,
+    "width": 300,
+    "height": 88,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.5,
+    "strokeWidth": 1.5,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "租约服务\n每次新授权递增令牌",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "a",
+    "x": 24,
+    "y": 300,
+    "width": 280,
+    "height": 100,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.5,
+    "strokeWidth": 1.5,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "① A 得到 33\n暂停／请求延迟",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "b",
+    "x": 554,
+    "y": 300,
+    "width": 280,
+    "height": 100,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.5,
+    "strokeWidth": 1.5,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "② B 得到 34\n准备建立隔离",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "grant33",
+    "x": 310,
+    "y": 214,
+    "width": 146,
+    "height": 80,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        -146,
+        80
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.4,
+    "strokeStyle": "solid",
+    "start": {
+      "id": "locks"
+    },
+    "end": {
+      "id": "a"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "grant34",
+    "x": 548,
+    "y": 214,
+    "width": 146,
+    "height": 80,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        146,
+        80
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.4,
+    "strokeStyle": "solid",
+    "start": {
+      "id": "locks"
+    },
+    "end": {
+      "id": "b"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "resource",
+    "x": 280,
+    "y": 494,
+    "width": 300,
+    "height": 132,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.5,
+    "strokeWidth": 1.5,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "③ 成功记录 max = 34\n④ 之后拒绝 33\n⑤ 允许同代次 34",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "advance",
+    "x": 694,
+    "y": 406,
+    "width": 156,
+    "height": 82,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        -156,
+        82
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.4,
+    "strokeStyle": "solid",
+    "start": {
+      "id": "b"
+    },
+    "end": {
+      "id": "resource"
+    }
+  },
+  {
+    "type": "text",
+    "id": "adv-label",
+    "x": 620,
+    "y": 446,
+    "text": "推进代次 34",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "arrow",
+    "id": "stale",
+    "x": 164,
+    "y": 406,
+    "width": 156,
+    "height": 82,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        156,
+        82
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.4,
+    "strokeStyle": "dashed",
+    "start": {
+      "id": "a"
+    },
+    "end": {
+      "id": "resource"
+    }
+  },
+  {
+    "type": "text",
+    "id": "stale-label",
+    "x": 42,
+    "y": 446,
+    "text": "迟到的 33：拒绝",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "barrier",
+    "x": 24,
+    "y": 680,
+    "text": "③ 完成是交接屏障；B 应在此后读取最新状态并继续业务。",
+    "fontSize": 19,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "note",
+    "x": 24,
+    "y": 716,
+    "text": "只发令牌、不检查资源，无法阻挡陈旧写；同代次乱序另需处理。",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  }
+]

@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="456" viewBox="0 0 720 456" role="img" aria-labelledby="title desc">
+  <title id="title">发布越昂贵，越容易越拖越大</title>
+  <desc id="desc">书中当时 YouTube 的发布过程形成一个循环：①发布很昂贵，每次约五十小时手工回归；②于是推迟发布，想再多测一点；③快完成的其他功能也想搭车；④单次发布的变化越积越多；⑤测试与故障归因更难，要靠少数专家救火；⑥专家被消耗，下次发布失去经验，发布又更昂贵。中间是作者主张的出口：不靠拉长发布间隔，而是用自动化降低每次的固定开销，用小批量和清楚边界缩小变化范围。</desc>
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 15px; fill: var(--muted); }
+    .label { font-size: 17px; font-weight: 600; text-anchor: middle; }
+    .body { font-size: 16px; text-anchor: middle; }
+    .note { font-size: 14px; fill: var(--muted); }
+    .center { text-anchor: middle; }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.3; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .exit { fill: var(--bg); stroke: var(--accent); stroke-width: 1.4; stroke-dasharray: 6 4; }
+    .flow { fill: none; stroke: var(--line); stroke-width: 1.8; marker-end: url(#arrow); }
+    .cut { stroke: var(--accent); stroke-dasharray: 5 4; marker-end: url(#arrow-accent); }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker>
+    <marker id="arrow-accent" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--accent)"/></marker>
+  </defs>
+  <rect width="720" height="456" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="28" y="40">发布越昂贵，越容易越拖越大</text>
+  <text class="sub" x="28" y="69">书中当时 YouTube 的发布循环，从①读起；实线表示“导致”，虚线是作者主张的切入点</text>
+
+  <rect class="node" x="28" y="96" width="188" height="80" rx="7"/>
+  <text class="label" x="122" y="129">⑥ 专家被消耗</text>
+  <text class="body" x="122" y="156">下次发布失去经验</text>
+  <rect class="focus" x="266" y="96" width="188" height="80" rx="7"/>
+  <text class="label" x="360" y="129">① 发布很昂贵</text>
+  <text class="body" x="360" y="156">约五十小时手工回归</text>
+  <rect class="node" x="504" y="96" width="188" height="80" rx="7"/>
+  <text class="label" x="598" y="129">② 推迟发布</text>
+  <text class="body" x="598" y="156">想再多测一点</text>
+
+  <rect class="node" x="28" y="326" width="188" height="80" rx="7"/>
+  <text class="label" x="122" y="359">⑤ 测试与归因更难</text>
+  <text class="body" x="122" y="386">靠少数专家救火</text>
+  <rect class="node" x="266" y="326" width="188" height="80" rx="7"/>
+  <text class="label" x="360" y="359">④ 变化越积越多</text>
+  <text class="body" x="360" y="386">一次发布批量变大</text>
+  <rect class="node" x="504" y="326" width="188" height="80" rx="7"/>
+  <text class="label" x="598" y="359">③ 其他功能也搭车</text>
+  <text class="body" x="598" y="386">快完成的也想带上</text>
+
+  <path class="flow" d="M454 136H494"/>
+  <path class="flow" d="M598 176V316"/>
+  <path class="flow" d="M504 366H464"/>
+  <path class="flow" d="M266 366H226"/>
+  <path class="flow" d="M122 326V186"/>
+  <path class="flow" d="M216 136H256"/>
+
+  <rect class="exit" x="250" y="216" width="220" height="68" rx="7"/>
+  <text class="label" x="360" y="244">作者主张的出口</text>
+  <text class="body" x="360" y="271">不靠拉长发布间隔</text>
+  <path class="flow cut" d="M360 216V186"/>
+  <text class="note" x="372" y="205">自动化降低固定开销</text>
+  <path class="flow cut" d="M360 284V316"/>
+  <text class="note" x="372" y="309">小批量、清楚边界</text>
+
+  <text class="note center" x="360" y="440">拉长间隔只多给测试一点时间，更多代码会堆进下一次发布</text>
+</svg>

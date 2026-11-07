@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="466" viewBox="0 0 720 466" role="img" aria-labelledby="title desc">
+  <title id="title">按读者和任务组织文档入口</title>
+  <desc id="desc">假设导出服务的文档导航：产品使用者通过使用入口到达教程、参考和概念文档；维护者通过团队入口到达设计与实现说明。箭头表示导航，不表示开发先后；文档之间也可以按需互相链接。</desc>
+  <!-- Original editable hand-written SVG; the web export is an identical copy. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 15px; fill: var(--muted); }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.2; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .label { font-size: 19px; font-weight: 600; text-anchor: middle; }
+    .body { font-size: 16px; text-anchor: middle; fill: var(--muted); }
+    .item { font-size: 18px; }
+    .branch { fill: none; stroke: var(--line); stroke-width: 1.6; }
+    .arrow { fill: none; stroke: var(--line); stroke-width: 1.6; marker-end: url(#arrow); }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker></defs>
+  <rect width="720" height="466" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="28" y="39">入口分流，让每份文档做好一件事</text>
+  <text class="sub" x="28" y="67">假设导出服务的组织示意；箭头表示导航</text>
+  <rect class="focus" x="28" y="108" width="164" height="148" rx="7"/>
+  <text class="label" x="110" y="151">产品使用者</text>
+  <text class="label" x="110" y="186">使用入口</text>
+  <text class="body" x="110" y="224">按当前任务分流</text>
+  <path class="branch" d="M192 182H234M234 130V234"/>
+  <path class="arrow" d="M234 130H282"/>
+  <path class="arrow" d="M234 182H282"/>
+  <path class="arrow" d="M234 234H282"/>
+  <rect class="node" x="290" y="108" width="402" height="44" rx="6"/>
+  <text class="item" x="310" y="136">教程：先完成一次导出</text>
+  <rect class="node" x="290" y="160" width="402" height="44" rx="6"/>
+  <text class="item" x="310" y="188">参考：查参数、状态与错误</text>
+  <rect class="node" x="290" y="212" width="402" height="44" rx="6"/>
+  <text class="item" x="310" y="240">概念：理解数据与任务的关系</text>
+  <path class="branch" d="M28 280H692" stroke-dasharray="5 5"/>
+  <rect class="focus" x="28" y="308" width="164" height="100" rx="7"/>
+  <text class="label" x="110" y="347">维护者</text>
+  <text class="label" x="110" y="381">团队入口</text>
+  <path class="branch" d="M192 358H234M234 330V386"/>
+  <path class="arrow" d="M234 330H282"/>
+  <path class="arrow" d="M234 386H282"/>
+  <rect class="node" x="290" y="308" width="402" height="44" rx="6"/>
+  <text class="item" x="310" y="336">设计：理解目标和方案取舍</text>
+  <rect class="node" x="290" y="364" width="402" height="44" rx="6"/>
+  <text class="item" x="310" y="392">实现说明：理解内部维护约束</text>
+  <text class="sub" x="28" y="448">按读者任务组织入口；不同文档之间仍可按需互链。</text>
+</svg>

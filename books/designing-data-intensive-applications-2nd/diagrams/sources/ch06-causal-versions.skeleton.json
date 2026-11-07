@@ -1,0 +1,292 @@
+[
+  {
+    "type": "text",
+    "id": "title",
+    "x": 20,
+    "y": 20,
+    "text": "购物车：版本编号不等于因果先后",
+    "fontSize": 25,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "sub",
+    "x": 20,
+    "y": 62,
+    "text": "箭头：后项已经知道前项；未连线仍需检查有无传递路径。",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "rectangle",
+    "id": "v1",
+    "x": 20,
+    "y": 155,
+    "width": 200,
+    "height": 85,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.7,
+    "strokeWidth": 1.5,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "v1 · 加奶\n上下文：空",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "v2",
+    "x": 20,
+    "y": 405,
+    "width": 200,
+    "height": 85,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.7,
+    "strokeWidth": 1.5,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "v2 · 加蛋\n上下文：空",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "v3",
+    "x": 300,
+    "y": 125,
+    "width": 200,
+    "height": 85,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.7,
+    "strokeWidth": 1.5,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "v3 · 加面粉\n上下文：1",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "v4",
+    "x": 590,
+    "y": 405,
+    "width": 200,
+    "height": 85,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.7,
+    "strokeWidth": 1.5,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "v4 · 加火腿\n上下文：2",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "v5",
+    "x": 590,
+    "y": 125,
+    "width": 200,
+    "height": 85,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.7,
+    "strokeWidth": 1.5,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "v5 · 加培根\n上下文：3",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "e13",
+    "x": 226,
+    "y": 175,
+    "width": 68,
+    "height": 8,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        68,
+        -8
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid",
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "v1"
+    },
+    "end": {
+      "id": "v3"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "e14",
+    "x": 225,
+    "y": 225,
+    "width": 359,
+    "height": 197,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        359,
+        197
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid",
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "v1"
+    },
+    "end": {
+      "id": "v4"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "e24",
+    "x": 226,
+    "y": 448,
+    "width": 358,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        358,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid",
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "v2"
+    },
+    "end": {
+      "id": "v4"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "e25",
+    "x": 225,
+    "y": 418,
+    "width": 359,
+    "height": 223,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        359,
+        -223
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid",
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "v2"
+    },
+    "end": {
+      "id": "v5"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "e35",
+    "x": 506,
+    "y": 167,
+    "width": 78,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        78,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid",
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "v3"
+    },
+    "end": {
+      "id": "v5"
+    }
+  },
+  {
+    "type": "text",
+    "id": "cross",
+    "x": 20,
+    "y": 513,
+    "text": "交叉线没有连接点",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "text",
+    "id": "concurrent",
+    "x": 20,
+    "y": 555,
+    "text": "v3 ∥ v4；v4 ∥ v5（∥ 表示并发，不是同时到达）",
+    "fontSize": 21,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "result",
+    "x": 20,
+    "y": 605,
+    "text": "步骤 5 后保留 v4、v5 两个候选，等待知道两者的后续合并。",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  }
+]

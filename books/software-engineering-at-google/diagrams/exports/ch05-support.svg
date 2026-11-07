@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="356" viewBox="0 0 720 356" role="img" aria-labelledby="title desc">
+  <title id="title">根据方向与动力的不同需要提供支持</title>
+  <desc id="desc">上下两条支持路径。需要方向时，通过明确目标、拆分任务和反馈帮助成员知道怎样前进；需要动力时，通过自主、精进和意义帮助成员愿意持续投入。两种需要可以同时存在，并会随着任务与经验改变，不是把成员固定分组。</desc>
+  <!-- Original, editable hand-written SVG. The export is an identical web copy. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 15px; fill: var(--muted); }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.2; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .label { font-size: 18px; font-weight: 600; text-anchor: middle; }
+    .small { font-size: 16px; fill: var(--muted); text-anchor: middle; }
+    .arrow { fill: none; stroke: var(--line); stroke-width: 1.8; marker-end: url(#arrow); }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker></defs>
+  <rect width="720" height="356" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="32" y="39">需要怎样的帮助，要看人和阶段</text>
+  <text class="sub" x="32" y="67">两种需要可以同时出现，也会随任务与经验改变</text>
+  <rect class="node" x="32" y="100" width="270" height="82" rx="7"/>
+  <text class="label" x="167" y="132">需要方向</text>
+  <text class="small" x="167" y="160">不清楚目标或下一步</text>
+  <path class="arrow" d="M314 141H370"/>
+  <rect class="focus" x="384" y="100" width="304" height="82" rx="7"/>
+  <text class="label" x="536" y="132">明确目标 · 拆分任务 · 反馈</text>
+  <text class="small" x="536" y="160">帮助人知道怎样前进</text>
+  <rect class="node" x="32" y="220" width="270" height="82" rx="7"/>
+  <text class="label" x="167" y="252">需要动力</text>
+  <text class="small" x="167" y="280">投入感下降或停滞</text>
+  <path class="arrow" d="M314 261H370"/>
+  <rect class="focus" x="384" y="220" width="304" height="82" rx="7"/>
+  <text class="label" x="536" y="252">自主 · 精进 · 意义</text>
+  <text class="small" x="536" y="280">帮助人愿意持续投入</text>
+  <text class="sub" x="32" y="335">支持的剂量因人调整；已能独立推进时，减少不必要的干预。</text>
+</svg>

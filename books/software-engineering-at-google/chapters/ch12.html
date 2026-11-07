@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>第 12 章｜单元测试 · Software Engineering at Google · 架构提升读书笔记</title>
+  <meta name="description" content="《Software Engineering at Google》第十二章读书笔记：通过公开 API、状态验证与行为测试建立稳定契约，以完整简洁、明确断言和 DAMP 降低长期维护成本。含可运行的 Python 示例与三张原创解释图。">
+  <link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+  <script src="../../../assets/theme.js"></script>
+  <script src="../../../assets/reader.js" defer></script>
+  <link rel="stylesheet" href="../../../assets/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header reader-header"><div class="container header-inner">
+    <a class="brand" href="../../../index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5.5C8.5 3.8 5.8 3.6 2.5 4.5v14c3.3-.9 6-.7 9.5 1 3.5-1.7 6.2-1.9 9.5-1v-14c-3.3-.9-6-.7-9.5 1Zm0 0v14"/></svg>书架</a>
+    <a class="reader-book-title" href="../index.html" lang="en">Software Engineering at Google</a>
+    <div class="theme-control" role="group" aria-label="外观" hidden><button type="button" data-theme-value="system" title="跟随系统"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path class="fill" d="M12 4a8 8 0 0 1 0 16Z"/></svg><span class="sr-only">跟随系统</span></button><button type="button" data-theme-value="light" title="浅色"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.6"/><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21M5.6 5.6l1.6 1.6M16.8 16.8l1.6 1.6M5.6 18.4l1.6-1.6M16.8 7.2l1.6-1.6"/></svg><span class="sr-only">浅色</span></button><button type="button" data-theme-value="dark" title="深色"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.5 14.6A7.8 7.8 0 0 1 9.4 4.5a7.8 7.8 0 1 0 10.1 10.1Z"/></svg><span class="sr-only">深色</span></button></div>
+  </div></header>
+  <main id="main" class="container reader-container">
+    <nav class="breadcrumb" aria-label="当前位置"><ol><li><a href="../../../index.html">书架</a></li><li><a href="../index.html">书籍概览</a></li><li aria-current="page">第 12 章</li></ol></nav>
+    <div class="reading-layout">
+      <aside class="toc"><nav aria-label="本页目录"><h2>本页目录</h2><ul>
+        <li><a href="#maintainable-feedback">01　可持续的反馈</a></li>
+        <li><a href="#unchanging-contracts">02　跟随行为约定保持稳定</a></li>
+        <li><a href="#public-api-boundary">03　通过使用者入口测试</a></li>
+        <li><a href="#state-over-interactions">04　优先检查结果状态</a></li>
+        <li><a href="#behavior-focused-tests">05　围绕行为组织测试</a></li>
+        <li><a href="#complete-and-concise">06　完整与简洁</a></li>
+        <li><a href="#obvious-expectations">07　明确预期与失败信息</a></li>
+        <li><a href="#damp-sharing">08　DAMP 与共享准备</a></li>
+        <li><a href="#helpers-and-infrastructure">09　助手与公共设施</a></li>
+      </ul><p class="toc-note"><a href="../index.html">← 书籍概览</a></p></nav></aside>
+      <article class="article">
+        <header class="article-header">
+          <p class="eyebrow">READING NOTES / CHAPTER 12</p>
+          <h1>第 12 章｜单元测试</h1>
+          <p class="article-deck"><span lang="en">Unit Testing</span> · 架构提升读书笔记</p>
+        </header>
+        <p>软件会不断被修改，测试的价值也要放到这个过程中衡量。一组测试既要及时发现错误，也要给正确的修改留出空间：内部结构变得更清楚、存储方式换了、新功能加进来了，原有行为仍然得到保护，而维护者不必先修复一大片与需求无关的测试。</p>
+        <p>本章围绕这种长期可用的反馈展开。前半部分讨论怎样让测试稳定地依附于行为约定，后半部分讨论怎样让失败迅速变得可理解。两条线最后汇合到同一件事：测试应当让软件更容易改变，并让接手它的人知道哪些东西必须保持。</p>
+        <details class="mobile-toc"><summary>本页目录 · 9 个小节</summary><nav aria-label="移动端本页目录"><ul>
+          <li><a href="#maintainable-feedback">01　单元测试要留下可持续的反馈</a></li>
+          <li><a href="#unchanging-contracts">02　让已有测试跟随行为约定保持稳定</a></li>
+          <li><a href="#public-api-boundary">03　通过使用者入口建立测试边界</a></li>
+          <li><a href="#state-over-interactions">04　优先检查结果状态，减少对执行路线的依赖</a></li>
+          <li><a href="#behavior-focused-tests">05　围绕行为组织测试，让名字说明保证</a></li>
+          <li><a href="#complete-and-concise">06　把影响结论的条件留在测试现场</a></li>
+          <li><a href="#obvious-expectations">07　让预期值直观，让失败信息保留上下文</a></li>
+          <li><a href="#damp-sharing">08　以 DAMP 为方向共享数据与准备过程</a></li>
+          <li><a href="#helpers-and-infrastructure">09　让断言助手表达一个事实，让公共设施有自己的测试</a></li>
+        </ul></nav></details>
+
+        <section id="maintainable-feedback">
+          <h2><span class="section-number">01</span>单元测试要留下可持续的反馈</h2>
+          <p>原书先延续上一章的两个维度。<strong>测试大小（size）</strong>描述测试消耗什么资源、允许执行哪些操作；<strong>测试范围（scope）</strong>描述它试图验证多少代码。单元测试指范围相对狭窄的测试，例如围绕一个类、一种方法，或一个有清楚边界的模块。它通常也属于小型测试，不过“单元”说的是范围，“小型”说的是大小，二者属于两种分类。</p>
+          <p>这种区分会影响实际选择。直接调用一个进程内的业务对象，可以只关注一条业务规则；如果这个对象在运行时访问远程服务，测试范围依然可能很窄，测试大小却已经改变。反过来，一个进程内也可以放入好几个真实对象，共同检查一个稳定的功能单元，不必为了“一次只测一个类”的形式把所有协作者都替换掉。</p>
+          <p>范围较窄的测试有一组相互加强的优点。它们往往运行快、结果确定，适合一边开发一边频繁运行；准备环境时只需理解眼前这部分代码，写测试的成本较低；失败所指向的区域也更集中。容易编写和执行，便有机会形成较充分的覆盖，让维护者更有把握地重构。同时，一个写得清楚的测试还展示了接口怎样使用，以及系统承诺怎样回应。</p>
+          <p>原书因此给出一条经验法则：测试组合中大约 80% 是单元测试、20% 是更大范围的测试。这里更重要的背景是测试会被大量、反复地执行：作者提到，工程师一个工作日直接或间接运行数千个单元测试并不罕见。</p>
+          <p>在这样的使用频率下，维护成本就成为测试质量的一部分。书中设想 Mary 只用了几十行代码完成一个小功能，却在提交时遇到满屏失败。逐一调查后，她发现产品没有出现真正的错误，只是测试依赖的内部结构改变了。接下来她还要猜每个测试当初想保护什么，再用临时改法让它们通过。原本很短的开发工作，最终耗掉数小时甚至数天。</p>
+          <p>这个情境包含两种不同的缺陷。<strong>脆弱的测试（brittle test）</strong>会因为没有引入缺陷的无关修改而失败；<strong>不清楚的测试</strong>则让人难以判断失败原因以及原本意图。原书脚注还把脆弱与<strong>不稳定的测试（flaky test）</strong>分开：后者在生产代码没有变化时，也可能非确定性地时成时败。一次重跑碰巧通过，解决不了前者依赖了错误约定的问题；后者也需要调查被测系统或测试本身的不确定性。</p>
+          <aside class="key-point"><p class="key-point-label">核心观点</p><p>可维护的测试，在无关实现变化时保持安静，在重要行为被破坏时发出清楚的信号。测试数量增长后，这两种能力共同决定它是在节省时间，还是在持续消耗时间。</p></aside>
+        </section>
+
+        <section id="unchanging-contracts">
+          <h2><span class="section-number">02</span>让已有测试跟随行为约定保持稳定</h2>
+          <p>作者提出一个很有用的设计目标：理想的测试写好以后，只在被测系统的需求改变时才需要修改。这个目标把“实现变了，所以测试也要一起改”的习惯，转成了对变化性质的判断。</p>
+          <p><strong>纯重构</strong>保持对外接口和行为不变，只调整内部实现。例如把一段交易校验提取成辅助类，或换一种等价的数据组织方式。旧测试在这里承担的是确认行为确实没变；如果必须同步改写所有预期，它们就很难继续充当独立的保护。出现失败时，应先确认修改有没有改变行为，再检查测试是不是越过了合理的抽象边界。</p>
+          <p><strong>增加新功能</strong>通常应当增加新测试，同时保留原有行为的测试。例如交易服务增加查询备注的能力，已有的成功转账、余额不足拒绝转账等测试应当继续成立。新功能如果确实改变了旧约定，就要按行为变更处理。</p>
+          <p><strong>修复缺陷</strong>通常意味着原先漏掉了一种情况。补上能够暴露缺陷的测试，再修复实现，既解释这次修改，也保护这个遗漏以后不再出现。原有正确约定仍应保持；若旧测试本身就把错误结果写成了预期，则也要明确修正那项错误的规格。</p>
+          <p><strong>改变既有行为</strong>才是预期需要调整旧测试的情形。假设某接口过去明确拒绝转出全部余额，现在业务要求允许清空账户，相应边界测试就需要改变。更大的工作还包括让调用者理解新约定：用户可能已经依赖旧行为，修改测试只是迁移成本的一部分。</p>
+          <p>这四类变化的区分，让维护工作保持局部性。系统增加一种新能力时，开发者主要补充相关的新测试；重排内部结构时，继续运行既有行为测试；真正改变约定时，再把受影响的测试和使用者一同纳入变更。测试由此更像长期保存的需求例子，而不会随着每一版实现重新描摹代码。</p>
+        </section>
+
+        <section id="public-api-boundary">
+          <h2><span class="section-number">03</span>通过使用者入口建立测试边界</h2>
+          <p>避免脆弱性最重要的做法，是像使用者一样调用被测单元的公开 API。这里的使用者包括调用它的其他代码；公开 API 也可以只是进程内的一组方法。</p>
+          <p>原书的交易处理器很好地说明了这个区别。它在内部判断交易是否有效，再把交易序列化后写入数据库。一个很顺手的测试办法，是放宽私有方法的可见性，直接调用校验函数，再断言数据库中保存了类似 <code>me,you,100</code> 的字符串。这样写很贴近眼前的实现，却也把辅助方法的名字和存储格式变成了测试要求。日后把校验移到另一类，或把字符串换成结构化记录，即使转账结果完全相同，测试也会失败。</p>
+          <p>更稳妥的检查，从外部可以表达的约定出发：先把付款方余额设为 150、收款方设为 20，执行 100 的转账，再通过余额查询确认双方分别得到 50 和 120。另一个测试把付款方设为 50，仍请求转出 100，确认双方余额保持 50 和 20。这两种情形同时解释了服务怎样使用，以及成功和拒绝各意味着什么；没有一条要求内部必须存成某个字符串。</p>
+          <figure class="concept-figure"><a href="../diagrams/exports/ch12-contract-boundary.svg" target="_blank" rel="noopener"><img src="../diagrams/exports/ch12-contract-boundary.svg" width="720" height="360" alt="同一组行为测试通过公开的转账与余额查询接口，验证相同结果；接口背后的字典与交易流水是可替换的实现方案。"></a><figcaption>图 12-1：从左向右读。测试只依赖中间的公开约定，右侧两框是可以互相替换的两种实现方案。箭头表示调用或实现关系；存储方式改变时，相同的行为测试仍可保留。点击<a href="../diagrams/exports/ch12-contract-boundary.svg" target="_blank" rel="noopener">查看大图</a>。</figcaption></figure>
+          <p>这个原则还需要一个合适的“单元”边界。编程语言的 <code>public</code> 只说明语言层面的可见性，不自动等于团队承诺长期供外部依赖的接口。一个 Java 类可能为了让同一单元里的其他包访问而声明为公开，却仍只是内部构件；一个 Python 模块也可以依照命名约定区分公开入口与内部辅助。因此，测试的边界应当按有意义的使用契约来划定。</p>
+          <p>原书给出三种有用的情形。只服务于一两个类的辅助类，通常通过它所帮助的类来测试；设计给其他团队或任意调用者使用的包，应当直接测试其公开约定；具有通用功能的内部支持库，即使只有本团队使用，也值得作为独立单元直接测试。最后一种安排可能与调用者测试形成一些重复覆盖，但这种重复有价值：某个调用者被删除时，库自身的行为仍然有人保护。</p>
+          <p>通过公开入口写测试，有时比直接调用刚写出的私有函数多费一点准备工作。回报在以后出现：实现可以自由调整，旧测试还保留着同一份外部视角。对于需要频繁整理代码的长期项目，这种独立性尤其重要。</p>
+          <aside class="key-point"><p class="key-point-label">核心观点</p><p>测试依赖什么，什么就可能变成额外的契约。围绕有意义的公开行为建立依赖，可以保护使用者真正需要的结果，同时保留内部重构的空间。</p></aside>
+        </section>
+
+        <section id="state-over-interactions">
+          <h2><span class="section-number">04</span>优先检查结果状态，减少对执行路线的依赖</h2>
+          <p>即使调用的是公开方法，断言仍可能绑住内部实现。原书把验证分为两种视角：<strong>状态验证（state testing）</strong>观察动作完成后系统呈现什么结果；<strong>交互验证（interaction testing）</strong>检查被测对象是否按预期对协作者执行了某些调用。一个测试也可以同时使用两种方式。</p>
+          <p>书中用创建用户的例子说明风险。调用 <code>accounts.createUser("foobar")</code> 后，如果只验证数据库的 <code>put("foobar")</code> 被调用过，测试确认的是某条执行路线。它可能漏掉真正的错误：实现先写入、随后又错误地删除记录，预期调用依旧发生了，测试仍然通过。它也可能拒绝正确的修改：实现改用另一种等价写入接口，用户照样存在，测试却因没有观察到原来的调用而失败。</p>
+          <p>把检查改成通过 <code>accounts.getUser("foobar")</code> 确认用户可以查到，便更接近创建用户的行为约定。转账也一样：检查双方最终余额，比要求某个内部 <code>save</code> 方法恰好调用两次，更直接地表达了需要保护的结果。这里的“状态”经由公开查询观察，测试无需读取对象的私有字段。</p>
+          <p>图 12-2 把两种验证方式放进同样的两种修改里对照：只检查调用的测试一次放过缺陷、一次拦下正确修改，查询结果的测试两次都判断正确。</p>
+          <figure class="concept-figure"><a href="../diagrams/exports/ch12-state-vs-interaction.svg" target="_blank" rel="noopener"><img src="../diagrams/exports/ch12-state-vs-interaction.svg" width="720" height="420" alt="同一个创建用户测试面对两种修改：实现写入后又误删记录时，只检查 put 调用的交互验证仍然通过、放过缺陷，用 getUser 查询的状态验证正确失败；改用等价写入接口的正确重构中，交互验证失败、拦下正确修改，状态验证正确通过。"></a><figcaption>图 12-2：每行是一种修改及测试应有的结果，后两列是两种验证方式的实际结果；实线框表示判断正确，虚线框表示判断错误。点击<a href="../diagrams/exports/ch12-state-vs-interaction.svg" target="_blank" rel="noopener">查看大图</a>。</figcaption></figure>
+          <p>过度使用模拟框架容易把测试推向交互细节，因为框架让记录每次调用、配置每个返回值都很方便。工具提供了这种能力，测试作者便容易顺势把当前调用序列全部写成硬性要求。原书建议，在真实对象足够快、足够确定时，优先使用真实对象。</p>
+          <p>交互验证也有合适的位置。假设一个资源管理器明确承诺“关闭时向底层资源发出释放请求”，释放动作本身就是需要保护的输出，这时检查这次调用正合适。判断的关键，在于调用本身是否属于约定。测试替身（test double）的选择，以及伪实现（fake）与打桩（stubbing）的具体取舍，在<a href="ch13.html">下一章</a>继续讨论。</p>
+        </section>
+
+        <section id="behavior-focused-tests">
+          <h2><span class="section-number">05</span>围绕行为组织测试，让名字说明保证</h2>
+          <p>方法是代码组织单位，行为则是系统在特定状态和输入下给出的保证。二者并不一一对应：一个方法可以实现许多行为，一种行为也可以依靠多个方法配合完成。按方法名建立一个不断变长的测试，很容易让测试随着实现一起膨胀。</p>
+          <p>原书的交易结果界面同时负责显示购买的商品名，以及在余额较低时显示警告。若把它们都放进 <code>testDisplayTransactionResults</code>，以后每增加一条显示规则，就可能继续往同一测试里塞条件和断言。拆成“显示所购商品名”和“低余额时显示警告”后，每个测试都能只准备与自身相关的条件，失败报告也更容易指向具体的保证。</p>
+          <p>行为通常可以用 <strong>given／when／then</strong> 表达：在什么前提下，执行什么动作，预期出现什么结果。原书脚注提到，它们也常称为 <strong>arrange／act／assert</strong>，即准备、执行、断言。空行通常已经足以让三个部分分明；较复杂的测试可以加简短注释，让读者依次从名称、阶段说明和代码理解它。</p>
+          <p>下面是本笔记为说明这些原则编写的完整 Python 示例，只依赖标准库。它使用整数表示金额单位，约定账户均已存在、双方为不同账户，余额非负，金额输入为整数；允许转出全部余额，非正金额抛出异常，余额不足则拒绝且不移动资金。它是一个进程内的教学模型，省略了持久化、并发和真实支付处理。保存为 <code>bank_test.py</code> 后运行 <code>python3 bank_test.py -v</code>，可执行四个测试。</p>
+          <pre><code class="language-python">import unittest
+
+
+class Bank:
+    def __init__(self, balances):
+        self._balances = dict(balances)
+
+    def balance(self, account):
+        return self._balances[account]
+
+    def transfer(self, sender, recipient, amount):
+        if amount &lt;= 0:
+            raise ValueError("amount must be positive")
+        if self._balances[sender] &lt; amount:
+            return False
+        self._balances[sender] -= amount
+        self._balances[recipient] += amount
+        return True
+
+
+class BankTest(unittest.TestCase):
+    def test_transfer_moves_money_between_accounts(self):
+        bank = Bank({"me": 150, "you": 20})
+
+        bank.transfer("me", "you", 100)
+
+        self.assertEqual(bank.balance("me"), 50)
+        self.assertEqual(bank.balance("you"), 120)
+
+    def test_insufficient_balance_rejects_transfer_without_changes(self):
+        bank = Bank({"me": 50, "you": 20})
+
+        accepted = bank.transfer("me", "you", 100)
+
+        self.assertFalse(accepted)
+        self.assertEqual(bank.balance("me"), 50)
+        self.assertEqual(bank.balance("you"), 20)
+
+    def test_entire_balance_can_be_transferred(self):
+        bank = Bank({"me": 100, "you": 20})
+
+        bank.transfer("me", "you", 100)
+
+        self.assertEqual(bank.balance("me"), 0)
+        self.assertEqual(bank.balance("you"), 120)
+
+    def test_zero_amount_raises_value_error_without_changes(self):
+        bank = Bank({"me": 150, "you": 20})
+
+        with self.assertRaises(ValueError):
+            bank.transfer("me", "you", 0)
+
+        self.assertEqual(bank.balance("me"), 150)
+        self.assertEqual(bank.balance("you"), 20)
+
+
+if __name__ == "__main__":
+    unittest.main()</code></pre>
+          <p>这四个测试都围绕同一个 <code>transfer</code> 方法，却分别表达正常转账、余额不足、恰好转空、零金额拒绝四种行为。每个测试的初始金额、动作和结果都在现场，测试没有查看 <code>_balances</code>，也没有验证内部读写次数。双方余额的两条断言共同说明一笔转账的结果，仍然属于一个行为；“一个行为”并不要求“只能有一条断言”。</p>
+          <p>这种命名比 <code>test_transfer</code> 更长，但失败列表往往首先显示的正是名称。<code>test_entire_balance_can_be_transferred</code> 直接告诉维护者：恰好转空账户是这里明确允许的边界。读完一组名称，就应当大体知道系统已有的保证；当一个名称需要串联几个无关的“并且”，通常值得把行为拆开。</p>
+          <p>有些保证确实跨越多个阶段。原书的连接池例子先建立连接、确认数量，再推进测试时钟、确认超时后连接移除且用户断开。这样的交替 when／then 可以成立，因为它们共同描述连接超时这一行为。推进的是测试控制的时钟，测试并不真的等待二十分钟。作者也提醒，绝大多数单元测试只需要一次动作和一次结果检查。</p>
+        </section>
+
+        <section id="complete-and-concise">
+          <h2><span class="section-number">06</span>把影响结论的条件留在测试现场</h2>
+          <p>清楚的测试同时需要<strong>完整（complete）</strong>与<strong>简洁（concise）</strong>。完整意味着正文包含理解结论所需的信息；简洁意味着不夹带与当前行为无关的干扰。两者合起来衡量的是信息有没有放在该放的位置。</p>
+          <p>原书的计算器反例把舍入策略、未使用字符串、功能开关等构造参数都暴露在测试里，却把真正参与运算的数字藏进 <code>newTestCalculation()</code>。读者看到了许多细节，仍不知道为什么结果应该是 5。改写后，通用构造被收进 <code>newCalculator()</code>，运算条件明确写成 2、加法、3，预期值继续写成 5。这样删掉的是理解本例不需要的信息，补回的是因果关系。</p>
+          <p>共享数据也容易形成类似问题。原书的商店例子定义了 <code>ACCOUNT_1</code>、<code>ACCOUNT_2</code> 等远处的常量，再拿它们验证“关闭账户不能购买”和“余额不足不能购买”。检查实际数据会发现，那个被用来说明关闭账户的对象其实是开放账户，只是余额不足；另一个账户既关闭又没有余额。测试都可能得到拒绝，却没有清楚地证明名称声称的那一种原因。</p>
+          <p>下面沿用书中的商店情境，以本笔记自定的数据把两个前提分开。商品价格同为 100：关闭账户的余额设为 150，让余额足够；余额不足的账户则明确开放、余额为 50。两种结果都为拒绝，但它们分别保护不同的业务规则。</p>
+          <figure class="concept-figure"><a href="../diagrams/exports/ch12-visible-preconditions.svg" target="_blank" rel="noopener"><img src="../diagrams/exports/ch12-visible-preconditions.svg" width="720" height="394" alt="关闭账户且余额足够时，购买仍应被拒绝；开放账户但余额不足时，购买也应被拒绝。两行显式给出各自要验证的限制条件。"></a><figcaption>图 12-3：逐行从“前提”读到“动作”和“期望”。每行都显式给出本例相关的数据，并排除另一个拒绝原因；只看共同的“拒绝”结果，无法知道测试是否覆盖了声称的规则。点击<a href="../diagrams/exports/ch12-visible-preconditions.svg" target="_blank" rel="noopener">查看大图</a>。</figcaption></figure>
+          <p>这也解释了为什么简单地把常量改名为 <code>CLOSED_ACCOUNT</code> 仍不如局部构造明确。名字可以概括意图，却不能保证被复用的数据恰好适合当前场景。一个带合理默认值的构造助手更合适：测试只覆盖自身关心的状态、余额和价格，地址、显示名称等无关字段交给默认值。若被测的正是某个默认字段，那么这个字段就应当重新出现在测试正文里。</p>
+          <aside class="key-point"><p class="key-point-label">核心观点</p><p>理解预期结果必须用到的条件，留在测试正文；重复而无关的准备细节，可以交给助手。简洁的目标是减少干扰，完整的目标是保住因果关系。</p></aside>
+        </section>
+
+        <section id="obvious-expectations">
+          <h2><span class="section-number">07</span>让预期值直观，让失败信息保留上下文</h2>
+          <p>测试的预期值需要有独立、容易检查的依据。生产代码通常必须处理一般输入，因此需要分支、循环和计算；一个具体测试只需讲清当前情境。把与实现相似的计算再写进测试，可能使两边共享同一个错误。</p>
+          <p>原书的 URL 例子只用了很少的逻辑，就足以掩盖问题。基础地址已经以 <code>/</code> 结尾，测试再拼接 <code>"/albums"</code>，得到的实际预期是 <code>http://photos.google.com//albums</code>。如果生产实现也采用同样的拼接错误，错误的实现与错误的测试便会互相认可。把本来想要的完整结果 <code>http://photos.google.com/albums</code> 直接写出来，读者就容易看见分隔符应当是什么。这里重复写一小段地址，比把预期包装成计算更有帮助。</p>
+          <p>同样的考虑适用于循环、条件判断和嵌套辅助调用。测试如果要先在脑中执行一遍，才能知道它到底期待什么，判断测试是否正确的成本就会上升。优先使用直线式的准备、动作和断言；当确实需要复杂的通用检查时，把它交给语义明确的断言助手，并保持单个测试所表达的事实简单。</p>
+          <p>清晰还要延伸到失败输出。书中比较了“测试失败：账户已关闭”和包含期望状态、实际状态、账户名称的消息。前者甚至不能说明究竟是“应该关闭但没关”，还是“本不该关闭却关了”；后者使维护者在打开测试文件之前，就能知道差异发生在哪里。</p>
+          <p>断言接口会影响能保留多少信息。先计算 <code>colors.contains("orange")</code>，再把布尔值交给通用真假断言，失败时可能只剩 <code>true</code> 与 <code>false</code>。直接把集合与待查元素交给专用包含断言，则能同时呈现原集合和缺少的元素。原书用 JUnit 与 Truth 的两种写法对比了这一差异。</p>
+          <p>在上面的 Python 示例里，<code>assertEqual</code> 比较余额与明确数值，<code>assertRaises</code> 验证异常类型；Python 官方文档也建议，有更具体的断言时优先使用它们，以获得更好的失败信息。若现有库无法表达业务上下文，可以自己加上相关输入、实际结果和期望结果。代码写得清楚和错误报得清楚，保护的是同一个人的排查时间。</p>
+        </section>
+
+        <section id="damp-sharing">
+          <h2><span class="section-number">08</span>以 DAMP 为方向共享数据与准备过程</h2>
+          <p>生产代码常用 <strong>DRY（Don’t Repeat Yourself）</strong>减少同一知识在多处重复，以便修改时只动一个地方。这个原则也能帮助测试，但测试有不同的成本结构：行为约定原本就希望稳定，测试却需要让读者随时看清它是怎样得到结论的。为了少写几行而引入层层跳转，未必划算。</p>
+          <p>作者因此提倡 <strong>DAMP（Descriptive And Meaningful Phrases）</strong>，让测试具有描述性和明确意义。它接受能改善理解的适量重复，也保留有价值的抽取。衡量共享方式时，首先看它是否让行为更清楚。</p>
+          <p>原书的论坛例子把创建用户、注册用户和校验结果分别收进三个助手，测试正文只剩几行。代价是正常用户和封禁用户怎样构造、注册时怎样处理异常、究竟怎样判定通过，都被藏到别处。通用校验里甚至把“是否已注册”与“是否封禁”作相等比较，方向恰好反了。这个错误是书中刻意安排的反例：抽象层数让读者不容易发现，短小的正文没有带来容易确认的正确性。</p>
+          <p>改写后的正常用户测试直接注册两个正常用户，再确认二者已注册；封禁用户测试单独建立封禁用户，尝试注册后确认没有注册成功。准备和动作有所重复，规则却各自完整，读者不用追踪一套通用算法才能知道测试想证明什么。</p>
+          <p>共享值时，一个很有效的办法是提供构造助手，让每个测试显式覆盖自己关心的字段。原书以联系人为例：验证全名组合时，显式给出 Ada 与 Lovelace，电话号码使用助手默认值；Java 可以借助 Builder，让设置字段的意图同样可见。被复用的是“方便地造一个合理对象”的能力，业务条件仍由每个测试自己给出。</p>
+          <p>共享初始化也遵循相同边界。测试框架在每个测试前执行的设置方法，适合建立被测对象及其协作者，或安排多数测试不关心的默认配置。原书的姓名服务例子，先在设置方法里给 <code>user1</code> 配置 Donald Knuth，远处的测试再断言结果就是这个名字；读者必须跳回设置方法才能找出预期的来源。更清楚的写法，是在当前测试里把这个用户的名字设为 Margaret Hamilton，再查询并断言同一个明确名字。共享初始化继续负责对象搭建，当前测试负责自己的关键前提。</p>
+          <p>原书脚注还提到，有时可以略微随机化未显式设置的默认字段，避免两个实例意外相等，也让人更难在测试里暗中依赖默认值。这样做时，关键字段仍由测试明确指定，测试结果也仍应可以重复。</p>
+        </section>
+
+        <section id="helpers-and-infrastructure">
+          <h2><span class="section-number">09</span>让断言助手表达一个事实，让公共设施有自己的测试</h2>
+          <p>共享助手最容易越界的地方，是把许多检查塞进一个通用 <code>validate()</code>，要求所有测试最后都调用它。这样每个测试都可能在检查一大批无关条件。某项实现出错时，一串名称不同的测试一起失败，读者却难以知道各自当初究竟想保护哪一种行为。</p>
+          <p>更好的断言助手只表达一个概念事实，例如“这个用户可以访问这个账户”。实现上，它可能需要遍历具有访问权的用户编号，找不到时给出包含用户和账户名称的失败消息。测试正文只需表达这一个清楚的结论，不必重复展开查找算法。把机械细节收起来、保留明确的业务含义，正是 DAMP 与合理复用可以相互配合的地方。</p>
+          <p>共享范围继续扩大，性质就又有变化。跨多个测试套件使用的自定义运行工具、数据构造库或通用断言库，已经属于<strong>测试基础设施（test infrastructure）</strong>。它有很多调用者，也有自己的兼容要求。原书因此强调，这类设施应当像独立产品一样维护，并且必须有自己的测试。</p>
+          <p>这与“单个测试应当一眼可知其正确性”并不冲突。一个具体行为测试应该尽量简单；一个服务许多测试的通用工具则承担了真正的复用逻辑，需要作为代码产品来验证。把二者分清，可以同时避免在个别测试里堆算法，以及对共享设施盲目信任。</p>
+          <p>原书还以 Google 为例：多年前，Google 规定新的 Java 测试只能使用 Mockito 作为模拟框架，减少多种框架并存带来的理解和维护成本。作者由此主张，组织应尽早统一成熟的基础测试库，让维护者把精力用在行为本身，不必反复适应不同的测试写法。</p>
+          <p>单元测试的长期价值，可以沿着本章的线索看清：通过公开 API 保护行为，以最终状态减少无谓的实现依赖；把每种保证写成局部、可读的例子，给出直接的预期与清楚的失败信息；共享真正无关的机械准备，把关键条件和结论留在眼前。这样的测试既是回归保护，也是未来维护者能够读懂的一份使用说明。</p>
+        </section>
+
+        <details id="sources" class="source-note">
+          <summary>来源、小节对应与代码核查</summary>
+          <p>依据《Software Engineering at Google》（2020）Abseil 官方公开英文 HTML 版<a href="https://abseil.io/resources/swe-book/html/ch12.html">第 12 章 Unit Testing</a>，Erik Kuefler 撰写、Tom Manshreck 编辑；核查日期 2026-11-06。</p>
+          <ul>
+            <li>01：章首关于 size／scope、单元测试优势与 80%／20% 的说明；<a href="https://abseil.io/resources/swe-book/html/ch12.html#the_importance_of_maintainability">The Importance of Maintainability</a>、<a href="https://abseil.io/resources/swe-book/html/ch12.html#preventing_brittle_tests">Preventing Brittle Tests</a>，以及脚注 <a href="https://abseil.io/resources/swe-book/html/ch12.html#ch01fn125">1</a>、<a href="https://abseil.io/resources/swe-book/html/ch12.html#ch01fn129">3</a>。80%／20% 在原文中是一条经验法则（rule of thumb），描述的是测试构成，不是覆盖率目标。</li>
+            <li>02：<a href="https://abseil.io/resources/swe-book/html/ch12.html#strive_for_unchanging_tests">Strive for Unchanging Tests</a>。旧测试本身写错时需要修正，是本笔记对这一理想目标的补充。</li>
+            <li>03：<a href="https://abseil.io/resources/swe-book/html/ch12.html#test_via_public_apis">Test via Public APIs</a>，例 12-1 至 12-3，脚注 <a href="https://abseil.io/resources/swe-book/html/ch12.html#ch01fn127">2</a>。</li>
+            <li>04：<a href="https://abseil.io/resources/swe-book/html/ch12.html#test_statecomma_not_interactions">Test State, Not Interactions</a>，例 12-4、12-5。图 12-2 的两种修改取自原章在例 12-4 之后列出的两种误判。</li>
+            <li>05：<a href="https://abseil.io/resources/swe-book/html/ch12.html#test_behaviorscomma_not_methods">Test Behaviors, Not Methods</a>、<a href="https://abseil.io/resources/swe-book/html/ch12.html#structure_tests_to_emphasize_behaviors">Structure tests to emphasize behaviors</a>、<a href="https://abseil.io/resources/swe-book/html/ch12.html#name_tests_after_the_behavior_being_tes">Name tests after the behavior being tested</a>，例 12-8 至 12-14，脚注 <a href="https://abseil.io/resources/swe-book/html/ch12.html#ch01fn130">4</a>、<a href="https://abseil.io/resources/swe-book/html/ch12.html#ch01fn132">5</a>、<a href="https://abseil.io/resources/swe-book/html/ch12.html#ch01fn134">6</a>。脚注 5 指出，产品意义上的功能可由一组行为组成。</li>
+            <li>06：<a href="https://abseil.io/resources/swe-book/html/ch12.html#make_your_tests_complete_and_concise">Make Your Tests Complete and Concise</a>、<a href="https://abseil.io/resources/swe-book/html/ch12.html#shared_values">Shared Values</a>，例 12-6、12-7、12-21、12-22。图 12-3 的金额与分离条件是本笔记对商店情境的改写。</li>
+            <li>07：<a href="https://abseil.io/resources/swe-book/html/ch12.html#donapostrophet_put_logic_in_tests">Don’t Put Logic in Tests</a>、<a href="https://abseil.io/resources/swe-book/html/ch12.html#write_clear_failure_messages">Write Clear Failure Messages</a>，例 12-15 至 12-18。</li>
+            <li>08：<a href="https://abseil.io/resources/swe-book/html/ch12.html#tests_and_code_sharing_dampcomma_not_dr">Tests and Code Sharing: DAMP, Not DRY</a>、<a href="https://abseil.io/resources/swe-book/html/ch12.html#shared_values">Shared Values</a>、<a href="https://abseil.io/resources/swe-book/html/ch12.html#shared_setup">Shared Setup</a>，例 12-19 至 12-24，脚注 <a href="https://abseil.io/resources/swe-book/html/ch12.html#ch01fn139">7</a>。</li>
+            <li>09：<a href="https://abseil.io/resources/swe-book/html/ch12.html#shared_helpers_and_validation">Shared Helpers and Validation</a>、<a href="https://abseil.io/resources/swe-book/html/ch12.html#defining_test_infrastructure">Defining Test Infrastructure</a>，例 12-25，以及 <a href="https://abseil.io/resources/swe-book/html/ch12.html#conclusion-id00016">Conclusion</a> 与 <a href="https://abseil.io/resources/swe-book/html/ch12.html#tlsemicolondrs-id00114">TL;DRs</a>。</li>
+          </ul>
+          <p>Python 示例为本笔记编写，在 Python 3.11.8 下四个测试通过；把内部表示换成交易流水后原测试仍通过，漏掉收款方入账时测试会失败。第 07 节关于具体断言的说明参考 Python 3.11 官方文档的 <a href="https://docs.python.org/3.11/library/unittest.html#basic-example"><code>unittest</code> 基本示例</a>、<a href="https://docs.python.org/3.11/library/unittest.html#unittest.TestCase.setUp"><code>setUp()</code></a> 与<a href="https://docs.python.org/3.11/library/unittest.html#assert-methods">具体断言</a>。</p>
+          <p>原章代码中的笔误：</p>
+          <ul>
+            <li><strong>例 12-1</strong>：<code>getAccountBalance</code> 声明返回 <code>void</code> → 例 12-3 却用它的返回值断言余额，方法体也只有注释 → 这是接口示意片段，实现时应返回与金额模型一致的余额。</li>
+            <li><strong>例 12-13</strong>：负数分组写成 <code>var negativeNumber = 10</code> → 正数 10 与该组的两个符号断言矛盾，代入即可验证 → 应为负数，例如 <code>-10</code>。</li>
+            <li><strong>例 12-16</strong>：<code>assertThat(nav.getCurrentUrl()))</code>，方法名与调用写的是 Photos，期望值却是 <code>/albums</code> → 断言多了一个右括号，命名也与前一例的相册情境不一致 → 删去多余括号，按相册情境理解；同例的双斜杠是作者有意暴露的错误预期，不在勘误之列。</li>
+            <li><strong>例 12-22</strong>：Python 部分写成 <code>def contact = newContact(...)</code> → 这不是合法的 Python 赋值语法 → 应为 <code>contact = newContact(...)</code>；该例把 Python 与 Java 片段并列在同一代码块中，应分语言阅读。</li>
+          </ul>
+          <p>论坛通用校验把封禁状态当作注册期望（例 12-19）、URL 拼接出双斜杠（例 12-15、12-16），都是作者刻意写的错误反例，用来讨论测试清晰度，不属于勘误。</p>
+          <p>Mary、创建用户、交易处理器、商店与论坛等情境转述自原书；交易备注、允许清空账户、资源管理器情境和 Python 示例是笔记的假设例子。图示均为本笔记原创示意图。本文按主题重组原章，而非逐段翻译。</p>
+        </details>
+
+        <nav class="chapter-pagination" aria-label="章节翻页"><a class="page-link prev" href="ch11.html" rel="prev"><span class="page-label">← 上一章 · 第 11 章</span><span class="page-title">测试概览</span></a><a class="page-link next" href="ch13.html" rel="next"><span class="page-label">下一章 · 第 13 章 →</span><span class="page-title">测试替身</span></a><a class="pagination-home" href="../index.html">书籍概览与目录</a></nav>
+      </article>
+    </div>
+  </main>
+  <footer class="site-footer"><div class="container footer-inner"><span>个人书架 / 中文读书笔记</span><a href="#main">回到顶部 ↑</a></div></footer>
+</body>
+</html>

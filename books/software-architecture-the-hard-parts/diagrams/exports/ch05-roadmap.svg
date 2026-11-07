@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="500" viewBox="0 0 720 500" role="img" aria-labelledby="title desc">
+<title id="title">组件分解的六步路线</title><desc id="desc">识别与定尺寸、汇集共同能力、展平组件、分析依赖、创建组件领域、创建领域服务依次进行。前五步主要整理单体内部结构，第六步改变部署边界。</desc>
+<style>:root{--surface:#fcfbf8;--text:#292824;--muted:#66645d;--line:#969187;--soft:#f0ece4;--accent:#386d74}@media(prefers-color-scheme:dark){:root:not([data-theme='light']){--surface:#252524;--text:#e6e3dc;--muted:#b6b1a7;--line:#8c8982;--soft:#353534;--accent:#94c8cf}}:root[data-theme='dark']{--surface:#252524;--text:#e6e3dc;--muted:#b6b1a7;--line:#8c8982;--soft:#353534;--accent:#94c8cf}.bg{fill:var(--surface)}text{fill:var(--text);font:17px system-ui,-apple-system,'PingFang SC',sans-serif}.title{font-size:22px;font-weight:600}.small{font-size:15px;fill:var(--muted)}.box{fill:var(--soft);stroke:var(--line);stroke-width:1.5}.group{fill:none;stroke:var(--line);stroke-dasharray:6 5}.edge{fill:none;stroke:var(--accent);stroke-width:2;marker-end:url(#a)}.arrow{fill:var(--accent)}</style>
+<defs><marker id="a" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path class="arrow" d="M0 0 8 4 0 8Z"/></marker></defs><rect class="bg" width="720" height="500"/>
+<text class="title" x="28" y="38">先让积木清楚，再组合成服务</text><text class="small" x="28" y="66">箭头表示首次工作顺序；维护期间按需要重用相关模式</text>
+<rect class="group" x="22" y="90" width="676" height="277" rx="12"/><text class="small" x="40" y="118">单体内部 · 代码结构与逻辑边界</text>
+<rect class="box" x="40" y="138" width="192" height="76" rx="8"/><text x="56" y="167">01 识别与定尺寸</text><text class="small" x="56" y="194">清单、规模、职责</text>
+<rect class="box" x="264" y="138" width="192" height="76" rx="8"/><text x="280" y="167">02 汇集共同能力</text><text class="small" x="280" y="194">重复实现与共享点</text>
+<rect class="box" x="488" y="138" width="192" height="76" rx="8"/><text x="504" y="167">03 展平组件</text><text class="small" x="504" y="194">代码只归入叶组件</text>
+<path class="edge" d="M232 176H257"/><path class="edge" d="M456 176H481"/><path class="edge" d="M584 214V258"/>
+<rect class="box" x="488" y="266" width="192" height="76" rx="8"/><text x="504" y="295">04 分析组件依赖</text><text class="small" x="504" y="322">方向、类型、迁移负担</text>
+<rect class="box" x="264" y="266" width="192" height="76" rx="8"/><text x="280" y="295">05 创建组件领域</text><text class="small" x="280" y="322">业务分组与路径对齐</text><path class="edge" d="M488 304H463"/><path class="edge" d="M360 342V399"/>
+<rect class="box" x="264" y="407" width="192" height="68" rx="8"/><text x="280" y="435">06 创建领域服务</text><text class="small" x="280" y="459">独立部署、远程访问</text><text class="small" x="477" y="438">部署边界在这里改变</text><text class="small" x="477" y="462">数据拆分继续另行处理</text>
+<script><![CDATA[try{const t=localStorage.getItem('reading-notes-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch{}]]></script>
+</svg>

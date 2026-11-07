@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="615" viewBox="0 0 720 615" role="img" aria-labelledby="title desc">
+  <title id="title">MapReduce 的存储边界与恢复责任</title>
+  <desc id="desc">数据从全局输入经多个独立 Map 工作器、本地中间结果、多个独立 Reduce 工作器写到全局输出。主控以虚线分配、监测和重调度工作器；实线为数据路径。聚合框不是单个实例，不表示每个 Reduce 读取全部中间数据。</desc>
+  <!-- Original editable SVG; the exported web copy is identical. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; } .sub { font-size: 16px; fill: var(--muted); }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.3; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.5; }
+    .label { font-size: 21px; font-weight: 600; text-anchor: middle; }
+    .detail { font-size: 16px; fill: var(--muted); text-anchor: middle; }
+    .data { fill: none; stroke: var(--line); stroke-width: 1.8; marker-end: url(#arrow); }
+    .control { fill: none; stroke: var(--accent); stroke-width: 1.8; stroke-dasharray: 7 5; marker-end: url(#ctrl); }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker>
+    <marker id="ctrl" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--accent)"/></marker>
+  </defs>
+  <rect width="720" height="615" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="30" y="35">数据在哪里，失败后谁重新安排工作？</text>
+  <text class="sub" x="30" y="64">每个工作器只处理分配给自己的部分，主控承担协调责任</text>
+  <path class="data" d="M495 149V185M495 250V286M495 351V387M495 452V488"/>
+  <rect class="node" x="320" y="94" width="350" height="55" rx="6"/><text class="label" x="495" y="117">全局输入</text><text class="detail" x="495" y="140">文件系统保存输入分片</text>
+  <rect class="node" x="320" y="195" width="350" height="55" rx="6"/><text class="label" x="495" y="218">多个 Map 工作器</text><text class="detail" x="495" y="241">彼此独立地处理输入分片</text>
+  <rect class="focus" x="320" y="296" width="350" height="55" rx="6"/><text class="label" x="495" y="319">本地中间结果</text><text class="detail" x="495" y="342">保存在各 Map 机器的本地文件系统</text>
+  <rect class="node" x="320" y="397" width="350" height="55" rx="6"/><text class="label" x="495" y="420">多个 Reduce 工作器</text><text class="detail" x="495" y="443">读取并合并各自负责的相关结果</text>
+  <rect class="node" x="320" y="498" width="350" height="55" rx="6"/><text class="label" x="495" y="521">全局输出</text><text class="detail" x="495" y="544">最终结果写回全局文件系统</text>
+  <rect class="node" x="35" y="245" width="185" height="85" rx="7"/><text class="label" x="127" y="275">主控 Master</text><text class="detail" x="127" y="302">分配／监测／重调度</text>
+  <path class="control" d="M220 270H270V222H310M220 305H270V424H310"/>
+  <text class="sub" x="35" y="380">工作器失败后，</text><text class="sub" x="35" y="409">相关任务可重新安排。</text>
+  <text class="sub" x="35" y="464">本地结果丢失，</text><text class="sub" x="35" y="493">需要重新生成。</text>
+  <text class="sub" x="30" y="591">实线：数据路径　　虚线：控制路径　　聚合框不代表单个实例</text>
+</svg>

@@ -1,0 +1,255 @@
+[
+  {
+    "type": "text",
+    "id": "title",
+    "x": 24,
+    "y": 18,
+    "text": "日志接管：交集是证据相遇的地方",
+    "fontSize": 25,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "subtitle",
+    "x": 24,
+    "y": 62,
+    "text": "固定三投票节点，多数派为 2；X 是任期 7、槽位 8 的条目。",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "text",
+    "id": "old-term",
+    "x": 24,
+    "y": 118,
+    "text": "任期 7：A + B 持久保存当前任期的 X → 可以提交",
+    "fontSize": 21,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "rectangle",
+    "id": "a-old",
+    "x": 54,
+    "y": 184,
+    "width": 210,
+    "height": 116,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 3,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "主节点 A\n保存 X",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "b-old",
+    "x": 334,
+    "y": 184,
+    "width": 210,
+    "height": 116,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 3,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "节点 B\n保存 X",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "c-old",
+    "x": 614,
+    "y": 184,
+    "width": 210,
+    "height": 116,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "dashed",
+    "label": {
+      "text": "节点 C\n尚未收到 X",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "line",
+    "id": "ab-evidence",
+    "x": 270,
+    "y": 244,
+    "width": 58,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        58,
+        0
+      ]
+    ],
+    "strokeColor": "#66645d",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "arrow",
+    "id": "memory",
+    "x": 439,
+    "y": 306,
+    "width": 0,
+    "height": 148,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        148
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "text",
+    "id": "memory-label",
+    "x": 460,
+    "y": 350,
+    "text": "B 保留 X\n并遵守继承规则",
+    "fontSize": 19,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "a-crash",
+    "x": 72,
+    "y": 354,
+    "text": "A 与其余节点失联",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "rectangle",
+    "id": "a-new",
+    "x": 54,
+    "y": 460,
+    "width": 210,
+    "height": 116,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "dashed",
+    "label": {
+      "text": "旧主 A\n无法独自提交",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "b-new",
+    "x": 334,
+    "y": 460,
+    "width": 210,
+    "height": 116,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 3,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "新主 B\n携带 X 接管",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "c-new",
+    "x": 614,
+    "y": 460,
+    "width": 210,
+    "height": 116,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 3,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "节点 C\n从 B 补齐 X",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "copy-x",
+    "x": 550,
+    "y": 518,
+    "width": 58,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        58,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "text",
+    "id": "new-term",
+    "x": 24,
+    "y": 620,
+    "text": "任期 8：B + C 形成新多数派；已提交 X 不能被推翻",
+    "fontSize": 21,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "legend",
+    "x": 24,
+    "y": 680,
+    "text": "粗框：该阶段多数派　虚框：落后／失联节点\n交集还需持久任期、投票限制与日志继承；不是“碰到同一节点就安全”。",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  }
+]

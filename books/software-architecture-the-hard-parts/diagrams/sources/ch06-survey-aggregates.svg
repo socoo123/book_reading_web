@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="480" viewBox="0 0 720 480" role="img" aria-labelledby="title desc">
+  <title id="title">客户调查的嵌入与引用聚合</title>
+  <desc id="desc">左侧两份问卷各自嵌入问题 Q，读取直接但公共问题需要多处更新。右侧问卷各自引用一个独立问题 Q，题目统一维护但读取需要组合。Sysops 因只有五类问卷且变化集中在增删题目，选择单聚合。</desc>
+  <style>
+    :root{--surface:#fcfbf8;--text:#292824;--muted:#66645d;--line:#969187;--soft:#f0ece4;--accent:#386d74}
+    @media(prefers-color-scheme:dark){:root:not([data-theme='light']){--surface:#252524;--text:#e6e3dc;--muted:#b6b1a7;--line:#8c8982;--soft:#353534;--accent:#94c8cf}}
+    :root[data-theme='dark']{--surface:#252524;--text:#e6e3dc;--muted:#b6b1a7;--line:#8c8982;--soft:#353534;--accent:#94c8cf}
+    .bg{fill:var(--surface)}text{fill:var(--text);font-family:system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;font-size:18px}.heading{font-size:21px;font-weight:600}.small{font-size:15px;fill:var(--muted)}.box{fill:var(--soft);stroke:var(--line);stroke-width:1.5}.inner{fill:var(--surface);stroke:var(--accent);stroke-width:1.5}.edge{fill:none;stroke:var(--accent);stroke-width:2;marker-end:url(#arrow)}.arrow{fill:var(--accent)}.divider{stroke:var(--line);stroke-dasharray:5 5}
+  </style>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path class="arrow" d="M0 0 8 4 0 8Z"/></marker></defs>
+  <rect class="bg" width="720" height="480"/>
+  <text class="heading" x="28" y="38">问卷与问题：一起读取，还是独立复用？</text>
+  <text x="180" y="79" text-anchor="middle">嵌入：单聚合问卷</text><text x="540" y="79" text-anchor="middle">引用：问卷与题目分聚合</text>
+  <path class="divider" d="M360 66V407"/>
+  <rect class="box" x="38" y="102" width="285" height="107" rx="10"/><text x="56" y="133">问卷甲</text><rect class="inner" x="59" y="148" width="244" height="43" rx="6"/><text x="181" y="176" text-anchor="middle">问题 Q：题干、选项</text>
+  <rect class="box" x="38" y="231" width="285" height="107" rx="10"/><text x="56" y="262">问卷乙</text><rect class="inner" x="59" y="277" width="244" height="43" rx="6"/><text x="181" y="305" text-anchor="middle">问题 Q：题干、选项</text>
+  <rect class="box" x="390" y="102" width="137" height="93" rx="10"/><text x="458" y="132" text-anchor="middle">问卷甲</text><text class="small" x="458" y="161" text-anchor="middle">Q 的 ID</text><text class="small" x="458" y="183" text-anchor="middle">本卷顺序</text>
+  <rect class="box" x="550" y="102" width="137" height="93" rx="10"/><text x="618" y="132" text-anchor="middle">问卷乙</text><text class="small" x="618" y="161" text-anchor="middle">Q 的 ID</text><text class="small" x="618" y="183" text-anchor="middle">本卷顺序</text>
+  <path class="edge" d="M458 195V239H515V271"/><path class="edge" d="M618 195V239H566V271"/>
+  <rect class="inner" x="414" y="275" width="250" height="63" rx="8"/><text x="539" y="302" text-anchor="middle">独立问题 Q</text><text class="small" x="539" y="326" text-anchor="middle">题干、类型、选项</text>
+  <text class="small" x="180" y="369" text-anchor="middle">一份问卷读取集中</text><text class="small" x="180" y="394" text-anchor="middle">公共题变化需更新多份文档</text>
+  <text class="small" x="539" y="369" text-anchor="middle">公共题统一维护</text><text class="small" x="539" y="394" text-anchor="middle">读取问卷时还需组合题目</text>
+  <text class="small" x="360" y="438" text-anchor="middle">框内包含 = 嵌入　箭头 = 按 ID 引用，不表示网络协议或事务</text>
+  <text class="small" x="360" y="463" text-anchor="middle">Sysops：仅五类问卷，常见变化是增删题目 → 接受有限重复</text>
+  <script><![CDATA[try { const t = localStorage.getItem('reading-notes-theme'); if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t); } catch {}]]></script>
+</svg>

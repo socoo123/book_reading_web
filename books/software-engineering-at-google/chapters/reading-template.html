@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>阅读页布局示例 · Software Engineering at Google · 架构提升读书笔记</title>
+  <link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+  <script src="../../../assets/theme.js"></script>
+  <script src="../../../assets/reader.js" defer></script>
+  <link rel="stylesheet" href="../../../assets/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header reader-header"><div class="container header-inner">
+    <a class="brand" href="../../../index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5.5C8.5 3.8 5.8 3.6 2.5 4.5v14c3.3-.9 6-.7 9.5 1 3.5-1.7 6.2-1.9 9.5-1v-14c-3.3-.9-6-.7-9.5 1Zm0 0v14"/></svg>书架</a>
+    <a class="reader-book-title" href="../index.html" lang="en">Software Engineering at Google</a>
+    <div class="theme-control" role="group" aria-label="外观" hidden><button type="button" data-theme-value="system" title="跟随系统"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path class="fill" d="M12 4a8 8 0 0 1 0 16Z"/></svg><span class="sr-only">跟随系统</span></button><button type="button" data-theme-value="light" title="浅色"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.6"/><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21M5.6 5.6l1.6 1.6M16.8 16.8l1.6 1.6M5.6 18.4l1.6-1.6M16.8 7.2l1.6-1.6"/></svg><span class="sr-only">浅色</span></button><button type="button" data-theme-value="dark" title="深色"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.5 14.6A7.8 7.8 0 0 1 9.4 4.5a7.8 7.8 0 1 0 10.1 10.1Z"/></svg><span class="sr-only">深色</span></button></div>
+  </div></header>
+  <main id="main" class="container reader-container">
+    <nav class="breadcrumb" aria-label="当前位置"><ol><li><a href="../../../index.html">书架</a></li><li><a href="../index.html">书籍概览</a></li><li aria-current="page">布局示例</li></ol></nav>
+    <div class="reading-layout">
+      <aside class="toc"><nav aria-label="本页目录"><h2>本页目录</h2><ul><li><a href="#body-example">01　正文排版</a></li><li><a href="#annotations">02　旁注与引用</a></li><li><a href="#code-table">03　代码与表格</a></li><li><a href="#figures">04　图示位置</a></li></ul><p class="toc-note"><a href="../index.html">← 书籍概览</a></p></nav></aside>
+      <article class="article">
+        <header class="article-header">
+          <p class="eyebrow">READING NOTES / LAYOUT PREVIEW</p>
+          <h1>阅读页布局示例</h1>
+          <p class="article-deck">本页仅供验收排版，所有文字与图表均为样式示例，不代表原书观点、引文或章节。正式笔记尚未开始。</p>
+        </header>
+        <details class="mobile-toc"><summary>本页目录 · 4 个小节</summary><nav aria-label="移动端本页目录"><ul><li><a href="#body-example">01　正文排版</a></li><li><a href="#annotations">02　旁注与引用</a></li><li><a href="#code-table">03　代码与表格</a></li><li><a href="#figures">04　图示位置</a></li></ul></nav></details>
+        <section id="body-example"><h2><span class="section-number">01</span>正文排版</h2>
+          <p>一份读书笔记，除了留下结论，也应该保留走向结论的过程。这里将用连贯的段落展开概念与推理，让重要的问题有足够的空间被解释清楚。</p>
+          <p>阅读时，可以从页内目录跳转到关心的小节，再回到正文继续。例子、补充与引用会各自保留清楚的边界；章节之间的联系，则通过文中的链接串联起来。</p>
+        </section>
+        <section id="annotations"><h2><span class="section-number">02</span>旁注与引用</h2>
+          <aside class="notice"><strong>补充说明</strong><p>与主线相关、但不必打断阅读的背景或解释，将放在这样的旁注里，并与原书内容区分。</p></aside>
+          <aside class="notice correction"><strong>纠错记录</strong><p>原表述 → 问题及依据 → 修正解释。</p></aside>
+          <blockquote><p>原文引用的位置留在这里，等待核对后填写。</p><footer>来源：对应版本、章节或小节；页码仅在确认后标注。</footer></blockquote>
+        </section>
+        <section id="code-table"><h2><span class="section-number">03</span>代码与表格</h2>
+          <p>操作步骤与示例需要交代前提、过程和结果。较长的代码或较宽的表格在各自区域内滚动，保持正文的阅读宽度。</p>
+          <pre tabindex="0" aria-label="代码排版示例，可横向滚动"><code>[代码示例待填]
+[前提、输入、操作步骤与结果待原文核对后补充]</code></pre>
+          <div class="table-scroll" role="region" aria-label="表格排版示例，可横向滚动" tabindex="0"><table><caption>表格样式示例</caption><thead><tr><th scope="col">说明项</th><th scope="col">内容</th><th scope="col">依据</th></tr></thead><tbody><tr><th scope="row">概念与例子</th><td>待整理</td><td>版本及章节待核对</td></tr><tr><th scope="row">适用边界</th><td>待整理</td><td>版本及章节待核对</td></tr></tbody></table></div>
+        </section>
+        <section id="figures"><h2><span class="section-number">04</span>图示位置</h2>
+          <figure><div class="figure-placeholder"><svg viewBox="0 0 54 54" aria-hidden="true"><rect x="5" y="7" width="44" height="36" rx="2"/><circle cx="17" cy="18" r="4"/><path d="m5 36 13-10 10 7 10-13 11 16M20 49h14"/></svg><span>为解释留一张图的位置</span></div><figcaption>图示尚未绘制。每张图将围绕一个问题，附上阅读说明与可编辑源文件。</figcaption></figure>
+        </section>
+        <nav class="chapter-pagination" aria-label="章节翻页"><span class="page-link prev disabled"><span class="page-label">← 上一章</span><span class="page-title">暂无</span></span><span class="page-link next disabled"><span class="page-label">下一章 →</span><span class="page-title">暂无</span></span><a class="pagination-home" href="../index.html">书籍概览与目录</a></nav>
+      </article>
+    </div>
+  </main>
+  <footer class="site-footer"><div class="container footer-inner"><span>个人书架 / 中文读书笔记</span><a href="#main">回到顶部 ↑</a></div></footer>
+</body>
+</html>

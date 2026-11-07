@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="390" viewBox="0 0 720 390" role="img" aria-labelledby="title desc">
+  <title id="title">Yinzer 的一个具体领域状态</title>
+  <desc id="desc">依据原书图8.3重绘。匿名联系关系连接Owen和Bradley；Bradley通过匿名雇佣关系连接Widgetron公司；Widgetron的一则招聘广告对应一个职位，Owen与该职位存在职位匹配。下划线与冒号表示实例及其类型，实线表示实例间的链接，图没有画出Owen的雇佣关系。</desc>
+  <!-- Editable hand-written SVG, redrawn after inspecting Figure 8.3. The export is identical. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 16px; fill: var(--muted); }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.2; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .instance { font-size: 17px; font-weight: 500; text-anchor: middle; text-decoration: underline; }
+    .detail { font-size: 15px; text-anchor: middle; fill: var(--muted); }
+    .link { fill: none; stroke: var(--line); stroke-width: 1.6; }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <rect width="720" height="390" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="30" y="38">把类型换成具体的人与关系</text>
+  <text class="sub" x="30" y="67">一条联系连接 Owen 与 Bradley；匹配不等于已被雇佣</text>
+
+  <path class="link" d="M162 151H202M334 151H374M518 151H568M96 186V244M162 277H202M334 277H374M518 277H568M629 186V244"/>
+
+  <rect class="focus" x="30" y="116" width="132" height="70" rx="6"/>
+  <text class="instance" x="96" y="144">: Contact</text>
+  <text class="detail" x="96" y="172">联系关系实例</text>
+  <rect class="node" x="202" y="116" width="132" height="70" rx="6"/>
+  <text class="instance" x="268" y="144">Owen :</text>
+  <text class="instance" x="268" y="171">Person</text>
+  <rect class="node" x="374" y="116" width="144" height="70" rx="6"/>
+  <text class="instance" x="446" y="144">: Job Match</text>
+  <text class="detail" x="446" y="172">职位匹配实例</text>
+  <rect class="node" x="568" y="116" width="122" height="70" rx="6"/>
+  <text class="instance" x="629" y="144">: Job</text>
+  <text class="detail" x="629" y="172">职位实例</text>
+
+  <rect class="node" x="30" y="244" width="132" height="70" rx="6"/>
+  <text class="instance" x="96" y="272">Bradley :</text>
+  <text class="instance" x="96" y="299">Person</text>
+  <rect class="node" x="202" y="244" width="132" height="70" rx="6"/>
+  <text class="instance" x="268" y="272">: Employment</text>
+  <text class="detail" x="268" y="300">雇佣关系实例</text>
+  <rect class="node" x="374" y="244" width="144" height="70" rx="6"/>
+  <text class="instance" x="446" y="272">Widgetron :</text>
+  <text class="instance" x="446" y="299">Company</text>
+  <rect class="node" x="568" y="244" width="122" height="70" rx="6"/>
+  <text class="instance" x="629" y="272">: Ad</text>
+  <text class="detail" x="629" y="300">招聘广告实例</text>
+
+  <text class="sub" x="30" y="354">下划线标实例，冒号后是类型；没有名字的实例仍是具体事物。</text>
+  <text class="sub" x="30" y="381">实线是此刻的链接，不是事件顺序。依据原书图 8.3 重绘。</text>
+</svg>

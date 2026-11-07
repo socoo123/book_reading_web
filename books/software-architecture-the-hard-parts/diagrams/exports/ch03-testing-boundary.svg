@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="440" viewBox="0 0 720 440" role="img" aria-labelledby="title desc">
+  <title id="title">部署拆开以后，验证范围仍取决于依赖</title>
+  <desc id="desc">上行三个服务没有相互依赖，虚线验证框只围住发生变更的 A。下行 A 调用 B、B 调用 C，虚线框扩展到三个服务。箭头代表调用，不代表发布顺序。</desc>
+  <style>
+    :root{--surface:#fcfbf8;--text:#292824;--muted:#69665e;--line:#8b877e;--box:#f1eee7;--accent:#466a74}
+    @media(prefers-color-scheme:dark){:root:not([data-theme='light']){--surface:#252524;--text:#e6e3dc;--muted:#c0bcb3;--line:#aaa59a;--box:#343432;--accent:#9bc2cc}}
+    :root[data-theme='dark']{--surface:#252524;--text:#e6e3dc;--muted:#c0bcb3;--line:#aaa59a;--box:#343432;--accent:#9bc2cc}
+    .bg{fill:var(--surface)}.box{fill:var(--box);stroke:var(--line);stroke-width:1.5}.scope{fill:none;stroke:var(--accent);stroke-width:2;stroke-dasharray:7 5}.arrow{fill:none;stroke:var(--text);stroke-width:2;marker-end:url(#head)}
+    text{font-family:system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;fill:var(--text);font-size:17px}.heading{font-size:21px;font-weight:650}.label{font-size:16px;fill:var(--muted)}.service{font-size:20px;font-weight:650}.accent{fill:var(--accent)}
+  </style>
+  <defs><marker id="head" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--text)"/></marker></defs>
+  <rect class="bg" width="720" height="440" rx="14"/>
+  <text class="heading" x="30" y="38">拆开部署单元 ≠ 自动缩小验证范围</text>
+  <text class="label" x="30" y="72">上行：无相互依赖，变更影响可留在 A</text>
+  <rect class="scope" x="42" y="87" width="192" height="119" rx="12"/>
+  <rect class="box" x="63" y="106" width="150" height="67" rx="9"/>
+  <rect class="box" x="285" y="106" width="150" height="67" rx="9"/>
+  <rect class="box" x="507" y="106" width="150" height="67" rx="9"/>
+  <text class="service" x="138" y="146" text-anchor="middle">A · 有变更</text>
+  <text class="service" x="360" y="146" text-anchor="middle">B</text>
+  <text class="service" x="582" y="146" text-anchor="middle">C</text>
+  <text class="label accent" x="138" y="194" text-anchor="middle">验证重点</text>
+  <text class="label" x="30" y="245">下行：存在调用依赖，需要判断跨边界影响</text>
+  <rect class="scope" x="42" y="261" width="636" height="119" rx="12"/>
+  <rect class="box" x="63" y="280" width="150" height="67" rx="9"/>
+  <rect class="box" x="285" y="280" width="150" height="67" rx="9"/>
+  <rect class="box" x="507" y="280" width="150" height="67" rx="9"/>
+  <text class="service" x="138" y="320" text-anchor="middle">A · 有变更</text>
+  <text class="service" x="360" y="320" text-anchor="middle">B</text>
+  <text class="service" x="582" y="320" text-anchor="middle">C</text>
+  <path class="arrow" d="M214 313H278"/><path class="arrow" d="M436 313H500"/>
+  <text class="label accent" x="360" y="369" text-anchor="middle">契约或语义变化，可能扩大验证范围</text>
+  <text class="label" x="30" y="415">实线箭头：调用　　虚线框：需考虑的验证范围（并非全量回归指令）</text>
+  <script><![CDATA[try { const t = localStorage.getItem('reading-notes-theme'); if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t); } catch {}]]></script>
+</svg>

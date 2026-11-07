@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="540" viewBox="0 0 720 540" role="img" aria-labelledby="title desc">
+  <title id="title">同一通信设计的三种观察边界</title>
+  <desc id="desc">第一行显示组件A、B、C及B使用的临时文件。第二行把文件作为B的内部细节。第三行把B和文件作为A与C之间连接器的内部细节。三行是同一实现的不同表达，并未删除实现元素。</desc>
+  <!-- Original editable SVG; based on the modeling alternatives in Figure 12.12. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 16px; fill: var(--muted); }
+    .label { font-size: 20px; font-weight: 600; text-anchor: middle; }
+    .row { font-size: 18px; font-weight: 600; }
+    .detail { font-size: 16px; text-anchor: middle; fill: var(--muted); }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.2; }
+    .hidden { fill: var(--focus); stroke: var(--accent); stroke-width: 1.3; stroke-dasharray: 6 5; }
+    .communication { fill: none; stroke: var(--line); stroke-width: 1.8; }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <rect width="720" height="540" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="30" y="38">隐藏细节，不等于删掉实现</text>
+  <text class="sub" x="30" y="67">实线是通信路径；虚线围框示意内部模型的范围</text>
+  <text class="row" x="30" y="120">① 全部展示</text>
+  <rect class="node" x="210" y="100" width="60" height="50" rx="5"/>
+  <text class="label" x="240" y="132">A</text>
+  <path class="communication" d="M270 125H385M445 125H560M415 150V175"/>
+  <rect class="node" x="385" y="100" width="60" height="50" rx="5"/>
+  <text class="label" x="415" y="132">B</text>
+  <rect class="node" x="560" y="100" width="60" height="50" rx="5"/>
+  <text class="label" x="590" y="132">C</text>
+  <rect class="node" x="365" y="175" width="100" height="35" rx="4"/>
+  <text class="detail" x="415" y="198">临时文件</text>
+  <text class="row" x="30" y="270">② 隐藏文件</text>
+  <rect class="hidden" x="345" y="239" width="140" height="119" rx="7"/>
+  <rect class="node" x="210" y="250" width="60" height="50" rx="5"/>
+  <text class="label" x="240" y="282">A</text>
+  <path class="communication" d="M270 275H385M445 275H560"/>
+  <rect class="node" x="385" y="250" width="60" height="50" rx="5"/>
+  <text class="label" x="415" y="282">B</text>
+  <rect class="node" x="560" y="250" width="60" height="50" rx="5"/>
+  <text class="label" x="590" y="282">C</text>
+  <text class="detail" x="415" y="335">内部：文件</text>
+  <text class="row" x="30" y="419">③ 隐藏中间件</text>
+  <rect class="hidden" x="318" y="389" width="190" height="90" rx="7"/>
+  <rect class="node" x="210" y="400" width="60" height="50" rx="5"/>
+  <text class="label" x="240" y="432">A</text>
+  <path class="communication" d="M270 425H560"/>
+  <text class="detail" x="413" y="414">连接器</text>
+  <text class="detail" x="413" y="462">内部：B 与文件</text>
+  <rect class="node" x="560" y="400" width="60" height="50" rx="5"/>
+  <text class="label" x="590" y="432">C</text>
+  <text class="sub" x="30" y="518">三行是同一实现的不同模型，不是逐步删除中间件。</text>
+</svg>

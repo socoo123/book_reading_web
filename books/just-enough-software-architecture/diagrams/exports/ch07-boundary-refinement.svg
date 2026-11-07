@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="474" viewBox="0 0 720 474" role="img" aria-labelledby="title desc">
+  <title id="title">精化增加内部细节，同时保留边界承诺</title>
+  <desc id="desc">假设一个按公司查询职位的组件，边界模型承诺只返回指定公司的广告；内部模型安排请求检查、广告检索和结果组装。横向实线表示候选处理顺序，向上虚线表示内部模型应符合边界模型的精化关系。</desc>
+  <!-- Original, editable hand-written SVG. Hypothetical example, not the Yinzer design. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 16px; fill: var(--muted); }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.2; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .frame { fill: none; stroke: var(--line); stroke-width: 1.2; }
+    .label { font-size: 21px; font-weight: 600; text-anchor: middle; }
+    .detail { font-size: 16px; text-anchor: middle; fill: var(--muted); }
+    .relation { font-size: 17px; }
+    .arrow { fill: none; stroke: var(--line); stroke-width: 1.8; marker-end: url(#arrow); }
+    .refine { fill: none; stroke: var(--accent); stroke-width: 1.8; stroke-dasharray: 5 4; marker-end: url(#refine-arrow); }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs>
+    <marker id="arrow" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0 0 7 3.5 0 7Z" fill="var(--line)"/></marker>
+    <marker id="refine-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--accent)"/></marker>
+  </defs>
+  <rect width="720" height="474" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="30" y="38">打开内部，仍要守住外部约定</text>
+  <text class="sub" x="30" y="67">假设例子：按公司查询职位的组件</text>
+
+  <rect class="focus" x="42" y="94" width="636" height="106" rx="7"/>
+  <text class="label" x="360" y="133">边界模型：按公司查询职位</text>
+  <text class="detail" x="360" y="168">承诺：结果中的每条广告都属于指定公司</text>
+
+  <path class="refine" d="M360 266V212"/>
+  <text class="relation" x="386" y="244">精化：增加细节，保留承诺</text>
+
+  <rect class="frame" x="42" y="276" width="636" height="132" rx="7"/>
+  <text class="sub" x="66" y="305">内部模型：一种候选机制</text>
+  <rect class="node" x="66" y="326" width="172" height="58" rx="6"/>
+  <text class="label" x="152" y="363">请求检查</text>
+  <path class="arrow" d="M246 355H264"/>
+  <rect class="node" x="274" y="326" width="172" height="58" rx="6"/>
+  <text class="label" x="360" y="363">广告检索</text>
+  <path class="arrow" d="M454 355H472"/>
+  <rect class="node" x="482" y="326" width="172" height="58" rx="6"/>
+  <text class="label" x="568" y="363">结果组装</text>
+
+  <text class="sub" x="30" y="446">内部的每个部分，也可继续用「边界／内部」展开。</text>
+</svg>

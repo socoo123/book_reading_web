@@ -1,0 +1,440 @@
+[
+  {
+    "type": "text",
+    "id": "title",
+    "x": 24,
+    "y": 18,
+    "text": "连接的差别：保存什么，什么变化触发输出",
+    "fontSize": 25,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "subtitle",
+    "x": 24,
+    "y": 62,
+    "text": "三行是语义对照；不是部署拓扑。",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "text",
+    "id": "h1",
+    "x": 24,
+    "y": 112,
+    "text": "输入／触发",
+    "fontSize": 19,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "h2",
+    "x": 306,
+    "y": 112,
+    "text": "受管理状态",
+    "fontSize": 19,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "h3",
+    "x": 600,
+    "y": 112,
+    "text": "输出",
+    "fontSize": 19,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "rectangle",
+    "id": "ss-input",
+    "x": 24,
+    "y": 164,
+    "width": 226,
+    "height": 128,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "流—流\n搜索或点击到来",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "ss-state",
+    "x": 300,
+    "y": 164,
+    "width": 246,
+    "height": 128,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "两侧近期事件\n按键、时间索引",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "ss-out",
+    "x": 596,
+    "y": 164,
+    "width": 190,
+    "height": 128,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "匹配记录\n到期后判未匹配",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "ss1",
+    "x": 256,
+    "y": 226,
+    "width": 38,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        38,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "arrow",
+    "id": "ss2",
+    "x": 552,
+    "y": 226,
+    "width": 38,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        38,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "text",
+    "id": "ss-note",
+    "x": 24,
+    "y": 316,
+    "text": "点击也可能先到；两侧都需要可等待的状态。",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "line",
+    "id": "sep1",
+    "x": 24,
+    "y": 364,
+    "width": 762,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        762,
+        0
+      ]
+    ],
+    "strokeColor": "#66645d",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "rectangle",
+    "id": "st-input",
+    "x": 24,
+    "y": 410,
+    "width": 226,
+    "height": 128,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "流—表\n活动到来触发查询",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "st-state",
+    "x": 300,
+    "y": 410,
+    "width": 246,
+    "height": 128,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "本地档案表\nCDC 更新当前值",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "st-out",
+    "x": 596,
+    "y": 410,
+    "width": 190,
+    "height": 128,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "丰富后的活动\n通常不追溯改写",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "st1",
+    "x": 256,
+    "y": 472,
+    "width": 38,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        38,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "arrow",
+    "id": "st2",
+    "x": 552,
+    "y": 472,
+    "width": 38,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        38,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "text",
+    "id": "st-note",
+    "x": 24,
+    "y": 562,
+    "text": "档案变化只更新表；使用哪个历史版本还需单独约定。",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "line",
+    "id": "sep2",
+    "x": 24,
+    "y": 610,
+    "width": 762,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        762,
+        0
+      ]
+    ],
+    "strokeColor": "#66645d",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "rectangle",
+    "id": "tt-input",
+    "x": 24,
+    "y": 656,
+    "width": 226,
+    "height": 128,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "表—表\n帖子或关注变化",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "tt-state",
+    "x": 300,
+    "y": 656,
+    "width": 246,
+    "height": 128,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "两侧当前表\n以及必要索引",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "tt-out",
+    "x": 596,
+    "y": 656,
+    "width": 190,
+    "height": 128,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "维护当前时间线\n插入／删除配对",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "tt1",
+    "x": 256,
+    "y": 718,
+    "width": 38,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        38,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "arrow",
+    "id": "tt2",
+    "x": 552,
+    "y": 718,
+    "width": 38,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        38,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "text",
+    "id": "tt-note",
+    "x": 24,
+    "y": 808,
+    "text": "任一侧更新都可能改变已有结果；输出必须理解更正。",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "text",
+    "id": "legend",
+    "x": 24,
+    "y": 866,
+    "text": "箭头：由输入经状态计算结果；每类状态都需要一致恢复。",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  }
+]

@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="424" viewBox="0 0 720 424" role="img" aria-labelledby="title desc">
+  <title id="title">让搜索改动的收益与成本共同进入决策</title>
+  <desc id="desc">从上到下阅读：更丰富的搜索结果需要同时评估结果质量、用户等待和服务资源。三方面观察共同进入上线判断，并在后续复查。箭头表示评估关系，不表示所有改动都按相同比例改变三个指标。</desc>
+  <!-- Original, editable hand-written SVG. The export is an identical web copy. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 15px; fill: var(--muted); }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.2; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .label { font-size: 18px; font-weight: 600; text-anchor: middle; }
+    .body { font-size: 16px; text-anchor: middle; fill: var(--muted); }
+    .arrow { fill: none; stroke: var(--line); stroke-width: 1.8; marker-end: url(#arrow); }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker></defs>
+  <rect width="720" height="424" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="28" y="39">一次搜索改动，共同评估三方面影响</text>
+  <text class="sub" x="28" y="67">把延迟纳入正式目标，让收益与代价在同一处比较</text>
+  <rect class="node" x="160" y="96" width="400" height="52" rx="7"/>
+  <text class="label" x="360" y="129">更丰富的搜索结果</text>
+  <path class="arrow" d="M360 148V169H130V190"/>
+  <path class="arrow" d="M360 148V190"/>
+  <path class="arrow" d="M360 148V169H590V190"/>
+  <rect class="node" x="28" y="198" width="204" height="110" rx="7"/>
+  <text class="label" x="130" y="228">结果质量</text>
+  <text class="body" x="130" y="258">信息更有帮助</text>
+  <text class="body" x="130" y="283">可能改善用户参与</text>
+  <rect class="focus" x="258" y="198" width="204" height="110" rx="7"/>
+  <text class="label" x="360" y="228">用户等待</text>
+  <text class="body" x="360" y="258">传输与渲染增加</text>
+  <text class="body" x="360" y="283">可能损害长期使用</text>
+  <rect class="node" x="488" y="198" width="204" height="110" rx="7"/>
+  <text class="label" x="590" y="228">服务资源</text>
+  <text class="body" x="590" y="258">生成内容需要计算</text>
+  <text class="body" x="590" y="283">还需考虑容量与负载</text>
+  <path class="arrow" d="M130 308V329H360V339"/>
+  <path class="arrow" d="M360 308V339"/>
+  <path class="arrow" d="M590 308V329H360V339"/>
+  <rect class="focus" x="160" y="347" width="400" height="48" rx="7"/>
+  <text class="label" x="360" y="377">共同决定是否上线，再持续复查</text>
+  <text class="sub" x="28" y="416">箭头：共同评估；不表示固定的变化比例或效果保证。</text>
+</svg>

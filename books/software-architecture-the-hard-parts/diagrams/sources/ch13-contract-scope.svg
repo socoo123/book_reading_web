@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="420" viewBox="0 0 720 420" role="img" aria-labelledby="title desc">
+<title id="title">收窄依赖范围，而不是共享完整资料模型</title>
+<desc id="desc">上行严格绑定完整 Profile，地址变化也可能波及只用姓名的清单。下行仅承诺按标识取得姓名，资料内部变化不进入这一契约。</desc>
+<style>
+:root{--surface:#fcfbf8;--text:#292824;--muted:#66645d;--line:#969187;--soft:#f0ece4;--accent:#386d74}
+@media(prefers-color-scheme:dark){:root:not([data-theme='light']){--surface:#252524;--text:#e6e3dc;--muted:#b6b1a7;--line:#8c8982;--soft:#353534;--accent:#94c8cf}}
+:root[data-theme='dark']{--surface:#252524;--text:#e6e3dc;--muted:#b6b1a7;--line:#8c8982;--soft:#353534;--accent:#94c8cf}
+.bg{fill:var(--surface)}text{fill:var(--text);font:17px system-ui,-apple-system,"PingFang SC",sans-serif}.h{font-size:21px;font-weight:600}.s{font-size:15px;fill:var(--muted)}.b{fill:var(--soft);stroke:var(--line);stroke-width:1.5}.c{fill:var(--surface);stroke:var(--accent);stroke-width:1.5}.e{fill:none;stroke:var(--accent);stroke-width:2;marker-end:url(#a)}.arrow{fill:var(--accent)}
+</style>
+<defs><marker id="a" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path class="arrow" d="M0 0 8 4 0 8Z"/></marker></defs>
+<rect class="bg" width="720" height="420"/>
+<text class="h" x="28" y="36">清单只用姓名，为什么还要随地址变化？</text>
+<text class="s" x="28" y="64">箭头 → 提供的信息　　中间框 = 消费者依赖的契约范围</text>
+<text x="28" y="103">完整模型绑定</text>
+<rect class="b" x="28" y="120" width="150" height="80" rx="9"/><text x="103" y="153" text-anchor="middle">Profile</text><text class="s" x="103" y="179" text-anchor="middle">资料提供方</text>
+<path class="e" d="M178 160H232"/>
+<rect class="c" x="242" y="115" width="244" height="90" rx="9"/><text x="364" y="146" text-anchor="middle">姓名 · 地址 · 联系方式</text><text class="s" x="364" y="175" text-anchor="middle">整个结构都必须匹配</text>
+<path class="e" d="M486 160H540"/>
+<rect class="b" x="550" y="120" width="142" height="80" rx="9"/><text x="621" y="153" text-anchor="middle">愿望清单</text><text class="s" x="621" y="179" text-anchor="middle">只使用姓名</text>
+<text x="28" y="251">必要信息投影</text>
+<rect class="b" x="28" y="270" width="150" height="80" rx="9"/><text x="103" y="303" text-anchor="middle">Profile</text><text class="s" x="103" y="329" text-anchor="middle">内部模型可演进</text>
+<path class="e" d="M178 310H232"/>
+<rect class="c" x="242" y="265" width="244" height="90" rx="9"/><text x="364" y="296" text-anchor="middle">给定标识，返回姓名</text><text class="s" x="364" y="325" text-anchor="middle">不依赖地址结构</text>
+<path class="e" d="M486 310H540"/>
+<rect class="b" x="550" y="270" width="142" height="80" rx="9"/><text x="621" y="303" text-anchor="middle">愿望清单</text><text class="s" x="621" y="329" text-anchor="middle">仍正确处理空值</text>
+<text class="s" x="360" y="393" text-anchor="middle">字段更少，不代表姓名的含义和错误约定可以任意改变</text>
+<script><![CDATA[try{const t=localStorage.getItem('reading-notes-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch{}]]></script>
+</svg>

@@ -1,0 +1,410 @@
+[
+  {
+    "type": "text",
+    "id": "title",
+    "x": 20,
+    "y": 10,
+    "text": "Shuffle 细节：只展开 reducer 2 的入边",
+    "fontSize": 25,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "sub",
+    "x": 20,
+    "y": 55,
+    "text": "m_i,r2 是逻辑分区，不承诺一个分区对应一个物理文件。",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "rectangle",
+    "id": "m1",
+    "x": 20,
+    "y": 120,
+    "width": 175,
+    "height": 85,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.5,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "Mapper 1",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "p1",
+    "x": 290,
+    "y": 120,
+    "width": 240,
+    "height": 85,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.5,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "m1,r2：有序段\n(A,1)  (C,1)",
+      "fontSize": 19,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "local1",
+    "x": 200,
+    "y": 162,
+    "width": 85,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        85,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid",
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "m1"
+    },
+    "end": {
+      "id": "p1"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "fetch1",
+    "x": 535,
+    "y": 162,
+    "width": 105,
+    "height": 155,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        105,
+        155
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid",
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "p1"
+    },
+    "end": {
+      "id": "merge"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "m2",
+    "x": 20,
+    "y": 275,
+    "width": 175,
+    "height": 85,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.5,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "Mapper 2",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "p2",
+    "x": 290,
+    "y": 275,
+    "width": 240,
+    "height": 85,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.5,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "m2,r2：有序段\n(A,1)  (B,1)",
+      "fontSize": 19,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "local2",
+    "x": 200,
+    "y": 317,
+    "width": 85,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        85,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid",
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "m2"
+    },
+    "end": {
+      "id": "p2"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "fetch2",
+    "x": 535,
+    "y": 317,
+    "width": 105,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        105,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid",
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "p2"
+    },
+    "end": {
+      "id": "merge"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "m3",
+    "x": 20,
+    "y": 430,
+    "width": 175,
+    "height": 85,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.5,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "Mapper 3",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "p3",
+    "x": 290,
+    "y": 430,
+    "width": 240,
+    "height": 85,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.5,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "m3,r2：有序段\n(B,1)  (C,1)",
+      "fontSize": 19,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "local3",
+    "x": 200,
+    "y": 472,
+    "width": 85,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        85,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid",
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "m3"
+    },
+    "end": {
+      "id": "p3"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "fetch3",
+    "x": 535,
+    "y": 472,
+    "width": 105,
+    "height": 155,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        105,
+        -155
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid",
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "p3"
+    },
+    "end": {
+      "id": "merge"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "merge",
+    "x": 645,
+    "y": 235,
+    "width": 240,
+    "height": 165,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.5,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "r2 拉取并归并\nA A B B C C\n同键相邻的输入",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "output",
+    "x": 645,
+    "y": 485,
+    "width": 240,
+    "height": 85,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.5,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "逐键求和\nA:2　B:2　C:2",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "reduce",
+    "x": 765,
+    "y": 405,
+    "width": 0,
+    "height": 75,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        75
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid",
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "merge"
+    },
+    "end": {
+      "id": "output"
+    }
+  },
+  {
+    "type": "text",
+    "id": "local-label",
+    "x": 225,
+    "y": 92,
+    "text": "本地",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "text",
+    "id": "network-label",
+    "x": 565,
+    "y": 170,
+    "text": "网络",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "text",
+    "id": "note",
+    "x": 20,
+    "y": 605,
+    "text": "教学假设：A、B、C 都分给 r2；其余 reducer 路径省略。",
+    "fontSize": 19,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "legend",
+    "x": 20,
+    "y": 645,
+    "text": "箭头：数据传送　有序仅指 r2 的输入；不是所有输出的全局顺序。",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  }
+]

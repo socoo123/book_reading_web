@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="550" viewBox="0 0 720 550" role="img" aria-labelledby="title desc">
+  <title id="title">增量管道与批次顺序的交接时机</title>
+  <desc id="desc">上方管道过滤器 A、B、C 的执行区间重叠，片段逐步向下游交付。下方同一线性作业的阶段 A、B、C 依次整批执行。横向是示意时间，不用于比较实际用时；多个作业和独立分支仍可并发。</desc>
+  <!-- Original editable SVG; the exported web copy is identical. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; } .sub { font-size: 16px; fill: var(--muted); }
+    .group { font-size: 20px; font-weight: 600; } .label { font-size: 18px; }
+    .chunk { fill: var(--focus); stroke: var(--accent); stroke-width: 1.3; }
+    .batch { fill: var(--box); stroke: var(--line); stroke-width: 1.3; }
+    .inside { font-size: 16px; text-anchor: middle; }
+    .axis { stroke: var(--line); stroke-width: 1.4; fill: none; marker-end: url(#arrow); }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker></defs>
+  <rect width="720" height="550" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="30" y="35">何时把工作交给下一步？</text>
+  <text class="sub" x="30" y="64">同一作业、线性结构；条块只表达先后与重叠</text>
+  <path class="axis" d="M230 92H665"/>
+  <text class="sub" x="617" y="82">时间</text>
+  <text class="group" x="30" y="125">管道：逐步交接</text>
+  <text class="label" x="30" y="169">过滤器 A</text>
+  <text class="label" x="30" y="216">过滤器 B</text>
+  <text class="label" x="30" y="263">过滤器 C</text>
+  <rect class="chunk" x="230" y="148" width="80" height="29" rx="4"/><rect class="chunk" x="320" y="148" width="80" height="29" rx="4"/><rect class="chunk" x="410" y="148" width="80" height="29" rx="4"/>
+  <text class="inside" x="270" y="168">片段 1</text><text class="inside" x="360" y="168">片段 2</text><text class="inside" x="450" y="168">片段 3</text>
+  <rect class="chunk" x="320" y="195" width="80" height="29" rx="4"/><rect class="chunk" x="410" y="195" width="80" height="29" rx="4"/><rect class="chunk" x="500" y="195" width="80" height="29" rx="4"/>
+  <text class="inside" x="360" y="215">片段 1</text><text class="inside" x="450" y="215">片段 2</text><text class="inside" x="540" y="215">片段 3</text>
+  <rect class="chunk" x="410" y="242" width="80" height="29" rx="4"/><rect class="chunk" x="500" y="242" width="80" height="29" rx="4"/><rect class="chunk" x="590" y="242" width="80" height="29" rx="4"/>
+  <text class="inside" x="450" y="262">片段 1</text><text class="inside" x="540" y="262">片段 2</text><text class="inside" x="630" y="262">片段 3</text>
+  <path d="M30 302H690" stroke="var(--line)" stroke-width="1"/>
+  <text class="group" x="30" y="338">批次：整批交接</text>
+  <text class="label" x="30" y="385">阶段 A</text><text class="label" x="30" y="435">阶段 B</text><text class="label" x="30" y="485">阶段 C</text>
+  <rect class="batch" x="230" y="364" width="120" height="30" rx="4"/><text class="inside" x="290" y="385">处理整批</text>
+  <rect class="batch" x="350" y="414" width="130" height="30" rx="4"/><text class="inside" x="415" y="435">处理整批</text>
+  <rect class="batch" x="480" y="464" width="150" height="30" rx="4"/><text class="inside" x="555" y="485">处理整批</text>
+  <text class="sub" x="30" y="531">示意不比较两种风格的绝对耗时，也不排除多作业或独立分支并行。</text>
+</svg>

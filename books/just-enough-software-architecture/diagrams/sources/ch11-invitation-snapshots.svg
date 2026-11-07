@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="558" viewBox="0 0 720 558" role="img" aria-labelledby="title desc">
+  <title id="title">接受邀请前后的接口状态</title>
+  <desc id="desc">调用 acceptInvitation(Alan, Kevin) 前，Alan 与 Kevin 由 Invite 实例连接，Alan 与 Bradley 已有 Contact。调用后，Alan 与 Kevin 的 Invite 被 Contact 替代，Alan 与 Bradley 的联系保留。矩形内带下划线的是实例，实线是当前状态中的链接，向下箭头表示操作引起的状态转换，不是调用路径或数据库写入顺序。依据原书图11.3重新组织。</desc>
+  <!-- Original, editable hand-written SVG, based on the relationships in Figure 11.3. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 16px; fill: var(--muted); }
+    .stage { font-size: 18px; font-weight: 600; }
+    .label { font-size: 18px; font-weight: 600; text-anchor: middle; text-decoration: underline; }
+    .detail { font-size: 16px; text-anchor: middle; fill: var(--muted); }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.2; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .scope { fill: none; stroke: var(--line); stroke-width: 1.1; }
+    .link { fill: none; stroke: var(--line); stroke-width: 1.6; }
+    .arrow { fill: none; stroke: var(--accent); stroke-width: 1.8; marker-end: url(#arrow); }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--accent)"/></marker></defs>
+  <rect width="720" height="558" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="30" y="38">同一个动作，改变哪些关系，保留哪些关系</text>
+  <text class="sub" x="30" y="67">框是实例；实线是链接，不表示调用或访问方向</text>
+
+  <rect class="scope" x="30" y="87" width="660" height="178" rx="8"/>
+  <text class="stage" x="48" y="114">接受前</text>
+  <path class="link" d="M268 178L337 146M463 146H510M268 178L337 220M463 220H510"/>
+  <rect class="node" x="110" y="153" width="158" height="52" rx="5"/>
+  <text class="label" x="189" y="185">Alan : Member</text>
+  <rect class="focus" x="337" y="120" width="126" height="52" rx="5"/>
+  <text class="label" x="400" y="152">: Invite</text>
+  <rect class="node" x="510" y="120" width="160" height="52" rx="5"/>
+  <text class="label" x="590" y="152">Kevin : Member</text>
+  <rect class="node" x="337" y="194" width="126" height="52" rx="5"/>
+  <text class="label" x="400" y="226">: Contact</text>
+  <rect class="node" x="510" y="194" width="160" height="52" rx="5"/>
+  <text class="label" x="590" y="226">Bradley : Member</text>
+
+  <path class="arrow" d="M108 277V318"/>
+  <text class="sub" x="136" y="303">acceptInvitation(Alan, Kevin)</text>
+
+  <rect class="scope" x="30" y="331" width="660" height="178" rx="8"/>
+  <text class="stage" x="48" y="358">接受后</text>
+  <path class="link" d="M268 422L337 390M463 390H510M268 422L337 464M463 464H510"/>
+  <rect class="node" x="110" y="397" width="158" height="52" rx="5"/>
+  <text class="label" x="189" y="429">Alan : Member</text>
+  <rect class="focus" x="337" y="364" width="126" height="52" rx="5"/>
+  <text class="label" x="400" y="396">: Contact</text>
+  <rect class="node" x="510" y="364" width="160" height="52" rx="5"/>
+  <text class="label" x="590" y="396">Kevin : Member</text>
+  <rect class="node" x="337" y="438" width="126" height="52" rx="5"/>
+  <text class="label" x="400" y="470">: Contact</text>
+  <rect class="node" x="510" y="438" width="160" height="52" rx="5"/>
+  <text class="label" x="590" y="470">Bradley : Member</text>
+  <text class="sub" x="30" y="542">改变的是接口可见状态；图没有规定内部如何存储或更新。</text>
+</svg>

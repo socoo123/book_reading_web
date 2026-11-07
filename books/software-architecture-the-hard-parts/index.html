@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Software Architecture: The Hard Parts · 书籍概览 · 架构提升读书笔记</title>
+  <meta name="description" content="《Software Architecture: The Hard Parts》中文读书笔记：通过 Sysops Squad 案例理解分布式架构的耦合、模块化、数据与权衡分析。">
+  <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header"><div class="container header-inner">
+    <a class="brand" href="../../index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5.5C8.5 3.8 5.8 3.6 2.5 4.5v14c3.3-.9 6-.7 9.5 1 3.5-1.7 6.2-1.9 9.5-1v-14c-3.3-.9-6-.7-9.5 1Zm0 0v14"/></svg>架构提升读书笔记</a>
+    <span class="header-caption" lang="en">A PERSONAL LIBRARY</span>
+    <div class="theme-control" role="group" aria-label="外观" hidden><button type="button" data-theme-value="system" title="跟随系统"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path class="fill" d="M12 4a8 8 0 0 1 0 16Z"/></svg><span class="sr-only">跟随系统</span></button><button type="button" data-theme-value="light" title="浅色"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.6"/><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21M5.6 5.6l1.6 1.6M16.8 16.8l1.6 1.6M5.6 18.4l1.6-1.6M16.8 7.2l1.6-1.6"/></svg><span class="sr-only">浅色</span></button><button type="button" data-theme-value="dark" title="深色"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.5 14.6A7.8 7.8 0 0 1 9.4 4.5a7.8 7.8 0 1 0 10.1 10.1Z"/></svg><span class="sr-only">深色</span></button></div>
+  </div></header>
+  <main id="main" class="container">
+    <nav class="breadcrumb" aria-label="当前位置"><ol><li><a href="../../index.html">书架</a></li><li aria-current="page">书籍概览</li></ol></nav>
+    <div class="book-overview">
+      <div class="overview-cover">
+        <div class="book-cover cover-hard-parts" aria-hidden="true">
+          <span class="cover-kicker">READING NOTES / 003</span>
+          <strong class="cover-title" lang="en"><span>Software</span><span>Architecture:</span><span><em>The Hard</em></span><span><em>Parts</em></span></strong>
+          <svg class="cover-art" viewBox="0 0 150 110"><path d="M12 14h34v28H12zM98 14h34v28H98zM55 72h34v28H55zM46 28h52M29 42v15h43v15M115 42v15H72"/><path d="M64 20l8 8-8 8M64 84h16"/></svg>
+          <span class="cover-footer"><span>中文读书笔记</span><span>笔记封面</span></span>
+        </div>
+        <p class="cover-caption">本站笔记封面 · 非原书封面</p>
+      </div>
+      <section class="book-frontmatter" aria-labelledby="book-title">
+        <p class="eyebrow">BOOK 003 / 分布式架构与权衡分析</p>
+        <h1 id="book-title" lang="en">Software Architecture:<br>The Hard Parts</h1>
+        <p class="book-subtitle" lang="en">Modern Trade-Off Analysis for Distributed Architectures</p>
+        <p class="book-description">把单体拆成服务之后，数据、事务、发布与工作流会怎样变化？本书从耦合入手，先把纠缠的问题分开分析，再研究各部分如何协作。贯穿全书的 Sysops Squad 虚构案例，让每个决定都有业务背景、候选方案与需要承担的后果。</p>
+        <p class="book-description">适合已有开发经验、准备参与单体改造或分布式系统设计的读者。了解组件、数据库事务和服务调用有助于阅读。笔记着重解释“为什么这样选”，并将作者论述、补充解释和技术核查分清。</p>
+        <p class="button-row"><a class="button" href="chapters/ch01.html">开始阅读</a><a class="button" href="guide.html">全书导航：路线、术语与决策</a></p>
+        <dl class="metadata"><dt>作者</dt><dd lang="en">Neal Ford、Mark Richards、Pramod Sadalage、Zhamak Dehghani</dd><dt>资料版本</dt><dd>O’Reilly 英文第一版，October 2021；首次发布 2021-09-23，版权年 2022</dd><dt>ISBN</dt><dd>978-1-492-08689-5</dd><dt>阅读进度</dt><dd>已收录全部 15 章</dd></dl>
+        <p class="source-note">以用户提供的英文原书 PDF 为依据，扉页、版权及目录已核对；中文标题与术语为本站译法。副标题依扉页使用 Analysis。具体正文范围见各章来源，原书资料仅本地留存。资料准备日期：2026-11-06。</p>
+      </section>
+      <section id="chapters" class="book-directory" aria-labelledby="directory-title">
+        <div class="section-heading"><h2 id="directory-title">阅读目录</h2><span>15 个主体章节</span></div>
+        <p class="directory-note">第 1 章建立共同背景；第一部分拆解结构与数据，第二部分分析重新协作后的取舍。全书整合已完成；可按<a href="guide.html#reading-route">五条专题路径</a>回读，或查阅<a href="guide.html#decisions">13 项案例 ADR</a>、<a href="guide.html#corrections">纠错与边界</a>及<a href="guide.html#appendices-and-gaps">附录与资料缺口</a>。</p>
+        <a class="chapter-entry" href="chapters/ch01.html"><span class="entry-number">01</span><span><strong>没有“最佳实践”时怎样决策</strong><small lang="en">What Happens When There Are No “Best Practices”?</small><small>已收录 · 10 节 · 3 幅图</small></span></a>
+        <h3>第一部分 · 拆开系统</h3>
+        <p class="directory-note" lang="en">Part I · Pulling Things Apart</p>
+        <a class="chapter-entry" href="chapters/ch02.html"><span class="entry-number">02</span><span><strong>辨析软件架构中的耦合</strong><small lang="en">Discerning Coupling in Software Architecture</small><small>已收录 · 9 节 · 2 幅图</small></span></a>
+        <a class="chapter-entry" href="chapters/ch03.html"><span class="entry-number">03</span><span><strong>架构模块化</strong><small lang="en">Architectural Modularity</small><small>已收录 · 10 节 · 2 幅图</small></span></a>
+        <a class="chapter-entry" href="chapters/ch04.html"><span class="entry-number">04</span><span><strong>架构分解</strong><small lang="en">Architectural Decomposition</small><small>已收录 · 9 节 · 3 幅图</small></span></a>
+        <a class="chapter-entry" href="chapters/ch05.html"><span class="entry-number">05</span><span><strong>基于组件的分解模式</strong><small lang="en">Component-Based Decomposition Patterns</small><small>已收录 · 13 节 · 3 幅图</small></span></a>
+        <a class="chapter-entry" href="chapters/ch06.html"><span class="entry-number">06</span><span><strong>拆分运营数据</strong><small lang="en">Pulling Apart Operational Data</small><small>已收录 · 18 节 · 3 幅图</small></span></a>
+        <a class="chapter-entry" href="chapters/ch07.html"><span class="entry-number">07</span><span><strong>服务粒度</strong><small lang="en">Service Granularity</small><small>已收录 · 11 节 · 3 幅图</small></span></a>
+        <h3>第二部分 · 重新组合</h3>
+        <p class="directory-note" lang="en">Part II · Putting Things Back Together</p>
+        <a class="chapter-entry" href="chapters/ch08.html"><span class="entry-number">08</span><span><strong>复用模式</strong><small lang="en">Reuse Patterns</small><small>已收录 · 11 节 · 3 幅图</small></span></a>
+        <a class="chapter-entry" href="chapters/ch09.html"><span class="entry-number">09</span><span><strong>数据所有权与分布式事务</strong><small lang="en">Data Ownership and Distributed Transactions</small><small>已收录 · 15 节 · 3 幅图</small></span></a>
+        <a class="chapter-entry" href="chapters/ch10.html"><span class="entry-number">10</span><span><strong>分布式数据访问</strong><small lang="en">Distributed Data Access</small><small>已收录 · 11 节 · 3 幅图</small></span></a>
+        <a class="chapter-entry" href="chapters/ch11.html"><span class="entry-number">11</span><span><strong>管理分布式工作流</strong><small lang="en">Managing Distributed Workflows</small><small>已收录 · 13 节 · 3 幅图</small></span></a>
+        <a class="chapter-entry" href="chapters/ch12.html"><span class="entry-number">12</span><span><strong>事务 Saga</strong><small lang="en">Transactional Sagas</small><small>已收录 · 17 节 · 4 幅图</small></span></a>
+        <a class="chapter-entry" href="chapters/ch13.html"><span class="entry-number">13</span><span><strong>契约</strong><small lang="en">Contracts</small><small>已收录 · 13 节 · 4 幅图</small></span></a>
+        <a class="chapter-entry" href="chapters/ch14.html"><span class="entry-number">14</span><span><strong>管理分析数据</strong><small lang="en">Managing Analytical Data</small><small>已收录 · 14 节 · 4 幅图</small></span></a>
+        <a class="chapter-entry" href="chapters/ch15.html"><span class="entry-number">15</span><span><strong>构建自己的权衡分析</strong><small lang="en">Build Your Own Trade-Off Analysis</small><small>已收录 · 14 节 · 3 幅图</small></span></a>
+      </section>
+    </div>
+  </main>
+  <footer class="site-footer"><div class="container footer-inner"><a href="../../index.html">← 返回书架</a><span>个人书架 / 中文读书笔记</span></div></footer>
+</body>
+</html>

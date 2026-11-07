@@ -1,0 +1,184 @@
+[
+  {
+    "type": "text",
+    "id": "title",
+    "x": 20,
+    "y": 20,
+    "text": "固定三副本：写二、读二必有交集",
+    "fontSize": 25,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "sub",
+    "x": 20,
+    "y": 62,
+    "text": "前提：写已完成，副本没有丢失版本，随后再读。",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "rectangle",
+    "id": "universe",
+    "x": 20,
+    "y": 112,
+    "width": 740,
+    "height": 380,
+    "strokeColor": "#386d74",
+    "backgroundColor": "transparent",
+    "fillStyle": "solid",
+    "roughness": 0.7,
+    "strokeWidth": 1.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "text",
+    "id": "universe-label",
+    "x": 40,
+    "y": 128,
+    "text": "同一副本集合 N = {A, B, C}",
+    "fontSize": 19,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "rectangle",
+    "id": "writes",
+    "x": 45,
+    "y": 178,
+    "width": 450,
+    "height": 170,
+    "strokeColor": "#386d74",
+    "backgroundColor": "transparent",
+    "fillStyle": "solid",
+    "roughness": 0.7,
+    "strokeWidth": 1.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "rectangle",
+    "id": "reads",
+    "x": 285,
+    "y": 223,
+    "width": 450,
+    "height": 204,
+    "strokeColor": "#386d74",
+    "backgroundColor": "transparent",
+    "fillStyle": "solid",
+    "roughness": 0.7,
+    "strokeWidth": 1.5,
+    "strokeStyle": "dashed"
+  },
+  {
+    "type": "text",
+    "id": "write-label",
+    "x": 65,
+    "y": 190,
+    "text": "实线：完成写的集合 {A, B}",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "read-label",
+    "x": 310,
+    "y": 390,
+    "text": "虚线：本次读的集合 {B, C}",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "rectangle",
+    "id": "a",
+    "x": 80,
+    "y": 265,
+    "width": 140,
+    "height": 60,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.7,
+    "strokeWidth": 1.5,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "A · 新值",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "b",
+    "x": 320,
+    "y": 265,
+    "width": 140,
+    "height": 60,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.7,
+    "strokeWidth": 1.5,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "B · 新值",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "c",
+    "x": 560,
+    "y": 265,
+    "width": 140,
+    "height": 60,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.7,
+    "strokeWidth": 1.5,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "C · 旧值",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "text",
+    "id": "intersect",
+    "x": 305,
+    "y": 448,
+    "text": "交集 B 提供已完成写",
+    "fontSize": 19,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "formula",
+    "x": 20,
+    "y": 535,
+    "text": "|交集| ≥ w + r − n = 2 + 2 − 3 = 1",
+    "fontSize": 22,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "scope",
+    "x": 20,
+    "y": 580,
+    "text": "按版本选值，不是对值投票；交集不等于完整一致性协议。",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  }
+]

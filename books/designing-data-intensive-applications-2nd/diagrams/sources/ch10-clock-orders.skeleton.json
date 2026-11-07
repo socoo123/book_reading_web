@@ -1,0 +1,266 @@
+[
+  {
+    "type": "text",
+    "id": "title",
+    "x": 24,
+    "y": 18,
+    "text": "逻辑时钟：知道的依赖才能进入顺序",
+    "fontSize": 25,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "subtitle",
+    "x": 24,
+    "y": 62,
+    "text": "上半部传播依赖；下半部只存在用户跨设备的现实先后。",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "rectangle",
+    "id": "a",
+    "x": 24,
+    "y": 132,
+    "width": 250,
+    "height": 86,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "A 发消息\n(1, A)",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "c",
+    "x": 24,
+    "y": 272,
+    "width": 250,
+    "height": 86,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "C 独立发消息\n(1, C)",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "b",
+    "x": 494,
+    "y": 202,
+    "width": 320,
+    "height": 112,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "B 收到两条消息\n计数器提升到 1\n回复：(2, B)",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "a-b",
+    "x": 280,
+    "y": 176,
+    "width": 208,
+    "height": 62,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        208,
+        62
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "arrow",
+    "id": "c-b",
+    "x": 280,
+    "y": 316,
+    "width": 208,
+    "height": 42,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        208,
+        -42
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "text",
+    "id": "visible",
+    "x": 326,
+    "y": 348,
+    "text": "箭头携带时间戳：回复排在原因之后",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "line",
+    "id": "divider",
+    "x": 24,
+    "y": 410,
+    "width": 790,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        790,
+        0
+      ]
+    ],
+    "strokeColor": "#66645d",
+    "roughness": 0.5,
+    "strokeStyle": "dashed"
+  },
+  {
+    "type": "rectangle",
+    "id": "privacy",
+    "x": 24,
+    "y": 472,
+    "width": 280,
+    "height": 106,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "笔记本：改为私密\n账号库时间戳 15",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "photo",
+    "x": 514,
+    "y": 472,
+    "width": 300,
+    "height": 106,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "手机：上传照片\n照片库时间戳 12",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "real-order",
+    "x": 310,
+    "y": 524,
+    "width": 198,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        198,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "text",
+    "id": "real-label",
+    "x": 338,
+    "y": 470,
+    "text": "先完成，再开始",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "no-context",
+    "x": 310,
+    "y": 552,
+    "text": "未传递时钟上下文",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "rectangle",
+    "id": "snapshot",
+    "x": 24,
+    "y": 634,
+    "width": 790,
+    "height": 96,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "快照 13：照片 12 已可见，私密设置 15 却不可见\n系统仍读到先前的“公开”，违背用户的实际操作顺序",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "text",
+    "id": "legend",
+    "x": 24,
+    "y": 766,
+    "text": "上方箭头：系统消息依赖　下方箭头：用户行动顺序，非数据库消息。",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  }
+]

@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="530" viewBox="0 0 720 530" role="img" aria-labelledby="title desc">
+  <title id="title">主序列与两种距离</title>
+  <desc id="desc">横轴是不稳定性 I，纵轴是抽象度 A。主序列 A 加 I 等于一。P 点坐标 I 为零点六，A 为零点二，几何距离约零点一四一四，归一化距离零点二。</desc>
+  <style>
+    :root{--surface:#fcfbf8;--text:#292824;--muted:#66645d;--line:#969187;--soft:#f0ece4;--accent:#386d74}
+    @media(prefers-color-scheme:dark){:root:not([data-theme='light']){--surface:#252524;--text:#e6e3dc;--muted:#b6b1a7;--line:#8c8982;--soft:#353534;--accent:#94c8cf}}
+    :root[data-theme='dark']{--surface:#252524;--text:#e6e3dc;--muted:#b6b1a7;--line:#8c8982;--soft:#353534;--accent:#94c8cf}
+    .bg{fill:var(--surface)}text{fill:var(--text);font-family:system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;font-size:17px}.heading{font-size:21px;font-weight:600}.small{font-size:15px;fill:var(--muted)}.axis{fill:none;stroke:var(--text);stroke-width:1.5}.grid{fill:none;stroke:var(--line);stroke-width:1;stroke-dasharray:3 5}.main{stroke:var(--accent);stroke-width:3}.distance{stroke:var(--text);stroke-width:2;stroke-dasharray:5 4}.point{fill:var(--accent);stroke:var(--surface);stroke-width:2}.panel{fill:var(--soft)}
+  </style>
+  <rect class="bg" width="720" height="530"/>
+  <text class="heading" x="30" y="38">接近主序列，表示两类结构特征较平衡</text>
+  <path class="grid" d="M90 80H430V420"/><path class="axis" d="M90 70V420H445"/>
+  <path class="main" d="M90 80 430 420"/>
+  <text class="small" x="69" y="86">1</text><text class="small" x="71" y="440">0</text><text class="small" x="425" y="440">1</text>
+  <text x="250" y="474" text-anchor="middle">不稳定性 I</text><text x="36" y="260" transform="rotate(-90 36 260)" text-anchor="middle">抽象度 A</text>
+  <text x="112" y="70">稳定抽象</text><text class="small" x="316" y="112">无用区</text><text class="small" x="316" y="135">高 A / 高 I</text>
+  <text class="small" x="111" y="365">痛苦区</text><text class="small" x="111" y="389">低 A / 低 I</text>
+  <text class="small" x="333" y="410">具体实现</text>
+  <text x="215" y="176" transform="rotate(45 215 176)">A + I = 1</text>
+  <path class="grid" d="M90 352H294V420"/><path class="distance" d="M294 352 328 318"/>
+  <circle class="point" cx="294" cy="352" r="7"/><text x="274" y="378">P</text><text class="small" x="307" y="344">d</text>
+  <text class="small" x="49" y="357">0.2</text><text class="small" x="281" y="440">0.6</text>
+  <rect class="panel" x="474" y="174" width="216" height="218" rx="12"/>
+  <text x="492" y="207">P：I=0.6，A=0.2</text>
+  <text class="small" x="492" y="244">归一化距离</text><text x="492" y="271">D = |−0.2| = 0.2</text>
+  <text class="small" x="492" y="310">几何垂直距离</text><text x="492" y="337">d = 0.2 / √2</text><text x="492" y="365">   ≈ 0.1414</text>
+  <text class="small" x="360" y="508" text-anchor="middle">两轴等尺度；虚线段为几何垂线，不是归一化后的长度</text>
+  <script><![CDATA[try { const t = localStorage.getItem('reading-notes-theme'); if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t); } catch {}]]></script>
+</svg>

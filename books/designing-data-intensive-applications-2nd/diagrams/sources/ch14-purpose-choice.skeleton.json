@@ -1,0 +1,180 @@
+[
+  {
+    "type": "text",
+    "id": "title",
+    "x": 24,
+    "y": 20,
+    "text": "同一份病历，不同用途需要不同判断",
+    "fontSize": 25,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "subtitle",
+    "x": 24,
+    "y": 66,
+    "text": "原书罕见病案例：愿意帮助研究，不等于放弃用途选择。",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "rectangle",
+    "id": "patient",
+    "x": 24,
+    "y": 150,
+    "width": 250,
+    "height": 100,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.7,
+    "label": {
+      "text": "患者的病历\n由本人作出知情选择",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "research",
+    "x": 455,
+    "y": 150,
+    "width": 250,
+    "height": 100,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.7,
+    "label": {
+      "text": "研究者\n用于约定研究",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "other-purpose",
+    "x": 455,
+    "y": 365,
+    "width": 250,
+    "height": 100,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.7,
+    "label": {
+      "text": "就业／保险判断\n另一种用途",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "share",
+    "x": 284,
+    "y": 200,
+    "width": 161,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        161,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.7,
+    "strokeStyle": "solid",
+    "start": {
+      "id": "patient"
+    },
+    "end": {
+      "id": "research"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "reuse",
+    "x": 580,
+    "y": 260,
+    "width": 0,
+    "height": 95,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        95
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.7,
+    "strokeStyle": "dashed",
+    "start": {
+      "id": "research"
+    },
+    "end": {
+      "id": "other-purpose"
+    }
+  },
+  {
+    "type": "text",
+    "id": "share-label",
+    "x": 310,
+    "y": 163,
+    "text": "愿意分享",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "text",
+    "id": "reuse-label",
+    "x": 600,
+    "y": 291,
+    "text": "用途扩展",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "text",
+    "id": "choice",
+    "x": 24,
+    "y": 355,
+    "text": "研究同意\n不自动涵盖另一个用途",
+    "fontSize": 20,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "legend",
+    "x": 24,
+    "y": 515,
+    "text": "实线：约定分享　虚线：需另行判断的用途，不表示已获许可。",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "text",
+    "id": "law",
+    "x": 24,
+    "y": 550,
+    "text": "本图说明个人选择；不把同意写成唯一法律依据。",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  }
+]

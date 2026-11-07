@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="510" viewBox="0 0 720 510" role="img" aria-labelledby="title desc">
+  <title id="title">七桥问题：保留连通关系，省略地理细节</title>
+  <desc id="desc">四个顶点代表陆块，七条无向边代表桥。A 与 B、B 与 C 各有两座桥，A 与 D、C 与 D、B 与 D 各有一座桥。A、B、C、D 的度数分别为 3、5、3、3，四个奇数度顶点使每桥恰走一次的连续路线不可能存在。</desc>
+  <!-- Original editable SVG; node positions are schematic, not geographic. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 16px; fill: var(--muted); }
+    .edge { fill: none; stroke: var(--line); stroke-width: 2; }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.5; }
+    .label { font-size: 20px; font-weight: 600; text-anchor: middle; }
+    .detail { font-size: 18px; text-anchor: middle; fill: var(--muted); }
+    .conclusion { font-size: 18px; text-anchor: middle; }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <rect width="720" height="510" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="30" y="35">把七座桥留下，把河形与距离拿掉</text>
+  <text class="sub" x="30" y="63">圆是陆块，线是桥；两座桥即使端点相同，也仍是两条边</text>
+
+  <path class="edge" d="M300 128Q183 95 132 209"/>
+  <path class="edge" d="M310 165Q250 220 174 236"/>
+  <path class="edge" d="M132 311Q183 425 300 392"/>
+  <path class="edge" d="M174 284Q250 300 310 355"/>
+  <path class="edge" d="M394 159L545 231"/>
+  <path class="edge" d="M394 361L545 289"/>
+  <path class="edge" d="M177 260H538"/>
+
+  <circle class="node" cx="350" cy="130" r="52"/>
+  <text class="label" x="350" y="125">陆块 A</text>
+  <text class="detail" x="350" y="151">（3）</text>
+  <circle class="node" cx="125" cy="260" r="52"/>
+  <text class="label" x="125" y="255">陆块 B</text>
+  <text class="detail" x="125" y="281">（5）</text>
+  <circle class="node" cx="350" cy="390" r="52"/>
+  <text class="label" x="350" y="385">陆块 C</text>
+  <text class="detail" x="350" y="411">（3）</text>
+  <circle class="node" cx="590" cy="260" r="52"/>
+  <text class="label" x="590" y="255">陆块 D</text>
+  <text class="detail" x="590" y="281">（3）</text>
+
+  <text class="sub" x="30" y="470">括号内为度数：与该陆块相接的边数；线长不表示桥长。</text>
+  <text class="conclusion" x="360" y="499">四个奇数度顶点 ⇒ 不存在每桥恰走一次的连续路线</text>
+</svg>

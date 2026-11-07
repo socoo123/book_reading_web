@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 430" role="img" aria-labelledby="title desc">
+  <title id="title">架构决定与持续反馈</title>
+  <desc id="desc">业务约束和候选方案经权衡分析形成 ADR，可检验的意图进入适应度函数。发现实现偏离时修正并复查，原假设变化时回到分析。</desc>
+  <defs><style>
+    :root{--surface:#fcfbf8;--text:#292824;--muted:#65635d;--box:#f0eee8;--line:#68675f;--accent:#346b67}
+    @media(prefers-color-scheme:dark){:root:not([data-theme='light']){--surface:#252524;--text:#e6e3dc;--muted:#b5b1a8;--box:#323430;--line:#aaa89e;--accent:#a0c9be}}
+    :root[data-theme='dark']{--surface:#252524;--text:#e6e3dc;--muted:#b5b1a8;--box:#323430;--line:#aaa89e;--accent:#a0c9be}
+    .bg{fill:var(--surface)}.box{fill:var(--box);stroke:var(--line);stroke-width:1.5}.flow{fill:none;stroke:var(--line);stroke-width:1.8;marker-end:url(#arrow)}.feedback{stroke-dasharray:6 5}.head{font:600 20px system-ui,sans-serif;fill:var(--text)}.label{font:16px system-ui,sans-serif;fill:var(--text)}.note{font:14px system-ui,sans-serif;fill:var(--muted)}.tip{fill:var(--line)}
+  </style><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="tip" d="M0 0 10 5 0 10Z"/></marker></defs>
+  <script><![CDATA[try { const t = localStorage.getItem('reading-notes-theme'); if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t); } catch {}]]></script>
+  <rect class="bg" width="720" height="430"/>
+  <text class="head" x="28" y="35">理由留下来，可检验的意图持续执行</text>
+  <rect class="box" x="28" y="70" width="194" height="94" rx="10"/>
+  <text class="head" x="125" y="107" text-anchor="middle">业务约束</text><text class="label" x="125" y="137" text-anchor="middle">问题与候选方案</text>
+  <rect class="box" x="263" y="70" width="194" height="94" rx="10"/>
+  <text class="head" x="360" y="107" text-anchor="middle">权衡分析</text><text class="label" x="360" y="137" text-anchor="middle">收益、代价、适用条件</text>
+  <rect class="box" x="498" y="70" width="194" height="94" rx="10"/>
+  <text class="head" x="595" y="107" text-anchor="middle">ADR</text><text class="label" x="595" y="137" text-anchor="middle">决定、理由与后果</text>
+  <path class="flow" d="M222 116H259"/><path class="flow" d="M457 116H494"/>
+  <path class="flow" d="M595 164V238"/><text class="note" x="581" y="194" text-anchor="end">可检验意图</text><text class="note" x="581" y="215" text-anchor="end">写成规则</text>
+  <rect class="box" x="498" y="242" width="194" height="94" rx="10"/>
+  <text class="head" x="595" y="279" text-anchor="middle">适应度函数</text><text class="label" x="595" y="309" text-anchor="middle">限定范围内的检查</text>
+  <rect class="box" x="203" y="242" width="194" height="94" rx="10"/>
+  <text class="head" x="300" y="279" text-anchor="middle">修正实现</text><text class="label" x="300" y="309" text-anchor="middle">遵守已有决定</text>
+  <path class="flow" d="M498 264H401"/><text class="note" x="448" y="254" text-anchor="middle">发现偏离</text>
+  <path class="flow" d="M397 320H494"/><text class="note" x="448" y="310" text-anchor="middle">重新检查</text>
+  <path class="flow feedback" d="M595 336V377H125V168"/>
+  <text class="note" x="360" y="400" text-anchor="middle">新证据改变原假设：重新分析，而非只修补实现</text>
+</svg>

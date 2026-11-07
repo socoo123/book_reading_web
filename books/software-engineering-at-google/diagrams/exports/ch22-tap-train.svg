@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="440" viewBox="0 0 720 440" role="img" aria-labelledby="title desc">
+  <title id="title">TAP 测试列车：合并运行，再拆回各变更</title>
+  <desc id="desc">TAP 测试列车每三小时发一班，一班可能运行六小时以上。第一步，每个候选变更先随机运行 1,000 项测试，未通过的不登本班；第二步，通过者合成一份列车变更；第三步，运行这批变更受影响测试的并集，底层改动可覆盖全库。多数测试在这里通过，只跑一次，结果直接计入报告。第四步，失败的非偶发测试再对每个变更分别重跑，找出致错的变更。第五步，为每个变更生成列出通过与失败目标的报告，作为能否提交的证据，分片随后各自进入评审与提交。通过的测试只在组合状态下跑过，能代表每一片的前提是变更之间很少相互作用。实线是每班都走的流程，虚线是测试失败后才走的归因重跑。</desc>
+  <!-- Original editable hand-written SVG; web export is an identical copy. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 15px; fill: var(--muted); }
+    .label { font-size: 18px; font-weight: 600; text-anchor: middle; }
+    .body { font-size: 16px; text-anchor: middle; }
+    .note { font-size: 14px; fill: var(--muted); text-anchor: middle; }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.3; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .flow { fill: none; stroke: var(--line); stroke-width: 1.8; marker-end: url(#arrow); }
+    .retry { stroke-dasharray: 5 5; }
+    .divider { stroke: var(--line); stroke-width: 1; }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker></defs>
+  <rect width="720" height="440" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="28" y="40">TAP 测试列车：合并跑共同测试，再把失败拆回各变更</text>
+  <text class="sub" x="28" y="69">上排从左到右、下排从右到左读；实线是每班流程，虚线只在测试失败时出现</text>
+
+  <rect class="node" x="28" y="96" width="192" height="96" rx="7"/>
+  <text class="label" x="124" y="128">① 抽样筛查</text>
+  <text class="body" x="124" y="157">每变更随机跑 1,000 项</text>
+  <text class="note" x="124" y="181">未通过的不登本班</text>
+  <path class="flow" d="M220 144H254"/>
+  <rect class="node" x="264" y="96" width="192" height="96" rx="7"/>
+  <text class="label" x="360" y="128">② 合成列车</text>
+  <text class="body" x="360" y="157">通过者合为一份变更</text>
+  <text class="note" x="360" y="181">列车里的变更一起测试</text>
+  <path class="flow" d="M456 144H490"/>
+  <rect class="focus" x="500" y="96" width="192" height="96" rx="7"/>
+  <text class="label" x="596" y="128">③ 运行测试并集</text>
+  <text class="body" x="596" y="157">受影响测试合起来跑</text>
+  <text class="note" x="596" y="181">底层改动可覆盖全库</text>
+
+  <path class="flow" d="M540 192V222H360V242"/>
+  <text class="note" x="450" y="214">多数测试通过，只跑这一次</text>
+  <path class="flow retry" d="M652 192V242"/>
+  <text class="note" x="604" y="238">失败且非偶发</text>
+
+  <rect class="node retry" x="500" y="252" width="192" height="96" rx="7"/>
+  <text class="label" x="596" y="284">④ 单独重跑</text>
+  <text class="body" x="596" y="313">逐个变更重跑失败测试</text>
+  <text class="note" x="596" y="337">找出致错的变更</text>
+  <path class="flow retry" d="M500 300H466"/>
+  <rect class="focus" x="264" y="252" width="192" height="96" rx="7"/>
+  <text class="label" x="360" y="284">⑤ 分别出报告</text>
+  <text class="body" x="360" y="313">列出通过与失败目标</text>
+  <text class="note" x="360" y="337">作为能否提交的证据</text>
+  <path class="flow" d="M264 300H230"/>
+  <rect class="node" x="28" y="252" width="192" height="96" rx="7"/>
+  <text class="label" x="124" y="284">分片各自提交</text>
+  <text class="body" x="124" y="313">进入评审与提交</text>
+  <text class="note" x="124" y="337">列车只合并验证</text>
+
+  <path class="divider" d="M28 366H692"/>
+  <text class="sub" x="28" y="392">每三小时发一班，一班可能运行六小时以上：前者是发车间隔，后者是运行时长</text>
+  <text class="sub" x="28" y="418">通过的测试只在组合状态下跑过；能代表每一片，前提是变更之间很少相互作用</text>
+</svg>

@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="426" viewBox="0 0 720 426" role="img" aria-labelledby="title desc">
+  <title id="title">异步发信与网页响应分开</title>
+  <desc id="desc">网页处理向队列提交异步发送请求，然后继续网页响应路径，不等待邮件组件与远程服务器完成实际投递。1秒是原书响应目标，不是测量结果；队列提交和其他处理仍需耗时。</desc>
+  <!-- Original, editable hand-written SVG. The export is an identical web copy. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 16px; fill: var(--muted); }
+    .label { font-size: 20px; font-weight: 600; text-anchor: middle; }
+    .detail { font-size: 16px; text-anchor: middle; fill: var(--muted); }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.2; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .arrow { fill: none; stroke: var(--line); stroke-width: 1.8; marker-end: url(#arrow); }
+    .async { fill: none; stroke: var(--accent); stroke-width: 1.8; stroke-dasharray: 7 5; marker-end: url(#async-arrow); }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker>
+    <marker id="async-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--accent)"/></marker>
+  </defs>
+  <rect width="720" height="426" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="30" y="38">网页不必等到邮件投递完成</text>
+  <text class="sub" x="30" y="67">移除一项同步等待，不等于自动满足响应目标</text>
+
+  <rect class="focus" x="40" y="100" width="245" height="85" rx="7"/>
+  <text class="label" x="162" y="134">网页处理</text>
+  <text class="detail" x="162" y="163">Contacts / Advertisements</text>
+  <path class="arrow" d="M297 142H433"/>
+  <text class="detail" x="365" y="125">继续响应</text>
+  <rect class="focus" x="445" y="100" width="235" height="85" rx="7"/>
+  <text class="label" x="562" y="134">系统发出网页</text>
+  <text class="detail" x="562" y="163">原书目标：1 秒内</text>
+
+  <path class="async" d="M162 196V262"/>
+  <text class="sub" x="184" y="235">提交发送请求</text>
+  <rect class="node" x="40" y="275" width="245" height="82" rx="7"/>
+  <text class="label" x="162" y="309">邮件发送请求排队</text>
+  <text class="detail" x="162" y="337">未指定具体队列实现</text>
+  <path class="arrow" d="M297 316H433"/>
+  <text class="detail" x="365" y="299">另行处理</text>
+  <rect class="node" x="445" y="275" width="235" height="82" rx="7"/>
+  <text class="label" x="562" y="309">邮件组件与远程服务器</text>
+  <text class="detail" x="562" y="337">实际投递可能耗时数秒</text>
+
+  <text class="sub" x="30" y="393">仍需验证网页本身的耗时；图不承诺可靠投递或负载下的延迟。</text>
+</svg>

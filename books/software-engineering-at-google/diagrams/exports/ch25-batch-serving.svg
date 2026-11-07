@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="448" viewBox="0 0 720 448" role="img" aria-labelledby="title desc">
+  <title id="title">撤走副本时，批处理与在线服务的配合不同</title>
+  <desc id="desc">三行从左往右依次是撤离方式、任务怎样应对和结果。批处理一次被撤走一半副本时，未确认的块由其他进程重新领取，结果是吞吐短暂下降、少量工作重算。在线服务先得到提前通知，平台限制同时撤走的数量，副本排空：停接新请求并完成已接收的请求，流量转给其他副本，请求尽量不受影响。虚线一行表示在线服务缺少这些配合：一次撤走一半且没有提前通知，跳过排空，剩余副本立即过载，在途请求可能失败。</desc>
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 15px; fill: var(--muted); }
+    .row { font-size: 17px; font-weight: 600; }
+    .label { font-size: 18px; font-weight: 600; text-anchor: middle; }
+    .body { font-size: 16px; text-anchor: middle; }
+    .note { font-size: 14px; fill: var(--muted); text-anchor: middle; }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.3; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .flow { fill: none; stroke: var(--line); stroke-width: 1.8; marker-end: url(#arrow); }
+    .missing { stroke-dasharray: 5 5; }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker></defs>
+  <rect width="720" height="448" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="28" y="40">撤走副本时，两类任务需要不同的配合</text>
+  <text class="sub" x="28" y="69">每行从左往右读：撤离方式、应对、结果；虚线一行是在线服务缺少配合时</text>
+
+  <text class="row" x="28" y="106">批处理：关心整批的吞吐</text>
+  <rect class="node" x="28" y="118" width="196" height="70" rx="7"/>
+  <text class="label" x="126" y="146">一次撤走一半副本</text>
+  <text class="body" x="126" y="172">调度器回收实例</text>
+  <path class="flow" d="M226 153H258"/>
+  <rect class="node" x="262" y="118" width="196" height="70" rx="7"/>
+  <text class="label" x="360" y="146">未确认的块</text>
+  <text class="body" x="360" y="172">由其他进程重新领取</text>
+  <path class="flow" d="M460 153H492"/>
+  <rect class="node" x="496" y="118" width="196" height="70" rx="7"/>
+  <text class="label" x="594" y="146">吞吐短暂下降</text>
+  <text class="body" x="594" y="172">少量工作重算</text>
+
+  <text class="row" x="28" y="224">在线服务：关心每次请求的延迟</text>
+  <rect class="node" x="28" y="236" width="196" height="70" rx="7"/>
+  <text class="label" x="126" y="264">提前通知</text>
+  <text class="body" x="126" y="290">限制同时撤走的数量</text>
+  <path class="flow" d="M226 271H258"/>
+  <rect class="focus" x="262" y="236" width="196" height="70" rx="7"/>
+  <text class="label" x="360" y="264">排空：停接新请求</text>
+  <text class="body" x="360" y="290">完成已接收的请求</text>
+  <path class="flow" d="M460 271H492"/>
+  <rect class="node" x="496" y="236" width="196" height="70" rx="7"/>
+  <text class="label" x="594" y="264">流量转给其他副本</text>
+  <text class="body" x="594" y="290">请求尽量不受影响</text>
+
+  <text class="row" x="28" y="342">在线服务，缺少配合时</text>
+  <rect class="node missing" x="28" y="354" width="196" height="70" rx="7"/>
+  <text class="label" x="126" y="382">一次撤走一半副本</text>
+  <text class="body" x="126" y="408">没有提前通知</text>
+  <path class="flow missing" d="M226 389H492"/>
+  <text class="note" x="360" y="378">跳过排空</text>
+  <rect class="node missing" x="496" y="354" width="196" height="70" rx="7"/>
+  <text class="label" x="594" y="382">剩余副本立即过载</text>
+  <text class="body" x="594" y="408">在途请求可能失败</text>
+</svg>

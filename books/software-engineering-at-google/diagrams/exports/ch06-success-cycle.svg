@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="424" viewBox="0 0 720 424" role="img" aria-labelledby="title desc">
+  <title id="title">成功循环中压缩旧问题的位置</title>
+  <desc id="desc">按原章的成功循环重绘。上排从左到右是同一个问题经历的分析、艰难推进和有效进展，随后的奖励是一个同样困难的新问题，人手却未必增加。右侧向下进入压缩：旧问题交给负责人与流程维护，占用更少人手与领导注意力。虚线表示压缩腾出的人手与注意力转向新问题，新问题再从分析开始下一圈，组织同时照看的问题由此增多。旧问题压不下来，新职责就只能靠更长的工作时间填补。</desc>
+  <!-- Original editable hand-written SVG; web export is an identical copy. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 15px; fill: var(--muted); }
+    .label { font-size: 18px; font-weight: 600; text-anchor: middle; }
+    .body { font-size: 16px; fill: var(--muted); text-anchor: middle; }
+    .note { font-size: 14px; fill: var(--muted); text-anchor: middle; }
+    .tag { font-size: 14px; fill: var(--muted); }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.3; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .flow { fill: none; stroke: var(--line); stroke-width: 1.8; marker-end: url(#arrow); }
+    .transfer { stroke-dasharray: 5 5; }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker></defs>
+  <rect width="720" height="424" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="28" y="40">成功换来新问题，压缩旧问题才腾得出人手</text>
+  <text class="sub" x="28" y="69">实线：阶段推进　　虚线：压缩腾出的人手与注意力转向新问题</text>
+
+  <rect class="node" x="28" y="96" width="140" height="104" rx="7"/>
+  <text class="label" x="98" y="130">分析</text>
+  <text class="body" x="98" y="160">识别遮蔽与权衡</text>
+  <text class="body" x="98" y="184">形成共识</text>
+  <path class="flow" d="M170 148H194"/>
+  <rect class="node" x="202" y="96" width="140" height="104" rx="7"/>
+  <text class="label" x="272" y="130">艰难推进</text>
+  <text class="body" x="272" y="160">未准备好也开始</text>
+  <text class="body" x="272" y="184">面对失败与重试</text>
+  <path class="flow" d="M344 148H368"/>
+  <rect class="node" x="376" y="96" width="140" height="104" rx="7"/>
+  <text class="label" x="446" y="130">有效进展</text>
+  <text class="body" x="446" y="160">判断变好</text>
+  <text class="body" x="446" y="184">开始自行运转</text>
+  <path class="flow" d="M518 148H542"/>
+  <rect class="focus" x="550" y="96" width="140" height="104" rx="7"/>
+  <text class="label" x="620" y="130">奖励：新问题</text>
+  <text class="body" x="620" y="160">同样困难</text>
+  <text class="body" x="620" y="184">人手未必增加</text>
+
+  <path class="flow" d="M620 202V252"/>
+  <rect class="focus" x="412" y="262" width="278" height="108" rx="7"/>
+  <text class="label" x="551" y="296">压缩旧问题</text>
+  <text class="body" x="551" y="326">更少人手与领导注意力</text>
+  <text class="body" x="551" y="350">交给负责人与流程维护</text>
+
+  <path class="flow transfer" d="M408 316H278"/>
+  <text class="note" x="343" y="304">腾出人手与注意力</text>
+  <rect class="node" x="28" y="262" width="240" height="108" rx="7"/>
+  <text class="label" x="148" y="296">投入新问题</text>
+  <text class="body" x="148" y="326">腾出的人手开始新一圈</text>
+  <text class="body" x="148" y="350">同时照看的问题多一个</text>
+
+  <path class="flow" d="M98 262V210"/>
+  <text class="tag" x="110" y="240">下一圈</text>
+
+  <text class="note" x="360" y="404">旧问题压不下来，新职责就只能靠更长的工作时间填补</text>
+</svg>

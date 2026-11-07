@@ -1,0 +1,286 @@
+[
+  {
+    "type": "text",
+    "id": "title",
+    "x": 24,
+    "y": 18,
+    "text": "日志保留数据，消费者组各自保存进度",
+    "fontSize": 25,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "subtitle",
+    "x": 24,
+    "y": 62,
+    "text": "经典分片分工模型；每个分片内有序，没有跨分片全序。",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "text",
+    "id": "logs",
+    "x": 24,
+    "y": 112,
+    "text": "同一个主题",
+    "fontSize": 21,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "rectangle",
+    "id": "p0",
+    "x": 24,
+    "y": 170,
+    "width": 248,
+    "height": 104,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "分片 P0\n… 40 → 41 → 42 …",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "p1",
+    "x": 24,
+    "y": 394,
+    "width": 248,
+    "height": 104,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "分片 P1\n… 16 → 17 → 18 …",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "a-scope",
+    "x": 450,
+    "y": 114,
+    "width": 334,
+    "height": 236,
+    "strokeColor": "#386d74",
+    "backgroundColor": "transparent",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "dashed",
+    "label": {
+      "text": "",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "text",
+    "id": "a-name",
+    "x": 470,
+    "y": 130,
+    "text": "组 A：组内分工",
+    "fontSize": 21,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "rectangle",
+    "id": "a1",
+    "x": 476,
+    "y": 174,
+    "width": 282,
+    "height": 68,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "A1 读 P0；next = 42",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "a2",
+    "x": 476,
+    "y": 260,
+    "width": 282,
+    "height": 68,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "A2 读 P1；next = 18",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "p0-a",
+    "x": 278,
+    "y": 206,
+    "width": 192,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        192,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "arrow",
+    "id": "p1-a",
+    "x": 278,
+    "y": 412,
+    "width": 192,
+    "height": 118,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        192,
+        -118
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "rectangle",
+    "id": "b-scope",
+    "x": 450,
+    "y": 390,
+    "width": 334,
+    "height": 174,
+    "strokeColor": "#386d74",
+    "backgroundColor": "transparent",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "dashed",
+    "label": {
+      "text": "",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "text",
+    "id": "b-name",
+    "x": 470,
+    "y": 406,
+    "text": "组 B：独立订阅",
+    "fontSize": 21,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "rectangle",
+    "id": "b1",
+    "x": 476,
+    "y": 450,
+    "width": 282,
+    "height": 86,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "B1 读 P0 和 P1\nnext：P0 = 40，P1 = 16",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "p0-b",
+    "x": 278,
+    "y": 250,
+    "width": 192,
+    "height": 222,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        192,
+        222
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "arrow",
+    "id": "p1-b",
+    "x": 278,
+    "y": 480,
+    "width": 192,
+    "height": 32,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        192,
+        32
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "text",
+    "id": "note",
+    "x": 24,
+    "y": 614,
+    "text": "实线：分片被哪个成员读取　　虚线框：消费者组\n读取不删除日志；两组可用不同速度处理同一批事件。",
+    "fontSize": 19,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  }
+]

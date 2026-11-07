@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="470" viewBox="0 0 720 470" role="img" aria-labelledby="title desc">
+  <title id="title">集中迁移如何复用专业知识</title>
+  <desc id="desc">上半部三个团队分别学习、修改和验证，表示分散迁移中重复发生的工作。下半部由专家组深入理解变化，建立可复用修改与验证方法，再覆盖多个使用方。箭头表示方法复用和迁移覆盖，逐处修改与验证仍然需要完成。</desc>
+  <!-- Original editable hand-written SVG; web export is an identical copy. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 15px; fill: var(--muted); }
+    .row { font-size: 17px; font-weight: 600; }
+    .label { font-size: 18px; font-weight: 600; text-anchor: middle; }
+    .body { font-size: 16px; text-anchor: middle; }
+    .note { font-size: 14px; fill: var(--muted); }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.3; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .flow { fill: none; stroke: var(--line); stroke-width: 1.8; marker-end: url(#arrow); }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker></defs>
+  <rect width="720" height="470" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="28" y="40">把一次深入理解，变成多处可用的方法</text>
+  <text class="sub" x="28" y="70">示意三组内部使用方：比较学习如何重复或复用</text>
+  <text class="row" x="28" y="112">分散迁移：各自理解，再各自实施</text>
+  <rect class="node" x="24" y="132" width="208" height="82" rx="7"/>
+  <text class="label" x="128" y="162">团队甲</text>
+  <text class="body" x="128" y="192">学习 · 修改 · 验证</text>
+  <rect class="node" x="256" y="132" width="208" height="82" rx="7"/>
+  <text class="label" x="360" y="162">团队乙</text>
+  <text class="body" x="360" y="192">学习 · 修改 · 验证</text>
+  <rect class="node" x="488" y="132" width="208" height="82" rx="7"/>
+  <text class="label" x="592" y="162">团队丙</text>
+  <text class="body" x="592" y="192">学习 · 修改 · 验证</text>
+  <path d="M28 240H692" stroke="var(--line)" stroke-dasharray="5 6"/>
+  <text class="row" x="28" y="275">集中迁移：专家组建立方法，再覆盖使用方</text>
+  <rect class="focus" x="24" y="295" width="170" height="94" rx="7"/>
+  <text class="label" x="109" y="330">专家组</text>
+  <text class="body" x="109" y="362">深入理解变化</text>
+  <path class="flow" d="M204 342H240"/>
+  <rect class="node" x="250" y="295" width="204" height="94" rx="7"/>
+  <text class="label" x="352" y="330">可复用方法</text>
+  <text class="body" x="352" y="362">修改规则与公共测试</text>
+  <path class="flow" d="M464 342H500"/>
+  <rect class="node" x="510" y="295" width="186" height="94" rx="7"/>
+  <text class="label" x="603" y="330">多个使用方</text>
+  <text class="body" x="603" y="362">甲 · 乙 · 丙</text>
+  <text class="sub" x="28" y="424">箭头：方法复用与迁移覆盖；逐处修改和验证仍然需要完成。</text>
+  <text class="note" x="28" y="451">前提：代码可见、变更权限与验证机制支持跨团队协作。</text>
+</svg>

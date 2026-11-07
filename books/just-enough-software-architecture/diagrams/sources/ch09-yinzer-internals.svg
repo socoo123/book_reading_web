@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="604" viewBox="0 0 720 604" role="img" aria-labelledby="title desc">
+  <title id="title">Yinzer 内部装配与外部端口绑定</title>
+  <desc id="desc">同一 Yinzer 系统内部有 Contacts、Advertisements、Users、Emails 四个组件。前两个组件同步访问 Users，异步请求 Emails。四个外部端口通过绑定由内部承接。图省略外部环境、操作清单和内部端口小方块。</desc>
+  <!-- Editable structural explanation based on Figure 9.8, not a process or deployment diagram. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 16px; fill: var(--muted); }
+    .label { font-size: 20px; font-weight: 600; text-anchor: middle; }
+    .detail { font-size: 16px; text-anchor: middle; fill: var(--muted); }
+    .port-label { font-size: 16px; text-anchor: middle; }
+    .scope { fill: none; stroke: var(--line); stroke-width: 1.4; }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.2; }
+    .port { fill: var(--focus); stroke: var(--accent); stroke-width: 1.2; }
+    .sync { fill: none; stroke: var(--line); stroke-width: 1.8; }
+    .async { fill: none; stroke: var(--accent); stroke-width: 1.8; stroke-dasharray: 7 5; }
+    .binding { fill: none; stroke: var(--line); stroke-width: 1.4; marker-end: url(#binding); }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs><marker id="binding" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M1 1 7 4 1 7" fill="none" stroke="var(--line)" stroke-width="1.1"/></marker></defs>
+  <rect width="720" height="604" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="30" y="38">外部端口保留，内部职责展开</text>
+  <text class="sub" x="30" y="67">绑定不执行工作；连接器才规定运行交互</text>
+
+  <rect class="scope" x="40" y="92" width="645" height="400" rx="8"/>
+  <text class="sub" x="57" y="119">同一个 Yinzer 系统实例的内部</text>
+  <rect class="port" x="27" y="165" width="26" height="26" rx="3"/>
+  <text class="port-label" x="105" y="158">非会员</text>
+  <path class="binding" d="M53 178H175"/>
+  <rect class="port" x="27" y="230" width="26" height="26" rx="3"/>
+  <text class="port-label" x="105" y="227">联系关系</text>
+  <path class="binding" d="M53 243H175"/>
+  <rect class="port" x="27" y="345" width="26" height="26" rx="3"/>
+  <text class="port-label" x="105" y="337">职位／广告</text>
+  <path class="binding" d="M53 358H175"/>
+
+  <rect class="node" x="175" y="150" width="185" height="108" rx="6"/>
+  <text class="label" x="267" y="195">联系关系</text>
+  <text class="detail" x="267" y="226">Contacts</text>
+  <rect class="node" x="175" y="327" width="185" height="86" rx="6"/>
+  <text class="label" x="267" y="361">广告</text>
+  <text class="detail" x="267" y="391">Advertisements</text>
+  <rect class="node" x="485" y="150" width="170" height="108" rx="6"/>
+  <text class="label" x="570" y="195">用户</text>
+  <text class="detail" x="570" y="226">Users</text>
+  <rect class="node" x="485" y="327" width="170" height="86" rx="6"/>
+  <text class="label" x="570" y="361">邮件</text>
+  <text class="detail" x="570" y="391">Emails</text>
+
+  <path class="sync" d="M360 177H485"/>
+  <path class="sync" d="M360 345L485 230"/>
+  <path d="M360 230L485 345" fill="none" stroke="var(--bg)" stroke-width="6"/>
+  <path class="async" d="M360 230L485 345"/>
+  <path class="async" d="M360 389H485"/>
+  <path class="binding" d="M570 413V479"/>
+  <rect class="port" x="557" y="479" width="26" height="26" rx="3"/>
+  <text class="port-label" x="570" y="530">SMTP 客户端</text>
+
+  <path class="binding" d="M40 554H83"/>
+  <text class="sub" x="95" y="560">绑定</text>
+  <path class="sync" d="M210 554H253"/>
+  <text class="sub" x="265" y="560">同步连接器</text>
+  <path class="async" d="M447 554H490"/>
+  <text class="sub" x="502" y="560">异步连接器</text>
+  <text class="sub" x="30" y="588">省略外部环境、操作清单及内部端口；交叉不连接，不表示进程。</text>
+</svg>

@@ -1,0 +1,245 @@
+[
+  {
+    "type": "text",
+    "id": "title",
+    "x": 24,
+    "y": 18,
+    "text": "Avro：两份模式，各负一项责任",
+    "fontSize": 25,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "subtitle",
+    "x": 24,
+    "y": 60,
+    "text": "笔记假设；Person 名称相同，favoriteNumber 两侧均为 long。",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "rectangle",
+    "id": "writer",
+    "x": 24,
+    "y": 116,
+    "width": 320,
+    "height": 152,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "写者模式\n① userName : string\n② favoriteNumber : long\n③ photoURL : string",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "reader",
+    "x": 414,
+    "y": 116,
+    "width": 320,
+    "height": 152,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeStyle": "dashed",
+    "label": {
+      "text": "读者模式\n① favoriteNumber : long\n② userName : string\n③ locale : string = \"zh-CN\"",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "bytes",
+    "x": 24,
+    "y": 344,
+    "width": 240,
+    "height": 100,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "原始字节\n按写者顺序连接值",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "resolve",
+    "x": 354,
+    "y": 344,
+    "width": 380,
+    "height": 100,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "按写者模式识别边界\n按字段名映射到读者结构",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "writer-input",
+    "x": 184,
+    "y": 274,
+    "width": 0,
+    "height": 64,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        64
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid",
+    "start": {
+      "id": "writer"
+    },
+    "end": {
+      "id": "bytes"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "data",
+    "x": 270,
+    "y": 394,
+    "width": 78,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        78,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid",
+    "start": {
+      "id": "bytes"
+    },
+    "end": {
+      "id": "resolve"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "reader-input",
+    "x": 574,
+    "y": 274,
+    "width": 0,
+    "height": 64,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        64
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "dashed",
+    "start": {
+      "id": "reader"
+    },
+    "end": {
+      "id": "resolve"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "result",
+    "x": 354,
+    "y": 516,
+    "width": 380,
+    "height": 132,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "读者得到的对象\nfavoriteNumber = 1337\nuserName = \"Martin\"\nlocale = \"zh-CN\"",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "output",
+    "x": 544,
+    "y": 450,
+    "width": 0,
+    "height": 60,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        60
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid",
+    "start": {
+      "id": "resolve"
+    },
+    "end": {
+      "id": "result"
+    }
+  },
+  {
+    "type": "text",
+    "id": "discard",
+    "x": 24,
+    "y": 530,
+    "text": "photoURL 被投影忽略。\n这不承诺保留它，\n再按旧模式写回仍可能丢失。",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "text",
+    "id": "legend",
+    "x": 24,
+    "y": 688,
+    "text": "实线：读取与投影　　虚线：读者期望的结构与默认值",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  }
+]

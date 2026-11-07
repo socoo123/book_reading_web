@@ -1,0 +1,260 @@
+[
+  {
+    "type": "text",
+    "id": "title",
+    "x": 20,
+    "y": 10,
+    "text": "本地索引：完整搜索需要分发—汇集",
+    "fontSize": 25,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "sub",
+    "x": 20,
+    "y": 52,
+    "text": "假设按车辆 ID 分片；每片只索引自己的记录。",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "rectangle",
+    "id": "query",
+    "x": 265,
+    "y": 105,
+    "width": 250,
+    "height": 85,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "查询方\n查全部红车",
+      "fontSize": 20,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "d0",
+    "x": 20,
+    "y": 305,
+    "width": 340,
+    "height": 175,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "数据片 D0\n101：红色 Ford\n202：蓝色 Honda\n本地 color:red → [101]",
+      "fontSize": 19,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "d1",
+    "x": 430,
+    "y": 305,
+    "width": 340,
+    "height": 175,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "数据片 D1\n501：红色 Honda\n本地 color:red → [501]",
+      "fontSize": 19,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "q0",
+    "x": 300,
+    "y": 195,
+    "width": 165,
+    "height": 105,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        -165,
+        105
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid",
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "query"
+    },
+    "end": {
+      "id": "d0"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "q1",
+    "x": 480,
+    "y": 195,
+    "width": 165,
+    "height": 105,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        165,
+        105
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid",
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "query"
+    },
+    "end": {
+      "id": "d1"
+    }
+  },
+  {
+    "type": "text",
+    "id": "scatter0",
+    "x": 100,
+    "y": 240,
+    "text": "查 color:red",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "scatter1",
+    "x": 610,
+    "y": 240,
+    "text": "查 color:red",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "rectangle",
+    "id": "result",
+    "x": 265,
+    "y": 600,
+    "width": 250,
+    "height": 85,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "汇集完整结果\n101 和 501",
+      "fontSize": 20,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "r0",
+    "x": 190,
+    "y": 485,
+    "width": 120,
+    "height": 110,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        120,
+        110
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "dashed",
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "d0"
+    },
+    "end": {
+      "id": "result"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "r1",
+    "x": 600,
+    "y": 485,
+    "width": 120,
+    "height": 110,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        -120,
+        110
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "dashed",
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "d1"
+    },
+    "end": {
+      "id": "result"
+    }
+  },
+  {
+    "type": "text",
+    "id": "return0",
+    "x": 80,
+    "y": 530,
+    "text": "返回记录 101",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "return1",
+    "x": 620,
+    "y": 530,
+    "text": "返回记录 501",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "legend",
+    "x": 20,
+    "y": 730,
+    "text": "实线：查询请求　虚线：查询结果　每片仍用索引，不是全表逐行扫描。",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  }
+]

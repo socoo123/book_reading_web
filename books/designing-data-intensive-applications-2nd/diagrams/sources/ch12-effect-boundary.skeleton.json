@@ -1,0 +1,276 @@
+[
+  {
+    "type": "text",
+    "id": "title",
+    "x": 24,
+    "y": 18,
+    "text": "恰好一次：先标明协议能管理哪些效果",
+    "fontSize": 25,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "subtitle",
+    "x": 24,
+    "y": 62,
+    "text": "执行可以重试；要约束的是可见效果是否重复。",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "rectangle",
+    "id": "scope",
+    "x": 24,
+    "y": 122,
+    "width": 764,
+    "height": 286,
+    "strokeColor": "#386d74",
+    "backgroundColor": "transparent",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "dashed",
+    "label": {
+      "text": "",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "text",
+    "id": "scope-title",
+    "x": 46,
+    "y": 144,
+    "text": "明确的处理／提交协议范围（概念图）",
+    "fontSize": 21,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "rectangle",
+    "id": "offset",
+    "x": 48,
+    "y": 218,
+    "width": 208,
+    "height": 114,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "输入位点\n恢复到正确前缀",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "state",
+    "x": 302,
+    "y": 218,
+    "width": 208,
+    "height": 114,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "受管状态\n与位点一致",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "out",
+    "x": 556,
+    "y": 218,
+    "width": 208,
+    "height": 114,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "输出记录\n提交或原子去重",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "inside1",
+    "x": 262,
+    "y": 274,
+    "width": 34,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        34,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "arrow",
+    "id": "inside2",
+    "x": 516,
+    "y": 274,
+    "width": 34,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        34,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "text",
+    "id": "inside-note",
+    "x": 48,
+    "y": 366,
+    "text": "框内不是自动成立：必须有实际事务或恢复协议。",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "arrow",
+    "id": "cross",
+    "x": 660,
+    "y": 414,
+    "width": 0,
+    "height": 102,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        102
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "text",
+    "id": "cross-label",
+    "x": 224,
+    "y": 450,
+    "text": "跨界调用不会随状态恢复而撤销",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "rectangle",
+    "id": "external",
+    "x": 478,
+    "y": 522,
+    "width": 310,
+    "height": 118,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "外部邮件／支付服务\n执行成功但响应丢失\n重试是否再次生效？",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "receiver",
+    "x": 24,
+    "y": 522,
+    "width": 350,
+    "height": 118,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "接收方配合\n稳定业务 ID\n原子去重 + 执行动作",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "contract",
+    "x": 380,
+    "y": 580,
+    "width": 92,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        92,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "text",
+    "id": "end",
+    "x": 24,
+    "y": 700,
+    "text": "保证只能延伸到接收方实际承诺的动作，不能延伸到用户行为。",
+    "fontSize": 19,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "legend",
+    "x": 24,
+    "y": 752,
+    "text": "虚线框：保证范围，不是进程边界　　实线：处理或调用关系",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  }
+]

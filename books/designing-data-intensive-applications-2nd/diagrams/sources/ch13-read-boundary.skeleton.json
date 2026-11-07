@@ -1,0 +1,392 @@
+[
+  {
+    "type": "text",
+    "id": "title",
+    "x": 24,
+    "y": 18,
+    "text": "移动读写边界，而非消灭计算",
+    "fontSize": 25,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "subtitle",
+    "x": 24,
+    "y": 60,
+    "text": "从上到下，越来越多的工作提前到写路径。",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "text",
+    "id": "col1",
+    "x": 24,
+    "y": 110,
+    "text": "写路径：提前完成",
+    "fontSize": 20,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "col2",
+    "x": 302,
+    "y": 110,
+    "text": "交汇点：保存结果",
+    "fontSize": 20,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "col3",
+    "x": 580,
+    "y": 110,
+    "text": "读路径：请求后执行",
+    "fontSize": 20,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "rectangle",
+    "id": "w1",
+    "x": 24,
+    "y": 165,
+    "width": 230,
+    "height": 75,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "label": {
+      "text": "保存文档",
+      "fontSize": 19,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "m1",
+    "x": 302,
+    "y": 165,
+    "width": 230,
+    "height": 75,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "label": {
+      "text": "原始文档",
+      "fontSize": 19,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "r1",
+    "x": 580,
+    "y": 165,
+    "width": 230,
+    "height": 75,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "label": {
+      "text": "扫描、匹配",
+      "fontSize": 19,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "a1",
+    "x": 259,
+    "y": 202,
+    "width": 37,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        37,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "strokeStyle": "solid",
+    "roughness": 0.6,
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "w1"
+    },
+    "end": {
+      "id": "m1"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "b1",
+    "x": 537,
+    "y": 202,
+    "width": 37,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        37,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "strokeStyle": "solid",
+    "roughness": 0.6,
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "m1"
+    },
+    "end": {
+      "id": "r1"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "w2",
+    "x": 24,
+    "y": 295,
+    "width": 230,
+    "height": 75,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "label": {
+      "text": "保存、分词、建索引",
+      "fontSize": 19,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "m2",
+    "x": 302,
+    "y": 295,
+    "width": 230,
+    "height": 75,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "label": {
+      "text": "倒排索引",
+      "fontSize": 19,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "r2",
+    "x": 580,
+    "y": 295,
+    "width": 230,
+    "height": 75,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "label": {
+      "text": "列表集合运算、排序",
+      "fontSize": 19,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "a2",
+    "x": 259,
+    "y": 332,
+    "width": 37,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        37,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "strokeStyle": "solid",
+    "roughness": 0.6,
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "w2"
+    },
+    "end": {
+      "id": "m2"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "b2",
+    "x": 537,
+    "y": 332,
+    "width": 37,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        37,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "strokeStyle": "solid",
+    "roughness": 0.6,
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "m2"
+    },
+    "end": {
+      "id": "r2"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "w3",
+    "x": 24,
+    "y": 425,
+    "width": 230,
+    "height": 75,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "label": {
+      "text": "继续维护热门结果",
+      "fontSize": 19,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "m3",
+    "x": 302,
+    "y": 425,
+    "width": 230,
+    "height": 75,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "label": {
+      "text": "热门查询物化视图",
+      "fontSize": 19,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "r3",
+    "x": 580,
+    "y": 425,
+    "width": 230,
+    "height": 75,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "label": {
+      "text": "取结果、组织响应",
+      "fontSize": 19,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "a3",
+    "x": 259,
+    "y": 462,
+    "width": 37,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        37,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "strokeStyle": "solid",
+    "roughness": 0.6,
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "w3"
+    },
+    "end": {
+      "id": "m3"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "b3",
+    "x": 537,
+    "y": 462,
+    "width": 37,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        37,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "strokeStyle": "solid",
+    "roughness": 0.6,
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "m3"
+    },
+    "end": {
+      "id": "r3"
+    }
+  },
+  {
+    "type": "text",
+    "id": "bottom",
+    "x": 24,
+    "y": 545,
+    "text": "三行是替代安排；更多预计算换取更少读时工作，也增加维护成本。",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  }
+]

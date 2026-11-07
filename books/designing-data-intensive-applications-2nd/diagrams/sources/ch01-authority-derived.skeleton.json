@@ -1,0 +1,16 @@
+[
+  {"type":"text","id":"title","x":24,"y":20,"text":"先确定权威，再更新不同的读取表示","fontSize":25,"fontFamily":2,"strokeColor":"#292824"},
+  {"type":"text","id":"subtitle","x":24,"y":62,"text":"笔记假设：商品价格从 100 元改为 90 元。","fontSize":17,"fontFamily":2,"strokeColor":"#66645d"},
+  {"type":"rectangle","id":"input","x":24,"y":124,"width":160,"height":90,"strokeColor":"#386d74","backgroundColor":"#f0ece4","fillStyle":"solid","roughness":1,"label":{"text":"业务修改","fontSize":21,"fontFamily":2,"strokeColor":"#292824"}},
+  {"type":"rectangle","id":"record","x":274,"y":124,"width":260,"height":90,"strokeColor":"#386d74","backgroundColor":"#f0ece4","fillStyle":"solid","roughness":1,"label":{"text":"权威记录\n正式价格：90 元","fontSize":21,"fontFamily":2,"strokeColor":"#292824"}},
+  {"type":"arrow","id":"write","x":190,"y":169,"width":78,"height":0,"points":[[0,0],[78,0]],"strokeColor":"#386d74","roughness":1,"start":{"id":"input"},"end":{"id":"record"}},
+  {"type":"text","id":"write-label","x":211,"y":137,"text":"写入","fontSize":17,"fontFamily":2,"strokeColor":"#66645d"},
+  {"type":"rectangle","id":"search","x":66,"y":346,"width":240,"height":96,"strokeColor":"#386d74","backgroundColor":"#f0ece4","fillStyle":"solid","roughness":1,"label":{"text":"搜索索引\n可能仍是 100 元","fontSize":21,"fontFamily":2,"strokeColor":"#292824"}},
+  {"type":"rectangle","id":"analytics","x":406,"y":346,"width":240,"height":96,"strokeColor":"#386d74","backgroundColor":"#f0ece4","fillStyle":"solid","roughness":1,"label":{"text":"分析汇总\n依管道进度更新","fontSize":21,"fontFamily":2,"strokeColor":"#292824"}},
+  {"type":"arrow","id":"index-update","x":350,"y":220,"width":164,"height":120,"points":[[0,0],[-164,120]],"strokeStyle":"dashed","strokeColor":"#386d74","roughness":1,"start":{"id":"record"},"end":{"id":"search"}},
+  {"type":"text","id":"index-label","x":120,"y":267,"text":"更新索引","fontSize":17,"fontFamily":2,"strokeColor":"#66645d"},
+  {"type":"arrow","id":"aggregate-update","x":456,"y":220,"width":70,"height":120,"points":[[0,0],[70,120]],"strokeStyle":"dashed","strokeColor":"#386d74","roughness":1,"start":{"id":"record"},"end":{"id":"analytics"}},
+  {"type":"text","id":"aggregate-label","x":530,"y":267,"text":"转换 / 聚合","fontSize":17,"fontFamily":2,"strokeColor":"#66645d"},
+  {"type":"text","id":"legend","x":24,"y":484,"text":"实线：业务写入　　虚线：派生传播（允许分别滞后）","fontSize":17,"fontFamily":2,"strokeColor":"#66645d"},
+  {"type":"text","id":"boundary","x":24,"y":520,"text":"图中没有共同事务；传播失败需要恢复，重建需要原始输入仍在。","fontSize":17,"fontFamily":2,"strokeColor":"#66645d"}
+]

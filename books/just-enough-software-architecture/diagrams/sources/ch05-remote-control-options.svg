@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="424" viewBox="0 0 720 424" role="img" aria-labelledby="title desc">
+  <title id="title">遥控应用中的两个质量问题与候选改造</title>
+  <desc id="desc">两行从左到右连接使用问题与候选设计。第一行从连接失败难以诊断，指向通信库区分并报告错误，同时调整现有接口。第二行从没有缓存导致重复请求与页面迟缓，指向考虑缓存并权衡延迟与存储，也需调整现有接口。图不是已实施或已测量的结果。</desc>
+  <!-- Original, editable hand-written SVG. The export is an identical web copy. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 16px; fill: var(--muted); }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.2; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .label { font-size: 20px; font-weight: 600; text-anchor: middle; }
+    .detail { font-size: 16px; text-anchor: middle; fill: var(--muted); }
+    .arrow { fill: none; stroke: var(--line); stroke-width: 1.8; marker-end: url(#arrow); }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker>
+  </defs>
+  <rect width="720" height="424" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="30" y="38">功能丰富，仍可能难诊断、响应慢</text>
+  <text class="sub" x="30" y="67">从使用失败追到通信边界，再形成有针对性的设计选项</text>
+
+  <rect class="node" x="30" y="102" width="280" height="108" rx="7"/>
+  <text class="label" x="170" y="141">连接失败难诊断</text>
+  <text class="detail" x="170" y="173">多种问题合成一个错误码</text>
+  <path class="arrow" d="M319 156H400"/>
+  <rect class="focus" x="410" y="102" width="280" height="108" rx="7"/>
+  <text class="label" x="550" y="135">区分并报告错误</text>
+  <text class="detail" x="550" y="164">修改通信库</text>
+  <text class="detail" x="550" y="189">也需要调整现有 API</text>
+
+  <rect class="node" x="30" y="244" width="280" height="108" rx="7"/>
+  <text class="label" x="170" y="283">页面切换迟缓</text>
+  <text class="detail" x="170" y="315">没有缓存，每次重新请求</text>
+  <path class="arrow" d="M319 298H400"/>
+  <rect class="focus" x="410" y="244" width="280" height="108" rx="7"/>
+  <text class="label" x="550" y="277">考虑缓存</text>
+  <text class="detail" x="550" y="306">权衡延迟与手机存储空间</text>
+  <text class="detail" x="550" y="331">也需要调整现有 API</text>
+
+  <text class="sub" x="30" y="392">箭头表示候选设计针对的问题，不表示已有实施或测量结果。</text>
+</svg>

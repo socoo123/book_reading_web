@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="430" viewBox="0 0 720 430" role="img" aria-labelledby="title desc">
+  <title id="title">部署实验的对照组也经历更新</title>
+  <desc id="desc">同一时期的可比用户随机分组，对照组收到旧功能重新发布的版本，候选组收到希望验证的新版本。两组都经历更新，随后按照相同口径比较任务成功率、崩溃和延迟等指标。随机分组是笔记补充的实验前提，证据仅覆盖测量范围。</desc>
+  <!-- Original editable hand-written SVG; web export is an identical copy. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 15px; fill: var(--muted); }
+    .label { font-size: 17px; font-weight: 600; text-anchor: middle; }
+    .body { font-size: 16px; text-anchor: middle; }
+    .note { font-size: 14px; fill: var(--muted); text-anchor: middle; }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.3; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .flow { fill: none; stroke: var(--line); stroke-width: 1.8; marker-end: url(#arrow); }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker></defs>
+  <rect width="720" height="430" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="28" y="40">两组都更新，比较候选内容的增量影响</text>
+  <text class="sub" x="28" y="70">概念示意；随机分组是笔记补充的可比性前提</text>
+  <rect class="node" x="28" y="154" width="154" height="158" rx="7"/>
+  <text class="label" x="105" y="201">同期可比用户</text>
+  <text class="body" x="105" y="232">随机分组</text>
+  <text class="note" x="105" y="264">相同观察时段</text>
+  <path class="flow" d="M182 205H205V168H224"/>
+  <path class="flow" d="M182 262H205V298H224"/>
+  <rect class="node" x="235" y="120" width="218" height="96" rx="7"/>
+  <text class="label" x="344" y="157">A · 对照更新</text>
+  <text class="body" x="344" y="187">旧功能重新发布</text>
+  <rect class="focus" x="235" y="250" width="218" height="96" rx="7"/>
+  <text class="label" x="344" y="287">B · 候选更新</text>
+  <text class="body" x="344" y="317">分发待验证的新版本</text>
+  <path class="flow" d="M453 168H500"/>
+  <path class="flow" d="M453 298H500"/>
+  <rect class="node" x="511" y="120" width="181" height="96" rx="7"/>
+  <text class="label" x="601" y="157">对照结果</text>
+  <text class="body" x="601" y="187">相同指标口径</text>
+  <rect class="focus" x="511" y="250" width="181" height="96" rx="7"/>
+  <text class="label" x="601" y="287">候选结果</text>
+  <text class="body" x="601" y="317">相同指标口径</text>
+  <text class="note" x="360" y="385">比较任务成功率、崩溃、延迟等预先定义的指标</text>
+  <text class="note" x="360" y="411">同时更新有助控制更新动作的影响；证据仅覆盖测量范围</text>
+</svg>

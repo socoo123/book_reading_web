@@ -1,0 +1,18 @@
+[
+  {"type":"text","id":"title","x":24,"y":20,"text":"时间线：计算从读路径移到写路径","fontSize":25,"fontFamily":2,"strokeColor":"#292824"},
+  {"type":"text","id":"subtitle","x":24,"y":62,"text":"两行是替代方案；箭头表示处理或数据流向。","fontSize":17,"fontFamily":2,"strokeColor":"#66645d"},
+  {"type":"text","id":"read-label","x":24,"y":110,"text":"读时聚合：每次读取重新收集","fontSize":20,"fontFamily":2,"strokeColor":"#292824"},
+  {"type":"rectangle","id":"read","x":24,"y":155,"width":150,"height":84,"strokeColor":"#386d74","backgroundColor":"#f0ece4","fillStyle":"solid","roughness":1,"label":{"text":"读取首页","fontSize":21,"fontFamily":2,"strokeColor":"#292824"}},
+  {"type":"rectangle","id":"fetch","x":230,"y":155,"width":200,"height":84,"strokeColor":"#386d74","backgroundColor":"#f0ece4","fillStyle":"solid","roughness":1,"label":{"text":"查关注关系\n取各作者近期帖","fontSize":21,"fontFamily":2,"strokeColor":"#292824"}},
+  {"type":"rectangle","id":"merge","x":490,"y":155,"width":210,"height":84,"strokeColor":"#386d74","backgroundColor":"#f0ece4","fillStyle":"solid","roughness":1,"label":{"text":"合并、排序\n返回首页","fontSize":21,"fontFamily":2,"strokeColor":"#292824"}},
+  {"type":"arrow","id":"read-fetch","x":181,"y":197,"width":42,"height":0,"points":[[0,0],[42,0]],"strokeColor":"#386d74","roughness":1,"start":{"id":"read"},"end":{"id":"fetch"}},
+  {"type":"arrow","id":"fetch-merge","x":437,"y":197,"width":46,"height":0,"points":[[0,0],[46,0]],"strokeColor":"#386d74","roughness":1,"start":{"id":"fetch"},"end":{"id":"merge"}},
+  {"type":"text","id":"write-label","x":24,"y":300,"text":"写时物化：发帖后预先投递","fontSize":20,"fontFamily":2,"strokeColor":"#292824"},
+  {"type":"rectangle","id":"post","x":24,"y":345,"width":150,"height":84,"strokeColor":"#386d74","backgroundColor":"#f0ece4","fillStyle":"solid","roughness":1,"label":{"text":"保存新帖","fontSize":21,"fontFamily":2,"strokeColor":"#292824"}},
+  {"type":"rectangle","id":"fanout","x":230,"y":345,"width":200,"height":84,"strokeColor":"#386d74","backgroundColor":"#f0ece4","fillStyle":"solid","roughness":1,"label":{"text":"查关注者\n投递到各时间线","fontSize":21,"fontFamily":2,"strokeColor":"#292824"}},
+  {"type":"rectangle","id":"timelines","x":490,"y":345,"width":210,"height":84,"strokeColor":"#386d74","backgroundColor":"#f0ece4","fillStyle":"solid","roughness":1,"label":{"text":"多份物化时间线\n小林 / 小周 / …","fontSize":21,"fontFamily":2,"strokeColor":"#292824"}},
+  {"type":"arrow","id":"post-fanout","x":181,"y":387,"width":42,"height":0,"points":[[0,0],[42,0]],"strokeColor":"#386d74","roughness":1,"start":{"id":"post"},"end":{"id":"fanout"}},
+  {"type":"arrow","id":"fanout-timelines","x":437,"y":387,"width":46,"height":0,"points":[[0,0],[46,0]],"strokeColor":"#386d74","roughness":1,"start":{"id":"fanout"},"end":{"id":"timelines"}},
+  {"type":"text","id":"reading","x":24,"y":466,"text":"写时方案的读取：读取首页 → 取自己的物化时间线","fontSize":19,"fontFamily":2,"strokeColor":"#292824"},
+  {"type":"text","id":"boundary","x":24,"y":504,"text":"投递可以异步排队；更新可能滞后，图中不是共同事务。","fontSize":17,"fontFamily":2,"strokeColor":"#66645d"}
+]

@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>后记｜可持续的软件与工程责任 · Software Engineering at Google · 架构提升读书笔记</title>
+  <meta name="description" content="《Software Engineering at Google》后记读书笔记：依据 Asim Husain 的短文，理解适应变化、长期代码健康，以及包容、公平与无障碍的工程责任。">
+  <link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+  <script src="../../../assets/theme.js"></script>
+  <script src="../../../assets/reader.js" defer></script>
+  <link rel="stylesheet" href="../../../assets/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header reader-header"><div class="container header-inner">
+    <a class="brand" href="../../../index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5.5C8.5 3.8 5.8 3.6 2.5 4.5v14c3.3-.9 6-.7 9.5 1 3.5-1.7 6.2-1.9 9.5-1v-14c-3.3-.9-6-.7-9.5 1Zm0 0v14"/></svg>书架</a>
+    <a class="reader-book-title" href="../index.html" lang="en">Software Engineering at Google</a>
+    <div class="theme-control" role="group" aria-label="外观" hidden><button type="button" data-theme-value="system" title="跟随系统"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path class="fill" d="M12 4a8 8 0 0 1 0 16Z"/></svg><span class="sr-only">跟随系统</span></button><button type="button" data-theme-value="light" title="浅色"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.6"/><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21M5.6 5.6l1.6 1.6M16.8 16.8l1.6 1.6M5.6 18.4l1.6-1.6M16.8 7.2l1.6-1.6"/></svg><span class="sr-only">浅色</span></button><button type="button" data-theme-value="dark" title="深色"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.5 14.6A7.8 7.8 0 0 1 9.4 4.5a7.8 7.8 0 1 0 10.1 10.1Z"/></svg><span class="sr-only">深色</span></button></div>
+  </div></header>
+  <main id="main" class="container reader-container">
+    <nav class="breadcrumb" aria-label="当前位置"><ol><li><a href="../../../index.html">书架</a></li><li><a href="../index.html">书籍概览</a></li><li aria-current="page">后记</li></ol></nav>
+    <div class="reading-layout">
+      <aside class="toc"><nav aria-label="本页目录"><h2>本页目录</h2><ul>
+        <li><a href="#sustaining-change">01　在变化中保持可持续</a></li>
+        <li><a href="#sharing-experience">02　长期代码健康</a></li>
+        <li><a href="#engineering-responsibility">03　让技术的价值包含更多人</a></li>
+      </ul><p class="toc-note"><a href="../index.html">← 书籍概览</a></p></nav></aside>
+      <article class="article">
+        <header class="article-header">
+          <p class="eyebrow">READING NOTES / AFTERWORD</p>
+          <h1>后记｜可持续的软件与工程责任</h1>
+          <p class="article-deck"><span lang="en">Afterword</span> · 架构提升读书笔记</p>
+        </header>
+        <p>全书的后记没有再介绍一套工具或流程。Asim Husain 把注意力放在两件相连的事情上：软件怎样在技术不断改变时继续有用，工程师又怎样让这些技术对更广泛的人负责。前者关系到代码库的生命，后者关系到这份工作的目的。</p>
+        <p>这是一篇基于亲身观察的短文。作者回顾自己自 2008 年加入 Google 后与工程团队共事、学习的经历，把 Google 开发和维护大型演进中代码库的实践看作一场重要实验。他肯定书中原则的价值，也保留了这些经验能推广多远的问题。</p>
+        <details class="mobile-toc"><summary>本页目录 · 3 个小节</summary><nav aria-label="移动端本页目录"><ul>
+          <li><a href="#sustaining-change">01　在变化中保持可持续</a></li>
+          <li><a href="#sharing-experience">02　把长期代码健康变成可以投入的目标</a></li>
+          <li><a href="#engineering-responsibility">03　让技术的价值包含更多人</a></li>
+        </ul></nav></details>
+
+        <section id="sustaining-change">
+          <h2><span class="section-number">01</span>在变化中保持可持续</h2>
+          <p>后记开头把代码库的演进与公司的发展放在一起：工程团队的探索，支持了 Google 作为一家触及数十亿用户的公司的成长。作者借此说明，软件工程原则会影响一个组织能否长期承担它的工作。系统越广泛地进入人们的生活，维护和改变系统的能力就越重要。</p>
+          <p>技术环境持续变化，使工程方案同时面对两个时间尺度。眼前的问题需要有效解决，未来的技术变化也会到来。作者用 resolute agility 描述团队需要的品质：有定力地推进工作，同时能够应变。这里谈的是一种工程能力——找到当前可用、又能经受后续变化的办法。</p>
+          <p><strong>可持续性（sustainability）</strong>由此成为后记的中心概念。在代码库的预期生命周期内，团队需要响应产品方向、技术平台、底层库、操作系统等方面的改变。软件最初运行成功，只是这段生命周期的一个时刻；它还要有机会适应后来改变的条件。这个用法与<a href="ch01.html#sustainability">第一章讨论的可持续性</a>相接。</p>
+          <p>从笔记的角度理解，关键是把“今天交付得出来”和“以后仍能改得动”放进同一项工程判断。若软件还需要继续服务，周围环境的更新就会成为它必须面对的工作。作者强调书中原则带来的灵活性，正因为这种灵活性使团队能够逐步调整软件生态中的不同部分，让正在运行的系统继续向前。</p>
+          <p>图 后记-1 把这两个时间尺度放在同一条时间线上：眼前的问题只占起点附近的一小段，产品方向、技术平台、底层库和操作系统的变化则会在整个预期生命周期里陆续到来。</p>
+          <figure class="concept-figure"><a href="../diagrams/exports/afterword-lifespan.svg" target="_blank" rel="noopener"><img src="../diagrams/exports/afterword-lifespan.svg" width="720" height="420" alt="代码库生命周期时间线：首次运行成功之后，产品方向、技术平台、底层库和操作系统的变化陆续到来，每次都需要团队响应；眼前的问题只占起点附近一小段，可持续性要覆盖整个预期生命周期。"></a><figcaption>图 后记-1：横轴从首次运行成功开始，虚线箭头是陆续到来的变化，菱形标出需要响应的时刻；下方短条和长条是方案要兼顾的两个时间尺度。可持续性看的是长条：每次变化到来时，系统都还改得动。点击<a href="../diagrams/exports/afterword-lifespan.svg" target="_blank" rel="noopener">查看大图</a>。</figcaption></figure>
+          <aside class="key-point"><p class="key-point-label">核心观点</p><p>可持续的软件，在预期使用期间仍能响应变化。工程方案既要解决当前问题，也要为产品与技术环境的后续改变保留可行的调整空间。</p></aside>
+        </section>
+
+        <section id="sharing-experience">
+          <h2><span class="section-number">02</span>把长期代码健康变成可以投入的目标</h2>
+          <p>肯定自身经验以后，作者随即说明它的边界：Google 无法证明，自己实现可持续性的方法适用于每一个组织。这句话为整篇后记确立了恰当的立场。书中分享的是一段实际走过的路，包括成果与途中遇到的坎坷；读者能够据此理解选择的理由，再结合自己的条件判断。</p>
+          <p>作者仍然认为分享很重要。他把软件工程看作一门仍在发展的年轻学科，并指出，同时经历大规模发展与长期维护的组织还不多。这样的经验一旦被写下来，其他团队就有机会学习其中的认识，而不必只看见最终建成的工具和制度。困难和调整过程也能帮助人理解，一种实践究竟在解决什么问题。</p>
+          <p>这份分享希望证明其价值与可行性的，是对<strong>代码健康（code health）进行长期规划</strong>。可以把代码健康理解为：维护者仍能理解软件、可靠地修改它，并让它继续演进的状态。时间会流逝，变化也会积累；把这件事纳入计划，维护工作才有机会获得持续投入，而不只是等到某次升级或修改已经难以进行时才被看见。</p>
+          <p>因此，后记提供的启发是调整工程工作的时间视野：除了看到眼前交付的结果，也看到代码库在后续年月中能否继续承担任务。</p>
+        </section>
+
+        <section id="engineering-responsibility">
+          <h2><span class="section-number">03</span>让技术的价值包含更多人</h2>
+          <p>后记的另一条线索，是软件工程对人的责任。作者认为，工程原则已经关系到企业怎样对用户和更广泛的世界负责。软件具有社会影响，工程师在设计代码时也就需要考虑，这些设计让谁得到帮助，谁的需要还没有进入视野。</p>
+          <p>他明确提出三个要求：<strong>包容（inclusion）、公平（equity）和无障碍（accessibility）</strong>。为便于理解，笔记将它们分别解释为：在设计中纳入不同人的经验与需要；关注不同群体实际获得的机会与结果；使包括残障人士在内的用户能够使用软件。它们把技术评价从“功能是否做出来”继续推进到“人是否能够从中受益”。这也呼应了<a href="ch04.html#design-with-users">第四章对用户处境与设计参与的讨论</a>。</p>
+          <p>例如，假设一个产品增加了新交互，却把完成关键任务的方式全部绑定在鼠标操作上。对于依赖键盘的用户，功能已经发布，也可能仍然无法使用。这个例子说明了无障碍为什么会进入工程责任：实现的存在与使用机会的存在，需要在设计中一起考虑。</p>
+          <p>作者对创新提出了很强的价值要求：只为创新本身而建造已经不够，仅帮助部分用户的技术，在他看来也算不上真正的创新。这是在强调创新应当扩大受益的范围。技术的新颖性需要与它给人带来的实际价值一起接受评价，包容、公平与无障碍也因此进入工程设计的目标之中。</p>
+          <p>在结尾，他把 Google 对内部和外部开发者的责任概括为提供一条 well-lit path，也就是一条照明充分、方向可辨的道路。笔记把这个比喻理解为：让开发者有可依循的原则和可学习的经验，更清楚怎样推进负责任的工程工作。作者同时承认，公司还需要继续学习。在成书时的展望中，他提到人工智能、量子计算，以及让计算融入日常环境的 ambient computing，期待行业继续发展软件工程的方法。</p>
+          <p>后记由此把长期演进与工程责任放到了一起：代码需要能够跟随世界改变，工程判断也需要持续看见技术所影响的人。作者留下的是对继续学习、分享经验和承担责任的期待。</p>
+          <aside class="key-point"><p class="key-point-label">核心观点</p><p>软件工程的价值既体现在系统能否持续演进，也体现在人能否真正受益。把包容、公平与无障碍纳入设计，是后记对负责任创新的明确要求。</p></aside>
+        </section>
+
+        <details id="sources" class="source-note">
+          <summary>来源、段落对应与整理说明</summary>
+          <p>依据《Software Engineering at Google》（2020）Abseil 官方公开英文 HTML 版<a href="https://abseil.io/resources/swe-book/html/ch26.html"><span lang="en">Afterword</span></a>，Asim Husain 撰写（署名职务为成书时的 <span lang="en">Vice President of Engineering, Google</span>），页面未列编辑；核查日期 2026-11-06。</p>
+          <p>原后记共七个自然段，不分小节；三个小节标题由笔记拟定。</p>
+          <ul>
+            <li>01：原文第 1—4 段，涵盖 Google 的代码库实践、持续变化的技术环境、resolute agility 与 sustainability。</li>
+            <li>02：原文第 5 段，涵盖经验适用性的限制、分享成果与坎坷，以及长期代码健康规划。</li>
+            <li>03：原文第 2、6、7 段，涵盖社会责任、inclusion／equity／accessibility、well-lit path 与未来仍须学习的方向。</li>
+          </ul>
+          <p><a href="https://abseil.io/resources/swe-book/html/toc.html">官方目录</a>把 Afterword 单独列在 25 个主体章节之后；原文地址中的 ch26 只是文件编号，后记不是第 26 章。</p>
+          <p>阅读提示：resolute agility 指团队应变的品质，不特指某种敏捷开发流程。数十亿用户的规模，以及末段列举的人工智能、量子计算等新技术，都是成书时的叙述。</p>
+          <p>本文按主题重组后记，而非逐段翻译。代码健康、三个设计要求和 well-lit path 的释义是笔记的解释，鼠标／键盘情境是笔记假设的例子。图示为本笔记原创示意图，其中的变化类型取自原文第 4 段。</p>
+        </details>
+
+        <nav class="chapter-pagination" aria-label="章节翻页"><a class="page-link prev" href="ch25.html" rel="prev"><span class="page-label">← 上一章 · 第 25 章</span><span class="page-title">计算即服务</span></a><a class="page-link next" href="../index.html"><span class="page-label">全书完 →</span><span class="page-title">返回书籍概览</span></a></nav>
+      </article>
+    </div>
+  </main>
+  <footer class="site-footer"><div class="container footer-inner"><span>个人书架 / 中文读书笔记</span><a href="#main">回到顶部 ↑</a></div></footer>
+</body>
+</html>

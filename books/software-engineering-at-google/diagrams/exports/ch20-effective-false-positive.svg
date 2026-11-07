@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="420" viewBox="0 0 720 420" role="img" aria-labelledby="title desc">
+  <title id="title">有效误报按开发者是否行动划分</title>
+  <desc id="desc">四格图。行表示报告在技术上是否准确，列表示开发者看到报告后是否采取积极行动，虚线框标出计入有效误报的右列。技术上报对且作者据此修复真实问题，是有用的诊断；报对了却因消息看不懂或问题无足轻重而没人行动，计入有效误报；技术上报错了，但改写后意图更清楚，例如把 Hashtable 的 contains 改为 containsValue，不计入有效误报；误判又被开发者忽略，计入有效误报。技术判断准不准，另用精确率、召回率衡量。</desc>
+  <!-- Original editable hand-written SVG; web export is an identical copy. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 15px; fill: var(--muted); }
+    .label { font-size: 17px; font-weight: 600; text-anchor: middle; }
+    .body { font-size: 16px; text-anchor: middle; }
+    .note { font-size: 14px; fill: var(--muted); text-anchor: middle; }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.3; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .group { fill: none; stroke: var(--accent); stroke-width: 1.5; stroke-dasharray: 6 5; }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <rect width="720" height="420" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="28" y="40">有效误报看开发者有没有行动</text>
+  <text class="sub" x="28" y="69">行：报告在技术上是否准确　　列：开发者看到后是否采取积极行动</text>
+
+  <text class="label" x="307" y="118">采取了积极行动</text>
+  <text class="note" x="307" y="141">不计入有效误报</text>
+  <rect class="group" x="440" y="90" width="258" height="278" rx="10"/>
+  <text class="label" x="569" y="118">没有采取积极行动</text>
+  <text class="note" x="569" y="141">计入有效误报</text>
+
+  <text class="label" x="98" y="198">技术上报对了</text>
+  <text class="note" x="98" y="224">问题确实存在</text>
+  <text class="label" x="98" y="306">技术上报错了</text>
+  <text class="note" x="98" y="332">代码其实没错</text>
+
+  <rect class="node" x="184" y="156" width="246" height="96" rx="7"/>
+  <text class="label" x="307" y="196">有用的诊断</text>
+  <text class="body" x="307" y="226">作者据此修复真实问题</text>
+  <rect class="focus" x="446" y="156" width="246" height="96" rx="7"/>
+  <text class="label" x="569" y="196">有效误报</text>
+  <text class="body" x="569" y="226">消息看不懂或问题无足轻重</text>
+
+  <rect class="node" x="184" y="264" width="246" height="96" rx="7"/>
+  <text class="label" x="307" y="296">仍有价值</text>
+  <text class="body" x="307" y="323">改写后意图更清楚</text>
+  <text class="note" x="307" y="347">例：contains → containsValue</text>
+  <rect class="focus" x="446" y="264" width="246" height="96" rx="7"/>
+  <text class="label" x="569" y="304">有效误报</text>
+  <text class="body" x="569" y="334">误判，被开发者忽略</text>
+
+  <text class="note" x="360" y="400">技术判断准不准，另用精确率、召回率衡量</text>
+</svg>

@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="462" viewBox="0 0 720 462" role="img" aria-labelledby="title desc">
+  <title id="title">B 删除对 C 的依赖时，A 是否受牵连</title>
+  <desc id="desc">两列面对同一次重构：报表服务库 B 不再需要通用编码库 C，删除 B 到 C 的依赖。箭头 X 指向 Y 表示 X 依赖 Y。左列为隐式写法：报表入口 A 只声明依赖 B，却借 B 的依赖直接调用 C；B 删边后 A 构建失败，B 的内部依赖成了 A 的契约。右列为显式写法：A 同时声明依赖 B 和 C；B 删边后 A 照常构建，B 可以放心删除这条依赖。</desc>
+  <!-- Original editable hand-written SVG; web export is an identical copy. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 15px; fill: var(--muted); }
+    .tag { font-size: 17px; font-weight: 600; }
+    .label { font-size: 20px; font-weight: 600; text-anchor: middle; }
+    .result { font-size: 18px; font-weight: 600; text-anchor: middle; }
+    .body { font-size: 16px; text-anchor: middle; }
+    .note { font-size: 14px; fill: var(--muted); }
+    .end { text-anchor: end; }
+    .mid { text-anchor: middle; }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.3; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .flow { fill: none; stroke: var(--line); stroke-width: 1.8; marker-end: url(#arrow); }
+    .implicit { stroke-dasharray: 5 5; }
+    .cut { stroke: var(--text); stroke-width: 2.4; stroke-linecap: round; }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker></defs>
+  <rect width="720" height="462" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="28" y="40">B 删掉对 C 的依赖，A 会不会跟着坏</text>
+  <text class="sub" x="28" y="69">两列面对同一次重构：B 不再需要 C；箭头 X → Y 表示 X 依赖 Y</text>
+
+  <text class="tag" x="28" y="106">隐式：A 借 B 用到 C</text>
+  <rect class="node" x="28" y="184" width="112" height="70" rx="7"/>
+  <text class="label" x="84" y="212">A</text>
+  <text class="body" x="84" y="239">报表入口</text>
+  <rect class="node" x="232" y="120" width="112" height="70" rx="7"/>
+  <text class="label" x="288" y="148">B</text>
+  <text class="body" x="288" y="175">报表服务库</text>
+  <rect class="node" x="232" y="248" width="112" height="70" rx="7"/>
+  <text class="label" x="288" y="276">C</text>
+  <text class="body" x="288" y="303">通用编码库</text>
+  <path class="flow" d="M140 204H182V155H222"/>
+  <path class="flow implicit" d="M140 234H182V283H222"/>
+  <path class="flow" d="M288 190V238"/>
+  <path class="cut" d="M280 211L296 227M296 211L280 227"/>
+  <text class="note end" x="270" y="224">重构后删除</text>
+  <rect class="focus" x="28" y="340" width="316" height="72" rx="7"/>
+  <text class="result" x="186" y="369">A 构建失败</text>
+  <text class="body" x="186" y="397">B 的内部依赖成了 A 的契约</text>
+
+  <text class="tag" x="376" y="106">显式：A 直接声明 C</text>
+  <rect class="node" x="376" y="184" width="112" height="70" rx="7"/>
+  <text class="label" x="432" y="212">A</text>
+  <text class="body" x="432" y="239">报表入口</text>
+  <rect class="node" x="580" y="120" width="112" height="70" rx="7"/>
+  <text class="label" x="636" y="148">B</text>
+  <text class="body" x="636" y="175">报表服务库</text>
+  <rect class="node" x="580" y="248" width="112" height="70" rx="7"/>
+  <text class="label" x="636" y="276">C</text>
+  <text class="body" x="636" y="303">通用编码库</text>
+  <path class="flow" d="M488 204H530V155H570"/>
+  <path class="flow" d="M488 234H530V283H570"/>
+  <path class="flow" d="M636 190V238"/>
+  <path class="cut" d="M628 211L644 227M644 211L628 227"/>
+  <text class="note end" x="618" y="224">重构后删除</text>
+  <rect class="focus" x="376" y="340" width="316" height="72" rx="7"/>
+  <text class="result" x="534" y="369">A 照常构建</text>
+  <text class="body" x="534" y="397">B 可以放心删除这条依赖</text>
+
+  <text class="note mid" x="360" y="446">实线：BUILD 中声明的依赖　　虚线：未声明的直接使用　　交叉线：重构中删除的依赖</text>
+</svg>

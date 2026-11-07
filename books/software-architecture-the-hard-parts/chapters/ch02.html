@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>第 2 章｜辨析软件架构中的耦合 · Software Architecture: The Hard Parts · 架构提升读书笔记</title>
+  <meta name="description" content="理解架构量子、独立部署、功能内聚与静态和动态耦合，辨析共享数据库、UI、同步调用的边界，并以 Sysops Squad 解释通信、一致性与协调的权衡。">
+  <link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+  <script src="../../../assets/theme.js"></script>
+  <script src="../../../assets/reader.js" defer></script>
+  <link rel="stylesheet" href="../../../assets/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header reader-header"><div class="container header-inner">
+    <a class="brand" href="../../../index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5.5C8.5 3.8 5.8 3.6 2.5 4.5v14c3.3-.9 6-.7 9.5 1 3.5-1.7 6.2-1.9 9.5-1v-14c-3.3-.9-6-.7-9.5 1Zm0 0v14"/></svg>书架</a>
+    <a class="reader-book-title" href="../index.html" lang="en">Software Architecture: The Hard Parts</a>
+    <div class="theme-control" role="group" aria-label="外观" hidden><button type="button" data-theme-value="system" title="跟随系统"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path class="fill" d="M12 4a8 8 0 0 1 0 16Z"/></svg><span class="sr-only">跟随系统</span></button><button type="button" data-theme-value="light" title="浅色"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.6"/><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21M5.6 5.6l1.6 1.6M16.8 16.8l1.6 1.6M5.6 18.4l1.6-1.6M16.8 7.2l1.6-1.6"/></svg><span class="sr-only">浅色</span></button><button type="button" data-theme-value="dark" title="深色"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.5 14.6A7.8 7.8 0 0 1 9.4 4.5a7.8 7.8 0 1 0 10.1 10.1Z"/></svg><span class="sr-only">深色</span></button></div>
+  </div></header>
+  <main id="main" class="container reader-container">
+    <nav class="breadcrumb" aria-label="当前位置"><ol><li><a href="../../../index.html">书架</a></li><li><a href="../index.html">书籍概览</a></li><li aria-current="page">第 2 章</li></ol></nav>
+    <div class="reading-layout">
+      <aside class="toc"><nav aria-label="本页目录"><h2>本页目录</h2><ul>
+        <li><a href="#coupling-and-change">01　耦合的意义，在于变化会牵动谁</a></li>
+        <li><a href="#architecture-quantum">02　架构量子：给独立性一个完整的观察范围</a></li>
+        <li><a href="#deployment-and-cohesion">03　独立部署与功能内聚，必须一起看</a></li>
+        <li><a href="#static-wiring">04　静态耦合：从空环境启动，需要接上什么</a></li>
+        <li><a href="#shared-coupling-points">05　共享数据库和 UI，为什么会收紧边界</a></li>
+        <li><a href="#dynamic-coupling">06　动态耦合：独立发布，仍可能一起等待</a></li>
+        <li><a href="#three-dimensions">07　通信、一致性与协调，是三个不同的选择</a></li>
+        <li><a href="#saga-map">08　八种组合是一张地图，不是实施说明</a></li>
+        <li><a href="#sysops-and-next">09　Sysops Squad：先建立两幅图，再决定怎样拆</a></li>
+      </ul><p class="toc-note"><a href="../index.html">← 书籍概览</a></p></nav></aside>
+      <article class="article">
+        <header class="article-header">
+          <p class="eyebrow">READING NOTES / CHAPTER 02</p>
+          <h1>第 2 章｜辨析软件架构中的耦合</h1>
+          <p class="article-deck"><span lang="en">Discerning Coupling in Software Architecture</span> · 先看清依赖，再讨论怎样拆分</p>
+        </header>
+        <p>把一个应用拆成许多服务，并没有自动把它拆成许多个可以独立变化的部分。几个服务可能分别启动，却共同读写一套数据库；也可能各有自己的数据，发布互不等待，但某条请求必须依次经过它们，最终响应仍被最慢的一环牵住。本章建立的语言，就是为了把这些不同的“连在一起”讲清楚。</p>
+        <p>前言强调，本书研究的是难以同时满足的架构与数据要求。第 2 章将这个目标具体化：先找出纠缠的因素，再辨认耦合方式，最后分析变化会沿哪些关系传播。架构量子不是追求服务数量的计数游戏，而是帮助团队说明部署、功能、依赖和运行特性究竟落在哪个范围内。</p>
+        <details class="mobile-toc"><summary>本页目录 · 9 个小节</summary><nav aria-label="移动端本页目录"><ul>
+          <li><a href="#coupling-and-change">01　耦合的意义，在于变化会牵动谁</a></li>
+          <li><a href="#architecture-quantum">02　架构量子：给独立性一个完整的观察范围</a></li>
+          <li><a href="#deployment-and-cohesion">03　独立部署与功能内聚，必须一起看</a></li>
+          <li><a href="#static-wiring">04　静态耦合：从空环境启动，需要接上什么</a></li>
+          <li><a href="#shared-coupling-points">05　共享数据库和 UI，为什么会收紧边界</a></li>
+          <li><a href="#dynamic-coupling">06　动态耦合：独立发布，仍可能一起等待</a></li>
+          <li><a href="#three-dimensions">07　通信、一致性与协调，是三个不同的选择</a></li>
+          <li><a href="#saga-map">08　八种组合是一张地图，不是实施说明</a></li>
+          <li><a href="#sysops-and-next">09　Sysops Squad：先建立两幅图，再决定怎样拆</a></li>
+        </ul></nav></details>
+
+        <section id="coupling-and-change">
+          <h2><span class="section-number">01</span>耦合的意义，在于变化会牵动谁</h2>
+          <p>本章开场，Austen 认为使用事务 Saga 就能把服务任意拆小；Addison 担心编排、异步通信和数据完整性，讨论很快滑向 ESB 与 Kafka 的工具比较。Logan 把他们拉回问题本身：这些工具处理的责任并不相同，也没有一个工具能替团队消除所有取舍。还没有区分通信、协调与事务要求，就讨论哪一种技术“更解耦”，很容易答非所问。</p>
+          <p>作者给耦合（coupling）的工作定义很简洁：<strong>系统的一部分发生变化，可能使另一部分也需要变化，两者就存在耦合。</strong> “可能”很重要。兼容的字段扩展未必要求所有调用者马上升级，但这不意味着接口不存在约定；一旦字段含义或错误语义改变，依赖它的代码就可能需要调整。</p>
+          <p>耦合本身也是协作的条件。工单分派需要知道工单的地点与问题类型，技术专家的手机需要收到分派结果。如果这些部分完全没有共同约定，它们就无法组成业务流程。真正要控制的是：哪些知识必须共享，哪些变化应当局部化，以及为了局部化愿意承担多少通信和恢复成本。</p>
+          <p>微服务让这个问题变得格外明显。在许多较早的分布式系统中，处理逻辑虽然分散，数据仍放在一个关系数据库里，事务边界可以由数据库承担。将数据也收进服务边界后，一次业务操作可能跨越多个独立提交的数据存储。原先藏在数据库事务里的问题，开始成为架构决策：允许中间状态吗，失败后谁恢复，何时才能对用户宣布完成？</p>
+          <p>因此，本章的分析顺序是“找出纠缠部分 → 说明耦合机制 → 判断变化影响”，而不是“先拆小 → 再想办法连接”。细粒度有助于局部发布和伸缩，也可能增加事务与协调负担；粗粒度让一些协作保持本地，却可能让无关功能共同承担发布和故障影响。两边都要放回具体场景判断。</p>
+        </section>
+
+        <section id="architecture-quantum">
+          <h2><span class="section-number">02</span>架构量子：给独立性一个完整的观察范围</h2>
+          <p>架构量子（architecture quantum，复数 quanta）是作者用来联系结构与运行行为的分析单位。原书的定义包含四个要素：<strong>可独立部署、高功能内聚、高静态耦合，以及同步的动态耦合。</strong> 这里的“高静态耦合”描述量子内部紧密连接的依赖；同步动态耦合则提醒我们，即使静态边界已经分开，运行中的等待仍可能把架构特性临时牵在一起。</p>
+          <p>理解时可以先看两层。第一层是静态范围：让一项功能真正运行，需要哪些代码、数据、运行时与基础设施契约，它们能否形成可部署、可运作的整体？第二层是运行范围：这一整体参与某条工作流时，是否必须等待另一个整体，导致延迟、容量和故障表现相互影响？这两层的边界可能重合，也可能只在某次调用期间叠加。</p>
+          <p><strong>服务、进程、部署单位与量子并不一一对应。</strong> 服务是承载内聚功能的可执行体；进程是操作系统中的运行实例；部署单位是发布与运维操作的范围。量子还要纳入代码之外的必要依赖，并分析运行特性。一项服务开十个副本，不会因此得到十个不同的功能量子；三个独立进程若必须共同使用不可分离的数据模型，也不能仅凭进程数认定它们具有三份架构独立性。</p>
+          <p>原书把作为单一单位部署的单体称为一个量子，又指出大型单体通常没有很高的功能内聚。这是两种用途之间需要保留的区别：在静态耦合分析中，它仍是一个不能独立拆开的范围；在设计评价中，它未必满足理想量子的内聚目标。不能因为“高内聚”写在定义里，就假定凡是数得出的量子都设计良好。</p>
+          <p>量子与领域驱动设计的限界上下文（bounded context）也相关而不相同。限界上下文关注模型和语言适用的边界；架构量子进一步追问该边界能否落实到部署、数据和运行依赖。一个模型边界清楚的模块可能仍嵌在单体里，不能单独发布；多个语义上不同的上下文也可能通过共享数据库紧密连接。模型边界提供候选分界，量子分析检验工程上的独立程度。</p>
+          <aside class="key-point"><p class="key-point-label">核心观点</p><p>架构量子把“这一部分能否独立变化”落到实际依赖与运行行为上。服务框的数量只是线索，数据、部署契约和调用方式才决定独立性有多大。</p></aside>
+        </section>
+
+        <section id="deployment-and-cohesion">
+          <h2><span class="section-number">03</span>独立部署与功能内聚，必须一起看</h2>
+          <p>独立部署（independently deployable）首先意味着有清楚的发布边界。团队能把某项能力的新版本投入使用，而不必同时替换一批不相关的应用；相关的数据结构、运行时配置和接口兼容要求也必须在分析范围内。只把一个 JAR 制成容器，还没有说明数据库迁移是否要求其他服务同时升级。</p>
+          <p>原书将数据库纳入量子，正是为了防止这种遗漏。假设工单服务与报表服务共同依赖一个字段，工单团队想把它从单一状态改成状态历史，如果报表直接解释旧字段，发布就不只是工单镜像的事情。团队可以用兼容迁移等办法降低联动，但那是实际设计出来的独立性，不能由“有两条流水线”自动推导。这一字段情境为笔记假设，用来解释原书的部署约束。</p>
+          <p>独立部署也不等于脱离所有外部设施后仍能完成整个业务。原书图 2-6 特别说明，一个量子可以在接近生产的环境中启动并执行自己的工作，即使暂时不能完成所有跨量子的流程。它需要具备自己的必要运行条件，而不是必须把每一项合作能力都复制一遍。若连自身职责都要等待另一部分同步发布，边界就还没有真正独立。</p>
+          <p>功能内聚（functional cohesion）则回答“为什么把这些东西放在一起”。关系紧密的行为与数据聚在同一范围，便于用统一的规则完成一项领域能力。工单分派涉及技能匹配、服务区域和可用性，这些规则围绕同一个决定协作；因为都使用 Java，就把客户计费与知识库检索放进一个服务，并没有同样的业务理由。</p>
+          <p>内聚不能只按接口数量或代码体积判断。一个有几十个操作的领域服务可能围绕一致的模型工作；一批每个只有一个操作的小服务，却可能为任何一次规则变化共同修改。反复同步变更是值得调查的信号，可能说明边界切断了一个紧密概念，也可能说明共享契约设计得过严，需要结合原因判断。</p>
+          <p>两项条件相互制约：只看独立部署，整个单体也可以成为一个单位；只看功能相近，则可能得到很多语义漂亮、实际却发布不了的模块。好的边界同时具有能解释的业务责任和能兑现的工程独立性。架构师、开发者与运维人员由此能够讨论同一个对象，而不是各自拿模型图、包目录和发布清单说不同的“服务”。</p>
+        </section>
+
+        <section id="static-wiring">
+          <h2><span class="section-number">04</span>静态耦合：从空环境启动，需要接上什么</h2>
+          <p>静态耦合（static coupling）描述架构怎样接在一起。源码 import 是其中一部分，依赖管理带来的框架与库、Java 运行时、数据库结构、连接地址、消息代理以及容器运行要求，也都可能构成必要契约。这里的“静态”不等于“只在编译期存在”，而是关注不执行具体业务流程也能描述的依赖结构。</p>
+          <p>章末的 Sysops Squad 对话给出一个实用起点：假如从空环境启动目标服务，要准备什么？Austen 先回答 Java、Postgres 和 Docker；Addison 继续追问 Spring Boot、Maven POM 中的传递依赖，以及服务用于收发事件的消息代理。缺少代理，服务预定的工作方式可能就无法运作，因此代理的存在属于静态依赖。</p>
+          <p>然而，经由代理向另一个服务发送事件，是动态协作。同一个消息系统可以同时出现在两种视图里：静态图说明必须提供哪一类基础能力，动态流程说明消息交给谁、是否等结果、失败由谁处理。不能因为用了异步消息，就把消息代理从部署与可靠性分析里删掉；也不能因为代理必须存在，就把所有消息交换当成同步调用。</p>
+          <figure class="concept-figure"><a href="../diagrams/exports/ch02-static-dynamic.svg" target="_blank" rel="noopener"><img src="../diagrams/exports/ch02-static-dynamic.svg" width="720" height="450" alt="左侧列出工单服务运行所需的运行时、库、数据库与消息代理；右侧描述工单服务经消息代理向分派服务发送工作请求。相同的代理在两种视图中承担不同解释责任。"></a><figcaption>图 2-1：原创解释图。左侧实线箭头表示“依赖其存在或契约”，右侧虚线箭头表示“运行时发送消息”；两种视图中的代理指同一类依赖，并不是两个必需实例。本图不据此划分量子数量。点击<a href="../diagrams/exports/ch02-static-dynamic.svg" target="_blank" rel="noopener">查看大图</a>。</figcaption></figure>
+          <p>静态图最有用的输出，是变更影响范围。例如升级运行时，优先关注依赖该运行时的服务；修改共同数据库契约，沿读写关系找受影响的代码；改动代理配置，则检查对应的生产者与消费者。这样才能说明“这次变更为什么需要验证这些部分”，而不是每次都把全系统测试当成唯一答案。</p>
+          <p>原书的案例团队正在组合容器清单、POM、NPM 依赖等信息，形成构建与运行依赖清单；再用一致的日志和可观测性信息建立调用图。这两种材料互相补充。清单可能表达运行时尚未触发的必要依赖，调用记录能够显示真实路径，却无法证明没观察到的路径永远不会发生。这里后一句是笔记的方法边界说明，不是书中工具已经实现的保证。</p>
+        </section>
+
+        <section id="shared-coupling-points">
+          <h2><span class="section-number">05</span>共享数据库和 UI，为什么会收紧边界</h2>
+          <p>原书图 2-2 把分层单体、模块化单体和微内核放在一起：图中的每一种应用都作为一个整体部署，并连接自己的单一数据库，所以各自的静态量子数为一。内部有清楚的层或插件，不等于这些部分已有独立运行范围。模块化仍可能改善理解和修改成本，只是不能把这种收益直接说成独立部署。</p>
+          <p>图 2-3 再把应用代码分成远程服务，但保留单体数据库。作者仍将图中系统划为一个量子，因为服务之间的数据依赖没有随代码一起分开。本书的“基于服务的架构”（service-based architecture）特指这种由独立 UI、粗粒度领域服务与共享关系数据库组成的风格；它是可用的折中方案，不是泛指一切用了服务的架构。保留数据库可能降低迁移成本并维持现有集成，代价是继续接受该共享点的约束。</p>
+          <p>图 2-4 的中介式事件驱动架构又增加了统一请求编排器。原图将编排器与数据库都标成耦合点，因为该图中的整体工作依赖它们。去掉中心编排器也不自动得到多个量子：图 2-5 的代理式事件驱动系统仍共用数据库。甚至没有直接连接数据库的组件，也可能通过自身必要依赖间接受到它影响。</p>
+          <p>反过来，图 2-6 能形成两个量子，依据不只是画了两个数据库：两组服务之间没有静态依赖，而且图注明确限定量子之间仅作异步通信。每一组可以带着自己的必要环境运作。图 2-7 中各服务与各自数据存储构成量子，同样以高解耦为前提；图上共同出现一个 API 层，并没有让作者直接把它们全部合并。</p>
+          <p>这也说明原书的示意图需要按前提阅读。原书在印刷页 30—33 用“共享数据库使量子数为一”作较强的概括，图例实际展示的是多个部分依赖同一应用数据与运行契约的情况。<strong>笔记限定：同用一种数据库产品、共享云厂商，或部署在同一集群，本身不足以判定所有业务是一量子。</strong> 应继续检查共享的是数据模型、实例容量、发布契约还是平台能力，是否真的要求共同变化或共同运作。</p>
+          <p>即使两个独立数据库放在同一服务器，服务器故障也会带来共同风险；这项风险应记入基础设施与可靠性视图。但“有共同故障域”“业务契约必须一起变更”“当前请求必须一起完成”是不同结论。本章概念图没有提供从任意共享资源机械计算量子数的算法。把分析目标和依赖类型注明，比孤立报告一个数字更有用。</p>
+          <p>用户界面也不能被当成架构之外的装饰。图 2-8 描述的是<strong>紧耦合 UI</strong>：它经 API 层同步依赖后端整体，缺少必要部分就无法正常工作，所以原图将其纳入共同量子范围。这里的重点是页面完成任务需要哪些后端能力，而不是浏览器窗口里是否出现同一个站点名称。</p>
+          <p>图 2-9 用微前端说明一种不同安排：与服务对应的 UI 片段由相应边界负责，通过较松的事件协作装配到页面上，让服务、数据和对应界面有机会形成独立范围。笔记补充一个判断情境：如果知识库推荐区域可以单独加载，暂时不可用时工单仍能提交，其牵连程度就不同于“等八个后端全部成功才展示页面”。微前端框架只是实现手段；若所有片段仍锁步发布并共同等待，它并没有兑现这份独立性。</p>
+          <p>最后，图 2-10 将一个单体与一组服务通过集成数据库连接起来。耦合不会因为跨越两个应用名称而消失。这对遗留系统尤其重要：要判断改动影响谁，应沿真实的数据和运行契约追踪，而不能止步于组织绘制的系统边界。</p>
+        </section>
+
+        <section id="dynamic-coupling">
+          <h2><span class="section-number">06</span>动态耦合：独立发布，仍可能一起等待</h2>
+          <p>动态耦合（dynamic coupling）关注各部分运行时如何协作。原书图 2-11 的同步通信，是调用者必须获得接收者的响应，才能继续当前依赖该结果的流程。同步在这里是一种工作流关系：即使实现用异步 I/O 释放了线程，如果当前业务结果仍必须等下游完成，其端到端等待依赖还在。</p>
+          <p>图 2-12 的异步通信则允许发送方交出请求后继续其他工作，需要结果时再经回复通道获知。发送消息仍可能要等待代理确认接收；“代理接收成功”与“分派已经成功”是两个不同事实。可以向用户报告已受理，但不能把它写成整个业务已完成。队列也不是异步的唯一实现，原书明确允许用其他库或框架实现这种协作。</p>
+          <p>Sysops Squad 的对话把区别放到弹性上。这里可扩展性（scalability）关注承载增长后的负载能力，弹性（elasticity）关注应对短时突发。原书假设未来 Ticketing（工单）与 Assignment（分派）在静态上已解耦，工单侧能达到分派侧十倍的弹性规模。如果每张工单都同步等待分派完成，工单侧增加实例仍无法绕过分派侧的处理瓶颈。</p>
+          <p>改用消息队列后，两侧可以暂时以不同节奏工作：工单侧先受理，分派侧从队列取任务，完成后通知结果。由此减少的是“调用者必须在此刻等接收者完成”的时间耦合，而不是删除分派这项业务责任。工作流最终完成仍依赖分派，代理本身也仍是需要运维的部分。</p>
+          <figure class="concept-figure"><a href="../diagrams/exports/ch02-workflow-wait.svg" target="_blank" rel="noopener"><img src="../diagrams/exports/ch02-workflow-wait.svg" width="720" height="500" alt="同步方案中工单服务必须等待分派完成再结束当前请求；异步方案中工单服务先把请求交给队列，分派按自己的速度处理，结果稍后通知。两种方案都依赖分派完成业务。"></a><figcaption>图 2-2：原创解释图。上行实线是同步请求与结果，下行虚线是异步消息；“已受理”与“已分派”是不同状态。量子可在调用期间牵连运行特性，但不会因此自动合并部署流水线。点击<a href="../diagrams/exports/ch02-workflow-wait.svg" target="_blank" rel="noopener">查看大图</a>。</figcaption></figure>
+          <p>为看清缓冲的边界，补一个假设数字：每张工单产生一个分派任务，突发持续 10 秒，工单到达速率为每秒 100 个，分派处理速率为每秒 10 个，开始时队列为空。忽略传输与启动开销，队列将新增 <code>(100 − 10) × 10 = 900</code> 个任务。若之后完全没有新请求，仍需约 <code>900 ÷ 10 = 90</code> 秒排空。异步让受理不必逐个等待，却没有把分派吞吐量变成十倍；若输入长期大于处理能力，积压会继续增长。</p>
+          <p>这个例子中的速率、时间和排空结果均为笔记假设，不是原书实测。“原书十倍”指对话设定的相对弹性规模，也不直接等于固定的吞吐比。真实决策要同时考虑等待期限、容量、失败重试与用户可见状态。对于必须当场取得结果才能继续的操作，同步可能更直接；对于允许先受理后完成的操作，异步才有机会用缓冲换取运行节奏的独立。</p>
+          <p>因此，同步调用使两个部分在相关工作流的延迟、响应能力和故障表现上临时相互牵连，<strong>不等于它们必须使用同一个部署包或同步发布。</strong> 反过来，异步也不保证契约、数据或部署已经解耦。静态依赖图与运行调用图必须共同使用。</p>
+        </section>
+
+        <section id="three-dimensions">
+          <h2><span class="section-number">07</span>通信、一致性与协调，是三个不同的选择</h2>
+          <p>解释完等待方式，本章再把动态协作分成三个维度。<strong>通信（communication）</strong>问的是当前调用是否必须等响应；<strong>一致性（consistency）</strong>在本章特定语境中问的是工作流是否要求原子式整体结果，还是接受受控的暂时不一致；<strong>协调（coordination）</strong>问的是谁管理步骤、分支、完成与失败。它们互相影响，却不能互相代替。</p>
+          <p>以笔记假设的“接收工单并完成分派”为例，同步还是异步决定调用者怎样等待；工单能否暂时处于“已受理、待分派”决定业务可接受的状态；由一个流程服务指挥分派与通知，还是由参与服务响应事件推进，决定协调责任。仅说“我们用队列”只回答了一部分通信问题，还没有回答数据状态和失败接续由谁负责。</p>
+          <p>一致性维度需要一个术语澄清。原书第 1 章把 atomicity 简化成各部分始终保持一致状态，第 2 章印刷页 40 又将 atomic transactions 描述为处理中要求一致的全有或全无事务。这个表达把原子性、可见性和业务一致性压在了一起。更精确地说，<strong>原子性（atomicity）约束一组修改整体成功或整体不生效；隔离性（isolation）约束并发事务互相看见什么、产生什么干扰；业务一致性还要求规则本身正确。</strong> 事务内部可以经过多个更新步骤，并非任意时刻的每个内部状态都已满足最终业务关系。</p>
+          <p>这里据 PostgreSQL 官方事务与隔离文档作概念纠正：事务的全有或全无效果与并发可见性需要分别说明，不把“atomic”当作任意强一致性、可串行化或跨服务自动提交保证。保留本书 atomic / eventual 两端，是为了理解作者的工作流分类；它并不是分布式一致性模型的完整分类表。</p>
+          <p>最终一致性（eventual consistency）也不是“以后总会好”。允许先受理再分派，就要让待处理状态有明确含义，并安排失败重试、恢复或终止路径，使流程在约定条件下达到一致的业务结果。它可以由多个本地原子事务组成，并不意味着放弃所有事务。具体的跨服务事务与补偿机制留到第 9、12 章展开。</p>
+          <p>协调的两端是编排（orchestration）与协同（choreography）。编排由某个服务主要负责推进流程，例如记录当前步骤并决定下一步；协同把推进责任分散给参与服务，由它们依据收到的消息和本地规则继续。简单的一问一答通常不需要复杂协调层；分支、并行步骤和失败恢复增多后，状态在哪里、谁知道流程已经结束，就越来越重要。</p>
+          <p>编排可以发送异步命令，协同也可以发生同步调用，所以“异步＝协同”不成立。同样，同步取得一个成功响应，不会自动让其他数据库里的修改与它成为原子事务。这三个维度之所以要分别命名，就是为了不让一种选择偷偷替另外两种作决定。</p>
+        </section>
+
+        <section id="saga-map">
+          <h2><span class="section-number">08</span>八种组合是一张地图，不是实施说明</h2>
+          <p>原书图 2-13 将三个维度画成三维空间，表 2-1 则枚举每个维度取两个端点时的八种组合。下面保留原书模式名称及定性耦合评价，方便后续章节定位；其中 Horror Story 在原表没有附带 Saga 一词。缩写依次表示通信 <code>s/a</code>、一致性 <code>a/e</code>、协调 <code>o/c</code>，例如 <code>aeo</code> 是异步、最终一致、编排。</p>
+          <div class="table-scroll" role="region" aria-label="表 2-1：动态耦合的八种组合" tabindex="0"><table>
+            <thead><tr><th scope="col">原书模式名</th><th scope="col">通信</th><th scope="col">一致性</th><th scope="col">协调</th><th scope="col">原书耦合评价</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">Epic Saga（sao）</th><td>同步</td><td>原子式</td><td>编排</td><td>很高</td></tr>
+              <tr><th scope="row">Phone Tag Saga（sac）</th><td>同步</td><td>原子式</td><td>协同</td><td>高</td></tr>
+              <tr><th scope="row">Fairy Tale Saga（seo）</th><td>同步</td><td>最终一致</td><td>编排</td><td>高</td></tr>
+              <tr><th scope="row">Time Travel Saga（sec）</th><td>同步</td><td>最终一致</td><td>协同</td><td>中</td></tr>
+              <tr><th scope="row">Fantasy Fiction Saga（aao）</th><td>异步</td><td>原子式</td><td>编排</td><td>高</td></tr>
+              <tr><th scope="row">Horror Story（aac）</th><td>异步</td><td>原子式</td><td>协同</td><td>中</td></tr>
+              <tr><th scope="row">Parallel Saga（aeo）</th><td>异步</td><td>最终一致</td><td>编排</td><td>低</td></tr>
+              <tr><th scope="row">Anthology Saga（aec）</th><td>异步</td><td>最终一致</td><td>协同</td><td>很低</td></tr>
+            </tbody>
+          </table></div>
+          <p>这些评价表达作者在本书模型中的相对趋势，不是测量出来的性能分数，也不是从上到下越来越推荐。较低的集中耦合，可能把状态追踪、异常恢复和业务理解负担分散到更多地方；为了一个需要统一流程可见性的业务，采用编排仍可能是合理选择。“原子式”在此表示分类所追求的整体事务语义，不是列出这个组合就已经实现了跨服务 ACID。</p>
+          <p>维度之间的牵引，可以这样理解：如果要求多个步骤全有或全无，就通常需要更多协调和状态管理；如果允许等待最终完成，就有机会让服务不同步执行，但要增加对暂态、失败和恢复的处理。同步加中心协调常让顺序控制比较直接，异步加最终一致常有利于错峰处理；这都是起点而非保证，实际结果仍受数据与工作负载制约。</p>
+          <p>本章只建立地图。八种模式具体怎样工作、补偿与状态机如何组织，属于<a href="ch12.html#dimensions">第 12 章</a>；工作流协调的责任划分先在<a href="ch11.html#workflow-responsibility">第 11 章</a>细讲。这里不把“选一种 Saga”写成足以支持无限拆分的技术答案。随着服务变小，跨边界的步骤可能变多，原本本地完成的决定也可能变成需要恢复的分布式过程。</p>
+        </section>
+
+        <section id="sysops-and-next">
+          <h2><span class="section-number">09</span>Sysops Squad：先建立两幅图，再决定怎样拆</h2>
+          <p>接回第 1 章，Sysops Squad 是虚构企业 Penultimate Electronics 的上门技术支持系统。现状是大型单体与单一数据库 schema，工单丢失、专家误派、系统不可用以及变更容易损坏其他功能，已经威胁业务。这个背景解释了为什么团队想拆，但尚未证明“拆成尽可能小的服务”就是答案。</p>
+          <p>本章给团队的输入，是对服务大小、事务、编排与消息工具混在一起的困惑。候选思路包括靠 Saga 支持更细拆分、引入中心协调设施，或使用事件通信；Logan 的选择是先分析耦合，而不是立即批准某种产品。后面的 Addison 与 Austen 对话，则用目标服务的运行依赖和未来工单／分派流程演示这种分析。</p>
+          <p>书中对话提到团队已经做过静态依赖图，并正在定制自动汇总工具；也说已经建立一致的可观测性信息。这是案例叙事给出的局部状态，可以用于解释方法。它不表示本轮笔记执行了这些工程工作，也不表示书中此处已经完成全部服务与数据库迁移。对未来 Ticketing／Assignment 的十倍弹性情境，原文明确采用假设来比较调用方式。</p>
+          <p>这一章形成的实际选择，是先让两幅图回答不同问题。静态图交代每个候选边界怎样启动、依赖哪些契约，并据此识别发布与可靠性检查范围；动态图交代具体工作流怎样等待、容许什么状态以及谁负责推进。两幅图放在一起，才能判断拆分是否真的带来预期的发布与运行独立性。</p>
+          <p>后续影响也由此清楚：拆分动机要落到可维护、可测试、可部署、可扩展和容错等目标上；数据关系与工作流要求又会反过来推动某些部分聚合。下一章的<a href="ch03.html">架构模块化</a>将继续解释这些动机。量子数量不是终点，能说明“改哪里会影响谁、为什么、代价是什么”，才是本章为后续权衡提供的能力。</p>
+        </section>
+
+        <details id="sources" class="source-note">
+          <summary>来源、原书对应与核查说明</summary>
+          <p>依据 Neal Ford、Mark Richards、Pramod Sadalage、Zhamak Dehghani，<cite lang="en">Software Architecture: The Hard Parts — Modern Trade-Off Analysis for Distributed Architectures</cite>，O’Reilly 英文第一版，October 2021（First Release 2021-09-23，版权 2022），ISBN 978-1-492-08689-5。通读第 2 章印刷页 25—44／PDF 页序 43—62；补读前言及第 1 章案例背景。核查日期：2026-11-06。中文术语为本站译法。</p>
+          <ul>
+            <li>01：章首讨论与耦合定义，印刷页 25—28；原图 2-1 用发辫说明问题维度纠缠，本文以文字转述分析方法。</li>
+            <li>02—03：Architecture (Quantum | Quanta)、Independently Deployable、High Functional Cohesion，印刷页 28—30；量子与限界上下文的区别另对应章末对话，印刷页 42。</li>
+            <li>04—05：High Static Coupling，印刷页 30—38，及章末静态依赖讨论，42—43。已用 PDF 页图核对原图 2-2—2-10：单体、基于服务、两种事件驱动、双量子、微服务、紧耦合 UI、微前端、集成数据库。共享基础设施的分析范围说明是笔记对示意模型的适用边界限定，不声称原书给出了通用计数算法。</li>
+            <li>06：Dynamic Quantum Coupling 下的 Communication，印刷页 38—40，原图 2-11、2-12；以及 Sysops Squad Saga: Understanding Quanta，印刷页 42—44。两张通信图已回看 PDF；速率 100／10、10 秒突发、900 个积压与 90 秒排空为笔记假设和算术演示，非书中数据或实验结果。</li>
+            <li>07—08：Consistency、Coordination，印刷页 40；原图 2-13 与表 2-1，印刷页 41／PDF 页序 59。已对照原页逐项核对八行模式名、三个维度与耦合评价。本文未展开第 12 章实现内容。</li>
+            <li>原子性澄清：原书第 1 章印刷页 15 的简化定义与第 2 章印刷页 40 的处理中一致表述 → 原子性、隔离性、业务一致性不能视为同一保证 → 本文将整体提交效果、并发可见性和业务不变量分别说明。额外核查 <a href="https://www.postgresql.org/docs/18/tutorial-transactions.html">PostgreSQL 18 · Transactions</a> 与 <a href="https://www.postgresql.org/docs/18/transaction-iso.html">Transaction Isolation</a>，2026-11-06；这些文档用于概念对照，不据此推断跨服务事务自动成立。</li>
+            <li>09：Sysops Squad Saga: Understanding Quanta，印刷页 42—44；初始业务和数据背景来自第 1 章印刷页 15—21。案例故事与事务 Saga 分开称呼，叙事中的目标架构讨论不改写为迁移完成报告。</li>
+          </ul>
+          <p>本笔记按推理顺序重组原章，不逐段翻译。字段迁移、可独立加载的知识库区域、三维工单状态与排队数字均为明确标注的笔记假设；两幅 SVG 为原创解释图，与原书图号分开。可编辑源文件为 diagrams/sources/ch02-static-dynamic.svg、ch02-workflow-wait.svg，网页导出副本内容一致。</p>
+        </details>
+
+        <nav class="chapter-pagination" aria-label="章节翻页"><a class="page-link prev" href="ch01.html" rel="prev"><span class="page-label">← 上一章 · 第 1 章</span><span class="page-title">没有“最佳实践”时怎样决策</span></a><a class="page-link next" href="ch03.html" rel="next"><span class="page-label">下一章 · 第 3 章 →</span><span class="page-title">架构模块化</span></a><a class="pagination-home" href="../index.html">书籍概览与目录</a></nav>
+        <p class="source-note"><a href="../guide.html">全书导航：术语、案例与来源</a></p>
+      </article>
+    </div>
+  </main>
+  <footer class="site-footer"><div class="container footer-inner"><span>个人书架 / 中文读书笔记</span><a href="#main">回到顶部 ↑</a></div></footer>
+</body>
+</html>

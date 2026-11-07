@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 570" role="img" aria-labelledby="title desc">
+  <title id="title">Sysops Squad 工单业务闭环</title><desc id="desc">业务主线自上向下、从左到右：客户提单、选择专家、工单投递与通知、维修完成、发送问卷、记录反馈。专家资料为分派提供输入，知识库支持维修。箭头不代表同步调用或事务边界。</desc>
+  <defs><style>
+    :root{--surface:#fcfbf8;--text:#292824;--muted:#65635d;--box:#f0eee8;--line:#68675f}
+    @media(prefers-color-scheme:dark){:root:not([data-theme='light']){--surface:#252524;--text:#e6e3dc;--muted:#b5b1a8;--box:#323430;--line:#aaa89e}}
+    :root[data-theme='dark']{--surface:#252524;--text:#e6e3dc;--muted:#b5b1a8;--box:#323430;--line:#aaa89e}
+    .bg{fill:var(--surface)}.box{fill:var(--box);stroke:var(--line);stroke-width:1.5}.flow{fill:none;stroke:var(--line);stroke-width:1.8;marker-end:url(#arrow)}.aux{stroke-dasharray:6 5}.head{font:600 20px system-ui,sans-serif;fill:var(--text)}.label{font:16px system-ui,sans-serif;fill:var(--text)}.note{font:14px system-ui,sans-serif;fill:var(--muted)}.tip{fill:var(--line)}
+  </style><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="tip" d="M0 0 10 5 0 10Z"/></marker></defs>
+  <rect class="bg" width="720" height="570"/><text class="head" x="28" y="35">从客户求助，到完成后的反馈</text>
+  <rect class="box aux" x="392" y="58" width="300" height="57" rx="9"/><text class="label" x="542" y="83" text-anchor="middle">专家技能、当前位置</text><text class="label" x="542" y="104" text-anchor="middle">服务区域与可用性</text><path class="flow aux" d="M542 115V148"/>
+  <rect class="box" x="28" y="152" width="300" height="82" rx="10"/><text class="head" x="178" y="185" text-anchor="middle">1　客户提交工单</text><text class="label" x="178" y="214" text-anchor="middle">已购买支持计划</text>
+  <rect class="box" x="392" y="152" width="300" height="82" rx="10"/><text class="head" x="542" y="185" text-anchor="middle">2　选择并分派专家</text><text class="label" x="542" y="214" text-anchor="middle">结合资料寻找合适人选</text><path class="flow" d="M328 193H388"/>
+  <path class="flow" d="M692 193H708V263H178V282"/>
+  <rect class="box" x="28" y="286" width="300" height="82" rx="10"/><text class="head" x="178" y="319" text-anchor="middle">3　投递工单与通知</text><text class="label" x="178" y="348" text-anchor="middle">专家移动端／专家及客户通知</text>
+  <rect class="box" x="392" y="286" width="300" height="82" rx="10"/><text class="head" x="542" y="319" text-anchor="middle">4　维修并标记完成</text><text class="label" x="542" y="348" text-anchor="middle">移动端查看问题与地点</text><path class="flow" d="M328 327H388"/>
+  <rect class="box aux" x="424" y="390" width="236" height="45" rx="9"/><text class="label" x="542" y="419" text-anchor="middle">知识库：查阅与补充经验</text><path class="flow aux" d="M542 368V386"/>
+  <path class="flow" d="M692 327H708V454H178V474"/>
+  <rect class="box" x="28" y="478" width="300" height="58" rx="10"/><text class="head" x="178" y="514" text-anchor="middle">5　邮件发送问卷链接</text>
+  <rect class="box" x="392" y="478" width="300" height="58" rx="10"/><text class="head" x="542" y="514" text-anchor="middle">6　客户填写，系统记录</text><path class="flow" d="M328 507H388"/>
+  <text class="note" x="28" y="558">实线：业务先后关系　·　虚线：资料输入或辅助活动</text>
+  <script><![CDATA[try { const t = localStorage.getItem('reading-notes-theme'); if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t); } catch {}]]></script>
+</svg>

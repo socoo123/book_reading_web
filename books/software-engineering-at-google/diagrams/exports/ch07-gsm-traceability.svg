@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="424" viewBox="0 0 720 424" role="img" aria-labelledby="title desc">
+  <title id="title">从目标推导指标，再回溯检查含义</title>
+  <desc id="desc">从上向下阅读 Readability 研究的一条简化路径：工作完成得更顺畅是目标，代码变更更快完成评审是信号，有无认证作者的评审时长中位数是可测量的代理。实线表示推导，右侧虚线表示拿到数字后回溯检查它是否仍然代表原来的目标。</desc>
+  <!-- Original, editable hand-written SVG. The export is an identical web copy. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 15px; fill: var(--muted); }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.2; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .label { font-size: 17px; font-weight: 600; }
+    .body { font-size: 17px; }
+    .arrow { fill: none; stroke: var(--line); stroke-width: 1.8; marker-end: url(#arrow); }
+    .back { stroke: var(--accent); stroke-dasharray: 6 5; marker-end: url(#back); }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker>
+    <marker id="back" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--accent)"/></marker>
+  </defs>
+  <rect width="720" height="424" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="28" y="39">先从目标出发，再找到可测量的代理</text>
+  <text class="sub" x="28" y="67">Readability 研究的一条简化对应关系，不是完整指标集</text>
+  <rect class="node" x="28" y="100" width="616" height="74" rx="7"/>
+  <text class="label" x="49" y="132">目标 Goal</text>
+  <text class="body" x="212" y="130">工作完成得更顺畅</text>
+  <text class="sub" x="212" y="154">期望的结果，不先写成某个数字</text>
+  <path class="arrow" d="M336 174V198"/>
+  <rect class="node" x="28" y="205" width="616" height="74" rx="7"/>
+  <text class="label" x="49" y="237">信号 Signal</text>
+  <text class="body" x="212" y="235">代码变更更快完成评审</text>
+  <text class="sub" x="212" y="259">目标实现时，预期看到的工作现象</text>
+  <path class="arrow" d="M336 279V303"/>
+  <rect class="focus" x="28" y="310" width="616" height="74" rx="7"/>
+  <text class="label" x="49" y="342">指标 Metric</text>
+  <text class="body" x="212" y="340">有／无认证作者的评审时长中位数</text>
+  <text class="sub" x="212" y="364">可收集的代理，还要核对任务差异与统计口径</text>
+  <path class="arrow back" d="M644 347H680V137H651"/>
+  <text class="sub" x="28" y="411">实线：推导测量　　虚线：回溯检查数字与目标是否吻合</text>
+</svg>

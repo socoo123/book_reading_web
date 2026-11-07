@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="416" viewBox="0 0 720 416" role="img" aria-labelledby="title desc">
+  <title id="title">三元组先取候选，完整正则再去伪</title>
+  <desc id="desc">查询 Read 点星 File 提取必需的 Rea、ead、Fil、ile 三元组，以倒排索引的交集取出候选。ReadRemoteFile 和 File 空格点点点空格 Read 都能通过片段过滤，但只有前者符合原始正则的顺序要求。</desc>
+  <!-- Original editable hand-written SVG; the web export is an identical copy. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 15px; fill: var(--muted); }
+    .label { font-size: 18px; font-weight: 600; text-anchor: middle; }
+    .body { font-size: 16px; text-anchor: middle; }
+    .code { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 17px; }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.2; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+    .arrow { fill: none; stroke: var(--line); stroke-width: 1.8; marker-end: url(#arrow); }
+  </style>
+  <!-- Image mode inherits the page's color scheme; standalone mode reads its saved choice. -->
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker></defs>
+  <rect width="720" height="416" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="28" y="39">索引先取候选，完整匹配再去伪</text>
+  <text class="sub" x="28" y="67">箭头：查询处理顺序　　示例仅解释 ASCII 三元组的基本机制</text>
+  <rect class="node" x="28" y="105" width="176" height="104" rx="7"/>
+  <text class="label" x="116" y="137">原始正则</text>
+  <text class="body code" x="116" y="178">Read.*File</text>
+  <path class="arrow" d="M215 157H248"/>
+  <rect class="focus" x="260" y="105" width="200" height="104" rx="7"/>
+  <text class="label" x="360" y="137">必需片段的交集</text>
+  <text class="body code" x="360" y="168">Rea ∧ ead</text>
+  <text class="body code" x="360" y="192">∧ Fil ∧ ile</text>
+  <path class="arrow" d="M471 157H504"/>
+  <rect class="node" x="516" y="105" width="176" height="104" rx="7"/>
+  <text class="label" x="604" y="137">完整正则匹配</text>
+  <text class="body" x="604" y="166">只检查候选内容</text>
+  <text class="body" x="604" y="190">验证顺序与间隔</text>
+  <text class="sub" x="44" y="245">同样包含必需片段的两个候选</text>
+  <text class="sub" x="540" y="245">最终判定</text>
+  <rect class="node" x="28" y="256" width="664" height="106" rx="7"/>
+  <path class="rule" d="M28 309H692"/>
+  <text class="code" x="48" y="289">ReadRemoteFile</text>
+  <text class="body" x="581" y="289">✓　命中</text>
+  <text class="code" x="48" y="342">File ... Read</text>
+  <text class="body" x="581" y="342">×　过滤</text>
+  <text class="sub" x="28" y="391">片段共存是必要条件；候选可以偏宽，最终结果仍需精确判断。</text>
+</svg>

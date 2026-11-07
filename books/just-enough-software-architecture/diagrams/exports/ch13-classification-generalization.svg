@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="490" viewBox="0 0 720 490" role="img" aria-labelledby="title desc">
+  <title id="title">分类是实例归属，泛化是类型之间的关系</title>
+  <desc id="desc">左侧的现代式房屋、折衷式房屋、房屋是三个类型，实线泛化箭头从子类型指向超类型。右下的 H1 是一栋具体房屋，虚线分类箭头指向现代式房屋类型。沿泛化向上，H1 也属于上方两种类型。</desc>
+  <!-- Original editable SVG; the exported web copy is identical. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 16px; fill: var(--muted); }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.3; }
+    .instance { fill: var(--focus); stroke: var(--accent); stroke-width: 1.5; }
+    .label { font-size: 21px; font-weight: 600; text-anchor: middle; }
+    .detail { font-size: 16px; text-anchor: middle; fill: var(--muted); }
+    .note { font-size: 18px; }
+    .relation { font-size: 17px; }
+    .generalization { fill: none; stroke: var(--line); stroke-width: 1.8; marker-end: url(#arrow); }
+    .classification { fill: none; stroke: var(--line); stroke-width: 1.8; stroke-dasharray: 6 4; marker-end: url(#arrow); }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker></defs>
+  <rect width="720" height="490" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="30" y="35">先分清：一类房屋，还是一栋房屋？</text>
+  <text class="sub" x="30" y="63">类型层次沿用原书教学例子，不表示建筑风格的权威分类</text>
+
+  <rect class="node" x="34" y="92" width="280" height="70" rx="7"/>
+  <text class="label" x="174" y="121">房屋</text>
+  <text class="detail" x="174" y="146">House · 类型</text>
+  <path class="generalization" d="M174 205V172"/>
+  <text class="relation" x="194" y="193">泛化</text>
+  <rect class="node" x="34" y="215" width="280" height="70" rx="7"/>
+  <text class="label" x="174" y="244">折衷式房屋</text>
+  <text class="detail" x="174" y="269">Eclectic House · 类型</text>
+  <path class="generalization" d="M174 328V295"/>
+  <text class="relation" x="194" y="316">泛化</text>
+  <rect class="node" x="34" y="338" width="280" height="70" rx="7"/>
+  <text class="label" x="174" y="367">现代式房屋</text>
+  <text class="detail" x="174" y="392">Modern House · 类型</text>
+
+  <text class="note" x="422" y="123">沿左侧实线向上：</text>
+  <text class="note" x="422" y="158">每栋现代式房屋</text>
+  <text class="note" x="422" y="188">也属于上方两种类型。</text>
+  <text class="note" x="422" y="242">右下的 H1 是实例，</text>
+  <text class="note" x="422" y="272">不是第四种房屋类型。</text>
+  <path class="classification" d="M418 373H324"/>
+  <text class="relation" x="352" y="357">分类</text>
+  <rect class="instance" x="428" y="338" width="258" height="70" rx="7"/>
+  <text class="label" x="557" y="367">H1：这栋具体房屋</text>
+  <text class="detail" x="557" y="392">实例</text>
+
+  <text class="sub" x="30" y="447">实线：子类型 → 超类型　　虚线：实例 → 类型</text>
+  <text class="sub" x="30" y="474">线型仅为本图图例；不能根据相似箭头猜测其他图的关系。</text>
+</svg>

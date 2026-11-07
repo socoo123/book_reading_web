@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="472" viewBox="0 0 720 472" role="img" aria-labelledby="title desc">
+  <title id="title">四种依赖管理模型中，寻找兼容组合的工作落在哪一步</title>
+  <desc id="desc">四行依次是静态依赖、SemVer、捆绑发行和 Live at Head；三列按时间先后分为上游提交前、发布与集成、使用方构建或升级。静态依赖没有选版决定，工作推迟到被迫升级时集中补上；SemVer 由提供者标注版本号，再由使用方的解析器求解满足全部范围约束的版本；捆绑发行由发行者在发布与集成阶段挑选版本、打补丁并测试，使用方采用整组；Live at Head 由提供者在提交前运行下游测试，失败时先协助迁移，使用方取当前稳定版。越往下，这份工作发生得越早，也越集中到专门的角色。</desc>
+  <!-- Original editable hand-written SVG; web export is an identical copy. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 15px; fill: var(--muted); }
+    .colhead { font-size: 16px; font-weight: 600; fill: var(--muted); text-anchor: middle; }
+    .model { font-size: 18px; font-weight: 600; }
+    .def { font-size: 14px; fill: var(--muted); }
+    .label { font-size: 18px; font-weight: 600; text-anchor: middle; }
+    .body { font-size: 16px; text-anchor: middle; }
+    .item { font-size: 16px; }
+    .note { font-size: 14px; fill: var(--muted); }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .deferred { fill: var(--box); stroke: var(--line); stroke-width: 1.4; stroke-dasharray: 6 5; }
+    .flow { fill: none; stroke: var(--line); stroke-width: 1.8; marker-end: url(#arrow); }
+    .axis { fill: none; stroke: var(--line); stroke-width: 1.2; marker-end: url(#arrow); }
+    .divider { stroke: var(--line); stroke-width: 1; opacity: 0.45; }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker></defs>
+  <rect width="720" height="472" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="28" y="40">四种模型：寻找兼容组合的工作落在哪一步</text>
+  <text class="sub" x="28" y="69">每行一种模型，列从左到右按时间先后；看方框落在哪一列</text>
+  <text class="colhead" x="246" y="106">上游提交前</text>
+  <text class="colhead" x="426" y="106">发布与集成</text>
+  <text class="colhead" x="606" y="106">使用方构建或升级</text>
+  <path class="axis" d="M160 122H684"/>
+
+  <text class="model" x="28" y="165">静态依赖</text>
+  <text class="def" x="28" y="188">假定依赖不变</text>
+  <rect class="deferred" x="520" y="138" width="172" height="62" rx="7"/>
+  <text class="label" x="606" y="164">没有选版决定</text>
+  <text class="body" x="606" y="187">被迫升级时集中补上</text>
+  <path class="divider" d="M28 206H692"/>
+
+  <text class="model" x="28" y="239">SemVer</text>
+  <text class="def" x="28" y="262">用版本号表达兼容</text>
+  <text class="item" x="410" y="248" text-anchor="middle">提供者标注版本号</text>
+  <path class="flow" d="M480 243H512"/>
+  <rect class="focus" x="520" y="212" width="172" height="62" rx="7"/>
+  <text class="label" x="606" y="238">解析器求解</text>
+  <text class="body" x="606" y="261">满足全部范围约束</text>
+  <path class="divider" d="M28 280H692"/>
+
+  <text class="model" x="28" y="313">捆绑发行</text>
+  <text class="def" x="28" y="336">整组作为发布单位</text>
+  <rect class="focus" x="340" y="286" width="172" height="62" rx="7"/>
+  <text class="label" x="426" y="312">发行者集成测试</text>
+  <text class="body" x="426" y="335">挑选版本、打补丁</text>
+  <path class="flow" d="M512 317H540"/>
+  <text class="item" x="548" y="322">使用方采用整组</text>
+  <path class="divider" d="M28 354H692"/>
+
+  <text class="model" x="28" y="387">Live at Head</text>
+  <text class="def" x="28" y="410">总依赖当前版本</text>
+  <rect class="focus" x="160" y="360" width="172" height="62" rx="7"/>
+  <text class="label" x="246" y="386">提供者跑下游测试</text>
+  <text class="body" x="246" y="409">失败先协助迁移</text>
+  <path class="flow" d="M332 391H540"/>
+  <text class="item" x="548" y="396">使用方取当前稳定版</text>
+
+  <text class="note" x="28" y="452">实线方框：寻找兼容组合的主要工作　　虚线框：没有选版，推迟到被迫升级　　箭头：结果交给后一步</text>
+</svg>

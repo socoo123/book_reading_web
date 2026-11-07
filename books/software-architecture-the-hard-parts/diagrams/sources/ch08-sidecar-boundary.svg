@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="430" viewBox="0 0 720 430" role="img" aria-labelledby="title desc">
+  <title id="title">Sidecar 统一运维能力，领域契约保持独立</title>
+  <desc id="desc">两个服务边界内各有领域逻辑和Sidecar，领域通过实线业务契约联系，统一运维治理以虚线配置两个Sidecar。这不是业务流量必须经过中央进程的拓扑。</desc>
+  <style>
+    :root{--surface:#fcfbf8;--text:#292824;--muted:#66645d;--line:#969187;--soft:#f0ece4;--accent:#386d74}
+    @media(prefers-color-scheme:dark){:root:not([data-theme='light']){--surface:#252524;--text:#e6e3dc;--muted:#b6b1a7;--line:#8c8982;--soft:#353534;--accent:#94c8cf}}
+    :root[data-theme='dark']{--surface:#252524;--text:#e6e3dc;--muted:#b6b1a7;--line:#8c8982;--soft:#353534;--accent:#94c8cf}
+    .bg{fill:var(--surface)}text{fill:var(--text);font-family:system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;font-size:17px}.heading{font-size:21px;font-weight:600}.small{font-size:15px;fill:var(--muted)}.box{fill:var(--soft);stroke:var(--line);stroke-width:1.5}.boundary{fill:none;stroke:var(--line);stroke-width:1.5}.core{fill:var(--surface);stroke:var(--accent);stroke-width:2}.edge{fill:none;stroke:var(--accent);stroke-width:2;marker-end:url(#arrow)}.govern{stroke-dasharray:6 5}.arrow{fill:var(--accent)}
+  </style>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path class="arrow" d="M0 0 8 4 0 8Z"/></marker></defs>
+  <rect class="bg" width="720" height="430"/>
+  <text class="heading" x="28" y="36">横跨领域的，是技术治理契约</text>
+  <text class="small" x="28" y="63">实线：业务调用或本地配合　虚线：配置／治理关系</text>
+  <rect class="boundary" x="28" y="84" width="252" height="212" rx="11"/><text class="small" x="45" y="108">服务甲及其伴随组件</text>
+  <rect class="boundary" x="440" y="84" width="252" height="212" rx="11"/><text class="small" x="457" y="108">服务乙及其伴随组件</text>
+  <rect class="box" x="48" y="123" width="212" height="54" rx="8"/><text x="154" y="157" text-anchor="middle">领域逻辑甲</text>
+  <rect class="box" x="460" y="123" width="212" height="54" rx="8"/><text x="566" y="157" text-anchor="middle">领域逻辑乙</text>
+  <path class="edge" d="M260 150H451"/><text class="small" x="360" y="134" text-anchor="middle">独立业务契约</text>
+  <rect class="core" x="48" y="221" width="212" height="54" rx="8"/><text x="154" y="243" text-anchor="middle">Sidecar</text><text class="small" x="154" y="264" text-anchor="middle">日志／监控等技术能力</text>
+  <rect class="core" x="460" y="221" width="212" height="54" rx="8"/><text x="566" y="243" text-anchor="middle">Sidecar</text><text class="small" x="566" y="264" text-anchor="middle">日志／监控等技术能力</text>
+  <path class="edge" d="M154 177V212"/><path class="edge" d="M566 177V212"/>
+  <rect class="box" x="241" y="340" width="238" height="54" rx="8"/><text x="360" y="374" text-anchor="middle">统一运维治理</text>
+  <path class="edge govern" d="M241 367H154V284"/><path class="edge govern" d="M479 367H566V284"/>
+  <text class="small" x="360" y="420" text-anchor="middle">不共享领域类；共同机制也需要版本、资源与责任管理</text>
+  <script><![CDATA[try { const t = localStorage.getItem('reading-notes-theme'); if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t); } catch {}]]></script>
+</svg>

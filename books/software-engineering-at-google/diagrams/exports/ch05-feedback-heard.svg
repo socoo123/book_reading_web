@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="410" viewBox="0 0 720 410" role="img" aria-labelledby="title desc">
+  <title id="title">赞美三明治与清楚而体谅的反馈，对方听到的不同</title>
+  <desc id="desc">上下两行对照书中 Tim 的两段经历。上行：原经理用夸奖、批评、夸奖的三明治方式谈话，批评被冲淡，对方只记住两头的肯定，没听见必须改变，结果总在重复同样的问题，被认为不肯改变。下行：新团队清楚而体谅地指出问题、说明需要的改变并承诺帮助，对方听见必须改变什么，经过几次后续提醒，几周内表现明显改善。</desc>
+  <!-- Original editable hand-written SVG; web export is an identical copy. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 15px; fill: var(--muted); }
+    .label { font-size: 18px; font-weight: 600; text-anchor: middle; }
+    .body { font-size: 16px; fill: var(--muted); text-anchor: middle; }
+    .piece-text { font-size: 16px; text-anchor: middle; }
+    .faint { fill: var(--muted); }
+    .note { font-size: 14px; fill: var(--muted); text-anchor: middle; }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.3; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .piece { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .buried { stroke-dasharray: 5 4; }
+    .flow { fill: none; stroke: var(--line); stroke-width: 1.8; marker-end: url(#arrow); }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker></defs>
+  <rect width="720" height="410" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="28" y="40">同一条批评，对方听到了什么</text>
+  <text class="sub" x="28" y="69">书中 Tim 的两段经历：上行是原经理的谈话，下行是新团队的谈话</text>
+  <text class="note" x="152" y="104">怎样说</text>
+  <text class="note" x="404" y="104">对方听到</text>
+  <text class="note" x="612" y="104">结果</text>
+
+  <rect class="node" x="28" y="118" width="248" height="108" rx="7"/>
+  <text class="label" x="152" y="150">赞美三明治</text>
+  <rect class="piece" x="36" y="168" width="74" height="36" rx="5"/>
+  <text class="piece-text" x="73" y="192">夸奖</text>
+  <rect class="piece buried" x="115" y="168" width="74" height="36" rx="5"/>
+  <text class="piece-text faint" x="152" y="192">批评</text>
+  <rect class="piece" x="194" y="168" width="74" height="36" rx="5"/>
+  <text class="piece-text" x="231" y="192">夸奖</text>
+  <path class="flow" d="M282 172H310"/>
+  <rect class="node" x="318" y="118" width="172" height="108" rx="7"/>
+  <text class="label" x="404" y="160">只记住两头的肯定</text>
+  <text class="body" x="404" y="192">没听见必须改变</text>
+  <path class="flow" d="M496 172H524"/>
+  <rect class="node" x="532" y="118" width="160" height="108" rx="7"/>
+  <text class="label" x="612" y="160">重复同样的问题</text>
+  <text class="body" x="612" y="192">被认为不肯改变</text>
+
+  <rect class="focus" x="28" y="246" width="248" height="108" rx="7"/>
+  <text class="label" x="152" y="278">清楚而体谅</text>
+  <rect class="piece" x="36" y="296" width="74" height="36" rx="5"/>
+  <text class="piece-text" x="73" y="320">指出问题</text>
+  <rect class="piece" x="115" y="296" width="74" height="36" rx="5"/>
+  <text class="piece-text" x="152" y="320">说明改变</text>
+  <rect class="piece" x="194" y="296" width="74" height="36" rx="5"/>
+  <text class="piece-text" x="231" y="320">承诺帮助</text>
+  <path class="flow" d="M282 300H310"/>
+  <rect class="focus" x="318" y="246" width="172" height="108" rx="7"/>
+  <text class="label" x="404" y="288">听见必须改变什么</text>
+  <text class="body" x="404" y="320">也知道有人帮助</text>
+  <path class="flow" d="M496 300H524"/>
+  <rect class="focus" x="532" y="246" width="160" height="108" rx="7"/>
+  <text class="label" x="612" y="288">几周内明显改善</text>
+  <text class="body" x="612" y="320">经几次后续提醒</text>
+
+  <text class="note" x="360" y="388">实线小框：清楚说出的信息　　虚线小框：被夸奖冲淡的批评</text>
+</svg>

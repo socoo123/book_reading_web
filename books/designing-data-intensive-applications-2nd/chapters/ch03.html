@@ -1,0 +1,542 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>第 3 章｜数据模型与查询语言 · DDIA 第二版 · 中文读书笔记</title>
+  <meta name="description" content="DDIA英文第二版第3章详解：关系与文档、规范化和连接、星型与雪花、Cypher与递归SQL、RDF/SPARQL与Datalog、GraphQL、事件溯源和CQRS，以及DataFrame与矩阵。">
+  <link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+  <script src="../../../assets/theme.js"></script>
+  <script src="../../../assets/reader.js" defer></script>
+  <link rel="stylesheet" href="../../../assets/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header reader-header"><div class="container header-inner">
+    <a class="brand" href="../../../index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5.5C8.5 3.8 5.8 3.6 2.5 4.5v14c3.3-.9 6-.7 9.5 1 3.5-1.7 6.2-1.9 9.5-1v-14c-3.3-.9-6-.7-9.5 1Zm0 0v14"/></svg>书架</a>
+    <a class="reader-book-title" href="../index.html" lang="en">DDIA · Second Edition</a>
+    <div class="theme-control" role="group" aria-label="外观" hidden><button type="button" data-theme-value="system" title="跟随系统"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path class="fill" d="M12 4a8 8 0 0 1 0 16Z"/></svg><span class="sr-only">跟随系统</span></button><button type="button" data-theme-value="light" title="浅色"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.6"/><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21M5.6 5.6l1.6 1.6M16.8 16.8l1.6 1.6M5.6 18.4l1.6-1.6M16.8 7.2l1.6-1.6"/></svg><span class="sr-only">浅色</span></button><button type="button" data-theme-value="dark" title="深色"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.5 14.6A7.8 7.8 0 0 1 9.4 4.5a7.8 7.8 0 1 0 10.1 10.1Z"/></svg><span class="sr-only">深色</span></button></div>
+  </div></header>
+  <main id="main" class="container reader-container">
+    <nav class="breadcrumb" aria-label="当前位置"><ol><li><a href="../../../index.html">书架</a></li><li><a href="../index.html">书籍概览</a></li><li><a href="../guide.html">全书导航</a></li><li aria-current="page">第 3 章</li></ol></nav>
+    <div class="reading-layout">
+      <aside class="toc"><nav aria-label="本页目录"><h2>本页目录</h2><ul><li><a href="#model-layers">01　模型、查询接口与存储，是三个不同的问题</a></li>
+<li><a href="#relational-document">02　简历像一棵树，ORM 却不能替你决定怎样读取</a></li>
+<li><a href="#normalization">03　规范化把共享事实放在一处，反规范化把维护工作移到写路径</a></li>
+<li><a href="#relationships">04　多对多不必复制两份关系，也不必立刻换图数据库</a></li>
+<li><a href="#analytics-schema">05　星型与雪花：先规定一行事实代表什么，再写聚合</a></li>
+<li><a href="#schema-locality">06　灵活模式与局部性，都必须说明把成本交给了谁</a></li>
+<li><a href="#document-query">07　换一种查询语法，仍然要跟清筛选、分组和求和</a></li>
+<li><a href="#property-graph">08　图的优势出现在路径长度和实体类型不断变化时</a></li>
+<li><a href="#cypher-sql">09　Cypher 描述路径，递归 SQL 展开可达集合</a></li>
+<li><a href="#triples-sparql">10　三元组把属性与边放进同一种语法</a></li>
+<li><a href="#datalog">11　Datalog：把递归查询拆成能反复应用的规则</a></li>
+<li><a href="#graphql-api">12　GraphQL 选择返回形状，不替后端选择存储模型</a></li>
+<li><a href="#events-cqrs">13　事件溯源保存已发生的事，CQRS 为读取派生不同答案</a></li>
+<li><a href="#replay-boundaries">14　可重建是一项有前提的能力，失败不会被日志自动消除</a></li>
+<li><a href="#dataframes">15　DataFrame 连接关系数据与数值计算，缺失值不能当成零</a></li>
+<li><a href="#choosing">16　选择模型，先写出最重要的查询与变化</a></li></ul><p class="toc-note"><a href="../index.html">← 书籍概览</a></p></nav></aside>
+      <article class="article">
+        <header class="article-header">
+          <p class="eyebrow">READING NOTES / CHAPTER 03</p>
+          <h1>第 3 章｜数据模型与查询语言</h1>
+          <p class="article-deck"><span lang="en">Data Models and Query Languages</span> · 让数据的关系、变化与查询彼此相配</p>
+        </header>
+        <p>同一份履历，可以拆成用户、任职和组织三张表，可以写成包含工作经历的 JSON，也可以画成人与组织之间的边。三者都能保存事实，但当需求从“显示一个人的简历”变成“找出同事的同事”，开发者需要写的查询、承担的更新责任和面对的性能问题，就会明显不同。</p>
+<p>本章沿着这个变化讨论模型选择：先看关系与文档怎样组织共享事实，再用同一个人物—地点数据集走完几种图查询，最后把“保存当前状态”扩展为事件日志与读取视图，并说明 DataFrame 怎样把业务记录变成数值计算的输入。重点是理解表达方式的代价，而不是替数据库产品排座次。</p>
+        <details class="mobile-toc"><summary>本页目录 · 16 个小节</summary><nav aria-label="移动端本页目录"><ul><li><a href="#model-layers">01　模型、查询接口与存储，是三个不同的问题</a></li>
+<li><a href="#relational-document">02　简历像一棵树，ORM 却不能替你决定怎样读取</a></li>
+<li><a href="#normalization">03　规范化把共享事实放在一处，反规范化把维护工作移到写路径</a></li>
+<li><a href="#relationships">04　多对多不必复制两份关系，也不必立刻换图数据库</a></li>
+<li><a href="#analytics-schema">05　星型与雪花：先规定一行事实代表什么，再写聚合</a></li>
+<li><a href="#schema-locality">06　灵活模式与局部性，都必须说明把成本交给了谁</a></li>
+<li><a href="#document-query">07　换一种查询语法，仍然要跟清筛选、分组和求和</a></li>
+<li><a href="#property-graph">08　图的优势出现在路径长度和实体类型不断变化时</a></li>
+<li><a href="#cypher-sql">09　Cypher 描述路径，递归 SQL 展开可达集合</a></li>
+<li><a href="#triples-sparql">10　三元组把属性与边放进同一种语法</a></li>
+<li><a href="#datalog">11　Datalog：把递归查询拆成能反复应用的规则</a></li>
+<li><a href="#graphql-api">12　GraphQL 选择返回形状，不替后端选择存储模型</a></li>
+<li><a href="#events-cqrs">13　事件溯源保存已发生的事，CQRS 为读取派生不同答案</a></li>
+<li><a href="#replay-boundaries">14　可重建是一项有前提的能力，失败不会被日志自动消除</a></li>
+<li><a href="#dataframes">15　DataFrame 连接关系数据与数值计算，缺失值不能当成零</a></li>
+<li><a href="#choosing">16　选择模型，先写出最重要的查询与变化</a></li></ul></nav></details>
+        <section id="model-layers"><h2><span class="section-number">01</span>模型、查询接口与存储，是三个不同的问题</h2>
+<p>数据模型决定哪些事物具有独立身份、哪些关系能够被直接表达。原书从分层开始：现实中的人、商品和行为，先被应用表示成对象与 API；持久化时再映射为表、文档或图；数据库随后把这些逻辑结构编码为内存、磁盘与网络上的字节。硬件还会把字节映射到电信号等物理表示。每一层隐藏一部分复杂性，使应用开发者不必同时设计磁盘格式。</p>
+<p>这一分层也防止几种常见混淆。返回 JSON 的接口，不证明底层采用文档数据库；在关系表里存顶点和边，不会使数据失去图的语义；选了某种逻辑模型，也不能直接推出数据在磁盘上连续排列。<a href="ch04.html">第 4 章</a>才会讨论索引、页面、日志和列式组织怎样实现这些模型。同一种模型可以有很不一样的存储代价，同一存储系统也可以暴露多种模型。</p>
+<p><strong>声明式查询（declarative query）</strong>进一步把目标与执行办法分开。SQL 描述筛选条件、连接关系及分组结果；Cypher 描述要匹配的路径。开发者不必在查询里规定“先扫描哪个文件，再逐个查哪个索引”。查询优化器可以根据统计信息、索引和数据分布选择执行顺序，也可以采用并行执行。</p>
+<p>例如，要找某公司的所有员工，可以从组织查任职关系，也可以先扫描经过筛选的用户再匹配组织。两条路在语义上可能等价，实际工作量却不同。声明式接口留下了改变执行计划的空间；这并不保证优化器永远选对，也不意味着查询写得短就一定快。它的长期价值，是把“什么算正确结果”与“当前怎样高效得到结果”适度解耦。</p>
+<p>本章使用的简历、销售、观测和座位数量均是明确标注的笔记假设；Lucy 与 Alain、聊天应用和会议管理则沿用原书案例，并缩小数据规模。这样可以比较模型，而不把教学数字误认为真实系统的测量结果。</p></section>
+<section id="relational-document"><h2><span class="section-number">02</span>简历像一棵树，ORM 却不能替你决定怎样读取</h2>
+<p>关系模型把数据组织为关系，在 SQL 中通常表现为表；表中的行不具有由模型保证的顺序，输出顺序应显式写出 <code>ORDER BY</code>。Codd 在1970年提出关系模型之后，关系数据库逐渐成为常见选择。原书回顾层级、网状、对象、XML 与 NoSQL 等路线，重点不是宣告其他模型失败，而是说明它们提出的需求不断被吸收：现代关系系统可以支持 JSON，文档系统也可以支持连接。</p>
+<p>原书用 LinkedIn 式履历说明对象—关系不匹配。假设用户 Lin 有两段工作经历和两段教育经历。在程序里，很自然会写成 <code>profile.positions</code> 与 <code>profile.education</code> 两个列表；关系表示则把每段经历放进子表，通过 <code>user_id</code> 指回用户。两者表达的是同一事实，但对象的嵌套、引用和列表顺序，不会自动变成数据库的行、键与连接。</p>
+<p><strong>对象—关系映射（ORM）</strong>负责一部分转换：把行装配成对象，把对象变更转成 SQL，也可能帮助缓存与模式迁移。它能减少重复代码，却不能使开发者只懂对象而完全不用理解关系表示。分析工程师仍可能直接查询这些表，数据库仍要执行实际 SQL，自动生成的表结构也未必适合其他使用者。</p>
+<p>最典型的问题是 N+1 查询。假设页面显示三条评论，它们的作者 ID 依次为 <code>7、9、7</code>。先查评论一次，再在循环内分别加载作者三次，总共四次数据库请求；若 ORM 没有有效缓存，作者7还会重复查询。关系查询可以一次连接评论与用户；预加载也可以先取评论，再批量取去重后的作者 <code>7、9</code>。后者是两次查询，并非所有 eager loading 都必须生成一次大连接。</p>
+<p>ORM 的价值因此在于简化常见映射，而不是免除对查询次数、返回行数和装配过程的检查。拿到三条结果很快，不代表循环中隐藏的三次网络往返也很快；反过来，复杂查询手写 SQL，也不妨碍其他简单操作继续使用 ORM。</p>
+<p>若页面总要一次显示整份简历，文档表示确实自然。下面是笔记假设，组织先用 ID 引用，随后再解释为什么：</p>
+<pre><code class="language-json">{
+  &quot;user_id&quot;: 7,
+  &quot;name&quot;: &quot;Lin&quot;,
+  &quot;region_id&quot;: &quot;r1&quot;,
+  &quot;positions&quot;: [
+    {&quot;position_id&quot;: 101, &quot;org_id&quot;: 20, &quot;title&quot;: &quot;工程师&quot;},
+    {&quot;position_id&quot;: 102, &quot;org_id&quot;: 30, &quot;title&quot;: &quot;研究员&quot;}
+  ],
+  &quot;education&quot;: [
+    {&quot;school&quot;: &quot;A大学&quot;, &quot;degree&quot;: &quot;本科&quot;},
+    {&quot;school&quot;: &quot;B大学&quot;, &quot;degree&quot;: &quot;硕士&quot;}
+  ]
+}
+</code></pre>
+<p>这棵树明确表达“一个人拥有若干段经历”。如果在关系模型中把两段任职与两段教育直接按用户连接，结果可能是 <code>2 × 2 = 4</code> 行：每段任职和每段教育各配对一次。程序还要重新去重、分组装配。这不是关系模型无法表示简历，而是多个独立的一对多分支，扁平连接后会产生重复组合；分开查询或分别聚合也能解决。</p>
+<p>文档把常一起读取的部分放进一个边界，减少装配工作。但关键前提是<strong>一对少、共同读取、生命周期接近</strong>。简历通常只有有限的经历；名人帖子的百万条评论同样是一对多，却不适合无限嵌入一个文档。评论需要独立分页、写入和删除时，单独记录更容易管理。关系的基数只是线索，集合大小与访问方式同样决定模型是否合适。</p></section>
+<section id="normalization"><h2><span class="section-number">03</span>规范化把共享事实放在一处，反规范化把维护工作移到写路径</h2>
+<p>简历中的地区为什么存 <code>region_id</code>，而不是直接复制地名？假设 Lin 和 Mei 都住在地区 <code>r1</code>。如果各自写自由文本，可能出现不同拼法；地区更名时，所有副本都要更新；多语言界面也要知道这些字符串是否其实表示同一个地点。独立的地区实体让“这是哪个地区”和“目前怎样显示它”分开。</p>
+<p>本章用这种方式解释<strong>规范化（normalization）</strong>：共享属性保存在合适的实体上，其他记录通过稳定标识引用它。这里是工程直觉，不是用“有 ID”替代关系理论中的各级范式。ID 应尽量不携带会变化的业务含义；这降低改名牵动引用的概率，但不是对任何 ID 永不迁移、永不合并的承诺。</p>
+<p>笔记假设的 <code>users</code> 有 <code>(7, Lin, r1)</code>、<code>(9, Mei, r1)</code>，<code>regions</code> 有 <code>(r1, 杭州)</code>。展示 Lin 时，可以这样连接：</p>
+<pre><code class="language-sql">SELECT u.user_id, u.name, r.region_name
+FROM users AS u
+JOIN regions AS r ON r.region_id = u.region_id
+WHERE u.user_id = 7;
+-- 结果：7 | Lin | 杭州
+</code></pre>
+<p>连接（join）是在匹配的记录间组合信息，不等于向数据库多发一次网络请求。这个例子由数据库在一次查询中完成。应用先取用户，再按地区 ID 查缓存或服务，也是在实现连接，只是执行位置移到了应用层。</p>
+<p>文档数据库同样能保存规范化引用。MongoDB 的 <code>$lookup</code> 可以把 <code>region_id</code> 与地区集合的 <code>_id</code> 匹配，结果放入数组 <code>region</code>；即使只匹配一个地区，输出形状仍需按该操作的规则理解：</p>
+<pre><code class="language-javascript">db.users.aggregate([
+  { $match: { _id: 7 } },
+  { $lookup: {
+      from: &quot;regions&quot;, localField: &quot;region_id&quot;,
+      foreignField: &quot;_id&quot;, as: &quot;region&quot;
+  } }
+]);
+</code></pre>
+<p><strong>反规范化（denormalization）</strong>则有意复制事实或预计算组合结果。把组织名称和头像 URL 都嵌进简历，读取时少了查找，但组织改头像时必须找到所有副本。假设共有一千份简历，更新到第六百份进程崩溃，网站就会同时显示新旧头像。问题不只在“多写了四百次”，还在谁知道哪些未完成、怎样继续推进。</p>
+<p>如果所有修改在一个受支持的原子事务里，可以共同提交或撤销；若使用异步更新，则需要可靠地记录变化、跟踪进度并处理重试。原书因此把反规范化联系到<a href="ch01.html">第 1 章</a>的派生数据：冗余值不是无主的第二份真相，而是应当能够解释来源与更新办法的结果。规范化通常减少共享属性变更时的写工作，反规范化通常减少特定读查询的工作；这不是脱离索引、数据量与查询形态的“写必快／读必慢”定律。</p>
+<h3>时间线只物化一部分连接</h3>
+<p><a href="ch02.html">第 2 章</a>的社交网络时间线给出了更细的取舍。原书引用的历史实现把“某用户应该看到哪些帖子”预计算成帖子 ID 与发送者 ID 列表，并不把全部正文、点赞数、用户名和头像复制进去。发帖时的扇出，维护的是关注关系与帖子连接后的成员集合。</p>
+<p>读取时间线时，仍要按帖子 ID 取内容，按发送者 ID 取个人资料。这称为 <strong>hydration，即按 ID 补齐展示信息</strong>。为什么保留这些读时连接？因为热门帖的统计频繁改变，头像与用户名也可能修改；若把它们复制到每个关注者的时间线，每次变化都会触发大量写入。</p>
+<p>关键区别是两种连接的成本不同：确定候选帖子可能受关注数量和关系规模影响；已有一页有限的 ID 后，批量取内容的工作主要受本页条目数影响，容易缓存和并行。原书借此反驳“高性能系统必须没有连接”。应识别昂贵的那一段并决定是否物化，而不是将所有引用一律展开。这里是按原书转述其历史案例，不声称核实了 X 当前的内部架构。</p></section>
+<section id="relationships"><h2><span class="section-number">04</span>多对多不必复制两份关系，也不必立刻换图数据库</h2>
+<p>一份简历有多段任职，是一对多；多人居住在同一地区，是多对一；一个人曾在多个组织任职，一个组织又有许多员工，则是多对多。这些称呼必须相对于端点判断。同一张 <code>positions</code> 表既可以是用户的一对多子表，也可以承担用户与组织之间的多对多关联。</p>
+<p>继续使用笔记假设数据：</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>position_id</th>
+<th>user_id</th>
+<th>org_id</th>
+<th>title</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>101</td>
+<td>7（Lin）</td>
+<td>20（北辰）</td>
+<td>工程师</td>
+</tr>
+<tr>
+<td>102</td>
+<td>7（Lin）</td>
+<td>30（远山）</td>
+<td>研究员</td>
+</tr>
+<tr>
+<td>103</td>
+<td>9（Mei）</td>
+<td>20（北辰）</td>
+<td>设计师</td>
+</tr>
+</tbody>
+</table></div>
+<p>这里的<strong>关联表（associative table）</strong>不只是两个 ID 的列表。职位、开始与结束日期都描述“某人某次在某组织的任职”，应附着在这段关系上。给任职单独的 <code>position_id</code>，还可以表示同一人离职后再次入职，而不把两次任职错误地合并。</p>
+<p>查询“Lin 在哪些组织工作过”，先按 <code>user_id=7</code> 找101与102，再按组织 ID 找到北辰与远山；查询“北辰有哪些员工”，则按 <code>org_id=20</code> 找101与103，再得到 Lin 与 Mei。关系只需记录一次，在 <code>user_id</code>、<code>org_id</code> 上分别建立适合查询的二级索引，就能支持两个方向。索引也是派生结构，但由数据库维护，不等于应用自己维护两个容易分歧的成员列表。</p>
+<p>文档方案可以只在每人的 <code>positions</code> 中存组织 ID，再对数组里的 <code>org_id</code> 建适合该系统的索引。也可以同时在组织文档里保存员工 ID，但后一种把同一关联复制到两端：新增任职若只成功写入用户端，就会出现“用户说在公司任职，公司却找不到此人”。双向查询的需要，不等于双份权威记录的需要。</p>
+<figure class="concept-figure"><a href="../diagrams/exports/ch03-model-representations.svg" target="_blank" rel="noopener"><img width="782" height="701.7" loading="lazy" alt="同一条任职事实的三种表示：关系模型用positions记录user_id和org_id；文档将任职嵌入用户并引用独立组织；图模型用WORKED_AT边连接人与组织。" src="../diagrams/exports/ch03-model-representations.svg" /></a><figcaption>图 3-1：三行是同一事实的替代表示，不是三份必须同时维护的数据。箭头分别表示外键引用、跨文档引用和带类型的图边；职位属于任职关系。点击<a href="../diagrams/exports/ch03-model-representations.svg">查看大图</a>。</figcaption></figure>
+<p>多对多是关系模型的常规能力。只有当问题大量涉及异构连接、未知深度的路径或反复遍历时，图模型的表达优势才格外明显。反过来，文档包含跨文档 ID 也并非设计失败；它说明局部可以是一棵树，整体仍是一张关系网。合理边界往往是把共同读取的小树嵌入，把需要共享与独立更新的实体保留下来。</p></section>
+<section id="analytics-schema"><h2><span class="section-number">05</span>星型与雪花：先规定一行事实代表什么，再写聚合</h2>
+<p>分析型系统也常采用关系模型，但表的组织围绕分析问题展开。原书的零售例子把销售事实放在中心，把商品、门店、日期、顾客和促销放在周围。<strong>事实表（fact table）</strong>记录发生的事件及可度量值，<strong>维度表（dimension table）</strong>提供事件中的“谁、什么、哪里、何时”等上下文。</p>
+<p>设计时首先要固定<strong>粒度</strong>。本节的笔记假设是：一行代表一张小票中的一种商品明细，<code>amount_cents</code> 是该行已经计算好的成交金额，单位为分，不是单价。两种商品同一次结账仍有两行，因而不能直接把事实行数解释成订单数。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>sale_id</th>
+<th>product_id</th>
+<th>store_id</th>
+<th>date_id</th>
+<th style="text-align: right;">quantity</th>
+<th style="text-align: right;">amount_cents</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>10（牛奶）</td>
+<td>1（东店）</td>
+<td>20261101</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1200</td>
+</tr>
+<tr>
+<td>2</td>
+<td>11（面包）</td>
+<td>1（东店）</td>
+<td>20261101</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">800</td>
+</tr>
+<tr>
+<td>3</td>
+<td>10（牛奶）</td>
+<td>2（西店）</td>
+<td>20261102</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">600</td>
+</tr>
+</tbody>
+</table></div>
+<p>商品维度再记录“牛奶属于乳品、面包属于烘焙”。按类别汇总销售额时，匹配商品后分组求和：</p>
+<pre><code class="language-sql">SELECT p.category, SUM(f.amount_cents) AS revenue_cents
+FROM fact_sales AS f
+JOIN dim_product AS p ON p.product_id = f.product_id
+GROUP BY p.category
+ORDER BY p.category;
+-- 乳品：1800分；烘焙：800分
+</code></pre>
+<p>商品维度的匹配键在这里必须唯一。若同一个商品 ID 匹配出两行维度，事实会在连接后翻倍，金额也随之重复计算。这个小例子说明：连接并非只影响性能，它还依赖粒度和键约束来维持结果含义。销售事实已经是行金额时，也不能再乘一次数量。</p>
+<p><strong>星型模式（star schema）</strong>把常用维度属性直接放在维度表里，分析者通常从事实表连接到几张维度表即可。日期也可作为维度，因为它不只是时间戳，还能标注节假日、财年或营业日；这些属性使“假日销量与平日销量”容易表达。</p>
+<p><strong>雪花模式（snowflake schema）</strong>进一步把维度规范化。例如商品不再直接存品牌名，而是通过 <code>brand_id</code> 连接品牌表。它减少品牌描述的重复，却增加查询路径与理解成本。星型和雪花是规范化程度不同的组织方式，不是两种不同数据库技术，也不应把“星型”误解为完全没有连接。</p>
+<p><strong>单一大宽表（one big table，OBT）</strong>再走向另一端：把维度属性复制进每条事实，预先完成连接。读查询可能更简单，代价是更多存储和数据维护。原书认为，历史分析数据往往批量处理、少原地修改，因此这一取舍比运营型系统更容易接受。</p>
+<p>但“历史发生过”不等于所有描述永远不变。迟到数据、错误更正，以及商品分类调整都会影响分析口径。应先决定报表需要“成交当时的类别”还是“今天的类别”，再选择保存历史版本还是关联当前维度。本段是笔记的边界补充：旧稿将数仓的更新一致性问题说成“基本不存在”，过于绝对；它们通常较不紧迫，却没有消失。</p></section>
+<section id="schema-locality"><h2><span class="section-number">06</span>灵活模式与局部性，都必须说明把成本交给了谁</h2>
+<p>“无模式（schemaless）”容易给人错误期待。即使数据库允许文档出现任意字段，读取代码通常仍假设 <code>positions</code> 是数组、<code>org_id</code> 能用于查找。模式只是变成了隐含约定。<strong>读时模式（schema-on-read）</strong>在使用时解释结构，<strong>写时模式（schema-on-write）</strong>则在写入时按明确规则检查结构。实际系统可以组合两者；文档数据库也可以启用验证。</p>
+<p>原书用姓名字段拆分说明演化成本：旧记录只有 <code>name</code>，新记录有 <code>first_name</code> 和 <code>last_name</code>。文档方案可以立即写入新格式，让读取代码兼容旧格式；关系方案可以先加可空列，再回填旧数据。前者避免一次性转换，却可能让每条读取路径长期承担兼容分支；后者把工作集中在迁移过程，却可能触及大量记录。</p>
+<p>加列和回填不是同一种成本。某些数据库版本支持只改元数据的快速加列，但逐行 <code>UPDATE</code> 仍要做实际工作，修改列类型也可能需要重写。关系库同样可以先加空列、读取时兼容、再逐步回填。不能把“关系库必须停机迁移”和“文档库完全不需要迁移”当作模型定义。</p>
+<p>本笔记没有沿用原例按空格自动拆分姓名的做法，因为真实姓名不保证符合这一规则。该例要说明的是新旧结构共存，不是提供通用姓名解析算法。数据来自不可控的外部系统、结构高度异构时，读时解释很有价值；若所有记录都应遵守统一结构，显式检查反而能更早发现错误。</p>
+<h3>一个文档的边界，也是一种访问假设</h3>
+<p><strong>局部性（locality）</strong>是把常一起访问的数据放在一起。整份简历经常一起读取，紧凑存储可以减少查找与装配；只读取巨大文档的一个字段，则可能为许多无关数据付费。频繁修改文档的一小部分，也可能带来较大写开销。</p>
+<p>原书以常见文档实现解释这些成本，旧稿进一步写成“更新要重写整个文档”。更准确的结论是：实际读取、局部更新和压缩单位由存储引擎决定，不能从 JSON 逻辑结构推导所有产品都整篇重写。反过来，关系模型也能通过聚簇、交错存储等办法提供局部性；原书举 Spanner 的父子表交错和宽列模型的列族作例子。模型回答如何组织事实，存储回答具体怎样把相关字节放近。</p>
+<p>文档还有两项不宜忽视的结构特征。第一，数组天然表达顺序；拖拽任务列表时，关系表需要另设排序键，不能依赖物理行顺序。第二，数组下标不是稳定身份：插入一项后，“第二段经历”可能变了。如果嵌套任职需要被其他实体引用，可以像前文那样给它分配 <code>position_id</code>，但跨文档查找、唯一性与引用维护需要明确支持。原书所谓嵌套项难以直接引用，应理解为它不像独立行那样天然成为统一寻址单位，不是禁止嵌套对象有 ID。</p>
+<p>现实选择往往是混合的：用户、组织等共享实体采用稳定列和键，少量异构配置使用 JSON；或在文档中嵌入个人经历，却引用独立组织。关系与文档的融合让这种组合更方便，但仍要核对所用系统的索引、约束和查询能力，而不能凭“支持 JSON”推定所有访问都高效。</p></section>
+<section id="document-query"><h2><span class="section-number">07</span>换一种查询语法，仍然要跟清筛选、分组和求和</h2>
+<p>原书的海洋观测例子很适合比较 SQL 与文档聚合管道。假设四条记录依次为：2026年1月3日观测鲨鱼2条，1月20日观测鲨鱼3条，1月21日观测海豚8只，2月2日观测鲨鱼1条。这里“鲨鱼”只是示例的类别标签，不把它当作严格分类学上的一个科。</p>
+<p>所求是<strong>每月观测数量之和</strong>，不是观测记录条数。先去掉海豚记录，剩下数量 <code>2、3、1</code>；按年月分组后，1月有两条记录，合计5，2月合计1。年份不能省略，否则不同年份的同一个月会被混在一起。下面假定时间均已统一到 UTC：</p>
+<pre><code class="language-sql">-- PostgreSQL；observed_at 为 timestamptz
+SELECT date_trunc('month', observed_at AT TIME ZONE 'UTC') AS month,
+       SUM(num_animals) AS total
+FROM observations
+WHERE category = 'Sharks'
+GROUP BY month
+ORDER BY month;
+</code></pre>
+<pre><code class="language-javascript">// MongoDB；observed_at 为 BSON Date，按UTC提取年月
+db.observations.aggregate([
+  { $match: { category: &quot;Sharks&quot; } },
+  { $group: {
+      _id: { year: { $year: &quot;$observed_at&quot; },
+             month: { $month: &quot;$observed_at&quot; } },
+      total: { $sum: &quot;$num_animals&quot; }
+  } },
+  { $sort: { &quot;_id.year&quot;: 1, &quot;_id.month&quot;: 1 } }
+]);
+</code></pre>
+<p>两段代码在这些前提下表达相同结果。管道看起来是一串步骤，但依然以集合运算描述目标，并不等于让应用逐行完成全部计算。文档系统的能力范围也不同：有的只支持按键读取，有的提供文档内部索引和聚合。XPath、XQuery 属于 XML 工具，JSON Pointer 用来定位值，JSONPath 用来查询 JSON；它们不能仅因都操作文档就被视为功能完全等同的数据库查询语言。</p></section>
+<section id="property-graph"><h2><span class="section-number">08</span>图的优势出现在路径长度和实体类型不断变化时</h2>
+<p>原书的另一组数据描述 Lucy 和 Alain：Lucy 出生在美国爱达荷州，Alain 出生在法国 Saint-Lô，两人现居伦敦。地点之间又有“位于”关系。美国与法国的行政层级不同，出生地也可能只精确到州，而居住地精确到城市。若把路径固定成“城市—省—国家”三列，就很难容纳所有情况。</p>
+<p>图用<strong>顶点（vertex）</strong>表示人和地点，用<strong>边（edge）</strong>表示出生、居住与包含关系。它不要求每条路线经过相同数量、相同类型的节点。下面截取原书图3-6中的 Lucy 路径，保留 England，避免把不同层级都压成同一条固定记录：</p>
+<figure class="concept-figure"><a href="../diagrams/exports/ch03-location-paths.svg" target="_blank" rel="noopener"><img width="851" height="531.7" loading="lazy" alt="Lucy的出生路径为Lucy到Idaho到United States；居住路径为Lucy到London到England到United Kingdom到Europe。箭头沿出生、居住和包含关系指向目标。" src="../diagrams/exports/ch03-location-paths.svg" /></a><figcaption>图 3-2：上、下两行的 Lucy 是同一个人。出生地到美国需要一条 <code>WITHIN</code> 边，居住地到欧洲需要三条；查询关心能否到达，而非事先规定统一层数。点击<a href="../diagrams/exports/ch03-location-paths.svg">查看大图</a>。</figcaption></figure>
+<p>为便于手算，后续查询采用这张图，加上 Alain 的 <code>Saint-Lo → France → Europe</code> 简化路径；法国的中间行政层级在本笔记数据中省略。已知事实是：Lucy 出生在 Idaho，Alain 出生在 Saint-Lo，两人都居住在 London。目标统一为：<strong>找出生于美国境内、目前居住在欧洲境内的人</strong>。这是对出生地和现居地的筛选，不能单凭结果证明其国籍、法律上的移民身份或完整迁移历史。</p>
+<p><strong>属性图（property graph）</strong>允许顶点与边都有属性。顶点有标识、类型标签与属性，例如 <code>Person {name: 'Lucy'}</code>；边有起点、终点、关系类型与属性，例如一条任职边可带 <code>title</code>、<code>start_year</code>。关系本身因此也能成为携带数据的对象。</p>
+<p>这并不要求神秘的存储形式。原书用 <code>vertices(vertex_id, label, properties)</code> 与 <code>edges(edge_id, tail_vertex, head_vertex, label, properties)</code> 两张表表示属性图，属性可以放在 JSON 列里。按 <code>tail_vertex</code> 查出边，按 <code>head_vertex</code> 查入边；相应索引支持双向遍历。图模型的独特之处，是把这些连接与路径作为常规操作来表达，并提供适合它们的接口与执行能力。</p>
+<p>邻接表按顶点记录邻居，适合沿边寻找；邻接矩阵用行列代表顶点，有边的位置记录1或权重，更便于某些数值运算。稀疏图若使用完整矩阵，空间可能很大，应将逻辑矩阵与稀疏存储区分开。原书的社交图、网页图和道路图例子，各自采用同一类顶点与边，即同质数据（homogeneous data）；这不是说三张图在数学上同构。知识图谱还可同时包含人、组织、地点、作品等不同对象。</p>
+<p>图的灵活性也有边界。普通边只连接两个端点；“A给B的技能C作背书”是三方关系，可以新增一个背书顶点分别连向三者，或采用其他高元建模方式。关系表的一行反而可以直接放三个外键。数据容易扩展，也不代表领域规则消失：哪些实体能够连接、哪些关系必须唯一，仍需要约束或应用逻辑负责。</p></section>
+<section id="cypher-sql"><h2><span class="section-number">09</span>Cypher 描述路径，递归 SQL 展开可达集合</h2>
+<p>Cypher 的模式接近图的画法。括号是顶点，带箭头的方括号是边，冒号后面是标签或关系类型。同一个变量 <code>person</code> 出现两次，要求出生条件与居住条件由同一个人满足：</p>
+<pre><code class="language-cypher">MATCH
+  (person:Person)-[:BORN_IN]-&gt;()-[:WITHIN*0..]-&gt;
+    (:Location {name: 'United States'}),
+  (person)-[:LIVES_IN]-&gt;()-[:WITHIN*0..]-&gt;
+    (:Location {name: 'Europe'})
+RETURN DISTINCT person.name;
+</code></pre>
+<p><code>*0..</code> 表示沿该类型的边走零次或多次。零次很重要：如果某人的出生地只记录为 United States，它已经是目标地点，不该因为没有额外的 <code>WITHIN</code> 边而被排除。Lucy 的出生路径走到 Idaho 后再走一跳到美国；居住路径从 London 走三跳到 Europe，两个条件都成立。Alain 满足居住条件，出生路径却到 France，因此不返回。</p>
+<p>这个查询没有指定执行起点。引擎既可以从人出发检查两条路径，也可以利用地点属性索引定位美国和欧洲，逆着 <code>WITHIN</code> 查下属地点，再逆着出生和居住边找人。声明式的自由就在这里：箭头规定关系方向，不规定引擎必须从箭头左端开始工作。</p>
+<p><code>DISTINCT</code> 避免同一人因多条匹配路径重复出现。本例名字唯一；实际若要区分同名者，应返回人员 ID。语法短并不保证遍历便宜，分支很多的图仍可能产生大量候选路径。Cypher 和2024年发布的 GQL 标准相关，但不能据此认定所有实现的语法与能力完全一致。</p>
+<h3>用 SQL 算同一个答案</h3>
+<p>为了专注递归，下面用简化的 <code>locations(id, name)</code>、<code>within(child, parent)</code>、<code>people(id, name, born_id, lives_id)</code> 三张关系表，地点 ID 对应图中的名称。这是对原书双表属性图表示的教学改写。</p>
+<pre><code class="language-sql">WITH RECURSIVE
+  in_usa(id) AS (
+    SELECT id FROM locations WHERE name = 'United States'
+    UNION
+    SELECT w.child
+    FROM within AS w JOIN in_usa AS p ON w.parent = p.id
+  ),
+  in_europe(id) AS (
+    SELECT id FROM locations WHERE name = 'Europe'
+    UNION
+    SELECT w.child
+    FROM within AS w JOIN in_europe AS p ON w.parent = p.id
+  )
+SELECT p.name
+FROM people AS p
+JOIN in_usa AS b ON b.id = p.born_id
+JOIN in_europe AS r ON r.id = p.lives_id
+ORDER BY p.name;
+-- Lucy
+</code></pre>
+<p><strong>递归公共表表达式（recursive CTE）</strong>先产生种子，再反复用新发现的记录寻找下一批。美国一侧的种子是 <code>{United States}</code>；匹配 <code>within.parent</code> 后发现 Idaho；下一轮没有新地点，停止。欧洲一侧先有 Europe，再发现 United Kingdom 与 France，再发现 England 与 Saint-Lo，最后发现 London。这里沿着子地点指向父地点的边反向扩展，因此匹配的是 <code>parent</code>，取出的是 <code>child</code>。</p>
+<p>把已发现地点代回人员表：Lucy 的 <code>born_id</code> 在美国集合内，<code>lives_id</code> 在欧洲集合内；Alain 的出生地不在美国集合内。两次连接组合成逻辑上的“同时满足”，最终只得到 Lucy。这与 Cypher 的路径模式表达相同问题，但显式写出了中间可达集合。</p>
+<p>本查询用 <code>UNION</code> 去掉已经出现的地点 ID。有限地点集合中，即使误有环，同一 ID 也不会永远作为新结果加入；若改成 <code>UNION ALL</code>，环就可能使递归持续增长。这个结论依赖递归行只有 ID：如果同时记录不断增加的深度，<code>(ID, 深度)</code> 每次都不同，单纯 <code>UNION</code> 就不够，需显式检测路径中的重复节点。PostgreSQL 的 <code>SEARCH</code> 主要生成结果排序信息，也不能被解释成强制底层按指定深度或广度顺序执行。</p>
+<p>原书例3-6在印刷90页使用 <code>'Location'</code>，91页另一分支使用 <code>'location'</code>。回看 PDF 后确认不是提取失真；在区分大小写的普通文本比较中，这两个字面量不等价，应统一标签或明确数据约定。本笔记改用独立地点表，避免沿用这一不一致。它不改变原书关于变长路径表达成本的论点。</p></section>
+<section id="triples-sparql"><h2><span class="section-number">10</span>三元组把属性与边放进同一种语法</h2>
+<p><strong>三元组存储（triple store）</strong>把事实写成“主语、谓语、宾语”：<code>(Lucy, name, "Lucy")</code> 描述属性，<code>(Lucy, bornIn, Idaho)</code> 描述连接。宾语是字面量时，像属性值；宾语是另一个实体时，像图的边。模型相近，却不是说属性图与 RDF 在每个细节上完全相同：属性图边上的日期等属性，在基础 RDF 三元组模型中通常需要额外节点或相应扩展来表达。</p>
+<p><strong>RDF（Resource Description Framework）</strong>是数据模型，Turtle、RDF/XML、JSON-LD 是相关的序列化表示。把一组事实写成 XML，不会使它逻辑上从图变成一棵只能嵌套的文档树。以下 Turtle 是笔记缩小后的完整 Lucy 路径：</p>
+<pre><code class="language-turtle">@prefix ex: &lt;urn:example:&gt; .
+ex:lucy a ex:Person ; ex:name &quot;Lucy&quot; ;
+        ex:bornIn ex:idaho ; ex:livesIn ex:london .
+ex:idaho ex:within ex:usa .
+ex:usa ex:name &quot;United States&quot; .
+ex:london ex:within ex:england .
+ex:england ex:within ex:uk .
+ex:uk ex:within ex:europe .
+ex:europe ex:name &quot;Europe&quot; .
+</code></pre>
+<p>分号表示继续描述同一个主语；<code>a</code> 是类型关系的简写。<code>ex:</code> 把长标识缩写为可读前缀。使用完整 URI／IRI 的动机是跨系统合并数据时区分名称：两个组织都叫某关系 <code>within</code>，不代表它们具有同一语义。标识不必是一个能够访问的网页。本笔记使用有名资源；原书的 <code>_:lucy</code> 则是空白节点标签，不应当作跨文件稳定的全局人员 ID。</p>
+<p><strong>SPARQL</strong>通过三元组模式和路径匹配查询 RDF。继续查出生于美国、现居欧洲的人：</p>
+<pre><code class="language-sparql">PREFIX ex: &lt;urn:example:&gt;
+SELECT DISTINCT ?name WHERE {
+  ?person ex:name ?name .
+  ?person ex:bornIn / ex:within* / ex:name &quot;United States&quot; .
+  ?person ex:livesIn / ex:within* / ex:name &quot;Europe&quot; .
+}
+</code></pre>
+<p><code>/</code> 连接相邻的路径段，<code>*</code> 表示零次或多次。第二行路径先从人员经过 <code>bornIn</code> 到出生地点，再经过任意多个 <code>within</code> 到某地点，最后沿 <code>name</code> 匹配字面量 United States。第三行要求同一个 <code>?person</code> 的居住路径到 Europe。Lucy 满足两者，<code>?name</code> 绑定为字符串 Lucy。这里 <code>name</code> 和 <code>within</code> 都是谓语，因此属性匹配也能参与同样的路径表达。</p>
+<p>三元组技术与语义网有历史联系。原书认为，早期“全网机器可理解数据”的宏大愿景没有按原样实现，但结构化词汇、JSON-LD、Wikidata 与专业领域本体等仍有现实用途。采用 RDF 不要求先建设全互联网知识系统；需要统一标识、组合异构事实和使用相关标准时，它也可以只是一个应用内部的模型。</p></section>
+<section id="datalog"><h2><span class="section-number">11</span>Datalog：把递归查询拆成能反复应用的规则</h2>
+<p>Datalog 采用关系式的<strong>事实与规则</strong>，不是专属于某种图存储的语言。事实 <code>within("Idaho", "United States")</code> 相当于两列表中的一行。规则描述哪些已有事实同时成立时，可以推导出一条新事实；这些派生关系可以像视图一样被查询，而不要求把每一次推导永久写回源数据库。</p>
+<p>为了看清递归，本节沿用原书思路，以字符串代替地点 ID，省略类型列。各名称在教学数据中唯一；实际模型可以像前文那样使用 ID，避免重名混淆：</p>
+<pre><code class="language-prolog">inside(X, X) :- location(X).
+inside(X, Z) :- within(X, Y), inside(Y, Z).
+
+us_to_europe(Name) :- person(P, Name),
+                     born_in(P, B), inside(B, &quot;United States&quot;),
+                     lives_in(P, L), inside(L, &quot;Europe&quot;).
+</code></pre>
+<p><code>:-</code> 读作“如果”；右侧逗号表示条件同时成立。大写的 <code>X、Y、Z</code> 是变量：只要存在一组绑定，使右侧关系都成立，左侧对应记录就属于结果。同名变量把不同关系连接起来，例如 <code>within(X,Y)</code> 与 <code>inside(Y,Z)</code> 必须在同一个 Y 上接合。</p>
+<p>第一条规则提供零跳情形：每个地点都在它自己之内。第二条把直接包含与已知包含组合起来。假设另有 <code>United States → North America</code>，从三个地点的基础事实出发，可以逐轮得到：</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>推导阶段</th>
+<th>新得到的部分 <code>inside</code> 事实</th>
+<th>原因</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>基础规则</td>
+<td><code>(Idaho, Idaho)</code>、<code>(United States, United States)</code>、<code>(North America, North America)</code></td>
+<td>每个地点的零跳路径</td>
+</tr>
+<tr>
+<td>第一次扩展</td>
+<td><code>(Idaho, United States)</code>、<code>(United States, North America)</code></td>
+<td>一条直接边接上零跳事实</td>
+</tr>
+<tr>
+<td>第二次扩展</td>
+<td><code>(Idaho, North America)</code></td>
+<td>Idaho到美国，再利用美国属于北美</td>
+</tr>
+<tr>
+<td>后续扩展</td>
+<td>无新事实</td>
+<td>已到固定点</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>固定点（fixed point）</strong>表示继续应用规则也不会产生新的关系记录。对这里有限事实、无函数符号的正向规则，可能的地点对有限，集合式去重使这一过程能停止。它不是按程序文本顺序只执行一遍，也不是每遇到递归就无限调用函数。实际引擎可以用增量方法，只让新事实参与下一轮必要推导。</p>
+<p>伦敦路径按相同规则得到 <code>inside(London, Europe)</code>。最后一条规则用 Lucy 的出生和居住事实连接这两个闭包，得出 <code>us_to_europe("Lucy")</code>；Alain 缺少 <code>inside(Saint-Lo, United States)</code>，不能满足全部条件。规则由此可复用：地点包含逻辑只定义一次，别的查询可以继续引用。</p>
+<p>Cypher 擅长把路径直接写成模式，SPARQL 把关系与属性统一为谓语，递归 SQL 显式组织中间关系，Datalog 则用小规则逐层组合。四者的差别首先是表达与组合方式。原书比较代码行数，是为了展示某个任务的自然程度，不能据此推出某种语言在所有查询上都“快一个量级”。</p></section>
+<section id="graphql-api"><h2><span class="section-number">12</span>GraphQL 选择返回形状，不替后端选择存储模型</h2>
+<p>GraphQL 主要处在客户端与服务端的 <strong>API 查询层</strong>。客户端按照服务端公布的 schema 选择字段与关系，服务端解析这些字段，返回相应结构的数据。它可以跨服务取数，也可以访问关系、文档或图数据库。名字带 graph，表示可沿 API 暴露的对象关系取数据，不意味着必须使用图数据库。</p>
+<p>原书的聊天应用请求频道、近期消息、发送者以及被回复消息。下面缩到每频道两条消息：</p>
+<pre><code class="language-graphql">query ChatApp {
+  channels {
+    name
+    recentMessages(latest: 2) {
+      content
+      sender { fullName }
+      replyTo { content sender { fullName } }
+    }
+  }
+}
+</code></pre>
+<p>假设 Aaliyah 先发“大家好”，Caleb 回复“你好”。成功响应可以把第一条消息的信息再嵌入第二条的 <code>replyTo</code>：</p>
+<pre><code class="language-json">{
+  &quot;data&quot;: {
+    &quot;channels&quot;: [{
+      &quot;name&quot;: &quot;general&quot;,
+      &quot;recentMessages&quot;: [
+        {&quot;content&quot;: &quot;大家好&quot;, &quot;sender&quot;: {&quot;fullName&quot;: &quot;Aaliyah&quot;},
+         &quot;replyTo&quot;: null},
+        {&quot;content&quot;: &quot;你好&quot;, &quot;sender&quot;: {&quot;fullName&quot;: &quot;Caleb&quot;},
+         &quot;replyTo&quot;: {&quot;content&quot;: &quot;大家好&quot;,
+                     &quot;sender&quot;: {&quot;fullName&quot;: &quot;Aaliyah&quot;}}}
+      ]
+    }]
+  }
+}
+</code></pre>
+<p>这种响应有冗余，却使界面不必再拿回复 ID 发起第二次请求；被回复的消息甚至可能不在最近两条里。服务端仍可把消息、作者和回复关系规范化保存，在处理请求时再连接。<strong>响应反规范化与持久化反规范化是两项选择</strong>：为了客户端方便而展开一次响应，不等于数据库必须永久保存相同副本。</p>
+<p>字段由 resolver 等服务端逻辑取得，查询形状也不等于数据库执行计划。若每条消息分别查作者，前面的 N+1 问题会在这一层重现；批量加载与缓存可以改善。客户端只需改查询的前提，是所需字段和关系已经存在于 schema 中；新增未暴露的能力仍需要服务端工作。</p>
+<p>GraphQL 没有本章前几种语言那样的任意长度递归路径操作符，片段也不能循环引用，但允许客户端写有限层级的嵌套选择。原书印刷99页称它“不允许任何可能昂贵的操作”，旧稿延续了这一推断。这个表述过强：一层字段就可能调用昂贵服务，深层列表还可能成倍扩大结果。GraphQL 官方文档因此明确讨论分页、深度、宽度与成本控制；限制表达方式并没有自动保证成本有界。</p>
+<p>同理，schema 检查的是查询是否符合接口结构，并不能代替字段级业务授权。成功响应通常对应所选结构；发生执行错误时也可能返回部分数据与错误信息，不能把“要什么就一定完整拿到什么”当作失败语义。GraphQL 的价值是让客户端选择已开放的数据形状，代价是后端必须承担这些组合的取数、权限与性能责任。</p></section>
+<section id="events-cqrs"><h2><span class="section-number">13</span>事件溯源保存已发生的事，CQRS 为读取派生不同答案</h2>
+<p>前面的模型主要讨论当前数据怎样表示。如果既要查询当前预订，又要追查取消原因、展示销售曲线和生成胸牌，一种当前状态结构可能难以同时满足所有需求。原书以会议管理说明另一条路线：先把每次有效变化记录为事件，再从事件生成不同读取表示。</p>
+<p><strong>事件溯源（event sourcing）</strong>以事件日志作为权威记录。用户发来“预订3席”是命令，它可能因为剩余座位不足而失败；确认成立后记录的“3席已被预订”才是事件。事件采用过去时命名，是为了表达它已成为事实。取消不会让曾经预订这件事从未发生，而是追加新的取消事件。</p>
+<p><strong>命令查询职责分离（CQRS）</strong>把写入职责与读取表示分开。本章重点是从写侧数据派生适合查询的读模型：预订状态、组织者仪表板、胸牌名单可以有不同结构，甚至采用不同数据库。CQRS 与事件溯源常组合，但概念不能合并：读写职责分离本身不要求必须以事件保存全部历史；事件溯源也不要求每个视图都部署成独立服务。</p>
+<p>以下是对原书会议案例的笔记假设。容量500，A预订3席，B预订5席，之后A取消。按顺序重放时，当前状态这样变化：</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>序号</th>
+<th>已确认事件</th>
+<th>有效预订</th>
+<th style="text-align: right;">剩余座位</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><code>conference_created(capacity=500)</code></td>
+<td>无</td>
+<td style="text-align: right;">500</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>seats_reserved(A, 3)</code></td>
+<td>A：3</td>
+<td style="text-align: right;">497</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>seats_reserved(B, 5)</code></td>
+<td>A：3，B：5</td>
+<td style="text-align: right;">492</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>booking_canceled(A)</code></td>
+<td>B：5</td>
+<td style="text-align: right;">495</td>
+</tr>
+</tbody>
+</table></div>
+<p>座位视图只需要容量与有效预订；审计视图仍保留A曾经订过；胸牌视图可能还要等人员分配事件才有姓名。一个读取模型忽略与自己无关的事件类型是正常的，但不能在看到已确认的预订事件后，又根据自己的滞后状态宣布“这次预订不算数”。业务拒绝应发生在命令成为事实之前；技术错误则需要修复、重试或明确处置。</p>
+<figure class="concept-figure"><a href="../diagrams/exports/ch03-events-projections.svg" target="_blank" rel="noopener"><img width="734" height="667" loading="lazy" alt="命令先校验再追加到权威事件日志；日志按顺序派生预订状态和统计视图。重建只产生新视图，邮件与支付等外部效果属于另外的执行边界。" src="../diagrams/exports/ch03-events-projections.svg" /></a><figcaption>图 3-3：实线表示有效命令成为已保存事件，虚线表示按序派生、可能滞后；下方标出重建读取状态与重复执行外部动作的区别。日志与视图不因连了一条线就成为同一事务。点击<a href="../diagrams/exports/ch03-events-projections.svg">查看大图</a>。</figcaption></figure>
+<p>下面的 Python 只演示<strong>已确认、完整、顺序且不重复</strong>的事件如何变成座位视图，故意不把它包装成持久化事件系统：</p>
+<pre><code class="language-python">events = [
+    (&quot;conference_created&quot;, {&quot;capacity&quot;: 500}),
+    (&quot;seats_reserved&quot;, {&quot;booking_id&quot;: &quot;A&quot;, &quot;seats&quot;: 3}),
+    (&quot;seats_reserved&quot;, {&quot;booking_id&quot;: &quot;B&quot;, &quot;seats&quot;: 5}),
+    (&quot;booking_canceled&quot;, {&quot;booking_id&quot;: &quot;A&quot;}),
+]
+
+def project(events):
+    capacity = 0
+    bookings = {}
+    for kind, data in events:
+        if kind == &quot;conference_created&quot;:
+            capacity = data[&quot;capacity&quot;]
+        elif kind == &quot;seats_reserved&quot;:
+            bookings[data[&quot;booking_id&quot;]] = data[&quot;seats&quot;]
+        elif kind == &quot;booking_canceled&quot;:
+            del bookings[data[&quot;booking_id&quot;]]
+    return capacity - sum(bookings.values())
+
+assert project(events) == 495
+assert project(events) == project(list(events))
+</code></pre>
+<p>旧稿相同数量的示例把输出写为497；实际是 <code>500 − 3 − 5 + 3 = 495</code>，本处已修正。代码从头重放得到同一答案，是确定性投影的演示，不证明并发接单、事件持久性或重复投递已经解决。</p>
+<p>事件还保留变更意图。“预订取消”比“把某行active改成false，再删除若干关联行”更直接地表达业务。修正视图计算错误时，可以保留历史事件、使用新逻辑重算；增加一种报表时，也可以重新利用旧事件。但新查询只能使用当时记录过或能够稳定恢复的信息，日志没有保存取消原因，就不能凭重放补出原因。</p>
+<p>与星型事实表相比，事件日志通常有多种事件类型，而且顺序参与语义；先订后取消不能随意交换。事实表是无序关系，要分析时间顺序需依靠明确字段。两者都记录过去，但承担的权威角色与读取方式不同。日志的顺序追加有吞吐优势，缓冲也能让下游按自己的速度追赶；这意味着积压与读取延迟被保留下来，并非下游永远不会过载。</p></section>
+<section id="replay-boundaries"><h2><span class="section-number">14</span>可重建是一项有前提的能力，失败不会被日志自动消除</h2>
+<p>原书强调，给定相同事件、相同顺序和相同代码，应能够重现物化视图。<strong>确定性</strong>要求计算所依赖的输入也相同。如果预订金额为100美元，投影每次都向外部服务取“现在的汇率”，今天和下月重建就会得到不同人民币金额。汇率应随事件记录，或由能够稳定返回对应历史版本的来源提供；只记录时间戳，却让历史服务后来改了结果，也不足以保证重现。</p>
+<p>顺序同样有具体范围。上面的单场会议采用一个有序事件流，所有相关视图依次应用其中事件。多分片日志通常只在分片内有序；若跨分片操作彼此依赖，如何确定共同顺序属于额外协议问题。时间戳可以描述发生时间，却不能单独解决并发校验或建立所有事件的可靠全序。</p>
+<h3>视图落后和重复处理，是两类不同故障</h3>
+<p>假设事件4已经写入日志，仪表板只处理到事件3，仍显示剩492席。日志完整不等于读取立即最新。产品可以容许短暂延迟，也可以让相关请求等待目标视图追上某个位置；无论采用哪种方式，都需要说明用户看到的是哪一阶段的数据。旧稿写“事件入日志时视图同步更新”过于确定，原书允许视图独立追赶，不承诺所有存储一起提交。</p>
+<p>再假设投影器已经应用事件4，却在保存进度之前崩溃。恢复后若从事件4再读一次，简单“加回3席”的投影会错误地变成498；如果先保存进度、后更新视图，反过来又可能永久漏掉取消。这个失败顺序说明，恢复必须将<strong>视图变化与消费进度协调</strong>，或通过事件 ID 和合适的幂等逻辑避免重复效果。前面的纯函数重放从空状态开始，不涉及这种中途恢复，不能拿它证明增量处理恰好一次。</p>
+<p>还要防止把异步读模型当作并发预约的唯一裁决依据。若最后只剩1席，两条命令都读到旧视图中的1，然后各自追加“预订成功”，日志会忠实保存两个互相冲突的成功事实。必须在写侧用合适的事务、版本条件或串行化决策保证业务约束。事件溯源改变权威数据的形式，并没有替代并发控制；相关机制留到事务与共识章节。</p>
+<h3>重放状态不等于重做现实动作</h3>
+<p>重建座位计数可以反复执行；重新扣款、发送确认邮件、打印胸牌却会产生新的外部效果。即使实现了“重建模式不发邮件”，实时处理中的崩溃仍可能发生在“邮件已发送、发送结果尚未记录”之间。因此要区分纯投影与副作用执行，再按业务需要使用稳定操作 ID、外部幂等接口或结果核对。这里是对原书副作用警告的失败路径展开，不宣称一个布尔开关就解决端到端恰好一次。</p>
+<p>追加补偿事件也不意味着现实可以回到过去。取消可以释放席位，退款可以形成后续业务操作，但已被阅读的邮件、已经发生的服务行为不会因此消失。事件记录让历史和纠错意图更清楚，能撤销哪些效果仍取决于领域规则及外部系统。</p>
+<p>个人数据删除是另一个重建边界。原书讨论把个人信息放到事件之外、按用户分日志，以及销毁加密密钥等思路。它们可能减少日志中可识别信息的保留，但会改变未来可重放的输入；销毁密钥也不能自动清除已解密的派生副本或备份。本笔记不沿用旧稿“销毁密钥即等于完成法定删除”的无条件说法，具体法律要求需另行核对。</p>
+<p>最终，只有历史事件及所需输入仍在、旧格式可解释、顺序可恢复、投影逻辑可运行，重建才真正成立。上线新视图时，可以在独立视图中重放，追上后再切换读取；“可以删掉重算”是一种数据可恢复性，不是要求在服务中直接删掉唯一可读视图。事件保留与版本演化、恢复时间和读取新鲜度，都是采用这套模型时需要接受的成本。</p></section>
+<section id="dataframes"><h2><span class="section-number">15</span>DataFrame 连接关系数据与数值计算，缺失值不能当成零</h2>
+<p>DataFrame 看起来像表：有列、行和不同类型的数据，也能筛选、分组、聚合与连接。它常见于探索性分析、统计和机器学习准备阶段，开发者通过一串操作逐渐整理自己的数据副本。Pandas 的即时操作与 Spark 等系统的延迟执行并不相同，因此不能把所有 DataFrame API 都简单等同于“逐条命令立即执行、无法优化”。</p>
+<p>原书用电影评分展示关系式记录向矩阵转换。下面是缩小的笔记假设，每个用户—电影组合至多一条评分：</p>
+<pre><code class="language-python">import pandas as pd
+
+ratings = pd.DataFrame([
+    (7, &quot;A&quot;, 5), (7, &quot;B&quot;, 3),
+    (9, &quot;A&quot;, 4), (9, &quot;C&quot;, 2),
+], columns=[&quot;user_id&quot;, &quot;movie&quot;, &quot;rating&quot;])
+
+matrix = ratings.pivot(index=&quot;user_id&quot;, columns=&quot;movie&quot;, values=&quot;rating&quot;)
+print(matrix)
+</code></pre>
+<p>结果的行是用户，列是电影：</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>user_id</th>
+<th style="text-align: right;">A</th>
+<th style="text-align: right;">B</th>
+<th style="text-align: right;">C</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>7</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">缺失</td>
+</tr>
+<tr>
+<td>9</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">缺失</td>
+<td style="text-align: right;">2</td>
+</tr>
+</tbody>
+</table></div>
+<p>这种 <strong>pivot（透视／重塑）</strong>改变数据形状，不凭空增加评分。用户7没有对C评分，含义是未知，不是“给了0分”。直接 <code>fillna(0)</code> 再取行平均，会把用户7的已知平均分从4改成约2.67，悄悄改变问题。推荐算法可以约定未观测位置的处理方式，但必须保留哪些值已观测的语义，不能把存储默认值当作用户意见。</p>
+<p><code>pivot</code> 还要求同一行列坐标对应唯一值。若用户修改过评分并留下两条记录，要先确定使用最后一次、平均值还是其他业务规则；<code>pivot_table</code> 可以聚合重复组合，但选择一个默认聚合函数，不等于自动得到了正确含义。时间字段在原书图3-9中被省略，实际转换时也应说明舍弃时间是否符合目标。</p>
+<p>评分矩阵往往很稀疏：百万用户与万部电影的组合远多于真实评分。完整二维数组需要为所有组合保留位置；<strong>稀疏存储</strong>只保存必要值及其坐标，可以显著节约空间。NumPy 的普通 <code>ndarray</code> 是稠密数组，专门稀疏结构可用 SciPy 的 <code>scipy.sparse</code> 或相应 DataFrame 稀疏类型。原书印刷106页把 NumPy 举作稀疏数组库，旧稿沿用；这里按官方接口职责收紧表述，不把“转成 NumPy”当作已获得稀疏存储。</p>
+<p>同样，关系数据库并非保存不了评分：它一直可以用前面的长表保存。比较的是为每部电影创建一列的超宽表示，是否适合数据库模式及后续计算，而不是关系模型能否表达这些事实。DataFrame 也不会自动消除内存限制；对巨大数据先生成稠密 pivot，再转稀疏，可能在转换前就耗尽内存。</p>
+<p>数值计算还要求把非数值属性编码。若电影只有一个类别，独热编码为“喜剧、剧情、恐怖”三列，所属列为1，其余为0；允许多类别时可以同时有多个1，通常称为多热编码。类别数字不能随便编码成1、2、3后当作有距离的连续值。日期可以转为时间差、周期特征等，具体方式由分析目标决定。</p>
+<p>此处讨论的是供线性代数和机器学习使用的<strong>数值矩阵</strong>，不是宣称任何二维容器都只能存数字。更高维的数组适合影像、规则网格上的地理测量、天文数据等：轴可以表示时间、空间和测量通道。数组数据库优化的是这样的坐标访问与块读取。模型选择再次回到下游操作：业务事件适合关系记录，模型训练可能需要矩阵，科学观测可能需要多维数组，它们可以是同一数据流程中的不同阶段。</p></section>
+<section id="choosing"><h2><span class="section-number">16</span>选择模型，先写出最重要的查询与变化</h2>
+<p>读完本章，可以把模型选择落到几个可检查的问题：哪些实体要独立标识和共享更新？哪些小集合总是一起读取？查询是已知的几次连接，还是未知深度的路径？保存当前值是否足够，还是必须保留业务变化意图？下游最终需要对象、表格、图路径，还是数值数组？</p>
+<p>文档适合边界清楚、规模有限的小树；关系模型擅长共享事实、键约束和集合查询；图模型让复杂连接与递归路径更直接；事件溯源和 CQRS 让权威历史与读取表示分开；DataFrame 则方便把数据逐步改造成分析所需的形状。它们不是互相排斥的五个产品类别，更不能机械压缩成“一对多就文档、多对多就图”。</p>
+<p>本章还提到基因序列、复式记账和全文搜索等专门领域，说明模型的空间远比常见数据库标签广。一个领域的操作与约束足够独特时，专门工具可能更合适；这不意味着通用数据库完全不能保存相关数据，而是保存记录与高效完成领域操作不同。</p>
+<p>真正值得保留的结论是：<strong>选择一种表示，也是在选择哪些操作简单，哪些变化需要付出额外工作。</strong> 先用少量真实形态的数据走完关键查询和一次变更，再判断复杂性落在哪里。下一章进入<a href="ch04.html">存储与检索</a>，继续解释这些逻辑操作怎样变成字节、索引和实际读写成本。</p></section>
+        <details id="sources" class="source-note"><summary>来源、原书对应与核查说明</summary><ul>
+<li>依据 Martin Kleppmann、Chris Riccomini，<em>Designing Data-Intensive Applications, Second Edition</em>，O’Reilly，February 2026，ISBN <code>978-1-098-11906-5</code>。第3章正文印刷65—108／PDF89—132，参考文献延至印刷114／PDF138；已完整读取本章逐页文本与对应旧稿。中文标题与术语为本站译法。核查日期：2026-11-07。</li>
+<li>§01—07 对应章首与 <em>Relational Versus Document Models</em>，印刷65—84：ORM与简历、规范化、时间线 hydration、多对一／多对多、星型／雪花、读时模式、局部性、文档聚合及模型融合。简历、销售、海洋观测小数据为笔记假设。原书LinkedIn履历与零售背景保留其论证，未复制人物履历或全部数据表。</li>
+<li>§08—11 对应 <em>Graph-Like Data Models</em>、<em>Property Graphs</em>、<em>The Cypher Query Language</em>、<em>Graph Queries in SQL</em>、<em>Triple Stores and SPARQL</em>、<em>Datalog: Recursive Relational Queries</em>，印刷84—98。Lucy／Alain沿用原书；教学数据保留伦敦—England—英国—欧洲，简化法国中间层级，查询只识别出生地／现居地条件。图3-2与各语言示例为重组，不是原图完整复刻。</li>
+<li>递归 SQL 的工作表、<code>UNION</code>去重、环检测及<code>SEARCH</code>排序边界，核对 <a href="https://www.postgresql.org/docs/18/queries-with.html">PostgreSQL 18 · WITH Queries</a>。原书例3-6印刷90—91的<code>Location/location</code>不一致已回看PDF；本文统一教学数据，不视为出版社已确认勘误。</li>
+<li>§12 对应 <em>GraphQL</em>，印刷98—101。原书99页“不会允许昂贵操作”的概括过强，依据 <a href="https://graphql.org/learn/security/">GraphQL · Security / Demand control</a> 改为“接口表达受限，执行成本仍需控制”。有限嵌套、schema暴露边界与响应失败说明属于笔记澄清。</li>
+<li>§13—14 对应 <em>Event Sourcing and CQRS</em>，印刷101—105。会议业务来自原书，500席算例为笔记假设；旧稿497修正为495。重复消费、位点提交、并发校验及独立视图切换是对重建边界的机制展开，不是本章给出的完整事务或消息协议。未将销毁密钥解释为无条件满足法律删除义务。</li>
+<li>§15 对应 <em>DataFrames, Matrices, and Arrays</em>，印刷105—107。评分数据为笔记假设；核对 <a href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.pivot.html">Pandas · DataFrame.pivot</a> 的唯一坐标与不聚合语义，以及 <a href="https://docs.scipy.org/doc/scipy/reference/sparse.html">SciPy · Sparse arrays</a> 的专用稀疏结构。原书106页及旧稿的NumPy稀疏数组举例已区分为普通稠密数组与专用稀疏表示。</li>
+<li>§16 对应 <em>Summary</em>，印刷107—108。专门模型只保留领域操作差异，不扩展产品速查表或面试题。</li>
+<li>实际回看原书图3-1—3-9：印刷70、71、76、77、78、86、98、102、106／PDF94、95、100、101、102、110、122、126、130；另回看印刷90、91、99的SQL标签与GraphQL原句。本站三张图为原创教学重组，保留原生Excalidraw编辑场景并用官方API导出SVG。</li>
+<li>实际验证：关系连接、销售聚合、图递归可达集合、座位投影与重复效果算术、评分透视及重复坐标行为；具体执行环境和静态页面检查见本章制作报告。Cypher、MongoDB与GraphQL示例用于说明语义，未声称在对应服务端运行。</li>
+</ul></details>
+        <nav class="chapter-pagination" aria-label="章节翻页"><a class="page-link prev" href="ch02.html" rel="prev"><span class="page-label">← 上一章 · 第 2 章</span><span class="page-title">定义非功能性需求</span></a><a class="page-link next" href="ch04.html" rel="next"><span class="page-label">下一章 · 第 4 章 →</span><span class="page-title">存储与检索</span></a><a class="pagination-home" href="../index.html">书籍概览与目录</a><a class="pagination-home" href="../guide.html">全书专题导航</a></nav>
+      </article>
+    </div>
+  </main>
+  <footer class="site-footer"><div class="container footer-inner"><span>个人书架 / 中文读书笔记</span><a href="#main">回到顶部 ↑</a></div></footer>
+</body>
+</html>

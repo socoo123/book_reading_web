@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="390" viewBox="0 0 720 390" role="img" aria-labelledby="title desc">
+  <title id="title">一种组件类型与两个组件实例</title>
+  <desc id="desc">图书馆数据库组件类型通过分类关系对应主实例与备实例。两个实例可以有相同代码和数据，但有不同身份。虚线不是数据复制或调用。</desc>
+  <!-- Original editable SVG; the web export is identical. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 16px; fill: var(--muted); }
+    .label { font-size: 20px; font-weight: 600; text-anchor: middle; }
+    .detail { font-size: 16px; text-anchor: middle; fill: var(--muted); }
+    .instance { text-decoration: underline; }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.2; }
+    .type { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .classification { fill: none; stroke: var(--line); stroke-width: 1.8; stroke-dasharray: 6 5; marker-end: url(#arrow); }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker></defs>
+  <rect width="720" height="390" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="30" y="38">一种定义，两个有身份的运行实体</text>
+  <text class="sub" x="30" y="67">同代码、同数据，也不等于同一个实例</text>
+  <rect class="type" x="225" y="98" width="270" height="80" rx="7"/>
+  <text class="label" x="360" y="131">图书馆数据库</text>
+  <text class="detail" x="360" y="158">LibraryDB · 组件类型</text>
+  <path class="classification" d="M182 239 282 191"/>
+  <path class="classification" d="M538 239 438 191"/>
+  <text class="detail" x="210" y="208">分类</text>
+  <text class="detail" x="510" y="208">分类</text>
+  <rect class="node" x="40" y="252" width="285" height="80" rx="7"/>
+  <text class="label instance" x="182" y="284">primary : LibraryDB</text>
+  <text class="detail" x="182" y="313">主实例 · 运行时视图类型</text>
+  <rect class="node" x="395" y="252" width="285" height="80" rx="7"/>
+  <text class="label instance" x="538" y="284">backup : LibraryDB</text>
+  <text class="detail" x="538" y="313">备实例 · 运行时视图类型</text>
+  <text class="sub" x="30" y="371">虚线表示实例属于类型；复制与故障切换机制未在图中表示。</text>
+</svg>

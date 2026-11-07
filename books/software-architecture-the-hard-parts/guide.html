@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>全书导航｜阅读路线、术语与决策 · Software Architecture: The Hard Parts</title>
+  <meta name="description" content="全书15章、五条专题阅读路径、统一术语、13项案例ADR及来源、纠错和附录导航。">
+  <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+  <script src="../../assets/theme.js"></script>
+  <script src="../../assets/reader.js" defer></script>
+  <link rel="stylesheet" href="../../assets/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header reader-header"><div class="container header-inner">
+    <a class="brand" href="../../index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5.5C8.5 3.8 5.8 3.6 2.5 4.5v14c3.3-.9 6-.7 9.5 1 3.5-1.7 6.2-1.9 9.5-1v-14c-3.3-.9-6-.7-9.5 1Zm0 0v14"/></svg>书架</a>
+    <a class="reader-book-title" href="index.html" lang="en">Software Architecture: The Hard Parts</a>
+    <div class="theme-control" role="group" aria-label="外观" hidden><button type="button" data-theme-value="system" title="跟随系统"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path class="fill" d="M12 4a8 8 0 0 1 0 16Z"/></svg><span class="sr-only">跟随系统</span></button><button type="button" data-theme-value="light" title="浅色"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.6"/><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21M5.6 5.6l1.6 1.6M16.8 16.8l1.6 1.6M5.6 18.4l1.6-1.6M16.8 7.2l1.6-1.6"/></svg><span class="sr-only">浅色</span></button><button type="button" data-theme-value="dark" title="深色"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.5 14.6A7.8 7.8 0 0 1 9.4 4.5a7.8 7.8 0 1 0 10.1 10.1Z"/></svg><span class="sr-only">深色</span></button></div>
+  </div></header>
+  <main id="main" class="container reader-container">
+    <nav class="breadcrumb" aria-label="当前位置"><ol><li><a href="../../index.html">书架</a></li><li><a href="index.html">书籍概览</a></li><li aria-current="page">阅读导航</li></ol></nav>
+    <div class="reading-layout">
+      <aside class="toc"><nav aria-label="本页目录"><h2>本页目录</h2><ul><li><a href="#reading-route">01　从分解走向协作</a></li><li><a href="#terms">02　容易混淆的术语</a></li><li><a href="#cases">03　各章案例决定</a></li><li><a href="#decisions">04　ADR 索引</a></li><li><a href="#sources">05　来源与核查入口</a></li><li><a href="#corrections">06　纠错与边界</a></li><li><a href="#appendices-and-gaps">07　附录与资料缺口</a></li></ul><p class="toc-note"><a href="index.html">← 书籍概览</a></p></nav></aside>
+      <article class="article">
+        <header class="article-header"><p class="eyebrow">READING GUIDE / COMPLETE BOOK</p><h1>全书导航｜阅读路线、术语与决策</h1><p class="article-deck">15 章 · 五条专题路径 · 术语、ADR、来源与纠错</p></header>
+        <p>本页连接全书 15 章中的阅读路线、术语、案例决定与核查依据。全书按“拆开系统，再重新组合”展开：第 1 章建立共同背景，第一部分（第 2—7 章）辨析耦合并分解代码与数据，第二部分（第 8—15 章）处理复用、跨服务协作、契约与分析数据，最后收束为自己的权衡分析方法。中文术语为本站译法；下面的专题路径是笔记整理，不改变原书章序。</p>
+        <details class="mobile-toc"><summary>本页目录 · 7 个小节</summary><nav aria-label="移动端本页目录"><ul><li><a href="#reading-route">01　从分解走向协作</a></li><li><a href="#terms">02　容易混淆的术语</a></li><li><a href="#cases">03　各章案例决定</a></li><li><a href="#decisions">04　ADR 索引</a></li><li><a href="#sources">05　来源与核查入口</a></li><li><a href="#corrections">06　纠错与边界</a></li><li><a href="#appendices-and-gaps">07　附录与资料缺口</a></li></ul></nav></details>
+        <section id="reading-route"><h2><span class="section-number">01</span>从分解走向协作</h2>
+          <p><a href="chapters/ch01.html">第 1 章</a>先解释为什么需要权衡分析：同一个结构选择，可能改善一项特性，又损害另一项。ADR 保存决策理由，架构适应度函数持续检查可客观判断的原则，两者分别承担“记住为什么”和“发现何时偏离”的责任。</p>
+          <p><a href="chapters/ch02.html">第 2 章</a>提供观察边界的语言。先看服务启动与运行必须具备哪些静态依赖，再看一次工作流怎样把不同部分的运行特性联系起来。架构量子不是把服务框数一遍；数据库、前端、契约以及实际调用方式都会影响分析。</p>
+          <p><a href="chapters/ch03.html">第 3 章</a>把“想拆”转成业务动机：哪些变更太难、哪些测试不完整、哪些发布风险过大、哪些负载与故障需要隔离。<a href="chapters/ch04.html">第 4 章</a>再问现有代码怎样拆，比较渐进整理组件与先复制再裁剪的战术分叉。度量帮助定位问题，路线仍须结合业务与团队条件选择。</p>
+          <p><a href="chapters/ch05.html">第 5 章</a>把组件路线展开成六种模式：先识别和整理代码组织，再分析依赖、建立领域边界并提取服务。<a href="chapters/ch06.html">第 6 章</a>补上数据这一面：数据域、连接和物理数据库分阶段改变，代码搬走并不代表事务和数据关系已经解开。</p>
+          <p><a href="chapters/ch07.html">第 7 章</a>用拆分与聚合的不同力量检查服务大小，重点比较工单分派与客户注册。<a href="chapters/ch08.html">第 8 章</a>进入第二部分：系统拆开后，重复逻辑可以复制、放入共享库或集中为服务；基础设施还可以通过 Sidecar、服务网格和平台复用。每种方式把变更与运行责任放在不同位置。</p>
+          <p><a href="chapters/ch09.html">第 9 章</a>先问谁有权改变数据，再讨论跨边界操作怎样完成：合并、拆表、委托与共享数据域会形成不同的写入责任和事务范围。<a href="chapters/ch10.html">第 10 章</a>转向读取非自有数据，比较运行时调用、字段复制、复制缓存和共享数据域。读取副本不会自动获得权威写入权，低延迟也伴随着更新与恢复责任。</p>
+          <p><a href="chapters/ch11.html">第 11 章</a>把多个参与者组成可观察、可恢复的工作流，比较编排与协同，以及集中、随消息携带或外部查询状态的办法。<a href="chapters/ch12.html">第 12 章</a>沿通信、一致性和协调三维展开八种事务 Saga，进一步讨论局部提交后的补偿、状态推进和失败恢复。模式名称只描述组合；具体系统仍需兑现业务约束、持久状态和重试语义。</p>
+          <p><a href="chapters/ch13.html">第 13 章</a>把契约放回所有协作方式之中：传递哪些数据、要求哪些结构与语义、怎样验证兼容，以及移动应用为什么不能随服务端同时发布。<a href="chapters/ch14.html">第 14 章</a>将这些问题延伸到分析数据，以领域数据产品、自助平台和联邦治理连接运营与分析责任。<a href="chapters/ch15.html">第 15 章</a>最后把全书方法收束为发现纠缠维度、分析耦合点、评估变更影响，并用具体领域情境检验看似漂亮的通用结论。</p>
+          <h3>按当前问题回读：五条跨章路径</h3>
+          <p><strong>服务边界。</strong> 从<a href="chapters/ch02.html#architecture-quantum">量子的观察范围</a>回到<a href="chapters/ch03.html#business-drivers">模块化动机</a>，再读<a href="chapters/ch05.html#component-domains">组件领域</a>、<a href="chapters/ch06.html#data-domains">数据域</a>和<a href="chapters/ch07.html#balancing-forces">粒度平衡</a>。五个组件领域与六个数据域是不同视角；分包、独立部署、数据库隔离和运行时等待也分别改变不同的边界。第 7 章两个案例均聚合，是具体约束的结果。</p>
+          <p><strong>数据责任。</strong> 连读<a href="chapters/ch08.html#sysops-ticket-library">工单共享 DLL</a> → <a href="chapters/ch09.html#sysops-expert">专家资料所有权</a>与<a href="chapters/ch09.html#sysops-survey">调查委托写入</a> → <a href="chapters/ch10.html#sysops-decision">专家复制缓存</a>。共享代码解决实现复用，数据所有权回答谁能改变事实，缓存回答怎样读取；三个工单服务仍共享工单数据域，分派的稳定字段副本不含实时位置，也不取得权威写入权。</p>
+          <p><strong>工作流与恢复。</strong> 先读<a href="chapters/ch02.html#three-dimensions">通信／一致性／协调三维</a>，再读<a href="chapters/ch11.html#sysops-decision">主工单编排决定</a>、<a href="chapters/ch12.html#dimensions">八种 Saga</a>与<a href="chapters/ch12.html#ticket-state-machine">工单状态机</a>。编排已定，Saga 模式仍是候选：Fairy Tale＝seo，Parallel＝aeo。补偿是新业务动作，不能撤回分析侧已经观察到的事实；CLOSED 只到调查发出，完整业务反馈还包含客户作答。</p>
+          <p><strong>契约与独立演进。</strong> 从<a href="chapters/ch08.html#library-versioning">共享库版本化</a>读到<a href="chapters/ch13.html#compatibility">结构与语义兼容</a>、<a href="chapters/ch13.html#mobile-adr">手机宽松契约 ADR</a>，再看<a href="chapters/ch14.html#analytical-contracts">分析契约</a>。可忽略的扩展有助于错开发布，必要业务语义仍须一致；名称—值格式、消费者驱动验证和完整日数据约定各自解决不同问题。</p>
+          <p><strong>分析与决策闭环。</strong> 从<a href="chapters/ch01.html#data-as-architecture">运营／分析用途</a>进入<a href="chapters/ch14.html#cooperative-coupling">协作量子</a>、<a href="chapters/ch14.html#sysops-supply">专家供给输入</a>及<a href="chapters/ch14.html#completeness-check">完整性检查边界</a>，最后回到<a href="chapters/ch15.html#qualitative-quantitative">定性与定量</a>、<a href="chapters/ch01.html#decision-records">ADR</a>和<a href="chapters/ch01.html#fitness-functions">适应度函数</a>。运营到 DPQ 的异步交接不禁止分析侧同步查询，也不合并事务；分钟静默与定性评级都需要限定其能支持的结论。</p>
+        </section>
+        <section id="terms"><h2><span class="section-number">02</span>容易混淆的术语</h2>
+          <div class="table-scroll" role="region" aria-label="全书术语" tabindex="0"><table><thead><tr><th>术语</th><th>含义与区别</th></tr></thead><tbody>
+            <tr><td>架构决策记录 / ADR</td><td>记录背景、选择与后果；选择有代价，不等于选择失败。见第 1、3、4 章。</td></tr>
+            <tr><td>架构适应度函数 / architecture fitness function</td><td>客观检验一个或一组架构特性的机制；可以是结构检查或运行监控，也可包含人工验证。见第 1 章。</td></tr>
+            <tr><td>组件 / component；服务 / service</td><td>前者是代码组织与架构构件，后者是作为独立可执行体部署的内聚功能集合；分包不自动产生独立部署。见第 1、3、4 章。</td></tr>
+            <tr><td>架构量子 / architecture quantum</td><td>综合部署、内聚、静态依赖与同步动态耦合分析架构边界；与领域驱动设计的限界上下文有关但不等同。见第 2 章。</td></tr>
+            <tr><td>静态耦合 / static coupling</td><td>看系统如何接线，包含库、数据库和必要运行基础设施；不只看源码 import。见第 2 章。</td></tr>
+            <tr><td>动态耦合 / dynamic coupling</td><td>看运行时怎样协作，区分通信、事务一致性与协调责任；异步通信仍有数据与工作流依赖。见第 2 章。</td></tr>
+            <tr><td>编排 / orchestration；协同 / choreography</td><td>分别由专门协调者管理工作流、由参与者分担协调责任；与同步／异步是不同维度。两者都能实现状态查询，但责任分布不同。见第 2、11 章。</td></tr>
+            <tr><td>运营数据 / operational data；分析数据 / analytical data</td><td>前者支持日常业务操作，后者支持分析与决策；运营数据不是机器运维指标。见第 1 章。</td></tr>
+            <tr><td>可扩展性 / scalability；弹性 / elasticity</td><td>前者关注承载增长，后者关注应对短时突发的能力；队列缓冲并不增加消费者的长期处理能力。见第 2、3 章。</td></tr>
+            <tr><td>功能可扩展性 / extensibility</td><td>指增加业务能力或接入新渠道的便利程度，区别于 scalability 所指的负载承载能力。见第 7 章。</td></tr>
+            <tr><td>传入耦合 Ca；传出耦合 Ce</td><td>分别从“谁依赖我”和“我依赖谁”观察变更影响，度量时保持统计单位一致。见第 4 章。</td></tr>
+            <tr><td>抽象度 A；不稳定性 I；主序列距离 D</td><td>描述抽象与依赖结构；不稳定性不是故障率，距离不是业务质量总分。见第 4 章。</td></tr>
+            <tr><td>组件领域 / component domain；领域服务 / domain service</td><td>先按业务关系把组件分组，再提取为可分别部署的粗粒度服务；不是一组件必配一服务。见第 5 章。</td></tr>
+            <tr><td>数据域 / data domain；数据库模式 / schema</td><td>前者是相关表与数据库对象的架构分组，后者是数据库组织对象的机制；分 schema 不等于完成物理隔离。见第 6 章。</td></tr>
+            <tr><td>拆分驱动力 / disintegrator；聚合驱动力 / integrator</td><td>分别支持拆开与放在一起；要结合业务判断各自代价，而非按条目数投票。见第 6、7 章。</td></tr>
+            <tr><td>共享库 / shared library；共享服务 / shared service</td><td>前者由使用方纳入自己的部署，后者通过运行时调用提供能力；版本选择与故障传播路径不同。见第 8 章。</td></tr>
+            <tr><td>Sidecar（边车）；服务网格 / service mesh</td><td>以伴随组件和统一基础设施机制处理跨服务运行能力；业务模型和事务责任仍需另外设计。见第 8 章。</td></tr>
+            <tr><td>单一 / single；共同 / common；联合 / joint ownership</td><td>以写入责任区分单个服务、广泛服务或少数同域服务拥有数据；高频读取不是写所有权依据。见第 9 章。</td></tr>
+            <tr><td>委托 / delegate</td><td>非所有者请求唯一所有者执行写入；减少多方直接写入，但引入调用或消息的成功与恢复责任。见第 9 章。</td></tr>
+            <tr><td>列模式复制 / column schema replication</td><td>在消费方保存所需字段的副本，须标清权威来源、更新传播与容许陈旧程度。见第 10 章。</td></tr>
+            <tr><td>复制缓存 / replicated cache；分布式缓存 / distributed cache</td><td>本章分别指各服务内完整副本与外部缓存服务；前者本地读取，仍有预热、复制延迟和内存成本。见第 10 章。</td></tr>
+            <tr><td>语义耦合 / semantic coupling；实现耦合 / implementation coupling</td><td>给定业务要求下必须协作的语义关系，与为实现要求引入的技术联系；减少实现耦合不自动取消业务关系。见第 11 章。</td></tr>
+            <tr><td>前置控制器 / front controller；印记耦合 / stamp coupling</td><td>前者让入口领域服务兼管状态，后者传递超出单个参与者所需的数据结构；携带工作流状态是本书的一种用途。见第 11 章。</td></tr>
+            <tr><td>补偿事务 / compensating transaction</td><td>用新的业务操作纠正已提交效果；不能撤回历史可见性，不保证回到原快照，也可能失败。见第 9、12 章。</td></tr>
+            <tr><td>事务 Saga / transactional saga</td><td>八组合按通信 s/a、一致性 a/e、协调 o/c 命名；atomic 端是整体结果目标，不能由补偿推出 ACID 隔离。见第 12 章。</td></tr>
+            <tr><td>严格契约 / strict contract；宽松契约 / loose contract</td><td>是约束程度的连续谱，不由 JSON、REST 或 gRPC 的名称直接决定；宽松结构仍需明确业务语义。见第 13 章。</td></tr>
+            <tr><td>消费者驱动契约 / consumer-driven contract</td><td>由消费者表达实际依赖，提供方持续验证；测试覆盖的是已声明的交互与预期，不等于证明整个工作流正确。见第 13 章。</td></tr>
+            <tr><td>数据网格 / data mesh</td><td>将分析数据所有权与业务领域对齐的社会技术方法；四项原则还包括数据即产品、自助式数据平台与联邦计算治理。见第 14 章。</td></tr>
+            <tr><td>数据产品量子 / data product quantum（DPQ）</td><td>封装提供分析数据所需的代码、数据／元数据与基础设施；不等于一张表或一个只读副本。见第 14 章。</td></tr>
+            <tr><td>协作量子 / cooperative quantum</td><td>本章中与运营服务运行独立、异步及最终一致协作的分析单元；领域语义和契约仍紧密相关。见第 14 章。</td></tr>
+            <tr><td>联邦计算治理 / federated computational governance</td><td>领域与平台等角色共同制定跨域规则，将可执行部分落实到平台和产品；分散所有权不等于取消共同标准。见第 14 章。</td></tr>
+            <tr><td>MECE / mutually exclusive, collectively exhaustive</td><td>在明确的比较范围中做到相互排斥、整体穷尽；帮助发现重叠与遗漏，不意味着穷举市场上所有产品。见第 15 章。</td></tr>
+            <tr><td>原子性 / atomicity；隔离性 / isolation；业务一致性</td><td>分别关注整体提交效果、并发可见性与业务不变量；本书 Saga 的 atomic 是分类目标，不是自动获得 ACID。见<a href="chapters/ch09.html#acid">第 9 章</a>。</td></tr>
+            <tr><td>正交耦合 / orthogonal coupling</td><td>让基础设施或分析供给等责任沿另一条轴组织，同时保留领域关系；不等于完全没有依赖。见<a href="chapters/ch08.html#sidecar-mesh">第 8 章</a>与<a href="chapters/ch14.html#cooperative-coupling">第 14 章</a>。</td></tr>
+          </tbody></table></div>
+        </section>
+        <section id="cases"><h2><span class="section-number">03</span>Sysops Squad：各章决定了什么</h2>
+          <p>Sysops Squad 是原书虚构的上门电子设备支持业务。客户购买支持计划，提交工单，系统分派技术专家并推送工单；维修结束后收集调查。注册、计费、专家档案、知识库与报表共同支撑这条主线。书中的案例故事（Sysops Squad Saga）与第 12 章的事务 Saga 是两种用法。</p>
+          <p>第 1 章给出起点：一个承载多种职责的单体应用与共享数据库，出现丢单、分派不当、不可用和难以变更等问题。此时还没有完成新的服务边界设计，不能从症状直接断言某个微服务方案就是答案。</p>
+          <p>第 3 章把证据组织为业务论证：超过 30% 的测试用例被注释或过时，发布积压为月度大批次，调查与报表故障会拖垮核心业务，超过 25 名客户同时创建工单时系统冻结，报表还带来数据库负载。以上数字属于故事中的观察，不是普适阈值。团队决定迁移到分布式架构，业务负责人同意推进；代价包括延后新功能、增加成本、调整部署流水线与拆分数据库。</p>
+          <p>第 4 章比较基于组件的分解与战术分叉。现有组件边界较清楚，且日志、安全和持久化等共享逻辑较多；反复维护副本会放大本来就存在的维护与可靠性问题。团队因此选择基于组件的渐进分解，接受较长迁移时间，保留协作识别共享功能、组件与领域边界的机会。</p>
+          <p>第 2 章的故事发生在较晚时点，用目标服务和依赖分析说明量子：运行消息代理是静态前提，通过它发消息则属于动态协作；同步等待和异步缓冲又改变运行特性的牵连。它是分析视角的演示，不应被拼接成“第 1 章之后立刻已迁移完成”的时间线。</p>
+          <p>第 5 章沿六种模式整理现有代码：拆开报表大组件，归并三处客户通知，将工单父包展开为清楚的组件，同时把简单稳定的问卷模板并回问卷组件。团队建立 Ticketing、Reporting、Customer、Admin、Shared 五个组件领域，逐步提取领域服务；这一步仍共享数据库。依赖图中过滤共享库是为了看清业务关系，并不代表共享依赖已经消失。</p>
+          <p>第 6 章依据报表争用连接、伸缩估算与故障隔离需求取得数据拆分共识。其 Customer、Survey、Payment、Profile、Knowledge Base、Ticketing 六个数据域与前章五个组件领域不一一对应。五步迁移先整理归属和访问，再搬数据库并切换连接；问卷另经业务论证选择文档数据库与嵌入问题的单聚合，接受题目重复维护及迁移停机。第 5 章的“问卷较少改动”与第 6 章营销方提出的需求不能合并成永久事实；后者还揭示了因改动太慢而没有提交的需求。</p>
+          <p>第 7 章的两个案例都选择聚合，但理由不同。分派与投递存在失败后重选专家的紧密反馈，团队选择同一服务内保留分派、投递和共享代码组件，承担共同测试发布的代价。客户注册则以全部信息共同提交为硬要求，选择单个客户服务，在 API 与服务层保留访问控制，承担一起伸缩和更大测试范围；合并服务本身并不会自动开启数据库事务。</p>
+          <p>第 8 章把基础设施复用与领域复用分别处理：基础设施团队维护 Sidecar 与服务网格，统一日志、监控、服务发现、认证和授权；只有约 5／16—17 个团队需要的 JSON-to-XML 工具暂不加入。创建、分派、完成三个工单服务共享稳定的数据逻辑，最终选版本化共享 DLL，而非额外的数据服务；仍共同使用工单数据域，各实例仍需管理连接池。第 9 章将继续分析数据所有权，这里没有宣称每个工单服务已经各有独立数据库。</p>
+          <p>第 9 章用写操作厘清归属：专家资料属于用户维护，调查数据由 Survey 服务独占写入。工单完成方在通知调查方时携带必要数据，把完成工单与创建调查记录分成独立活动，接受消息与恢复责任。章节中把客户注册／退订拆成三服务的图是模式演示，并没有取代第 7 章客户服务聚合的 ADR。</p>
+          <p>第 10 章为分派方的高频读取选择复制缓存，范围是专家技能、服务区域与标准排班，实时位置另有来源。用户维护仍独占写入；900 位专家、每人约 1.3 KB、最多六份副本是案例估算，不能当作测得的内存占用或实时一致性保证。原书没有确定具体产品或提供性能基准。</p>
+          <p>第 11 章因状态查询、丢单恢复、取消与重派等复杂异常选择编排，接受编排器的容量与可用性责任。图中的 Ticket Management 同时包含创建与完成工作，但本章没有新增服务合并 ADR；继续与第 8 章部署边界区分。协同同样可以提供状态查询，只是需要安排状态携带、存储或查询的责任。</p>
+          <p>第 12 章发现把调查发送失败与工单完成一起撤销，会让已经看到完成记录的分析侧产生额外处理。案例展示保留完成结果、进入 NO_SURVEY 并恢复调查发送的方案；CLOSED 表示问卷已发送，不表示客户已填写。第 7 章失败后重选专家与本章 ASSIGNED 等待投递属于不同粒度的示意，不能据此编造已发生的流程改造。章末讨论 Fairy Tale／Parallel 候选，没有最终 Saga 选型 ADR。</p>
+          <p>第 13 章按实际变化关系分配契约严格度：编排器与工单管理、分派之间采用较紧契约，通知与调查采用较松契约。专家手机应用虽然与工单业务紧密相关，却受应用商店发布延迟约束，ADR 因而选择宽松键值对及临时扩展机制，接受编排器与手机端增加验证逻辑的代价；这没有推翻既有主工单编排决定。</p>
+          <p>第 14 章的故事已经开始逐步建立领域 DPQ、自助数据平台与联邦治理。新的 Experts Supply DPQ 计划异步汇聚工单历史、用户维护的专家快照和调查结果，支持专家供给建议。ADR 要求每个来源提供完整一天或排除该日，避免把缺失数据误读为低需求；一分钟消息间隔只是依赖典型流量的检测示例。原书没有给出完整性证明、模型效果或新产品上线结果。</p>
+          <p>第 15 章通过复盘肯定业务论证、应用与数据团队协作、权衡表、ADR 与持续验证，并以尾声强调在自己的系统中逐步积累证据。共享库／服务、支付拆分和消息拓扑是分析教学情境，不是新的 Sysops 迁移决定；业务好转属于虚构故事叙述，没有可补填的生产指标或最终 Saga 选型。</p>
+        </section>
+        <section id="decisions"><h2><span class="section-number">04</span>ADR 索引：选择与承担的后果</h2>
+          <p>下表按章节定位原书明确记录的 13 项案例 ADR，标题为中文概述，页码为英文第一版的 ADR 起始印刷页。它是阅读索引，不是重新编号的项目决策库，也不是迁移完成时间表。<a href="chapters/ch01.html#decision-records">第 1 章的 ADR 格式</a>属于模板；该章笔记里的问卷邮件 ADR 是自拟示例，均不计入这 13 项案例决定。</p>
+          <div class="table-scroll" role="region" aria-label="十三项案例 ADR" tabindex="0"><table><thead><tr><th>决策入口</th><th>印刷页／PDF 页序</th><th>本次选择与接受的主要后果</th></tr></thead><tbody>
+            <tr><td><a href="chapters/ch03.html#adr-and-consequences">迁移到分布式架构</a></td><td>61／79</td><td>为运行与交付问题改变边界；接受新功能延后、额外成本、流水线改造和拆库。</td></tr>
+            <tr><td><a href="chapters/ch04.html#sysops-decision">采用基于组件的分解</a></td><td>79／97</td><td>利用现有组件和协作整理共享逻辑；接受比战术分叉更长的迁移时间。</td></tr>
+            <tr><td><a href="chapters/ch06.html#survey-decision">调查使用文档数据库</a></td><td>184／202</td><td>案例选择单聚合问卷；接受公共题重复更新与调查迁移停机。</td></tr>
+            <tr><td><a href="chapters/ch07.html#ticket-assignment">聚合工单分派与投递</a></td><td>211／229</td><td>保留失败重选闭环及内部组件；接受共同测试、部署和伸缩范围。</td></tr>
+            <tr><td><a href="chapters/ch07.html#customer-registration">聚合客户相关功能</a></td><td>215／233</td><td>注册／退订保留完整提交和分层访问控制；接受更大的回归与发布范围。</td></tr>
+            <tr><td><a href="chapters/ch08.html#sysops-infrastructure">用 Sidecar 处理运行共性</a></td><td>241／259</td><td>基础设施团队负责五项公共能力；领域类与暂不需要普及的工具不随意纳入。</td></tr>
+            <tr><td><a href="chapters/ch08.html#sysops-ticket-library">工单数据库逻辑使用共享库</a></td><td>247／265</td><td>稳定逻辑以版本化 DLL 复用；使用方升级需测试部署，各实例管理连接池。</td></tr>
+            <tr><td><a href="chapters/ch09.html#sysops-expert">限界上下文内明确单一表所有权</a></td><td>280／298</td><td>专家资料归用户维护；跨边界读访问另设计，接受相应性能与恢复成本。</td></tr>
+            <tr><td><a href="chapters/ch09.html#sysops-survey">调查服务拥有 Survey 数据</a></td><td>281／299</td><td>完成方通过已有消息交接必要信息；接受调查独立建档的时间窗口与恢复责任。</td></tr>
+            <tr><td><a href="chapters/ch10.html#sysops-decision">专家资料使用内存复制缓存</a></td><td>297／315</td><td>用户维护独占权威写，分派读取稳定字段；接受冷启动依赖和案例中的许可成本。</td></tr>
+            <tr><td><a href="chapters/ch11.html#sysops-decision">主工单流程采用编排</a></td><td>321／339</td><td>集中追踪与处理复杂异常；接受编排点容量和可用性责任，需求变化时重评。</td></tr>
+            <tr><td><a href="chapters/ch13.html#mobile-adr">专家手机使用宽松契约</a></td><td>380／398</td><td>双向名称—值与临时扩展适应商店发布延迟；两端增加验证，并保留重评条件。</td></tr>
+            <tr><td><a href="chapters/ch14.html#daily-decision">专家供给采用完整日或排除日</a></td><td>397／415</td><td>明确分析输入覆盖、保留较松结构契约；排除太多天仍会损害趋势质量。</td></tr>
+          </tbody></table></div>
+          <p>附录 B（419／437）列出模板及前 12 项案例 ADR；第 14 章这项未列入附录，本页据正文补入。<a href="chapters/ch12.html#sysops-completion">第 12 章末</a>只有 Fairy Tale／Parallel 候选分析，未新增最终选型 ADR；第 15 章的教学场景也不替换上述决定。</p>
+        </section>
+        <section id="sources"><h2><span class="section-number">05</span>来源与核查入口</h2>
+          <p>依据 Neal Ford、Mark Richards、Pramod Sadalage、Zhamak Dehghani，<em>Software Architecture: The Hard Parts</em>，O’Reilly 英文第一版 October 2021，首次发布 2021-09-23，版权年 2022，ISBN 978-1-492-08689-5。所用 PDF 共 462 页；正文 PDF 页序等于印刷页码加 18。核查日期：2026-11-06—07。</p>
+          <ul><li><a href="chapters/ch01.html#sources">第 1 章来源</a>：正文印刷页 1—21／PDF 页序 19—39；决策方法、适应度函数与案例背景。</li><li><a href="chapters/ch02.html#sources">第 2 章来源</a>：印刷页 25—44／PDF 页序 43—62；量子、静态／动态耦合及三维组合。</li><li><a href="chapters/ch03.html#sources">第 3 章来源</a>：印刷页 45—62／PDF 页序 63—80；模块化动机及迁移 ADR。</li><li><a href="chapters/ch04.html#sources">第 4 章来源</a>：正文印刷页 63—79／PDF 页序 81—97；代码度量、两种分解路线及路线 ADR。</li></ul>
+          <ul><li><a href="chapters/ch05.html#sources">第 5 章来源</a>：印刷页 81—130／PDF 页序 99—148；六种组件分解模式、治理与五个组件领域。</li><li><a href="chapters/ch06.html#sources">第 6 章来源</a>：印刷页 131—184／PDF 页序 149—202；数据驱动力、五步迁移、数据库类型与问卷文档模型。</li><li><a href="chapters/ch07.html#sources">第 7 章来源</a>：正文印刷页 185—216／PDF 页序 203—234；服务粒度拉力与两个聚合决策。217 为第二部分引言，218 为空白页。</li><li><a href="chapters/ch08.html#sources">第 8 章来源</a>：正文印刷页 219—247／PDF 页序 237—265；复用模式、Sidecar 与共享工单数据逻辑。248 为空白页。</li></ul>
+          <p>重要边界随论证就地说明：原子性不等同于隔离；适应度函数只能覆盖被检查的结构或运行特性；静态量子与同步工作流牵连不等于同一个部署概念；主序列指标也不能代替业务边界判断。具体原表述、补充依据与公式核查见各章文末折叠来源。</p>
+          <ul><li><a href="chapters/ch09.html#sources">第 9 章来源</a>：印刷页 249—282／PDF 页序 267—300；写所有权、四种联合所有权处理技术、分布式事务与最终一致性。</li><li><a href="chapters/ch10.html#sources">第 10 章来源</a>：印刷页 283—298／PDF 页序 301—316；四种读访问模式与专家复制缓存决策。</li><li><a href="chapters/ch11.html#sources">第 11 章来源</a>：正文印刷页 299—321／PDF 页序 317—339；编排、协同、状态管理及主工单流程决策。322 为空白页。</li><li><a href="chapters/ch12.html#sources">第 12 章来源</a>：印刷页 323—364／PDF 页序 341—382；八种事务 Saga、状态机、补偿更新与失败恢复。</li></ul>
+          <p>第 3 章还记录了两项可直接定位的修正：ML 指标中的贡献值不能当作耦合次数相加；印刷页 57 的可扩展性／弹性比较方向与图 3-9、后续解释不一致，应按上下文理解为可扩展性的改善更明显。水杯类比与单体容错的绝对化描述，则作为适用条件问题展开，区别于公式错误。</p>
+          <p>第 5—8 章的核查继续区分计算错误、排版问题与适用条件：第 6 章连接池示例按原设定应为 1750 而非 1700；第 7 章恢复排版挤在一起的四项聚合驱动力，并说明普通跨服务调用不自动形成统一事务、认证密码通常使用带盐哈希；第 8 章按出版社勘误将 SOA 风潮改为 21 世纪初，同时限定版本化、共享库与 Sidecar 各自能隔离的变化和故障。具体依据见各章来源。</p>
+          <p>第 9—12 章继续区分业务结果与实现保证：持久队列不自动解决数据库与消息双写，复制缓存不保证时时一致，补偿也不是数据库回滚。第 9 章 282 页的 ticket creation 按出版社勘误修正为 ticket completion；第 10 章精确乘积为 1170 KB，原书 1200 KB 是粗估；第 12 章 Fairy Tale 仍是同步的 seo，后台异步恢复不改变模式定义，表 12-10 的动作列应按到达状态后推进的动作阅读。各章正文保留原表述、依据与适用边界。</p>
+          <ul><li><a href="chapters/ch13.html#sources">第 13 章来源</a>：印刷页 365—380／PDF 页序 383—398；契约严格度、消费者驱动验证、印记耦合与手机发布 ADR。</li><li><a href="chapters/ch14.html#sources">第 14 章来源</a>：正文印刷页 381—397／PDF 页序 399—415；仓库、湖、数据网格、DPQ 与日数据完整性。398 为空白页。</li><li><a href="chapters/ch15.html#sources">第 15 章来源</a>：印刷页 399—416／PDF 页序 417—434；三步权衡分析、定性评级、MECE、领域情境与案例尾声。</li></ul>
+          <p>第 13—15 章继续区分格式、语义与实现保证：GraphQL 有明确类型体系，也支持变更与订阅；第 13 章带宽示例应按每请求字节数乘每秒请求数计算。第 14 章 395 页 DQP 按出版社勘误统一为 DPQ，分钟级静默检查不证明整日数据完整。第 15 章的等级表用于定性比较，不是通用评分；发布订阅可配独立订阅队列，monorepo 与主干开发也不是互斥选项。具体原表述与修正依据见各章。</p>
+        </section>
+        <section id="corrections"><h2><span class="section-number">06</span>纠错与边界：直接回到论证位置</h2>
+          <p>以下索引沿用逐章已经核实的记录，外部依据与核查日期保留在各章来源中；“笔记核查”与“出版社已确认”分别标明。只看修正后的结论容易失去原来的适用条件，建议沿链接同时阅读原表述、依据和解释。</p>
+          <ul>
+            <li><strong>事务术语与保证范围｜技术澄清。</strong> <a href="chapters/ch01.html#working-definitions">第 1 章定义</a>、<a href="chapters/ch09.html#acid">第 9 章 ACID</a>和<a href="chapters/ch12.html#compensation">第 12 章补偿</a>：始终一致、原子提交、隔离和补偿不能混用；普通跨服务调用不自动获得统一事务，分布式 ACID 也不能被一概说成不存在。</li>
+            <li><strong>模块化度量与伸缩｜笔记核查。</strong> <a href="chapters/ch03.html#maintainability">ML 贡献值</a>不是耦合次数；<a href="chapters/ch03.html#scalability-and-elasticity">57 页文字与图 3-9</a>比较方向不一致，按图和上下文解释；星级不是容量实测。</li>
+            <li><strong>抽象度与距离｜公式／提取区别。</strong> <a href="chapters/ch04.html#abstractness">抽象度分母</a>应为全部类型；<a href="chapters/ch04.html#main-sequence">主序列距离</a>区分归一化 D 与几何 d。式 4-3 原页有绝对值，是文本提取丢失；Martin 原始 PDF 的除数／范围矛盾属于另一份资料。</li>
+            <li><strong>组件归属与检测范围｜笔记核查。</strong> <a href="chapters/ch05.html#reporting-resize">Reporting Shared 占比</a>、<a href="chapters/ch05.html#component-domains">Survey 归属与 Login 前缀</a>、<a href="chapters/ch05.html#fitness-boundaries">ArchUnit 访问与依赖</a>分别是算术、原书内部不一致与工具范围问题；过滤依赖图不删除真实依赖。</li>
+            <li><strong>数据拆分｜算术、官方勘误与适用条件。</strong> <a href="chapters/ch06.html#connection-budget">连接数</a>应为 1750；<a href="chapters/ch06.html#view-refactoring">合同支付视图标题</a>为出版社已确认勘误；<a href="chapters/ch06.html#steps-one-two">分 schema</a>与<a href="chapters/ch06.html#steps-four-five">复制切换</a>不自动失去事务或保证零停机。</li>
+            <li><strong>粒度与复用｜官方勘误与技术澄清。</strong> <a href="chapters/ch07.html#database-transactions">197 页四项聚合力量</a>和<a href="chapters/ch08.html#platform-reuse">242 页 SOA 年代</a>为出版社已确认；<a href="chapters/ch07.html#customer-registration">密码存储</a>依 OWASP 澄清为通常使用带盐自适应哈希。两个粒度案例仍都选择聚合。</li>
+            <li><strong>所有权与副本｜语法、官方勘误与估算。</strong> <a href="chapters/ch09.html#table-split">255 页 INSERT</a>按语法修正；<a href="chapters/ch09.html#sysops-survey">282 页 creation→completion</a>为出版社已确认；<a href="chapters/ch10.html#sysops-candidates">专家缓存</a>精确载荷为 1170／7020 KB，1200／7200 是粗估，不是运行时内存。</li>
+            <li><strong>跨章视图与状态｜情境差异及缺口。</strong> <a href="chapters/ch11.html#sysops-workflow">Ticket Management 合框</a>不证明新合并 ADR；<a href="chapters/ch12.html#ticket-state-machine">ASSIGNED 等待与 CLOSED</a>保留不同流程粒度；<a href="chapters/ch12.html#saga-metadata">Routing 元数据分列</a>不推翻分派／投递聚合。</li>
+            <li><strong>Saga 模式与草稿误读｜笔记核查。</strong> <a href="chapters/ch12.html#phone-tag">Phone Tag</a>的异步交叉引用、<a href="chapters/ch12.html#fairy-tale">Fairy Tale</a>的章末措辞与各自同步定义分别说明；<a href="chapters/ch12.html#ratings">评级张力</a>不改成数值。图 12-11 的同步实线与事务虚线符合 sec；曾误读的是笔记草稿，见<a href="chapters/ch12.html#sources">主审记录</a>，不列为原书错误。</li>
+            <li><strong>契约｜技术核查。</strong> <a href="chapters/ch13.html#graphql-and-rest">GraphQL 与 REST</a>、<a href="chapters/ch13.html#consumer-driven-contracts">Schema 范围校验</a>、<a href="chapters/ch13.html#bandwidth">带宽单位</a>分别澄清类型／风格、可验证范围及每秒载荷；<a href="chapters/ch13.html#workflow-envelope">广播状态</a>不能恢复跨服务 ACID。</li>
+            <li><strong>分析数据｜官方缩写勘误与验证边界。</strong> <a href="chapters/ch14.html#dpq">DPQ</a>的 395 页倒置为出版社已确认，391 页为笔记另行核对；<a href="chapters/ch14.html#when-mesh">仓库／湖与网格</a>不是技术互斥；<a href="chapters/ch14.html#completeness-check">一分钟间隔</a>不能证明整日完整。</li>
+            <li><strong>权衡方法｜定性与实现条件。</strong> <a href="chapters/ch15.html#ratings-matrix">模式评级</a>不是通用评分或统计定律；<a href="chapters/ch15.html#messaging-scenarios">发布订阅</a>可以有独立订阅队列；<a href="chapters/ch15.html#evangelism">monorepo 与主干开发</a>是不同维度，可同时采用。</li>
+          </ul>
+        </section>
+        <section id="appendices-and-gaps"><h2><span class="section-number">07</span>附录怎样使用，哪些资料仍然缺少</h2>
+          <p>附录 A（印刷 417／PDF 435）是对另一本 <em>Fundamentals of Software Architecture</em> 的概念引用，涉及圈复杂度、组件耦合／内聚、技术／领域划分及架构风格。它列出的章节和页码不属于本书，也不属于本站另两本书；这里不把那些引用当作已核验的第二本原书内容。本书对应的工作定义与解释可从上面的术语和阅读路线进入。</p>
+          <p>附录 B（419／437）用于核对 ADR 的名称与位置，缺少第 14 章条目的情况已在决策索引说明。附录 C（421—423／439—441）则是权衡图表索引，适合查找比较依据；表中优缺点仍要放回章节情境，不能直接相加成为架构总分。</p>
+          <p>按附录 C 的主题回读：<a href="chapters/ch06.html#database-choice">数据库类型</a>（原图 6-25—6-33 中列出的八张评级图）、<a href="chapters/ch08.html#chapter-conclusion">复用</a>（表 8-1—8-4）、<a href="chapters/ch09.html#write-ownership">写所有权与一致性</a>（表 9-1—9-7）、<a href="chapters/ch10.html#tradeoff-summary">读访问</a>（表 10-1—10-4）、<a href="chapters/ch11.html#sysops-decision">工作流</a>（表 11-1—11-8）、<a href="chapters/ch12.html#compensation">状态与补偿</a>（表 12-11—12-12）、<a href="chapters/ch13.html#tradeoffs-and-versions">契约</a>（表 13-1—13-4）、<a href="chapters/ch14.html#when-mesh">分析数据</a>（表 14-1—14-3）及<a href="chapters/ch15.html#ratings-matrix">综合权衡</a>（表 15-2—15-4）。这些入口是本站重组解释，不承诺逐张复制原表。</p>
+          <p>原书仍未提供完整表结构和最终迁移映射、服务合并与手机投递职责迁移的 ADR、缓存产品与陈旧上限、最终 Saga 模式决定、取消／重试耗尽的完整状态机、生产契约与兼容窗口、日界线／迟到规则和完整性实现，以及机器学习算法、上线效果与性能实测。笔记中为理解这些责任给出的示例、反例和实现方向均保留其补充身份。若要继续到可执行方案，需要补充相应资料并作为新的任务确认；当前全书整合止于有据可查的阅读内容。</p>
+          <p>本轮附录索引核对日期：2026-11-07；已读附录 A—C 提取文本，另回看 PDF 435、437 与正文 415 页，确认跨书引用、ADR 清单及完整日数据决定。网页不提供本地原书下载链接。</p>
+        </section>
+        <p class="button-row"><a class="button" href="index.html">书籍概览与目录</a><a class="button" href="chapters/ch01.html">从第 1 章开始 →</a></p>
+      </article>
+    </div>
+  </main>
+  <footer class="site-footer"><div class="container footer-inner"><span>个人书架 / 中文读书笔记</span><a href="#main">回到顶部 ↑</a></div></footer>
+</body>
+</html>

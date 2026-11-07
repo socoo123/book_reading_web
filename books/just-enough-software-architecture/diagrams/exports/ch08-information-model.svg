@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="430" viewBox="0 0 720 430" role="img" aria-labelledby="title desc">
+  <title id="title">Yinzer 领域中的类型、关系与基数</title>
+  <desc id="desc">依据原书图8.2重绘。联系关系连接两个人，每个人可有零到多条联系；职位匹配连接一个人与一个职位；雇佣关系连接一个人与一家公司；招聘广告连接一家公司与一个职位。实线没有调用或访问方向，数字表示关联端点的基数，Network是一个人的联系关系集合的角色名。</desc>
+  <!-- Editable hand-written SVG, redrawn after inspecting Figure 8.2. The export is identical. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 16px; fill: var(--muted); }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.2; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .label { font-size: 19px; font-weight: 600; text-anchor: middle; }
+    .detail { font-size: 15px; text-anchor: middle; fill: var(--muted); }
+    .count { font-size: 18px; text-anchor: middle; }
+    .role { font-size: 15px; text-anchor: middle; fill: var(--muted); }
+    .link { fill: none; stroke: var(--line); stroke-width: 1.6; }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <rect width="720" height="430" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="30" y="38">先看领域关系，再读关联数量</text>
+  <text class="sub" x="30" y="67">框是类型；实线不表示调用、外键或访问方向</text>
+
+  <path class="link" d="M148 151H220M336 151H410M534 151H600M278 184V274M347 307H410M534 307H600M645 184V274"/>
+  <text class="count" x="161" y="138">*</text>
+  <text class="count" x="207" y="138">2</text>
+  <text class="role" x="184" y="174">Network</text>
+  <text class="count" x="349" y="138">1</text>
+  <text class="count" x="397" y="138">*</text>
+  <text class="count" x="547" y="138">*</text>
+  <text class="count" x="587" y="138">1</text>
+  <text class="count" x="293" y="206">1</text>
+  <text class="count" x="293" y="265">*</text>
+  <text class="count" x="360" y="294">*</text>
+  <text class="count" x="397" y="294">1</text>
+  <text class="count" x="547" y="294">1</text>
+  <text class="count" x="587" y="294">*</text>
+  <text class="count" x="660" y="206">1</text>
+  <text class="count" x="660" y="265">*</text>
+
+  <rect class="focus" x="30" y="118" width="118" height="66" rx="6"/>
+  <text class="label" x="89" y="145">联系关系</text>
+  <text class="detail" x="89" y="171">Contact</text>
+  <rect class="node" x="220" y="118" width="116" height="66" rx="6"/>
+  <text class="label" x="278" y="145">人</text>
+  <text class="detail" x="278" y="171">Person</text>
+  <rect class="node" x="410" y="118" width="124" height="66" rx="6"/>
+  <text class="label" x="472" y="145">职位匹配</text>
+  <text class="detail" x="472" y="171">Job Match</text>
+  <rect class="node" x="600" y="118" width="90" height="66" rx="6"/>
+  <text class="label" x="645" y="145">职位</text>
+  <text class="detail" x="645" y="171">Job</text>
+
+  <rect class="node" x="209" y="274" width="138" height="66" rx="6"/>
+  <text class="label" x="278" y="301">雇佣关系</text>
+  <text class="detail" x="278" y="327">Employment</text>
+  <rect class="node" x="410" y="274" width="124" height="66" rx="6"/>
+  <text class="label" x="472" y="301">公司</text>
+  <text class="detail" x="472" y="327">Company</text>
+  <rect class="node" x="600" y="274" width="90" height="66" rx="6"/>
+  <text class="label" x="645" y="301">招聘广告</text>
+  <text class="detail" x="645" y="327">Ad</text>
+
+  <text class="sub" x="30" y="239">端点数字：</text>
+  <text class="sub" x="30" y="269">1：恰好一个</text>
+  <text class="sub" x="30" y="299">2：恰好两个</text>
+  <text class="sub" x="30" y="329">*：零个或多个</text>
+  <text class="sub" x="30" y="382">从一个实例出发，另一端的数字说明它可关联多少个实例。</text>
+  <text class="sub" x="30" y="409">Network 是角色名，不是另一个类型。依据原书图 8.2 重绘。</text>
+</svg>

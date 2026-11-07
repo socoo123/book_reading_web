@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="480" viewBox="0 0 720 480" role="img" aria-labelledby="title desc">
+<title id="title">先识别结果，再选择恢复动作</title>
+<desc id="desc">确认成功则推进，暂时失败则重试，结果未知先核对，永久拒绝按业务修复，补偿失败继续持久记录恢复进度。</desc>
+<style>
+:root{--surface:#fcfbf8;--text:#292824;--muted:#66645d;--line:#969187;--soft:#f0ece4;--accent:#386d74}
+@media(prefers-color-scheme:dark){:root:not([data-theme='light']){--surface:#252524;--text:#e6e3dc;--muted:#b6b1a7;--line:#8c8982;--soft:#353534;--accent:#94c8cf}}
+:root[data-theme='dark']{--surface:#252524;--text:#e6e3dc;--muted:#b6b1a7;--line:#8c8982;--soft:#353534;--accent:#94c8cf}
+.bg{fill:var(--surface)}text{fill:var(--text);font:17px system-ui,-apple-system,"PingFang SC",sans-serif}.title{font-size:22px;font-weight:600}.small{font-size:15px;fill:var(--muted)}.box{fill:var(--soft);stroke:var(--line);stroke-width:1.5}.edge{fill:none;stroke:var(--accent);stroke-width:2;marker-end:url(#arrow)}.arrow{fill:var(--accent)}
+</style>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path class="arrow" d="M0 0 8 4 0 8Z"/></marker></defs>
+<rect class="bg" width="720" height="480"/>
+<text class="title" x="28" y="38">超时不是“肯定没执行”</text><text class="small" x="28" y="65">每行独立阅读：已知结果 → 恢复责任（笔记补充）</text>
+<rect class="box" x="28" y="94" width="198" height="54" rx="9"/><text x="48" y="127">确认成功</text><path class="edge" d="M226 121H277"/><text x="294" y="127">记录结果，推进允许的下一步</text>
+<rect class="box" x="28" y="164" width="198" height="54" rx="9"/><text x="48" y="197">明确暂时失败</text><path class="edge" d="M226 191H277"/><text x="294" y="197">同一操作标识，退避后重试</text>
+<rect class="box" x="28" y="234" width="198" height="54" rx="9"/><text x="48" y="267">超时／结果未知</text><path class="edge" d="M226 261H277"/><text x="294" y="267">查询或幂等重发，先确认事实</text>
+<rect class="box" x="28" y="304" width="198" height="54" rx="9"/><text x="48" y="337">永久业务拒绝</text><path class="edge" d="M226 331H277"/><text x="294" y="337">补偿、终止或其他业务修复</text>
+<rect class="box" x="28" y="374" width="198" height="54" rx="9"/><text x="48" y="407">补偿也失败</text><path class="edge" d="M226 401H277"/><text x="294" y="407">保留恢复进度，重试或人工介入</text>
+<text class="small" x="28" y="460">所有路径都需要明确责任；记录待办不等于已经修复完成</text>
+<script><![CDATA[try { const t=localStorage.getItem('reading-notes-theme'); if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t); } catch {}]]></script>
+</svg>

@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="420" viewBox="0 0 720 420" role="img" aria-labelledby="title desc">
+  <title id="title">已知失败被隔离后怎样回到正常检查</title>
+  <desc id="desc">暂时修不了的失败附上关联缺陷并分派给负责团队，测试框架抑制该失败，但测试照常运行。测试持续通过超过配置的时长后，系统提示清理标记，并把未关闭的缺陷标为修复，测试随后恢复正常检查。标成 flaky 的测试通过时不提示清理。对比：直接注释掉的测试不再运行，走不到这条回路。实线是普通已知失败的路径，虚线是 flaky 的例外。</desc>
+  <!-- Original editable hand-written SVG; web export is an identical copy. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 15px; fill: var(--muted); }
+    .label { font-size: 18px; font-weight: 600; text-anchor: middle; }
+    .body { font-size: 16px; text-anchor: middle; }
+    .note { font-size: 14px; fill: var(--muted); }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.3; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .flow { fill: none; stroke: var(--line); stroke-width: 1.8; marker-end: url(#arrow); }
+    .flaky { stroke-dasharray: 5 5; }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker></defs>
+  <rect width="720" height="420" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="28" y="40">已知失败怎样被隔离，又怎样回来</text>
+  <text class="sub" x="28" y="69">实线：普通已知失败的路径　虚线：标成 flaky 的例外</text>
+
+  <rect class="node" x="28" y="96" width="200" height="70" rx="7"/>
+  <text class="label" x="128" y="126">失败暂时修不了</text>
+  <text class="body" x="128" y="152">如插件团队的缺陷</text>
+  <path class="flow" d="M228 131H252"/>
+  <rect class="node" x="260" y="96" width="200" height="70" rx="7"/>
+  <text class="label" x="360" y="126">附上关联缺陷</text>
+  <text class="body" x="360" y="152">分派给负责团队</text>
+  <path class="flow" d="M460 131H484"/>
+  <rect class="focus" x="492" y="96" width="200" height="70" rx="7"/>
+  <text class="label" x="592" y="126">框架抑制失败</text>
+  <text class="body" x="592" y="152">测试照常运行</text>
+
+  <path class="flow" d="M592 166V206"/>
+
+  <rect class="node" x="492" y="214" width="200" height="70" rx="7"/>
+  <text class="label" x="592" y="244">持续通过</text>
+  <text class="body" x="592" y="270">超过配置的时长</text>
+  <path class="flow" d="M492 249H468"/>
+  <rect class="node" x="260" y="214" width="200" height="70" rx="7"/>
+  <text class="label" x="360" y="244">提示清理标记</text>
+  <text class="body" x="360" y="270">未关的缺陷标为修复</text>
+  <path class="flow" d="M260 249H236"/>
+  <rect class="focus" x="28" y="214" width="200" height="70" rx="7"/>
+  <text class="label" x="128" y="244">恢复正常检查</text>
+  <text class="body" x="128" y="270">失败不再被抑制</text>
+
+  <path class="flow flaky" d="M592 284V320"/>
+  <text class="note" x="604" y="307">flaky 时</text>
+  <rect class="node flaky" x="492" y="328" width="200" height="64" rx="7"/>
+  <text class="label" x="592" y="356">标为 flaky</text>
+  <text class="body" x="592" y="380">通过也不提示清理</text>
+
+  <text class="note" x="28" y="356">对比：直接注释掉的测试不再运行，</text>
+  <text class="note" x="28" y="380">走不到这条回路，问题容易被遗忘</text>
+</svg>

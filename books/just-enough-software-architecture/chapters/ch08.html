@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>第 8 章｜领域模型 · Just Enough Software Architecture · 架构提升读书笔记</title>
+  <meta name="description" content="《Just Enough Software Architecture》第八章读书笔记：以 Yinzer 招聘与关系网络解释领域词义、关联基数、导航、不变量、快照和功能场景，并说明它们如何帮助设计。">
+  <link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+  <script src="../../../assets/theme.js"></script>
+  <script src="../../../assets/reader.js" defer></script>
+  <link rel="stylesheet" href="../../../assets/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header reader-header"><div class="container header-inner">
+    <a class="brand" href="../../../index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5.5C8.5 3.8 5.8 3.6 2.5 4.5v14c3.3-.9 6-.7 9.5 1 3.5-1.7 6.2-1.9 9.5-1v-14c-3.3-.9-6-.7-9.5 1Zm0 0v14"/></svg>书架</a>
+    <a class="reader-book-title" href="../index.html" lang="en">Just Enough Software Architecture</a>
+    <div class="theme-control" role="group" aria-label="外观" hidden><button type="button" data-theme-value="system" title="跟随系统"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path class="fill" d="M12 4a8 8 0 0 1 0 16Z"/></svg><span class="sr-only">跟随系统</span></button><button type="button" data-theme-value="light" title="浅色"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.6"/><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21M5.6 5.6l1.6 1.6M16.8 16.8l1.6 1.6M5.6 18.4l1.6-1.6M16.8 7.2l1.6-1.6"/></svg><span class="sr-only">浅色</span></button><button type="button" data-theme-value="dark" title="深色"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.5 14.6A7.8 7.8 0 0 1 9.4 4.5a7.8 7.8 0 1 0 10.1 10.1Z"/></svg><span class="sr-only">深色</span></button></div>
+  </div></header>
+  <main id="main" class="container reader-container">
+    <nav class="breadcrumb" aria-label="当前位置"><ol><li><a href="../../../index.html">书架</a></li><li><a href="../index.html">书籍概览</a></li><li aria-current="page">第 8 章</li></ol></nav>
+    <div class="reading-layout">
+      <aside class="toc"><nav aria-label="本页目录"><h2>本页目录</h2><ul>
+        <li><a href="#domain-and-architecture">01　领域里的小差别，会怎样变成架构问题</a></li>
+        <li><a href="#risk-bounded-modeling">02　先决定要回答什么，再决定建多大的模型</a></li>
+        <li><a href="#yinzer-vocabulary">03　Yinzer 的信息模型，首先是一套说得清楚的词义</a></li>
+        <li><a href="#relationships-and-multiplicity">04　读懂关系、基数和方向，而不是猜测代码引用</a></li>
+        <li><a href="#navigation-and-invariants">05　导航提出问题，不变量限定什么状态才合法</a></li>
+        <li><a href="#snapshots">06　画一个快照，让抽象规则遇到具体的人</a></li>
+        <li><a href="#functionality-scenarios">07　功能场景把快照连起来，而不是把操作界面写一遍</a></li>
+        <li><a href="#from-domain-to-design">08　把领域单独留下，设计才能在明确前提上作选择</a></li>
+      </ul><p class="toc-note"><a href="../index.html">← 书籍概览</a></p></nav></aside>
+      <article class="article">
+        <header class="article-header">
+          <p class="eyebrow">READING NOTES / CHAPTER 08</p>
+          <h1>第 8 章｜领域模型</h1>
+          <p class="article-deck"><span lang="en">The Domain Model</span> · 在设计软件之前，先把软件面对的世界说清楚</p>
+        </header>
+        <p><a href="ch07.html#three-primary-models">第 7 章</a>把架构知识组织为领域模型、设计模型和代码模型。本章先展开其中最抽象的一层：软件要处理的事情，在不谈数据库、接口和程序对象时，究竟是什么，又遵守什么规则。</p>
+        <p><strong>领域模型（domain model）</strong>表达与项目有关、相对持久的领域事实。这里的“持久”不只指自然规律；公司提供职位、通过广告招人，也是本项目据以开展工作的稳定认识。它们未必永远不变，但不应只是开发者这一次选择的技术方案。把职位广告保存成什么格式、放在哪一种数据库里，则属于另外的问题。</p>
+        <p>作者用招聘与商务关系网络的 Yinzer 案例，逐步介绍信息模型、导航、不变量、快照和功能场景。它们不是五份互不相干的文档：先约定词义与关系，再用具体状态和事件检查这些约定，才能让开发者与领域专家围绕同一个世界讨论。</p>
+        <details class="mobile-toc"><summary>本页目录 · 8 个小节</summary><nav aria-label="移动端本页目录"><ul>
+          <li><a href="#domain-and-architecture">01　领域里的小差别，会怎样变成架构问题</a></li>
+          <li><a href="#risk-bounded-modeling">02　先决定要回答什么，再决定建多大的模型</a></li>
+          <li><a href="#yinzer-vocabulary">03　Yinzer 的信息模型，首先是一套说得清楚的词义</a></li>
+          <li><a href="#relationships-and-multiplicity">04　读懂关系、基数和方向，而不是猜测代码引用</a></li>
+          <li><a href="#navigation-and-invariants">05　导航提出问题，不变量限定什么状态才合法</a></li>
+          <li><a href="#snapshots">06　画一个快照，让抽象规则遇到具体的人</a></li>
+          <li><a href="#functionality-scenarios">07　功能场景把快照连起来，而不是把操作界面写一遍</a></li>
+          <li><a href="#from-domain-to-design">08　把领域单独留下，设计才能在明确前提上作选择</a></li>
+        </ul></nav></details>
+
+        <section id="domain-and-architecture">
+          <h2><span class="section-number">01</span>领域里的小差别，会怎样变成架构问题</h2>
+          <p>领域建模很容易招来一种合理的怀疑：开发者已经知道联系人、职位、权限是什么，为什么还要先画模型？§8.1 没有用“所有项目都需要”来回答，而是给出作者经历过的两个问题。</p>
+          <h3>同一个联系人，不一定属于同一张常用名单</h3>
+          <p>作者使用的一部智能手机，与电脑上的邮件程序共享并同步联系人列表。邮件程序每向一个新收件人发送邮件，就把对方加进名单。同步本身可以正常工作，手机拨号时却要在约 1400 个联系人中寻找朋友；其中不少人甚至没有电话号码。</p>
+          <p>从数据结构看，电话和邮件联系人都可以用姓名、电话号码、电子邮箱描述，合并似乎顺理成章。从使用习惯看，手机里原先保留的可能只是亲友和少数重要工作联系人，而邮件列表包含所有曾经通信的人。两张名单的区别，不只在于某个字段有没有值，还在于人为什么把某人放进这张名单、准备在什么情境下找他。</p>
+          <p>因此，这件事既可以被归为界面问题或集成问题，也暴露了领域假设：<strong>“曾经给他发过邮件”与“希望把他放在随手拨号的名单里”，并不是同一个关系。</strong> 只检查同步协议和字段兼容，未必会发现这种差异。原书也没有给出唯一修复方案，重点是让开发者看见看似简单的名词里隐藏的语义。</p>
+          <h3>同一种权限配置，可能有两种完全不同的生效方式</h3>
+          <p>第二个故事发生在一家金融公司整合应用时。团队考虑采购用户权限管理产品。权限（entitlement）指用户获准执行的动作，例如建数据库表，或者进入楼宇的某一层；不同员工类别有相应的一组权限配置。</p>
+          <p>书中区分两种配置语义。<strong>活动配置（active profile）</strong>发生变化时，使用该配置的现有用户也随之获得新权限。<strong>模板配置（template profile）</strong>则像开户时使用的初始模板：模板新增一项权限，只影响之后按它创建的用户，已经建立的用户权限不自动改变。两种产品都可能宣称支持“员工类别”和“权限配置”，实际行为却不相同。</p>
+          <p>如果现有应用依赖活动配置，而采购的产品只有模板语义，消息格式能够互通，也不足以保证整合正确。团队必须知道变化如何影响现有用户，才能判断产品是否适合，以及需要怎样的整合设计。作者发现，供应商往往能回答详细的硬件和消息格式问题，却很难说清这些领域前提。</p>
+          <p>这两个故事说明了领域理解与架构的连接点：领域假设会进入共享数据、产品选择和系统互操作。它们不意味着架构已经藏在领域里、只等开发者发现；同一个领域仍可以有不同的软件设计。但如果连需要保留的语义都没有说清，就无法可靠地判断某个设计是否合适。</p>
+        </section>
+
+        <section id="risk-bounded-modeling">
+          <h2><span class="section-number">02</span>先决定要回答什么，再决定建多大的模型</h2>
+          <p>领域几乎可以无限展开。研究电话联系人，可以一路研究到人为什么成为朋友；研究权限，可以把每个系统、每种例外、每段历史都补进来。原书承认，分析瘫痪确实是领域建模的风险。</p>
+          <p>一个直接的限制办法，是先写出模型需要回答的问题。联系人整合的风险，可能要求团队弄清“哪些人应进入手机常用名单”；权限产品选型的风险，则要求弄清“配置变化会不会影响现有用户”。问题得到足够明确的回答后，就有理由停止，而不必等到整个领域无一遗漏。</p>
+          <p>另一个限制办法，是分别选择广度与深度。以权限整合为例，深入一种系统、调查其全部权限，是增加深度；横向调查公司里多种系统的配置语义，是增加广度。风险在于跨系统不一致时，先看多个系统的关键差别，可能比穷尽某个系统的细节更有用。需要覆盖多少系统、处理多少例外，应服务于当前判断。</p>
+          <p>写代码和做原型也能帮助理解领域。作者并不否认这一点；但权限案例中的概念验证整合，即使有开发者和付费供应商顾问参与，也花了数周。先用纸面模型发现问题，可以更便宜地筛选方案，并使后续整合试验有明确的验证目标。</p>
+          <p>因此，停止条件不只是“继续建模已经毫无价值”。当继续补充模型的收益，低于做原型、询问专家或检查实际产品的收益时，就应考虑转向那些活动。领域复杂、开发者不熟悉业务时，模型往往更有帮助；主要困难在性能、可扩展性而领域语义相对简单时，投入可以较少。这仍是<a href="ch03.html#cost-and-stopping">第 3 章</a>的风险驱动判断，而不是每个项目固定执行的一道工序。</p>
+        </section>
+
+        <section id="yinzer-vocabulary">
+          <h2><span class="section-number">03</span>Yinzer 的信息模型，首先是一套说得清楚的词义</h2>
+          <p>Yinzer 是<a href="ch07.html#conceptual-structure">第 7 章</a>引入的示例网站，为匹兹堡地区的会员提供商务社交与职位广告服务。会员可以建立商务联系、发布招聘广告、推荐熟人应聘，并收到匹配职位的邮件通知。这是书中用于解释建模的案例，不是本笔记调查的一家真实招聘平台。</p>
+          <p>为了理解它，先暂时放下网站。人在现实中认识别人，公司提供职位、发布广告，有人认为某人可能适合某个职位，最终还可能发生雇佣。这些事情并不以 Yinzer 网站存在为前提；关系网络可以保存在名片堆里，也可以只存在人的记忆中。</p>
+          <p><strong>信息模型（information model）</strong>先把这些概念及其关系说清楚。原书图 8.1 用一张类型定义表开始，下面按其含义整理：</p>
+          <div class="table-scroll"><table>
+          <thead>
+          <tr>
+          <th>类型</th>
+          <th>在本例中的含义</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+          <td>人（Person）</td>
+          <td>可以被雇佣的人。</td>
+          </tr>
+          <tr>
+          <td>公司（Company）</td>
+          <td>向人提供职位的雇主。</td>
+          </tr>
+          <tr>
+          <td>职位（Job）</td>
+          <td>公司中由人承担的工作角色。</td>
+          </tr>
+          <tr>
+          <td>招聘广告（Advertisement，简称 Ad）</td>
+          <td>为公司的某个职位寻找受雇者的招募信息。</td>
+          </tr>
+          <tr>
+          <td>联系关系（Contact）</td>
+          <td>两个人互相认识的关系。这里不是某人的电话号码条目。</td>
+          </tr>
+          <tr>
+          <td>雇佣关系（Employment）</td>
+          <td>表示某人现在或曾经在该公司担任职位的关系，因此不只包含当前任职。</td>
+          </tr>
+          <tr>
+          <td>职位匹配（Job Match）</td>
+          <td>人与职位之间“这个人可能适合该职位”的关系，不等于已经录用。</td>
+          </tr>
+          </tbody>
+          </table></div>
+          <p>定义类型看似简单，却会迫使团队处理含混之处。例如，职位匹配与雇佣关系如果被混为一谈，就无法准确描述“有人推荐，但还未入职”的阶段；把联系关系当作一份通信录记录，也会提前混入软件如何保存它的想法。</p>
+          <p>特别要留意：<strong>待建的 Yinzer 系统不出现在领域模型里。</strong> 领域模型中的招聘广告不是数据结构，人也不是用户表的一行。设计模型才开始描述软件怎样记录和处理这些事，代码模型再进入具体实现。即使领域图借用了 UML 类图的外形，也不能因此把每个框直接当成待实现的类。</p>
+          <aside class="key-point"><p class="key-point-label">核心观点</p><p>领域模型先约定软件必须理解的世界，而不是提前决定软件的内部结构。它可以约束设计必须保留的含义，却不能单独推出唯一的类、表或服务划分。</p></aside>
+        </section>
+
+        <section id="relationships-and-multiplicity">
+          <h2><span class="section-number">04</span>读懂关系、基数和方向，而不是猜测代码引用</h2>
+          <p>文字定义已经包含关系，画成图可以使关系更容易检查。图 8-1 保留原书图 8.2 的类型、关联和基数，重新排版并加入中文标签。每条实线表达领域关联，没有表示调用或信息流的箭头。</p>
+          <figure class="concept-figure"><a href="../diagrams/exports/ch08-information-model.svg" target="_blank" rel="noopener"><img src="../diagrams/exports/ch08-information-model.svg" width="720" height="430" alt="Yinzer 信息模型：联系关系连接两个人；职位匹配连接一个人与一个职位；雇佣关系连接一个人与一家公司；招聘广告连接一家公司与一个职位。连线端点的 1、2 和星号表示关联数量，Network 是一个人的联系关系集合的角色名。"></a><figcaption>图 8-1：沿一条线从某个类型出发，读取另一端的数字：<code>1</code> 是恰好一个，<code>2</code> 是恰好两个，<code>*</code> 是零个或多个。图中关系来自原书图 8.2，连线没有实现层面的访问方向。点击<a href="../diagrams/exports/ch08-information-model.svg" target="_blank" rel="noopener">查看大图</a>。</figcaption></figure>
+          <h3>基数约束的是“一个实例对应多少另一端实例”</h3>
+          <p>从一个人出发，联系关系一端的 <code>*</code> 表示他可以参加零条或多条联系关系；反过来，从一条联系关系出发，人这一端的 <code>2</code> 表示它连接两个人。不能把 <code>2</code> 读成“每个人必须有两个联系人”。连线上的 <strong>Network</strong> 是角色名，用来称呼某个人参与的那组联系关系；原图没有另设一个 Network 类型。</p>
+          <p>每个职位匹配连接恰好一个人和一个职位；一个人可以有多个职位匹配，一个职位也可以匹配多个人。每条雇佣关系连接恰好一个人和一家公司，而人和公司两边都可以有多条雇佣关系。由于 Employment 包含过去任职，图中的多个关系不能直接解释为“这个人当前同时任职多家公司”。</p>
+          <p>每则招聘广告连接一家公司和一个职位，公司与职位都可以对应零则或多则广告。这是本例的简化约定。原书在结尾明确提醒：现实中的一则广告也许会招聘多个职位，但模型仍可以选择只表达一个，前提是这种简化不妨碍需要回答的问题。</p>
+          <p>原图还有一个值得保留的省略：雇佣关系直接连到人和公司，没有再连到职位。它支持调查某人在哪些公司工作过，却不能仅靠这条路径区分他在同一公司历任的具体职位。如果项目需要回答后一个问题，就应扩充信息模型，而不是假装原图已经包含这条关联。</p>
+          <h3>领域关系的方向，与程序能否访问另一对象是两回事</h3>
+          <p>本例的 Contact 表示两个人认识，并由两人共同参与同一条联系关系。结合后面的场景——Owen 和 Bradley 彼此进入对方的网络——这里采用的是对称的认识关系。沿模型从 Owen 找到 Bradley，也能从 Bradley 找到 Owen，不需要再画一条反向 Contact。</p>
+          <p>这不能推广成所有社交业务的规则。单向关注、尚未接受的邀请，与互相认识有不同语义；如果它们对项目重要，就需要另外说清角色、方向或状态。原书结尾提出“我在你的网络里，是否意味着你也在我的网络里”，正是要团队明确这一类前提，而不是让每个人各自猜测。</p>
+          <p>另一方面，即使领域关系对称，实现也未必在两个对象里各保存一个指针；即使程序只提供一个方向的查询接口，也不能据此改变领域中关系的含义。领域图里的线尚未承诺对象引用、外键、索引或 API，它只在表达世界中的联系。</p>
+          <p>作者因而建议只使用少量 UML 记法：类型、实例、关联、实例间的链接、基数与角色名。少量属性也可以使用，例如雇佣的起止日期、职位匹配的适合程度，但它们表示领域特征，不自动表示需要存储的字段。复杂语义用文字注释讲清，往往比要求领域专家识别空心与实心菱形更有效。</p>
+        </section>
+
+        <section id="navigation-and-invariants">
+          <h2><span class="section-number">05</span>导航提出问题，不变量限定什么状态才合法</h2>
+          <p><strong>导航（navigation）</strong>是沿着信息模型的关联寻找相关事物。可以把手指放在人这个类型上，先走到他的联系关系，再走到这些联系连接的人；也可以沿“人—雇佣关系—公司”，询问他现在或曾经在哪些公司任职。导航描述的是语义路径，不是在要求程序沿内存指针跳转，也没有承诺查询速度。</p>
+          <p><strong>不变量（invariant）</strong>则是模型允许的状态必须始终满足的条件。图上的基数已经表达了一部分约束，例如每个职位匹配只对应一个人和一个职位。另一些条件需要文字补充：§8.3 提议可以规定，同一个人的网络里不能有通向同一人的重复联系；§8.3—§8.4 还讨论了联系应连接不同的人，而不是把自己当作自己的联系人。这些是需要明确的领域约定，不是绘图工具自动替团队作出的业务决定。</p>
+          <p>将本例采用的约束写成自然语言，就是：允许空网络；每条联系连接两个不同的人；同一对人之间至多有一条联系。导航与不变量结合后，文字会变得可检查。例如，从 Bradley 的 Network 中逐一取出 Contact，再查看每条联系的另一位参与者，就不应重复遇到同一个人。与只写“联系人列表必须正确”相比，这个表述指出了检查对象、检查路径和不允许的情况。</p>
+          <p>原书进一步给出对象约束语言 OCL（Object Constraint Language）的表达：</p>
+          <pre><code class="language-ocl">context Person
+inv: network.person-&gt;asSet()-&gt;size() = network-&gt;size() + 1
+</code></pre>
+          <p>它先沿 Network 取得联系关系，再沿 Person 关联取得参与者，去重后数人数。对于一个非空网络，如果每条联系都把本人连向一个不同的新联系人，那么有三条联系时，参与者集合就是“本人加三位别人”，共四人；同一人之间多一条重复联系，联系数增加了，去重后人数却不增加。这里的 <code>+ 1</code> 指本人，不是额外一个尚未认识的人。</p>
+          <p>这条原式有一个边界问题，不能直接照抄成业务规则：图 8.2 的 <code>*</code> 允许一个人没有任何 Contact，此时左边沿空集合导航得到的人数为 <code>0</code>，右边却是 <code>0 + 1</code>，条件不成立。<strong>原式会错误排除空 Network；本例并没有“每个人至少认识一人”的规定。</strong> 修正思路可以是先把本人加入计数集合，再比较人数；若无需机器执行，直接分别写清“不联系自己”和“不重复联系同一人”会更明白。这是原书公式与空网络边界的不一致，不应悄悄改成作者原意。</p>
+          <p>作者也没有要求每个项目编写 OCL。除非确实要让计算机读取和检查约束，正式表达的成本未必值得；但思考一句自然语言规则能否被形式化，可以发现它漏了对象、范围或边界。形式化知识的价值，可以体现为写出更准确的普通文字，而不必最终交付一套形式化模型。</p>
+        </section>
+
+        <section id="snapshots">
+          <h2><span class="section-number">06</span>画一个快照，让抽象规则遇到具体的人</h2>
+          <p>只看类型容易漏掉问题。“一个人”“一家公司”都很抽象，把它换成 Bradley、Owen 和 Widgetron，就容易判断关系是否符合实际。<strong>快照（snapshot）</strong>也叫实例图，表达某一时刻的一组具体实例及其链接；它不是运行中程序的内存截图。</p>
+          <p>图 8-2 保留原书图 8.3 的实例与连线。先看左侧：一条匿名 Contact 同时连接 Owen 和 Bradley。再看下方：Bradley 通过一条 Employment 连接 Widgetron。右侧则是一则与 Widgetron、某个职位关联的 Ad，以及 Owen 与该职位之间的 Job Match。</p>
+          <figure class="concept-figure"><a href="../diagrams/exports/ch08-snapshot.svg" target="_blank" rel="noopener"><img src="../diagrams/exports/ch08-snapshot.svg" width="720" height="390" alt="Yinzer 的一个实例快照：Owen 与 Bradley 由同一条联系关系连接；Bradley 的雇佣关系连到 Widgetron；Widgetron 的招聘广告对应一个职位，Owen 与该职位存在职位匹配。各实例的类型写在冒号后，连线表示这一状态中实际存在的链接。"></a><figcaption>图 8-2：框中带下划线的名字表示实例，冒号后是类型；省略冒号前的名字表示匿名实例。每个框应对应图 8-1 的一个类型，每条链接应对应一条关联。依据原书图 8.3 重绘，未添加 Owen 已被雇佣或匹配已结束等状态。点击<a href="../diagrams/exports/ch08-snapshot.svg" target="_blank" rel="noopener">查看大图</a>。</figcaption></figure>
+          <p>类型与实例之间是<a href="ch13.html#classification-and-generalization">分类关系</a>：Bradley 是 Person 的一个实例，不是 Person 的一种子类型。类似地，图上两个具体实例间的链接，是信息模型中关联的一次具体出现。这与面向对象语言里的类和对象有相似的类型—实例区别，但这里的 Bradley 仍指现实中的人，而非程序对象。</p>
+          <p>快照不仅用来展示一个“正确例子”，也可以帮助寻找不该允许的状态。原书让读者设想一条从 Bradley 出发、又连回 Bradley 的 Contact：这个具体画面会促使团队确认是否禁止自己联系自己。重复建立两条 Owen—Bradley 的 Contact，也可以暴露“两个不同实例，是否其实在重复同一段认识关系”的问题。后一个是按前节约定作的解释性检验，不是原图已有两条联系。</p>
+          <p>这种检查使信息模型与约束互相修正。若一个确实需要的快照画不出来，可能是类型、关联或基数太窄；若一个明显不想要的状态仍被允许，可能是缺少不变量。快照检验能暴露具体缺口，但画出几个正确例子，并不等于证明所有可能状态都正确。</p>
+        </section>
+
+        <section id="functionality-scenarios">
+          <h2><span class="section-number">07</span>功能场景把快照连起来，而不是把操作界面写一遍</h2>
+          <p>信息模型和不变量描述哪些状态可以存在，快照展示其中一个具体状态。还缺少的是变化：这些人如何认识，公司如何发出广告，候选人如何从可能适合走到受雇。<strong>功能场景（functionality scenario）</strong>用一串事件描述一条具体的变化路径。</p>
+          <p>原书图 8.4 的场景名为“Owen 被 Widgetron 雇佣”，初始状态是 Bradley 已在 Widgetron 任职，参与者是 Owen 和 Bradley。四步过程可以与模型中的变化逐项对照：</p>
+          <div class="table-scroll"><table>
+          <thead>
+          <tr>
+          <th>场景中的事件</th>
+          <th>在领域状态中看得见的变化</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+          <td>Owen 和 Bradley 在专业会议上认识、交换名片，进入彼此的联系网络。</td>
+          <td>出现一条连接两人的 Contact；双方的 Network 都包含这段联系。</td>
+          </tr>
+          <tr>
+          <td>Bradley 所在的 Widgetron 发布一则软件开发职位广告。</td>
+          <td>出现相应的 Ad，并关联到 Widgetron 和那个 Job；场景没有细分职位本身在何时设立。</td>
+          </tr>
+          <tr>
+          <td>Bradley 推荐 Owen 匹配该职位。</td>
+          <td>出现连接 Owen 与该 Job 的 Job Match；原信息模型没有另行记录推荐人。</td>
+          </tr>
+          <tr>
+          <td>Widgetron 雇佣 Owen 担任这个软件开发职位。</td>
+          <td>出现 Owen 与 Widgetron 的 Employment；原图没有为 Employment 单独画出到 Job 的关联。</td>
+          </tr>
+          </tbody>
+          </table></div>
+          <p>把图 8-2 与这个过程对照，可以把它理解为前三步已经发生、Owen 还未入职时的一个状态：认识关系、广告和职位匹配都已出现。最后一步之后，至少还要增加 Owen 的雇佣关系。场景没有规定入职时必须删除职位匹配，或广告必须立即撤下；这些若是重要规则，应另行确认，而不能由讲故事的人顺手补成事实。</p>
+          <p>每一步都应能够通过“前后两个快照有什么不同”来解释。这样做会让场景紧贴模型，而不是变成一段松散故事。Bradley 也许打电话告知机会，Owen 也许送西装去干洗，但目前的信息模型没有这些概念，它们也不改变已选取的领域状态，因此原书建议不写进这个场景。如果它们确实关系到要解决的问题，就先把必要概念加入模型，再说明相应变化。</p>
+          <p>这也解释了为什么场景里没有“点击推荐按钮”“调用接口”“插入记录”。Owen 和 Bradley 是现实中的人；交换名片已经能够形成联系，不需要先登录 Yinzer。领域场景关注真实事情怎样发生，<a href="ch09.html#use-cases-and-traces">第 9 章的设计模型</a>才讨论软件怎样支持、记录或响应这些变化。</p>
+          <p>一个场景只表达一条可能路径，不覆盖所有招聘过程。很少几个具体场景通常就能帮助专家参与讨论；如果确实需要一般化描述很多路径，原书建议考虑 UML 活动图或状态图，但也提醒它们需要更多建模工作。是否值得推广，仍取决于当前问题，而不是因为还有一种图尚未画过。</p>
+          <aside class="key-point"><p class="key-point-label">核心观点</p><p>信息模型提供词汇与关系，导航使问题可追踪，不变量限定合法状态，快照使规则具体可检验，功能场景再说明状态如何变化。它们围绕同一套概念协作，才不会出现“图里是一套名词，故事里又是另一套世界”。</p></aside>
+        </section>
+
+        <section id="from-domain-to-design">
+          <h2><span class="section-number">08</span>把领域单独留下，设计才能在明确前提上作选择</h2>
+          <p>领域与设计分开后，一些本来容易被技术细节掩盖的问题就能直接讨论。例如，公司当前员工是否应该收到本公司的招聘广告？数据库表和类层次本身不会给出这个答案。需要先理解广告面向谁、通知要达到什么目的，以及当前员工在这个领域中扮演什么角色。原书提出这个问题，但没有替所有招聘业务规定统一答案。</p>
+          <p>领域模型也为共同语言提供基础。业务专家不必关心开发者使用什么编程语言，开发者也不必把同一件事在每份设计里重新命名。双方围绕 Person、Contact、Job Match、Employment 等已经定义的概念澄清含义，可以逐步形成<strong>通用语言（ubiquitous language）</strong>。这不是把词表贴在墙上就算完成，而是在讨论具体状态与变化时持续使用、修正同一套词义。</p>
+          <p>这种清晰仍然以简化为代价。模型选择哪些类型、能处理多少例外、忽略哪些过程，都应与准备回答的问题一致。只要假设说得清楚、必要关系没有丢掉，简化模型仍然可以精确回答“Bradley 的网络包含哪些联系”“Owen 在哪些公司任职过”等问题；它并不因此声称自己覆盖了现实的全部丰富性。</p>
+          <p>接下来的<a href="ch09.html#one-design-many-views">第 9 章</a>将让待建软件进入设计模型。此时领域模型提供的是必须理解和尊重的语义，而不是一套自动翻译成代码的类图。团队可以据此检查：设计是否保留了职位匹配与雇佣的区别，是否在联系人方向和配置生效方式上采用了一致前提。至于由什么组件承担、怎样存储和交互，仍需要结合风险、约束与质量目标作设计选择。</p>
+          <p>本章的收束仍然很克制：先确定不了解哪一部分领域会导致失败，再为那一部分建模；能回答关键问题之后，就把获得的理解带回设计与验证。领域建模的成果是更可靠的共同前提，而不是一份永远补不完的现实百科。</p>
+        </section>
+
+        <details id="sources" class="source-note">
+          <summary>来源、原书对应与整理说明</summary>
+          <p>依据 George Fairbanks，<em>Just Enough Software Architecture: A Risk-Driven Approach</em>，Marshall &amp; Brainerd，2010 年 8 月首次印刷，ISBN <code>978-0-9846181-0-1</code>。已完整通读用户提供全书 PDF 中第 8 章 <em>The Domain Model</em> 的章首与 §8.1—§8.7；本章无另列编号脚注。章节正文为全书 PDF 页序 145—155／印刷页 127—137，第 156 页／印刷页 138 为空白页。核查日期：2026-11-06。中文标题与术语为笔记译法；<a href="https://www.georgefairbanks.com/book/">作者官网</a>提供书目信息。</p>
+          <ul>
+          <li>01：§8.1 <em>How the domain relates to architecture</em>，印刷页 128—130。联系人与权限产品是作者真实经历的转述；约 1400 名联系人、整合试验花费数周，均为原书历史案例信息，不是当代产品测试。</li>
+          <li>02：§8.1 后半部分，印刷页 130—131。按问题设停止点、选择深度与广度，以及比较建模和原型收益，均依据原文。</li>
+          <li>03：章首、§8.2 <em>Information model</em> 与图 8.1，印刷页 127—128、131—133；Yinzer 的地区与服务背景补自 §7 章首，印刷页 113—114。保留七种类型的含义，特别区分 Contact、Employment、Job Match 与实现记录。</li>
+          <li>04：§8.2、图 8.2 及 §8.6 <em>Conclusion</em>。已回看全书 PDF 页序 150—151／印刷页 132—133 的类型表与信息模型，逐项核对基数、Network 角色名及无向关联；原图没有 Employment—Job 直接关联。对称联系按该图与图 8.4 场景解释，未推广为全部社交业务的规则。</li>
+          <li>05：§8.3 <em>Navigation and invariants</em>，印刷页 133—134，OCL 原式已对照 PDF 页序 151。原式的左侧在空 Network 下为 0，右侧为 1，与图 8.2 的零到多基数不一致；这是笔记明确记录的边界纠错。补充核对 <a href="https://www.omg.org/spec/OCL/2.4/PDF">OMG OCL 2.4 规范</a>（2014）的 §7.5.3 导航、§7.6.2 <code>collect</code> 简写与 <code>asSet()</code>、§11.7.1 <code>size()</code>／<code>isEmpty()</code>；该规范只用于语义核查，不属于 2010 年原书依据。已用 Python 集合复算空网络、单联系、两条不同联系、重复联系的计数；空网络使原式为假，允许空网络的判断可保留它，其余案例符合前述解释，未运行 OCL 引擎。</li>
+          <li>06：§8.4 <em>Snapshots</em> 与图 8.3，印刷页 134。已回看 PDF 页序 152，按图中具名的 Bradley、Owen、Widgetron 与匿名关系实例重绘；重复联系的快照检验为笔记解释。原图没有绘出 Owen 的雇佣关系。</li>
+          <li>07：§8.5 <em>Functionality scenarios</em> 与图 8.4，印刷页 135—136。已回看 PDF 页序 153 的完整四步场景；把每步与新增关系对应、把图 8.3 对照到前三步之后，是笔记解释，不是原书额外规定的状态清理或执行机制。</li>
+          <li>08：§8.6，印刷页 136—137。§8.7 <em>Further reading</em> 说明本书领域建模来自 Catalysis（D’Souza 与 Wills，1998），并推荐 Cockburn（2000）的用例写法、指向 <a href="ch12.html#functionality-scenarios">§12.6</a>；本文未将这些延伸著作声称为另行通读的资料。</li>
+          </ul>
+          <p>本文围绕“语义—关系—约束—状态—变化”重组解释，不是逐段翻译。两张图均在回看原图后手工重绘，保留所说明的类型或实例与关联，不复用原页截图。可编辑图源保存在本书 <code>diagrams/sources/</code>，分别为 <code>ch08-information-model.svg</code>、<code>ch08-snapshot.svg</code>，与网页导出副本一致。</p>
+        </details>
+
+        <nav class="chapter-pagination" aria-label="章节翻页"><a class="page-link prev" href="ch07.html" rel="prev"><span class="page-label">← 上一章 · 第 7 章</span><span class="page-title">软件架构的概念模型</span></a><a class="page-link next" href="ch09.html" rel="next"><span class="page-label">下一章 · 第 9 章 →</span><span class="page-title">设计模型</span></a><a class="pagination-home" href="../index.html">书籍概览与目录</a></nav>
+        <p class="source-note"><a href="../guide.html">全书导航：术语、案例与来源</a></p>
+      </article>
+    </div>
+  </main>
+  <footer class="site-footer"><div class="container footer-inner"><span>个人书架 / 中文读书笔记</span><a href="#main">回到顶部 ↑</a></div></footer>
+</body>
+</html>

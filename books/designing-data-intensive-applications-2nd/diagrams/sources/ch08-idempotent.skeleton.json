@@ -1,0 +1,303 @@
+[
+  {
+    "type": "text",
+    "id": "title",
+    "x": 24,
+    "y": 18,
+    "text": "幂等消费：让重投递只重复交接，不重复生效",
+    "fontSize": 25,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "subtitle",
+    "x": 24,
+    "y": 62,
+    "text": "假设稳定消息 ID、唯一约束，且去重记录仍保留。",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "rectangle",
+    "id": "delivery",
+    "x": 260,
+    "y": 110,
+    "width": 300,
+    "height": 72,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "接收消息 ID = m",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "transaction",
+    "x": 24,
+    "y": 232,
+    "width": 772,
+    "height": 360,
+    "strokeColor": "#386d74",
+    "backgroundColor": "transparent",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 3,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "text",
+    "id": "txn-label",
+    "x": 44,
+    "y": 246,
+    "text": "同一个数据库事务",
+    "fontSize": 21,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "rectangle",
+    "id": "claim",
+    "x": 240,
+    "y": 292,
+    "width": 340,
+    "height": 72,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "尝试插入唯一 ID = m",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "begin",
+    "x": 410,
+    "y": 188,
+    "width": 0,
+    "height": 98,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        98
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "rectangle",
+    "id": "first",
+    "x": 52,
+    "y": 432,
+    "width": 300,
+    "height": 98,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "首次：插入成功\n更新业务，并保存结果",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "duplicate",
+    "x": 448,
+    "y": 432,
+    "width": 300,
+    "height": 98,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "重复：ID 已存在\n读取原结果，跳过业务写",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "first-path",
+    "x": 310,
+    "y": 370,
+    "width": 108,
+    "height": 56,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        -108,
+        56
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "arrow",
+    "id": "duplicate-path",
+    "x": 510,
+    "y": 370,
+    "width": 88,
+    "height": 56,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        88,
+        56
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "text",
+    "id": "commit-label",
+    "x": 312,
+    "y": 550,
+    "text": "整体 COMMIT",
+    "fontSize": 21,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "arrow",
+    "id": "ack-path",
+    "x": 410,
+    "y": 598,
+    "width": 0,
+    "height": 60,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        60
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "rectangle",
+    "id": "ack",
+    "x": 260,
+    "y": 664,
+    "width": 300,
+    "height": 76,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "确认当前投递（ack）",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "retry",
+    "x": 676,
+    "y": 618,
+    "width": 198,
+    "height": 472,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        88,
+        0
+      ],
+      [
+        88,
+        -420
+      ],
+      [
+        -90,
+        -420
+      ],
+      [
+        -90,
+        -472
+      ],
+      [
+        -110,
+        -472
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "dashed"
+  },
+  {
+    "type": "text",
+    "id": "crash",
+    "x": 468,
+    "y": 610,
+    "text": "此处崩溃 → 重投",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "legend",
+    "x": 24,
+    "y": 786,
+    "text": "粗框：数据库原子边界　　虚线：提交后确认前故障引起重投\n两条分支都在提交后 ack；外部邮件不在此事务框内。",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  }
+]

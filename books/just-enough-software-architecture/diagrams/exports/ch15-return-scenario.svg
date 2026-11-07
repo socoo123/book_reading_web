@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="520" viewBox="0 0 720 520" role="img" aria-labelledby="title desc">
+  <title id="title">一个归还步骤，连接参与者、端口、信息与状态</title>
+  <desc id="desc">Bart 将实体副本交给 Larry，Larry 通过 pDesk 使用 Return 操作。动作需要模型说明怎样匹配 Loan，以及借阅状态怎样变化。实线表示办理与调用顺序，虚线关联动作所需的模型知识，不表示内部消息。</desc>
+  <!-- Original editable SVG; the exported web copy is identical. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 16px; fill: var(--muted); }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.3; }
+    .question { fill: var(--focus); stroke: var(--accent); stroke-width: 1.3; }
+    .label { font-size: 21px; font-weight: 600; text-anchor: middle; }
+    .detail { font-size: 17px; text-anchor: middle; fill: var(--muted); }
+    .small { font-size: 16px; text-anchor: middle; fill: var(--muted); }
+    .step { fill: none; stroke: var(--line); stroke-width: 1.8; marker-end: url(#arrow); }
+    .reference { fill: none; stroke: var(--line); stroke-width: 1.5; stroke-dasharray: 6 5; }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker></defs>
+  <rect width="720" height="520" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="30" y="35">归还这一步，哪些模型事实必须接上？</text>
+  <text class="sub" x="30" y="65">上方是一次办理过程；下方是由它暴露的定义缺口</text>
+
+  <rect class="node" x="30" y="112" width="170" height="90" rx="7"/>
+  <text class="label" x="115" y="148">Bart</text>
+  <text class="detail" x="115" y="180">归还者</text>
+  <path class="step" d="M210 157H265"/>
+  <text class="small" x="237" y="139">交书</text>
+  <rect class="node" x="275" y="112" width="170" height="90" rx="7"/>
+  <text class="label" x="360" y="148">Larry</text>
+  <text class="detail" x="360" y="180">管理员／办理者</text>
+  <path class="step" d="M455 157H510"/>
+  <text class="small" x="482" y="139">发起</text>
+  <rect class="node" x="520" y="112" width="170" height="90" rx="7"/>
+  <text class="label" x="605" y="148">pDesk</text>
+  <text class="detail" x="605" y="180">Return()</text>
+
+  <path class="reference" d="M605 202V239H185V302M605 239H535V302"/>
+  <text class="sub" x="30" y="277">动作引用的知识，必须能在模型中找到：</text>
+  <rect class="question" x="30" y="302" width="310" height="118" rx="7"/>
+  <text class="label" x="185" y="335">怎样匹配 Loan？</text>
+  <text class="detail" x="185" y="367">系统须找到副本的相应借阅</text>
+  <text class="small" x="185" y="397">Bart 不必预先知道 Loan ID</text>
+  <rect class="question" x="380" y="302" width="310" height="118" rx="7"/>
+  <text class="label" x="535" y="335">状态怎样变化？</text>
+  <text class="detail" x="535" y="367">动作要引用归还前后的状态</text>
+  <text class="small" x="535" y="397">原书在此发现：状态尚未定义</text>
+
+  <text class="sub" x="30" y="463">实线箭头：本场景的办理与调用顺序。</text>
+  <text class="sub" x="30" y="492">虚线：动作依赖的模型知识，不表示内部消息。</text>
+</svg>

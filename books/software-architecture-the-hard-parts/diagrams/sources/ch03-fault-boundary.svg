@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="420" viewBox="0 0 720 420" role="img" aria-labelledby="title desc">
+  <title id="title">问卷故障不必阻塞核心工单</title>
+  <desc id="desc">核心工单先完成并保存业务结果，后续问卷任务经持久队列交给问卷服务。问卷服务故障时等待恢复，核心路径不等待问卷成功。可靠衔接与资源隔离仍须设计。</desc>
+  <style>
+    :root{--surface:#fcfbf8;--text:#292824;--muted:#69665e;--line:#8b877e;--box:#f1eee7;--accent:#466a74}
+    @media(prefers-color-scheme:dark){:root:not([data-theme='light']){--surface:#252524;--text:#e6e3dc;--muted:#c0bcb3;--line:#aaa59a;--box:#343432;--accent:#9bc2cc}}
+    :root[data-theme='dark']{--surface:#252524;--text:#e6e3dc;--muted:#c0bcb3;--line:#aaa59a;--box:#343432;--accent:#9bc2cc}
+    .bg{fill:var(--surface)}.box{fill:var(--box);stroke:var(--line);stroke-width:1.5}.scope{fill:none;stroke:var(--accent);stroke-width:2;stroke-dasharray:7 5}.arrow{fill:none;stroke:var(--text);stroke-width:2;marker-end:url(#head)}
+    text{font-family:system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;fill:var(--text);font-size:17px}.heading{font-size:21px;font-weight:650}.label{font-size:16px;fill:var(--muted)}.strong{font-weight:650}.accent{fill:var(--accent)}
+  </style>
+  <defs><marker id="head" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--text)"/></marker></defs>
+  <rect class="bg" width="720" height="420" rx="14"/>
+  <text class="heading" x="30" y="38">先保护核心能力，再安排可延后的工作</text>
+  <text class="label" x="30" y="69">笔记解释方案：工单完成后，问卷可以稍后发送</text>
+  <rect class="scope" x="30" y="92" width="660" height="124" rx="12"/>
+  <text class="label accent" x="49" y="119">核心业务边界</text>
+  <rect class="box" x="54" y="135" width="164" height="59" rx="9"/>
+  <rect class="box" x="280" y="135" width="164" height="59" rx="9"/>
+  <rect class="box" x="506" y="135" width="160" height="59" rx="9"/>
+  <text class="strong" x="136" y="171" text-anchor="middle">完成工单</text>
+  <text class="strong" x="362" y="171" text-anchor="middle">保存业务结果</text>
+  <text class="strong" x="586" y="171" text-anchor="middle">返回核心结果</text>
+  <path class="arrow" d="M219 165H273"/><path class="arrow" d="M445 165H499"/>
+  <path class="arrow" d="M362 195V274"/>
+  <text class="label" x="377" y="248">可靠留下后续任务</text>
+  <rect class="box" x="280" y="282" width="164" height="63" rx="9"/>
+  <rect class="box" x="506" y="282" width="160" height="63" rx="9"/>
+  <text class="strong" x="362" y="307" text-anchor="middle">持久队列</text>
+  <text class="label" x="362" y="332" text-anchor="middle">缓冲等待</text>
+  <text class="strong" x="586" y="307" text-anchor="middle">问卷服务 ×</text>
+  <text class="label" x="586" y="332" text-anchor="middle">故障后等待恢复</text>
+  <path class="arrow" d="M445 313H499"/>
+  <text class="label" x="54" y="302">无需同步等待</text>
+  <text class="label" x="54" y="329">问卷发送成功</text>
+  <text class="label" x="30" y="382">箭头：处理与任务流。可靠衔接、资源隔离、恢复处理仍需实现。</text>
+  <text class="label" x="30" y="405">此图解释隔离目标，不表示本章已选定消息或事务实现。</text>
+  <script><![CDATA[try { const t = localStorage.getItem('reading-notes-theme'); if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t); } catch {}]]></script>
+</svg>

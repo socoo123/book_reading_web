@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="396" viewBox="0 0 720 396" role="img" aria-labelledby="title desc">
+  <title id="title">以代码证据推动规则演进</title>
+  <desc id="desc">从左上顺时针读：实际代码中的问题模式进入语言社区讨论，风格负责人依据共同目标形成决定，再同步文档、工具与教学。实线表示修订推进，左侧向上的虚线表示使用后的新证据返回问题讨论。同步动作由笔记归纳。</desc>
+  <!-- Original, editable hand-written SVG. The export is an identical web copy. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 15px; fill: var(--muted); }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.2; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .label { font-size: 18px; font-weight: 600; text-anchor: middle; }
+    .body { font-size: 16px; text-anchor: middle; fill: var(--muted); }
+    .arrow { fill: none; stroke: var(--line); stroke-width: 1.8; marker-end: url(#arrow); }
+    .feedback { fill: none; stroke: var(--accent); stroke-width: 1.8; stroke-dasharray: 6 5; marker-end: url(#feedback-arrow); }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker>
+    <marker id="feedback-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--accent)"/></marker>
+  </defs>
+  <rect width="720" height="396" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="28" y="39">规则在真实代码与共同判断之间演进</text>
+  <text class="sub" x="28" y="67">顺时针阅读；每次调整都能接上已有理由和新证据</text>
+  <rect class="focus" x="36" y="105" width="290" height="86" rx="7"/>
+  <text class="label" x="181" y="139">实际代码出现问题模式</text>
+  <text class="body" x="181" y="168">带上示例与原有决策理由</text>
+  <path class="arrow" d="M326 148H386"/>
+  <rect class="node" x="394" y="105" width="290" height="86" rx="7"/>
+  <text class="label" x="539" y="139">语言社区讨论</text>
+  <text class="body" x="539" y="168">比较现状、改法与影响</text>
+  <path class="arrow" d="M539 191V255"/>
+  <rect class="node" x="394" y="263" width="290" height="86" rx="7"/>
+  <text class="label" x="539" y="297">风格负责人形成决定</text>
+  <text class="body" x="539" y="326">依据共同目标权衡取舍</text>
+  <path class="arrow" d="M394 306H334"/>
+  <rect class="node" x="36" y="263" width="290" height="86" rx="7"/>
+  <text class="label" x="181" y="297">同步文档、工具与教学</text>
+  <text class="body" x="181" y="326">让正式决定进入日常工作</text>
+  <path class="feedback" d="M181 263V199"/>
+  <text class="sub" x="196" y="233">使用反馈</text>
+  <text class="sub" x="28" y="382">实线：修订推进　虚线：使用后反馈；同步动作由笔记归纳。</text>
+</svg>

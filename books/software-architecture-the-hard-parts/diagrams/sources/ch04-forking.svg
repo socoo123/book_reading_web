@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="480" viewBox="0 0 720 480" role="img" aria-labelledby="title desc">
+  <title id="title">战术分叉的复制与删除过程</title>
+  <desc id="desc">原单体具有 X、Y、Z 行为和共享依赖 S。完整复制后，甲删除 Z，乙删除 X 和 Y。最终甲服务保留 X、Y、S，乙服务保留 Z、S。共享依赖的两个副本仍需处理。</desc>
+  <style>
+    :root{--surface:#fcfbf8;--text:#292824;--muted:#66645d;--line:#969187;--soft:#f0ece4;--accent:#386d74}
+    @media(prefers-color-scheme:dark){:root:not([data-theme='light']){--surface:#252524;--text:#e6e3dc;--muted:#b6b1a7;--line:#8c8982;--soft:#353534;--accent:#94c8cf}}
+    :root[data-theme='dark']{--surface:#252524;--text:#e6e3dc;--muted:#b6b1a7;--line:#8c8982;--soft:#353534;--accent:#94c8cf}
+    .bg{fill:var(--surface)}text{fill:var(--text);font-family:system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;font-size:18px}.heading{font-size:21px;font-weight:600}.small{font-size:15px;fill:var(--muted)}.box{fill:var(--soft);stroke:var(--line);stroke-width:1.5}.result{fill:var(--surface);stroke:var(--accent);stroke-width:2}.edge{fill:none;stroke:var(--accent);stroke-width:2;marker-end:url(#arrow)}.arrow{fill:var(--accent)}.cross{stroke:var(--text);stroke-width:2.5}
+  </style>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path class="arrow" d="M0 0 8 4 0 8Z"/></marker></defs>
+  <rect class="bg" width="720" height="480"/>
+  <text class="heading" x="30" y="38">先复制完整依赖，再删到目标范围</text>
+  <rect class="box" x="240" y="67" width="240" height="69" rx="10"/>
+  <text x="360" y="94" text-anchor="middle">原单体</text><text x="360" y="121" text-anchor="middle">X　Y　Z　S</text>
+  <path class="edge" d="M310 136 180 192"/><path class="edge" d="M410 136 540 192"/>
+  <text class="small" x="360" y="174" text-anchor="middle">① 完整复制</text>
+  <rect class="box" x="35" y="203" width="290" height="92" rx="10"/><rect class="box" x="395" y="203" width="290" height="92" rx="10"/>
+  <text x="180" y="231" text-anchor="middle">甲副本：保留 X、Y</text><text x="540" y="231" text-anchor="middle">乙副本：保留 Z</text>
+  <text x="111" y="272">X　Y　Z　S</text><text x="471" y="272">X　Y　Z　S</text>
+  <path class="cross" d="m177 253 22 25m0-25-22 25m291-25 22 25m0-25-22 25m37-25 22 25m0-25-22 25"/>
+  <path class="edge" d="M180 295V353"/><path class="edge" d="M540 295V353"/>
+  <text class="small" x="360" y="330" text-anchor="middle">② 反复删除并验证</text>
+  <rect class="result" x="35" y="363" width="290" height="66" rx="10"/><rect class="result" x="395" y="363" width="290" height="66" rx="10"/>
+  <text x="180" y="390" text-anchor="middle">甲服务：X、Y + S</text><text x="540" y="390" text-anchor="middle">乙服务：Z + S</text>
+  <text class="small" x="180" y="414" text-anchor="middle">粗粒度部署单元</text><text class="small" x="540" y="414" text-anchor="middle">粗粒度部署单元</text>
+  <text class="small" x="360" y="459" text-anchor="middle">箭头：代码演变　×：删除目标　S：可能留在两边的共享依赖副本</text>
+  <script><![CDATA[try { const t = localStorage.getItem('reading-notes-theme'); if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t); } catch {}]]></script>
+</svg>

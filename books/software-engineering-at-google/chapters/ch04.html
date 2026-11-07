@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>第 4 章｜面向公平的工程实践 · Software Engineering at Google · 架构提升读书笔记</title>
+  <meta name="description" content="《Software Engineering at Google》第四章读书笔记：从 Google Photos 误标与内部转岗案例，理解默认偏差、多元文化能力、用户共同设计和面向公平的流程验证。">
+  <link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+  <script src="../../../assets/theme.js"></script>
+  <script src="../../../assets/reader.js" defer></script>
+  <link rel="stylesheet" href="../../../assets/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header reader-header"><div class="container header-inner">
+    <a class="brand" href="../../../index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5.5C8.5 3.8 5.8 3.6 2.5 4.5v14c3.3-.9 6-.7 9.5 1 3.5-1.7 6.2-1.9 9.5-1v-14c-3.3-.9-6-.7-9.5 1Zm0 0v14"/></svg>书架</a>
+    <a class="reader-book-title" href="../index.html" lang="en">Software Engineering at Google</a>
+    <div class="theme-control" role="group" aria-label="外观" hidden><button type="button" data-theme-value="system" title="跟随系统"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path class="fill" d="M12 4a8 8 0 0 1 0 16Z"/></svg><span class="sr-only">跟随系统</span></button><button type="button" data-theme-value="light" title="浅色"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.6"/><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21M5.6 5.6l1.6 1.6M16.8 16.8l1.6 1.6M5.6 18.4l1.6-1.6M16.8 7.2l1.6-1.6"/></svg><span class="sr-only">浅色</span></button><button type="button" data-theme-value="dark" title="深色"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.5 14.6A7.8 7.8 0 0 1 9.4 4.5a7.8 7.8 0 1 0 10.1 10.1Z"/></svg><span class="sr-only">深色</span></button></div>
+  </div></header>
+  <main id="main" class="container reader-container">
+    <nav class="breadcrumb" aria-label="当前位置"><ol><li><a href="../../../index.html">书架</a></li><li><a href="../index.html">书籍概览</a></li><li aria-current="page">第 4 章</li></ol></nav>
+    <div class="reading-layout">
+      <aside class="toc">
+        <nav aria-label="本页目录"><h2>本页目录</h2><ul>
+          <li><a href="#bias-by-default">01　偏差怎样进入系统</a></li>
+          <li><a href="#photos-failure">02　Google Photos 的遗漏与伤害</a></li>
+          <li><a href="#multicultural-capacity">03　多元经验与工程判断力</a></li>
+          <li><a href="#opportunity-ecosystem">04　成长与留下来的条件</a></li>
+          <li><a href="#design-with-users">05　让最难使用的人更早参与</a></li>
+          <li><a href="#mobility-ratings">06　给绩效数据划清用途</a></li>
+          <li><a href="#measure-outcomes">07　用结果验证价值观</a></li>
+        </ul><p class="toc-note"><a href="../index.html">← 书籍概览</a></p></nav>
+      </aside>
+      <article class="article">
+        <header class="article-header">
+          <p class="eyebrow">READING NOTES / CHAPTER 04</p>
+          <h1>第 4 章｜面向公平的工程实践</h1>
+          <p class="article-deck"><span lang="en">Engineering for Equity</span> · 架构提升读书笔记</p>
+        </header>
+        <p>软件一旦进入现实，就会影响谁能得到信息、谁能获得机会，以及谁要为一次错误付出代价。开发团队决定采集什么数据、把谁当成典型用户、怎样排列候选人，这些看似日常的实现选择，会逐渐成为其他人必须接受的生活条件。第四章把工程责任延伸到这里：系统需要正确运行，也需要认真理解它对不同人的影响。</p>
+        <p>作者 Demma Rodriguez 从 Google 自己的失败写起。她没有把一家公司的技术能力当成公平的保证，而是追问：当开发者与使用者的经验相距很远时，团队怎样发现那些自己看不见的问题？这一章的主线，是把更多人的经验带进设计，把公平落实到具体流程，再用实际结果检验承诺。</p>
+        <details class="mobile-toc"><summary>本页目录 · 7 个小节</summary><nav aria-label="移动端本页目录"><ul>
+          <li><a href="#bias-by-default">01　偏差会沿着日常选择进入系统</a></li>
+          <li><a href="#photos-failure">02　Google Photos：遗漏怎样变成用户伤害</a></li>
+          <li><a href="#multicultural-capacity">03　让多元经验变成工程判断力</a></li>
+          <li><a href="#opportunity-ecosystem">04　招进来之后，还要有成长与留下来的条件</a></li>
+          <li><a href="#design-with-users">05　让最难使用产品的人更早参与</a></li>
+          <li><a href="#mobility-ratings">06　转岗系统：给绩效数据划清用途</a></li>
+          <li><a href="#measure-outcomes">07　把价值观接到可以观察的结果</a></li>
+        </ul></nav></details>
+
+        <section id="bias-by-default">
+          <h2><span class="section-number">01</span>偏差会沿着日常选择进入系统</h2>
+          <p>原章首先提出一个简短结论：<strong>偏差是默认状态（bias is the default）</strong>。这里的偏差，包括我们在没有充分察觉时，用熟悉的人和生活方式来理解所有用户。一个团队的成员都用新手机、稳定网络和同一种语言，便很容易把这些条件当成产品的自然背景。需求没有写出的人群，也就很少进入测试。</p>
+          <p>这种问题常常发生在善意、认真工作的团队里。工程师可能已经完成代码评审、性能优化和自动化测试，却仍然没有验证某些用户能否完成任务。因为测试证明的是既定假设下的行为，而假设本身也由人选择。只要对用户的认识不完整，执行得越高效，遗漏就越容易被大规模复制。</p>
+          <p>为了理解本章，可以把三个相近的词稍作区分。<strong>多样性（diversity）</strong>关注有哪些不同经验的人在场；<strong>包容性（inclusion）</strong>关注这些人能否真正参与、表达并影响决定；<strong>公平（equity）</strong>则进一步关注机会、负担和产品结果，减少不同处境造成的不合理障碍。按这个区分，一个团队即使成员背景丰富，仍然需要让意见进入决策，并检查决策最后帮助或伤害了谁。</p>
+          <p>原书所说的代表性不足群体，也需要放到具体环境里理解。它指的是某些人在组织、数据或决策中没有得到充分呈现，不一定意味着他们在人口中占比很小。一个产品可以服务大量某类用户，开发和评测时却几乎听不到他们的声音。</p>
+          <p>因此，识别偏差可以从实际工作开始：了解产品正在服务哪些人、哪些使用条件尚未进入需求，以及错误落到不同人身上会产生什么后果。用户的国籍、语言、年龄、经济条件、身体能力和文化经验，都可能改变同一个功能的真实用途。把这些差异写进设计认识，团队才有机会在上线前发现遗漏。</p>
+          <aside class="key-point"><p class="key-point-label">核心观点</p><p>好意与技术熟练，都不能自动保证公平。用户范围、数据和验证方式也属于工程设计；没有被纳入这些环节的人，可能在系统正常运行时持续遇到障碍。</p></aside>
+        </section>
+
+        <section id="photos-failure">
+          <h2><span class="section-number">02</span>Google Photos：遗漏怎样变成用户伤害</h2>
+          <p>本章最直接的案例发生在 2015 年。软件工程师 Jacky Alciné 公开指出，Google Photos 把他与一位黑人朋友的照片标成了“大猩猩”。原章用这个事件说明种族包容上的失败。出错的是给照片自动打标签的图像分类，后文讨论的人脸识别则用于根据面部确认身份。</p>
+          <p>它造成的伤害也超出了普通分类错误。给一张风景照贴错标签，通常影响检索；把黑人照片标为猿类，则会触碰长期存在的种族贬损。相同的技术错误率，可能对应非常不同的社会后果。理解标签的含义和使用历史，因此也是判断产品风险的一部分。</p>
+          <p>作者把问题连接到三个环节。首先，训练所用的照片没有充分代表使用人群，模型的学习材料存在缺口。其次，组织本身缺少相关群体的充分参与，影响了哪些问题会被注意、哪些数据会被收集。最后，目标用户和测试范围也没有覆盖好这些风险，错误直到用户实际使用时才被发现。作者认为，组织自身的无意识偏差很可能参与了这一过程。</p>
+          <p>这三个环节值得放在一起看。如果产品团队没有想到某类用户，数据团队可能不会主动补足相应场景，测试团队也可能沿着同样的用户假设设计用例。于是，缺失并没有在下一道工序被纠正，而是一路留下来。每个局部都能报告“按要求完成”，用户却仍然要承担整体遗漏的后果。</p>
+          <figure class="concept-figure"><a href="../diagrams/exports/ch04-equity-feedback.svg" target="_blank" rel="noopener"><img src="../diagrams/exports/ch04-equity-feedback.svg" width="720" height="386" alt="产品假设决定关注谁，数据与评测沿用这些假设；覆盖不足可能在上线后才表现为用户伤害。受影响用户的反馈需要回到需求、数据和验证。"></a><figcaption>图 4-1：从左到右看遗漏如何穿过产品假设、数据和评测；下方虚线表示把实际影响带回前面的设计环节。点击<a href="../diagrams/exports/ch04-equity-feedback.svg" target="_blank" rel="noopener">查看大图</a>。</figcaption></figure>
+          <p>原章指出，Google 响应迟缓，处理也不完整，到 2018 年仍未充分解决底层问题。脚注引用的 WIRED 报道记录了当时的后续应对：2018 年 1 月，记者测试发现，Google Photos 对“大猩猩”等部分灵长类词语的搜索不返回结果；Google 发言人确认，这些词在搜索和图像标签中受到了屏蔽。屏蔽标签可以降低同类侮辱再次出现的风险，但它拦住的只是输出，并不说明底层识别已经改善。</p>
+          <p>这个案例也说明，用户信任与组织建设相连。受到伤害的人，可能同时是未来的求职者、合作伙伴或产品研究参与者。原书据此提醒，产品中的排斥会反过来削弱组织吸纳不同经验的能力。团队若希望更多人参与，产品如何对待他们，本身就是邀请是否可信的一部分。</p>
+          <p>从工程上理解，修复应当回到产生遗漏的条件：重新检查用户范围、数据覆盖、敏感错误的评估和用户反馈进入团队的路径。只把事件当作一个需要消掉的标签，容易错过它暴露出来的共同盲点。</p>
+        </section>
+
+        <section id="multicultural-capacity">
+          <h2><span class="section-number">03</span>让多元经验变成工程判断力</h2>
+          <p>面对上述问题，原书提出让工程团队更能代表现有和未来用户。不同的语言、文化和生活经历，会帮助团队更早注意到需求中的空白。一个在稳定宽带环境中长大的工程师，未必会首先想到昂贵流量如何影响视频功能；经常依靠辅助技术使用电脑的人，则可能立即发现一个仅靠鼠标才能操作的流程无法完成。</p>
+          <p>这种价值来自认识范围的扩展。团队仍然需要调查和证据，但调查会从更完整的问题出发，也更容易发现“我们以为所有人都如此”只是局部经验。<a href="ch02.html#working-with-differences">第二章讨论了让不同工作方式互相补足</a>；本章又向外迈了一步，让不同的生活处境也能够改变产品判断。</p>
+          <p>作者把这种持续扩展称为<strong>多元文化能力（multicultural capacity）</strong>。它包括理解产品会怎样使不同群体受益或受损，也包括辨别何时应当继续实现、何时需要改变功能乃至停止推进。计算机知识和工作经验提供重要基础；在涉及机会分配、敏感数据、监控和社会影响时，工程师还要学习技术之外的背景。</p>
+          <p>作者用人脸识别展开这一点。除了不同肤色上的识别表现，团队还要理解图像为何进入数据库、系统在什么场景使用，以及谁更容易被反复比对。她引用的 2016 年 Georgetown Law 报告估计，美国执法人脸识别网络涉及超过 1.17 亿名成年人，其中包括来自驾照和身份证的照片，许多普通人也因此进入了执法比对的范围。</p>
+          <p>这份报告同时讨论，较高的逮捕率会使黑人在依赖被捕者照片的数据库中被过度呈现，而识别准确性和独立测试又可能不足。由此能看到两类相连的问题：技术表现是否对不同人同样可靠，以及人们被纳入系统、受到系统检查的机会是否已经不同。增加某类照片，不能单独回答这些关于数据来源和使用权力的问题。</p>
+          <p>原书因此强调，即使有代表性数据，也仍需检查偏差；团队有不同背景的成员，也仍需认真评估训练材料和实际用途。多样性让问题更有机会被看见，持续研究和验证再把这些认识变成可靠行动。涉及监控或敏感信息时，还要考虑功能可能被怎样滥用，以及这种滥用将由谁承担。</p>
+          <p>这样的学习也需要组织支持。作者把持续、跨学科的专业发展同时视为个人和雇主的责任。团队可以安排相关培训、让领域专家参与评审，并为接触不同用户留出工作时间。若把理解其他群体完全交给个人业余学习，或者默认某位成员代表整个群体，所获得的认识仍然很有限。</p>
+          <aside class="key-point"><p class="key-point-label">核心观点</p><p>多元经验扩展团队能看见的问题，专业研究与验证帮助团队作出判断。工程能力还包括理解数据从哪里来、功能将怎样被使用，以及何时应为减少伤害调整开发方向。</p></aside>
+        </section>
+
+        <section id="opportunity-ecosystem">
+          <h2><span class="section-number">04</span>招进来之后，还要有成长与留下来的条件</h2>
+          <p>原章随后把公平从产品转到组织。面对长期形成的不平等，团队容易把讨论停在很大的历史解释上。作者承认这些背景的重要性，同时要求管理者把责任接到自己能够改变的环节：候选人从哪里来，谁获得面试机会，进入团队以后，谁得到有助于成长的工作。</p>
+          <p>这也解释了为什么“扩大招聘来源”不能独自解决代表性问题。招聘是入口，项目分配、反馈、晋升和留任则决定人能否继续发展。如果新成员不断进入，却很难得到重要任务、展示成果或获得支持，组织就会一边扩大入口，一边流失刚刚积累的经验。书中还提到，到写作时，Google 黑人员工的流失速度高于其他所有群体，拖慢了代表性目标的进展。</p>
+          <p>图 4-2 把这条路径画了出来：入口之后的每一环缺少机会与支持，人都可能离开，只加宽入口补不上这些缺口。</p>
+          <figure class="concept-figure"><a href="../diagrams/exports/ch04-opportunity-path.svg" target="_blank" rel="noopener"><img src="../diagrams/exports/ch04-opportunity-path.svg" width="720" height="420" alt="成员从左到右经过招聘入口、任务分配、反馈与支持、晋升与留任四个环节；单一做法只修招聘入口，而在后面三环得不到重要任务、缺少反馈与支持或晋升时被跳过的人会离开组织，入口扩大了，代表性仍难提升。"></a><figcaption>图 4-2：上排从左往右是一个人从被招聘到留下来要经过的环节，标着“单一做法”的是招聘入口；向下的虚线表示后面各环缺少机会与支持时，人会离开组织。点击<a href="../diagrams/exports/ch04-opportunity-path.svg" target="_blank" rel="noopener">查看大图</a>。</figcaption></figure>
+          <p>把这条路径想清楚，管理工作就会更具体。顺着原章“机会分布是否公平”的追问，负责人可以在安排项目时留意，关键设计是否总交给最熟悉的几个人；可以检查成长反馈是否及时，以及新成员是否知道怎样获得下一阶段的机会。抽象的公平目标由此落到每周、每月实际发生的决定上。</p>
+          <p>机会还需要配套支持。让一个人第一次负责重要模块，同时提供背景资料、明确目标和可以求助的同事，更可能让他积累能力。若只把任务交出去，却让他独自面对此前没有共享的信息，表面的机会就可能变成额外风险。第二章的尊重、信任和知识共享，在这里共同构成让人能够成长的条件。</p>
+          <p>原书还强调<strong>心理安全感（psychological safety）</strong>：人能够提出疑问、表达不同意见，而不必担心因此受到羞辱或排斥。它使不同经验真正进入工作。如果某位成员已经发现需求排除了某类用户，却预期自己会被视为拖慢进度，团队即使成员多元，也得不到这份信息。</p>
+          <p>因此，招聘、成长与留任需要同时看。具体负责人能够说明自己改善了哪一个环节，组织才能逐步理解哪些安排有效。公平由此成为团队运作的一部分，和任务分工、培养人才、维持长期能力放在同一张工作图景中。</p>
+        </section>
+
+        <section id="design-with-users">
+          <h2><span class="section-number">05</span>让最难使用产品的人更早参与</h2>
+          <p>在产品开发中，与“只修招聘入口”相似的单一路径，是先把多数用户的需求做好，再把其他人放进边缘场景。原书指出，这种安排会让原本更容易使用技术的人先得到收益，其他人的困难则随着需求和架构定型，越来越难被认真处理。</p>
+          <p>作者提出的方向，是优先研究那些与开发者经验距离较远、使用产品最困难或最少被听见的人。语言、文化、国家、经济条件、年龄和身体能力，都应进入用户研究的视野。书中进一步把“为所有人构建”推进到<strong>与用户一起构建</strong>：让受影响者参与定义问题，而不只是拿到一个接近完成的产品后评价它。</p>
+          <p>可以用一个假设情境理解这个区别。一个公益机构要做职业培训报名网站，团队最初在办公室电脑上验证：填完一张较长的表单、上传证明材料，再一次提交。已有测试者网络稳定、操作熟练，流程很快通过，于是团队准备把提交成功率作为主要验收指标。</p>
+          <p>如果在原型阶段邀请更多实际申请者参与，问题会变得不同。一位只能在下班路上使用手机的人，可能因为网络中断丢掉已经填写的内容；一位使用读屏软件的人，可能听不到输入框对应的问题；不熟悉机构术语的人，则可能无法判断需要上传哪一种证明。这些情况共同指向同一个问题：能否完成报名。</p>
+          <p>团队据此可以先把报名拆成清楚的步骤，解释材料要求，为表单控件提供可被辅助技术理解的名称，并安排合适的草稿保存与恢复方式。使用共享设备的申请者，还需要知道草稿保存在哪里、怎样退出或清除。再请这些参与者尝试完整流程，观察他们是否能理解当前状态、从中断处继续，以及确认提交结果。</p>
+          <p>这个例子说明，用户参与会改变问题的定义：团队原先认为要优化的是“怎样更快提交长表单”，后来才发现真正需要保证的是“在现实条件下完成一次有效申请”。当这个目标更早明确，功能范围与技术实现就能围绕它取舍。</p>
+          <p>为困难条件作出的改进，还可能帮助其他用户。清楚的字段说明让更多人少填错，能恢复的流程帮助任何遇到临时断网的人，可理解的状态信息也减少重复提交。原书用这种整体收益说明包容性设计的价值；具体哪些改动确实有效，仍要回到实际使用来确认。</p>
+          <aside class="key-point"><p class="key-point-label">核心观点</p><p>让受影响用户参与定义和验证，需求本身才会更完整。越早理解最难完成任务的人，越容易把必要条件放进产品基础，而不是等到架构定型后再补一个入口。</p></aside>
+        </section>
+
+        <section id="mobility-ratings">
+          <h2><span class="section-number">06</span>转岗系统：给绩效数据划清用途</h2>
+          <p>全章另一个重要案例，是 Google 的全球招聘需求系统。它同时支持外部招聘和内部转岗，开发团队认真听取了招聘人员的需求。招聘人员希望减少用人经理和申请者的无效等待，于是提出：内部员工一旦表达转岗兴趣，就向招聘人员与潜在的新经理突出展示他的绩效评级，尤其是较低评级。</p>
+          <p>从工作流看，这个需求很顺手。数据已经存在，尽早呈现似乎能让双方更快判断是否继续接触。但它暗含一个重要前提：员工在过去岗位上的绩效，能够可靠地代表他在另一个团队的表现与任职准备。界面只是显示一个数字，使用者却很可能把它当成筛选机会的依据。</p>
+          <p>案例中有人提出了三个公平问题：用于发展反馈的评价，是否有预测能力；评价里是否含有个人偏差；不同组织的评级能否直接比较。只要其中一个答案是否定的，展示评级就可能带来不公平的结果。一位工程师质疑过去的表现能否预测未来的表现，评审团队于是决定做一次全面审查。讨论由此从“怎样把字段展示得更明显”，推进到了“这个字段适不适合承担这项决定”。</p>
+          <p>审查发现，曾经获得较差评级的内部候选人，在找到新团队后，获得满意或优秀评级的可能性，与没有获得过较差评级的候选人相当。作者由此强调，评级主要描述一个人在特定时期、特定岗位上的表现，不应直接拿来判断他是否适合另一个团队的未来岗位。</p>
+          <p>这一发现让情境重新进入数据解释。一个人当前表现不佳，可能暴露岗位匹配或支持上的问题；新的团队可能提供不同任务、合作关系与工作条件。评级可以帮助讨论如何改善当前安排，或者转岗时需要哪些支持。若它先被突出展示为负面信号，员工可能连接触新环境的机会都得不到。</p>
+          <figure class="concept-figure"><a href="../diagrams/exports/ch04-rating-context.svg" target="_blank" rel="noopener"><img src="../diagrams/exports/ch04-rating-context.svg" width="720" height="366" alt="同一份历史绩效，可以用于理解当时岗位表现并讨论支持；把它直接用于预测新团队表现和转岗筛选，则是本案例质疑的用途。"></a><figcaption>图 4-3：从左侧同一份数据看两种用途。实线通向当前情境中的解释；虚线与叉号标出本案例中缺乏依据的跨情境推断。箭头表示数据的用途。点击<a href="../diagrams/exports/ch04-rating-context.svg" target="_blank" rel="noopener">查看大图</a>。</figcaption></figure>
+          <p>这个案例很适合用来区分“字段准确”与“用途有效”。系统即使毫无差错地读取了历史评级，也仍可能把一个只描述局部情境的信号，包装成对未来能力的判断。信息出现的时机、强调程度和所在流程，会改变它的实际作用；产品设计同样参与了机会分配。</p>
+          <p>原章的结论来自 Google 这一次内部分析，可以把它读作这个转岗场景中的发现。更普遍适用的是其中的方法：数据被用于新的决定之前，先验证它与这个决定之间的关系。</p>
+          <p>作者明确说，分析占用了可观的项目时间，换来的是更公平的内部流动流程。这个案例展示的工程行动很清楚：听取核心操作人员的需求，同时把候选人受到的影响带进评审；发现现有流程依赖未经验证的推断，就先检查依据，再决定怎样实现。</p>
+          <aside class="key-point"><p class="key-point-label">核心观点</p><p>一份数据可以真实，却不适合被用于另一项判断。让历史评价进入新机会的筛选流程之前，应当核实它的预测依据、评价偏差与跨团队可比性，而不只确认字段能够正确展示。</p></aside>
+        </section>
+
+        <section id="measure-outcomes">
+          <h2><span class="section-number">07</span>把价值观接到可以观察的结果</h2>
+          <p>原章最后区分了价值观与结果。Google 对尊重、多样性与包容有明确承诺，也投入了招聘和相关项目，仍然没有自动得到与用户充分相称的人员代表性。作者把注意力落在政策怎样被执行：哪些人实际进入流程，哪些意见改变了设计，以及谁最后获得了机会。</p>
+          <p>因此，她提出持续测量系统中的公平，并与多样性、公平和包容领域的专业人士合作。测量没有统一公式，不同系统要结合自己的用途，观察它是否给不同处境的人带来不同障碍，再理解差异从哪里产生。</p>
+          <p>回到假设的报名网站，只看最终提交成功率，可能遗漏已经在上传步骤离开的人。更好的做法是观察从开始填写到完成的过程，结合中断位置、错误提示和用户访谈，了解哪些困难仍未被解决。在确有必要且获得适当授权时，区分设备、语言或辅助技术等使用条件；公平评估也要考虑隐私，避免为了测量额外收集与任务无关的敏感身份信息。</p>
+          <p>观察到差异以后，团队还要把发现接到改变上。若移动端的材料上传经常中断，就需要研究上传流程，而不只是改写“支持手机报名”的宣传。再次邀请原先遇到困难的人验证，才能知道修改是否真的帮助他们完成任务。这样，测量、用户参与和实现形成持续反馈，公平就进入了正常的产品改进过程。</p>
+          <p>这也会改变对速度的理解。转岗案例花时间检查评级依据，报名假设在长表单定型之前调整流程，都是为了减少把成本留给他人的情况。原书的取向很明确：存在会伤害用户的重要缺口时，值得放慢推进，补足理解、数据与验证。已经承受障碍的用户，无法用开发团队更快交付这个事实来抵消自己的损失。</p>
+          <p>这一章最终要求的，是把工程判断扩展到系统的完整影响。让不同经验的人能够参与，让成长与流动机会得到认真审视，让数据只承担有依据的用途，让真实用户的结果能够改变下一步工作。第二章的谦逊在这里变成了承认自身经验有限，尊重变成了认真理解受影响者，信任则要求他们有机会参与塑造技术。团队越有能力大规模改变现实，就越需要把这种责任放进每天的设计和实现。</p>
+        </section>
+
+        <details id="sources" class="source-note">
+          <summary>来源、主题对应与整理说明</summary>
+          <p>依据《Software Engineering at Google》（2020）Abseil 官方公开英文 HTML 版<a href="https://abseil.io/resources/swe-book/html/ch04.html">第 4 章 <span lang="en">Engineering for Equity</span></a>，Demma Rodriguez 撰写、Riona MacNamara 编辑；核查日期 2026-11-06。</p>
+          <ul>
+            <li>01：<a href="https://abseil.io/resources/swe-book/html/ch04.html#bias_is_the_default">Bias Is the Default</a>；多样性、包容性与公平三个术语的区分是笔记的梳理。</li>
+            <li>02：<a href="https://abseil.io/resources/swe-book/html/ch04.html#case-study-google-misses-the-mark-on-racial-inclusion-gaH3C9tZ">Case Study: Google Misses the Mark on Racial Inclusion</a>及<a href="https://abseil.io/resources/swe-book/html/ch04.html#ch01fn52">脚注 2</a>、<a href="https://abseil.io/resources/swe-book/html/ch04.html#ch01fn54">脚注 4</a>。脚注 4 所引 Tom Simonite 的 <a href="https://www.wired.com/story/when-it-comes-to-gorillas-google-photos-remains-blind/">WIRED 报道</a>（2018-01-11）只用于区分 2015 年的误标与 2018 年初的后续应对，不代表今天的产品状态。</li>
+            <li>03：<a href="https://abseil.io/resources/swe-book/html/ch04.html#understanding_the_need_for_diversity">Understanding the Need for Diversity</a>、<a href="https://abseil.io/resources/swe-book/html/ch04.html#building_multicultural_capacity">Building Multicultural Capacity</a>及<a href="https://abseil.io/resources/swe-book/html/ch04.html#ch01fn55">脚注 5</a>。人脸识别报告的数据与数据来源，按 Georgetown Law <a href="https://www.perpetuallineup.org/">The Perpetual Line-Up</a> 的执行摘要与关键发现核对（未通读全文）。</li>
+            <li>04：<a href="https://abseil.io/resources/swe-book/html/ch04.html#making_diversity_actionable">Making Diversity Actionable</a>、<a href="https://abseil.io/resources/swe-book/html/ch04.html#reject_singular_approaches">Reject Singular Approaches</a>。负责人的检查点、配套支持，以及图 4-2 中“反馈与支持”一环，是笔记的展开。</li>
+            <li>05：<a href="https://abseil.io/resources/swe-book/html/ch04.html#reject_singular_approaches">Reject Singular Approaches</a>、<a href="https://abseil.io/resources/swe-book/html/ch04.html#values_versus_outcomes">Values Versus Outcomes</a>。</li>
+            <li>06：<a href="https://abseil.io/resources/swe-book/html/ch04.html#challenge_established_processes">Challenge Established Processes</a>。原章写到评级不能预测未来表现，但没有公开这项内部分析的样本量、统计方法和评级口径，也没有介绍最终界面如何调整。</li>
+            <li>07：<a href="https://abseil.io/resources/swe-book/html/ch04.html#values_versus_outcomes">Values Versus Outcomes</a>、<a href="https://abseil.io/resources/swe-book/html/ch04.html#stay_curiouscomma_push_forward">Stay Curious, Push Forward</a>、<a href="https://abseil.io/resources/swe-book/html/ch04.html#conclusion-id00008">Conclusion</a>及 <a href="https://abseil.io/resources/swe-book/html/ch04.html#tlsemicolondrs-id00103">TL;DRs</a>。</li>
+          </ul>
+          <p><strong>脚注署名纠错：</strong>原章脚注 <a href="https://abseil.io/resources/swe-book/html/ch04.html#ch01fn55">5</a> 将 <em>The Perpetual Lineup</em> 署为 Stephen Gaines、Sara Williams → 报告首页署名为 Clare Garvie、Alvaro Bedoya、Jonathan Frankle（Georgetown Law 隐私与技术中心，2016-10-18）→ 本文按报告署名引用。</p>
+          <p>本文按问题形成、用户参与和流程验证重新组织原章，而非逐段翻译。Google Photos、人脸识别报告和转岗系统均转述自原章；职业培训报名网站及其参与者经历、设计改动、测量方式和隐私考虑，是笔记假设的情境与解释。图示均为本笔记原创示意图。</p>
+        </details>
+
+        <nav class="chapter-pagination" aria-label="章节翻页"><a class="page-link prev" href="ch03.html" rel="prev"><span class="page-label">← 上一章 · 第 3 章</span><span class="page-title">知识共享</span></a><a class="page-link next" href="ch05.html" rel="next"><span class="page-label">下一章 · 第 5 章 →</span><span class="page-title">团队领导</span></a><a class="pagination-home" href="../index.html">书籍概览与目录</a></nav>
+      </article>
+    </div>
+  </main>
+  <footer class="site-footer"><div class="container footer-inner"><span>个人书架 / 中文读书笔记</span><a href="#main">回到顶部 ↑</a></div></footer>
+</body>
+</html>

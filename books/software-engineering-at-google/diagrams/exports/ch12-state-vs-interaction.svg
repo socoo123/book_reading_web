@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="420" viewBox="0 0 720 420" role="img" aria-labelledby="title desc">
+  <title id="title">只验证调用的测试在两种修改下都判断错误</title>
+  <desc id="desc">书中创建用户的例子。上行：实现有缺陷，写入后又误删记录，测试应当失败；只检查 put 是否被调用的交互验证仍然通过，放过了缺陷；用 getUser 查询用户的状态验证查不到用户而失败，判断正确。下行：正确的重构改用等价的写入接口，测试应当通过；交互验证没看到原来的 put 调用而失败，拦下了正确修改；状态验证查到用户照样存在而通过，判断正确。实线框表示判断正确，虚线框表示判断错误。</desc>
+  <!-- Original editable hand-written SVG; web export is an identical copy. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 15px; fill: var(--muted); }
+    .col { font-size: 16px; font-weight: 600; text-anchor: middle; }
+    .label { font-size: 18px; font-weight: 600; text-anchor: middle; }
+    .body { font-size: 16px; fill: var(--muted); text-anchor: middle; }
+    .verdict { font-size: 16px; font-weight: 600; text-anchor: middle; }
+    .note { font-size: 14px; fill: var(--muted); text-anchor: middle; }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.3; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .wrong { fill: var(--bg); stroke: var(--line); stroke-width: 1.6; stroke-dasharray: 6 5; }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <rect width="720" height="420" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="28" y="40">只验证调用，两种修改下都会判断错误</text>
+  <text class="sub" x="28" y="69">书中 createUser 的例子：每行一种修改，后两列是两种验证方式的实际结果</text>
+
+  <text class="col" x="134" y="106">修改与应有结果</text>
+  <text class="col" x="363" y="106">交互验证</text>
+  <text class="note" x="363" y="128">检查 put 是否被调用</text>
+  <text class="col" x="589" y="106">状态验证</text>
+  <text class="note" x="589" y="128">用 getUser 查询用户</text>
+
+  <rect class="node" x="28" y="142" width="212" height="104" rx="7"/>
+  <text class="label" x="134" y="176">实现有缺陷</text>
+  <text class="body" x="134" y="206">写入后又误删记录</text>
+  <text class="verdict" x="134" y="232">应当：测试失败</text>
+
+  <rect class="wrong" x="260" y="142" width="206" height="104" rx="7"/>
+  <text class="label" x="363" y="176">测试通过</text>
+  <text class="body" x="363" y="206">put 确实调用过</text>
+  <text class="verdict" x="363" y="232">错误：放过缺陷</text>
+
+  <rect class="focus" x="486" y="142" width="206" height="104" rx="7"/>
+  <text class="label" x="589" y="176">测试失败</text>
+  <text class="body" x="589" y="206">查不到这个用户</text>
+  <text class="verdict" x="589" y="232">正确：发现缺陷</text>
+
+  <rect class="node" x="28" y="264" width="212" height="104" rx="7"/>
+  <text class="label" x="134" y="298">正确的重构</text>
+  <text class="body" x="134" y="328">改用等价的写入接口</text>
+  <text class="verdict" x="134" y="354">应当：测试通过</text>
+
+  <rect class="wrong" x="260" y="264" width="206" height="104" rx="7"/>
+  <text class="label" x="363" y="298">测试失败</text>
+  <text class="body" x="363" y="328">没看到原来的 put</text>
+  <text class="verdict" x="363" y="354">错误：拦下正确修改</text>
+
+  <rect class="focus" x="486" y="264" width="206" height="104" rx="7"/>
+  <text class="label" x="589" y="298">测试通过</text>
+  <text class="body" x="589" y="328">用户照样存在</text>
+  <text class="verdict" x="589" y="354">正确：放行修改</text>
+
+  <text class="note" x="360" y="400">后两列中，实线框：测试判断正确　　虚线框：测试判断错误</text>
+</svg>

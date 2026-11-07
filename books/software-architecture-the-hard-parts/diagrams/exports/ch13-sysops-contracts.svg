@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="500" viewBox="0 0 720 500" role="img" aria-labelledby="title desc">
+<title id="title">Sysops 按协作边界选择契约严格度</title>
+<desc id="desc">编排器与工单管理、分派的契约较严格，与通知、调查及手机的契约较宽松；手机选择来自应用商店的发布约束。图中不编码同步与异步，也不推断新的部署边界。</desc>
+<style>
+:root{--surface:#fcfbf8;--text:#292824;--muted:#66645d;--line:#969187;--soft:#f0ece4;--accent:#386d74}
+@media(prefers-color-scheme:dark){:root:not([data-theme='light']){--surface:#252524;--text:#e6e3dc;--muted:#b6b1a7;--line:#8c8982;--soft:#353534;--accent:#94c8cf}}
+:root[data-theme='dark']{--surface:#252524;--text:#e6e3dc;--muted:#b6b1a7;--line:#8c8982;--soft:#353534;--accent:#94c8cf}
+.bg{fill:var(--surface)}text{fill:var(--text);font:17px system-ui,-apple-system,"PingFang SC",sans-serif}.h{font-size:21px;font-weight:600}.s{font-size:15px;fill:var(--muted)}.b{fill:var(--soft);stroke:var(--line);stroke-width:1.5}.c{fill:var(--surface);stroke:var(--accent);stroke-width:1.5}.e{fill:none;stroke:var(--accent);stroke-width:2;marker-end:url(#a)}.both{marker-start:url(#a)}.arrow{fill:var(--accent)}
+</style>
+<defs><marker id="a" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse"><path class="arrow" d="M0 0 8 4 0 8Z"/></marker></defs>
+<rect class="bg" width="720" height="500"/>
+<text class="h" x="28" y="36">语义联系与发布节奏，一起决定契约</text>
+<text class="s" x="28" y="64">工作流契约视图；连线不表示同步／异步或共同事务</text>
+<rect class="b" x="28" y="206" width="184" height="112" rx="11"/><text x="120" y="245" text-anchor="middle">工单编排器</text><text class="s" x="120" y="274" text-anchor="middle">主流程编排已定</text><text class="s" x="120" y="299" text-anchor="middle">各交界分别约定</text>
+<rect class="b" x="450" y="85" width="242" height="62" rx="8"/><text x="571" y="110" text-anchor="middle">工单管理</text><text class="s" x="571" y="135" text-anchor="middle">创建／完成的工作流合框</text>
+<rect class="b" x="450" y="163" width="242" height="62" rx="8"/><text x="571" y="188" text-anchor="middle">工单分派</text><text class="s" x="571" y="213" text-anchor="middle">工单类型变化需共同理解</text>
+<rect class="b" x="450" y="241" width="242" height="62" rx="8"/><text x="571" y="266" text-anchor="middle">通知服务</text><text class="s" x="571" y="291" text-anchor="middle">仅依赖必要通知信息</text>
+<rect class="b" x="450" y="319" width="242" height="62" rx="8"/><text x="571" y="344" text-anchor="middle">调查服务</text><text class="s" x="571" y="369" text-anchor="middle">Survey 仍独占写入</text>
+<rect class="c" x="450" y="397" width="242" height="62" rx="8"/><text x="571" y="422" text-anchor="middle">专家手机应用</text><text class="s" x="571" y="447" text-anchor="middle">应用商店限制更新节奏</text>
+<path class="e" d="M212 226L278 116H440"/><text class="s" x="355" y="105" text-anchor="middle">严格</text>
+<path class="e" d="M212 242L278 194H440"/><text class="s" x="355" y="183" text-anchor="middle">严格</text>
+<path class="e" d="M212 262L278 272H440"/><text class="s" x="355" y="261" text-anchor="middle">宽松</text>
+<path class="e" d="M212 282L278 350H440"/><text class="s" x="355" y="339" text-anchor="middle">宽松</text>
+<path class="e both" d="M222 304L278 428H440"/><text class="s" x="355" y="417" text-anchor="middle">宽松 · 双向</text>
+<text class="s" x="360" y="485" text-anchor="middle">手机 ADR：名称—值＋临时扩展；两端增加验证责任</text>
+<script><![CDATA[try{const t=localStorage.getItem('reading-notes-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch{}]]></script>
+</svg>

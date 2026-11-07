@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="366" viewBox="0 0 720 366" role="img" aria-labelledby="title desc">
+  <title id="title">历史绩效需要放在原有情境中解释</title>
+  <desc id="desc">左侧是特定岗位、特定时期的历史绩效。上方实线通向理解当时表现、讨论匹配与支持。下方虚线经叉号通向直接预测新团队表现、作为转岗筛选门槛，表示本章 Google 内部转岗案例所质疑的跨情境用途。箭头表示数据用途，不是人员流转。</desc>
+  <!-- Original, editable hand-written SVG. The export is an identical web copy. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 15px; fill: var(--muted); }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.2; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .label { font-size: 18px; font-weight: 600; text-anchor: middle; }
+    .small { font-size: 16px; fill: var(--muted); text-anchor: middle; }
+    .arrow { fill: none; stroke: var(--line); stroke-width: 1.8; marker-end: url(#arrow); }
+    .unsupported { fill: none; stroke: var(--accent); stroke-width: 1.8; stroke-dasharray: 6 5; marker-end: url(#unsupported-arrow); }
+    .cross { stroke: var(--accent); stroke-width: 2.4; }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker>
+    <marker id="unsupported-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--accent)"/></marker>
+  </defs>
+  <rect width="720" height="366" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="32" y="39">同一份评级，用来回答什么问题？</text>
+  <text class="sub" x="32" y="67">依据原章的 Google 内部转岗案例；不是对所有绩效预测的断言</text>
+  <rect class="node" x="32" y="155" width="228" height="94" rx="7"/>
+  <text class="label" x="146" y="190">历史绩效</text>
+  <text class="small" x="146" y="220">特定岗位 · 特定时期</text>
+  <path class="arrow" d="M268 180H322V140H370"/>
+  <rect class="node" x="380" y="98" width="308" height="84" rx="7"/>
+  <text class="label" x="534" y="132">理解当时的岗位表现</text>
+  <text class="small" x="534" y="160">讨论匹配与支持</text>
+  <path class="unsupported" d="M268 226H322V270H370"/>
+  <circle cx="322" cy="270" r="13" fill="var(--bg)"/>
+  <path class="cross" d="m314 262 16 16m0-16-16 16"/>
+  <rect class="focus" x="380" y="228" width="308" height="84" rx="7"/>
+  <text class="label" x="534" y="262">直接预测新团队表现</text>
+  <text class="small" x="534" y="290">作为转岗筛选门槛</text>
+  <text class="sub" x="32" y="347">实线：情境内的解释　　虚线与叉号：本案例质疑的跨情境推断</text>
+</svg>

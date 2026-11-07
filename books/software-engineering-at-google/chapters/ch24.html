@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>第 24 章｜持续交付 · Software Engineering at Google · 架构提升读书笔记</title>
+  <meta name="description" content="《Software Engineering at Google》第二十四章读书笔记：理解小批量、功能开关、Search 发布列车、质量阈值、客户端分阶段放量与部署 A/B 对照，建立可持续的用户反馈通路。">
+  <link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+  <script src="../../../assets/theme.js"></script>
+  <script src="../../../assets/reader.js" defer></script>
+  <link rel="stylesheet" href="../../../assets/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header reader-header"><div class="container header-inner">
+    <a class="brand" href="../../../index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5.5C8.5 3.8 5.8 3.6 2.5 4.5v14c3.3-.9 6-.7 9.5 1 3.5-1.7 6.2-1.9 9.5-1v-14c-3.3-.9-6-.7-9.5 1Zm0 0v14"/></svg>书架</a>
+    <a class="reader-book-title" href="../index.html" lang="en">Software Engineering at Google</a>
+    <div class="theme-control" role="group" aria-label="外观" hidden><button type="button" data-theme-value="system" title="跟随系统"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path class="fill" d="M12 4a8 8 0 0 1 0 16Z"/></svg><span class="sr-only">跟随系统</span></button><button type="button" data-theme-value="light" title="浅色"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.6"/><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21M5.6 5.6l1.6 1.6M16.8 16.8l1.6 1.6M5.6 18.4l1.6-1.6M16.8 7.2l1.6-1.6"/></svg><span class="sr-only">浅色</span></button><button type="button" data-theme-value="dark" title="深色"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.5 14.6A7.8 7.8 0 0 1 9.4 4.5a7.8 7.8 0 1 0 10.1 10.1Z"/></svg><span class="sr-only">深色</span></button></div>
+  </div></header>
+  <main id="main" class="container reader-container">
+    <nav class="breadcrumb" aria-label="当前位置"><ol><li><a href="../../../index.html">书架</a></li><li><a href="../index.html">书籍概览</a></li><li aria-current="page">第 24 章</li></ol></nav>
+    <div class="reading-layout">
+      <aside class="toc"><nav aria-label="本页目录"><h2>本页目录</h2><ul>
+        <li><a href="#delivery-and-learning">01　从完成到学习循环</a></li>
+        <li><a href="#small-batches">02　小批量与可判断的小步</a></li>
+        <li><a href="#modular-delivery">03　独立前进与变化边界</a></li>
+        <li><a href="#feature-flags">04　代码送达与功能开放</a></li>
+        <li><a href="#release-train">05　可预期的发布列车</a></li>
+        <li><a href="#quality-thresholds">06　质量阈值与具体用户</a></li>
+        <li><a href="#ship-what-is-used">07　有用的交付与用户成本</a></li>
+        <li><a href="#representative-rollout">08　代表性验证与分阶段放量</a></li>
+        <li><a href="#deployment-ab-testing">09　部署本身的 A/B 对照</a></li>
+        <li><a href="#deployment-discipline">10　可持续的交付纪律</a></li>
+      </ul><p class="toc-note"><a href="../index.html">← 书籍概览</a></p></nav></aside>
+      <article class="article">
+        <header class="article-header">
+          <p class="eyebrow">READING NOTES / CHAPTER 24</p>
+          <h1>第 24 章｜持续交付</h1>
+          <p class="article-deck"><span lang="en">Continuous Delivery</span> · 架构提升读书笔记</p>
+        </header>
+        <p>代码合入主干以后，用户可能仍要等很久才能用上它。构建、回归测试、发布协调、逐步放量，每一段等待都让“已经完成”的工作继续处在不确定中：它有没有解决真实问题，会不会拖慢设备，出了故障能否及时停止，答案还没有回来。</p>
+        <p>本章把软件工程的视线从代码库延伸到用户手中。持续交付关注的是让这段路变短、变可靠，并且在团队扩大以后仍能重复走通。它把架构、功能开关、发布列车、用户指标与团队纪律接在一起，使一次上线成为可控制的学习过程。</p>
+        <details class="mobile-toc"><summary>本页目录 · 10 个小节</summary><nav aria-label="移动端本页目录"><ul>
+          <li><a href="#delivery-and-learning">01　让完成的代码，尽快进入学习循环</a></li>
+          <li><a href="#small-batches">02　小批量，把一次大赌注拆成可判断的小步</a></li>
+          <li><a href="#modular-delivery">03　让团队独立前进，要先让变化有边界</a></li>
+          <li><a href="#feature-flags">04　功能开关，把代码送达与功能开放分开</a></li>
+          <li><a href="#release-train">05　发布列车，用可预期的下一班减少临场协调</a></li>
+          <li><a href="#quality-thresholds">06　质量判断，要同时看阈值与具体用户</a></li>
+          <li><a href="#ship-what-is-used">07　只交付有用的部分，也尊重用户接收更新的成本</a></li>
+          <li><a href="#representative-rollout">08　接受设备多样性，用代表性验证接近现实</a></li>
+          <li><a href="#deployment-ab-testing">09　连部署本身也做对照，分清更新与功能的影响</a></li>
+          <li><a href="#deployment-discipline">10　让纪律进入流程，把交付变成可持续的日常能力</a></li>
+        </ul></nav></details>
+
+        <section id="delivery-and-learning">
+          <h2><span class="section-number">01</span>让完成的代码，尽快进入学习循环</h2>
+          <p>原书开头把发布放在产品的长期生命里理解。首次上线只能回答一部分问题；之后仍要应对真实用户的困难、市场变化与新的运行条件。一个想法在开发环境中停留得越久，团队围绕它作出的后续投入就越多，却迟迟不能确认这些投入是否有用。</p>
+          <p>假设一个报表产品要增加“保存常用筛选条件”。开发者已经完成数据库、接口和页面，又等了一个月才随大版本发布。用户真正使用后，团队才发现，运营人员更需要按部门共享筛选方案，个人收藏反而很少使用。这说明，代码正确与需求有效之间还有一段距离；如果早一些把小范围可用版本交给用户，团队可以更早调整权限和共享方式，减少沿错误方向继续完善的工作。</p>
+          <p>因此，持续交付所追求的速度，包括更早发现“这项功能不值得继续做”。原书强调，代码的用户价值到功能真正可用时才开始实现；发布之后，观察、调整、再发布会继续发生。只统计提交数量或开发完成日期，容易把尚未得到验证的库存误认为已经实现的产品收益。</p>
+          <p>这里需要厘清两个相近术语。按 Martin Fowler 的定义，<strong>持续交付（Continuous Delivery）</strong>是始终保有按需把软件发布到生产环境的能力；<strong>持续部署（Continuous Deployment）</strong>进一步把通过管道的变更自动送进生产。原章在讨论理想状态时交替使用这两个词，本文把“随时能够发布”与“每次都自动发布”分开。用户是否应当每天接收更新，是产品选择；团队能否可靠地产出可发布版本，是工程能力。</p>
+          <p>这种能力可以逐步建立。原书列出的几个抓手彼此配合：小批量降低每次改变的范围，自动化降低重复操作成本，模块化隔离影响，健康指标提供判断依据，分阶段放量限制早期暴露，再用实验比较实际结果。团队即使尚未做到自动部署每个变更，也可以先从消除一个手工步骤、补齐一项健康指标开始获得收益。</p>
+          <aside class="key-point"><p class="key-point-label">核心观点</p><p>持续交付首先让软件随时具备可靠发布的条件，再由用户需要决定何时实际交付。缩短“代码完成—用户反馈”的距离，能同时减少错误实现与错误产品方向的成本。</p></aside>
+        </section>
+
+        <section id="small-batches">
+          <h2><span class="section-number">02</span>小批量，把一次大赌注拆成可判断的小步</h2>
+          <p>“更快也能更安全”是全章的主线。它成立的机制，在于每次发布包含较少的新变化，变化发生不久就能被观察到。出现回归时，候选原因更少，作者对修改仍有清楚记忆，修正也更容易及时抵达用户。频率只是这些工作方式的外在表现。</p>
+          <p>原书用当时一个 YouTube 大型 Python 单体应用的发布过程展示相反的循环。发布需要构建值守者、发布经理和其他人员参与，几乎每次都要挑入补丁并重新构建；远程 QA 团队还要为每次发布执行约五十小时的手工回归测试。</p>
+          <p>当一次发布如此昂贵，团队很容易希望“再测一点，争取这次都带上”。另一个功能恰好快完成了，也想搭上这一班。等待让新变化继续积累，变化越多，测试与故障归因又越困难。发布越来越像需要少数专家临场救火的大项目；专家被消耗以后，下一次发布还会失去部分经验。图 24-1 把这个循环画了出来：从“发布很昂贵”出发，每一步都让下一次发布更昂贵；中间的虚线标出作者主张的两个切入点。</p>
+          <figure class="concept-figure"><a href="../diagrams/exports/ch24-costly-release-loop.svg" target="_blank" rel="noopener"><img src="../diagrams/exports/ch24-costly-release-loop.svg" width="720" height="456" alt="发布越昂贵越容易越拖越大的循环：发布很昂贵导致推迟发布，快完成的功能也想搭车，单次变化越积越多，测试与归因更难，专家被消耗，发布又更昂贵；作者主张用自动化降低固定开销、用小批量和清楚边界缩小变化范围来打破循环，而非拉长发布间隔。"></a><figcaption>图 24-1：从①开始顺着实线箭头读，六步首尾相接；中间虚线框是作者主张的出口，两支虚线箭头分别作用于固定开销和变化范围。点击<a href="../diagrams/exports/ch24-costly-release-loop.svg" target="_blank" rel="noopener">查看大图</a>。</figcaption></figure>
+          <p>单纯把发布间隔拉长，可以暂时给测试更多时间，却也让更多代码堆进下一次发布。作者主张把投入转向降低每次发布的操作成本、改善隔离和缩小增量。这需要持续集成、可靠测试、可观察的生产状态与恢复手段支撑；把原来的高风险流程一天多跑几次，不会自动得到相同收益。</p>
+          <p>从成本角度看，可以把一次发布拆成两类工作：每次都要重复的固定开销，以及随变更范围增长的验证与排错工作。自动构建、自动检查与标准化操作降低前者；较小批量和明确边界减少后者。两边一起改善，团队才能在增加发布次数时仍减少总体负担，也更容易放弃一个有问题的候选版本，而不觉得丢掉了整个季度的成果。</p>
+        </section>
+
+        <section id="modular-delivery">
+          <h2><span class="section-number">03</span>让团队独立前进，要先让变化有边界</h2>
+          <p>团队变大后，一个常见办法是给子团队拉长期分支，暂时避免彼此影响。原书指出，这会把问题推到后面的集成阶段：隔离期间积累的差异最终仍要会合，出了问题却更难知道是哪次修改造成的。Google 更倾向在共同主干上持续开发，用持续集成、问题变更定位与必要的回退尽快恢复可用状态。相关基础见<a href="ch23.html">第二十三章的持续集成</a>。</p>
+          <p>代码及时合在一起，还需要架构允许不同工作分别成熟。一个产品若每改一个小功能都必须协调所有模块、重测全部组合，发布负担会随参与团队一起增长。清楚的接口、职责分离和可独立验证的模块，能够让某个功能的问题停留在较小范围，其他团队也更容易判断自己是否受影响。</p>
+          <p>原章在这里强烈推荐向微服务架构迁移，并提到 Google 有些应用选择重写，把需要的模块性直接放进新架构。这个建议有其大型产品与长期维护的背景。可以这样理解：真正要先得到的是可隔离、可理解的变化边界，微服务是实现它的一种路径；把所有模块立即拆成网络服务，还会引入跨服务调用、部署协调和故障处理的成本。</p>
+          <p>继续用报表产品作假设。筛选条件的存取、报表执行与文件下载可以各有明确接口。修改筛选界面时，团队先验证它仍生成已有执行接口接受的请求；报表引擎无需同时改变。若未来确实需要独立扩缩容或独立部署，再据此调整服务边界。原书的重点可以落实为：一个团队交付新价值时，尽量不要求所有其他团队在同一时刻完成自己的工作。</p>
+          <p>这种边界同样为故障恢复服务。只有明确知道某项改动影响什么、依赖什么，才容易关掉一个新路径或回退一项部署。它与<a href="ch22.html#compatible-bridge">第二十二章的兼容桥</a>相通：共同系统保持可用，不必要求所有变化以同一个速度完成。</p>
+        </section>
+
+        <section id="feature-flags">
+          <h2><span class="section-number">04</span>功能开关，把代码送达与功能开放分开</h2>
+          <p><strong>功能开关（feature flag）</strong>是在构建或运行过程中控制某条功能路径是否可用的条件。原书希望用开关保护变更，使已上线功能、开发中功能和准备实验的功能能够在同一个产品中共存，而不会因为某一个功能尚未成熟，就阻塞其他代码的交付。</p>
+          <p>这里有两种需要分清的作用。构建时关闭某功能，在语言和工具允许的条件下，可以把相应代码从产物中排除；运行时开关则把新旧路径保留在同一二进制中，通过动态配置选择执行哪一条。后者允许团队先分发代码，再逐步开放功能，也允许在发现问题时调整配置，不必总是等待下一次二进制发布。</p>
+          <p>在假设的报表产品中，团队可以先把新筛选编辑器与旧编辑器一起部署，默认继续使用旧界面。内部验证完成后，配置服务让少量用户进入新界面，团队观察保存成功率、页面错误和加载延迟。若新界面调用出现异常，就先停止扩大并让后续访问回到旧路径；若表现稳定，再增加开放范围。一次二进制交付因此支持了多个功能开放阶段。</p>
+          <p>下面的图有两条时钟。上方表示代码经过构建验证并送达；下方表示同一份代码已在场时，配置怎样改变新功能的可见范围。把两条时钟分开，发布团队就不必为了一个功能的宣传日，临时重做整包交付。</p>
+          <figure class="concept-figure"><a href="../diagrams/exports/ch24-deploy-and-activate.svg" target="_blank" rel="noopener"><img src="../diagrams/exports/ch24-deploy-and-activate.svg" width="720" height="430" alt="代码交付先把受开关保护的新旧路径一起送达，功能开放随后通过配置从少量用户开始，观察后再逐步扩大，不必重发同一二进制。"></a><figcaption>图 24-2：实线表示交付或放量的推进。下方三个框发生在二进制已送达之后；关闭开关改变后续执行路径，不能自动撤销此前的数据写入。点击<a href="../diagrams/exports/ch24-deploy-and-activate.svg" target="_blank" rel="noopener">查看大图</a>。</figcaption></figure>
+          <p>原书还用新闻发布解释这种控制的价值：代码可以提前就位，功能在约定时刻附近才开放，减少功能已经被用户发现、公告却还没准备好的时间差。但客户端中的代码仍可能被提取分析，功能开关不承担保密保证；把按钮藏起来，也不能代替服务端权限判断。</p>
+          <p>动态配置本身也是一次改变。若同时给所有用户打开一条未经真实流量验证的新路径，风险只是从二进制发布转移到了配置发布。原书因此主张投资安全的配置分发，并在结尾强调配置应像代码一样进入版本控制，支持预演、追踪与恢复。</p>
+          <p>开关的恢复能力还取决于新旧路径是否真正可切换。如果新功能已经把数据改成旧版本无法读取的格式，关闭界面开关不会恢复数据兼容；如果初始化时已经崩溃，稍后才读取的开关也无法保护启动。团队应把开关放在有效的影响边界，并保留经过验证的旧路径。新功能稳定后，再按计划删除不再需要的旧实现和临时开关，避免两套路径永久堆积。</p>
+          <aside class="key-point"><p class="key-point-label">核心观点</p><p>功能开关让“代码已经送达”与“用户开始使用”可以分别控制。它的价值来自可用的隔离边界、可靠的配置发布和真实可退回的路径，而非条件判断本身。</p></aside>
+        </section>
+
+        <section id="release-train">
+          <h2><span class="section-number">05</span>发布列车，用可预期的下一班减少临场协调</h2>
+          <p><strong>发布列车（release train）</strong>按照约定的节奏组织发布，已经满足条件的变化上车，尚未就绪的变化等待后续班次。它把“什么时候能够发布”从每次重新协商的问题，逐渐变成团队可以依赖的公共安排。</p>
+          <p>Search 的历史案例把这个变化讲得很具体。原有代码长期积累，移动端需求又不断加入，构建、数据整合和测试相互牵连。一度以每周一次发布为目标，仍经常无法稳定做到。Sheri Shipe 参与改善这套流程时，每轮都需要一组工程师花数天处理，每个缺陷都要人工判断是否影响搜索质量、用户体验或收入；功能作者很难知道自己的工作到底何时会到用户手中。</p>
+          <p>专门团队经过数年的改进，自动化可以自动化的步骤，为功能进入版本设置截止点，并简化插件、数据与二进制的集成，最终做到稳定地隔天发布 Search 二进制。</p>
+          <p>截止点是列车能够准时的重要条件。若每个“只差一点”的功能都能临时插入，构建与测试就会不断重来，所有已经就绪的修改也跟着等待。反过来，下一班足够近且可信，错过一班的成本就会下降，功能团队较容易接受等待，发布工程师也较少需要在夜间为临时请求重新构建。</p>
+          <p>原书也描述了一类少见的例外：团队临近赛事才完成有合同期限的功能，要求发布经理立即挑入，即使重新构建与测试需要数小时。这个故事展示了业务紧急度与可持续工作之间的冲突。真正固定日期的功能，应尽早把截止时间、验证材料与分阶段开放安排接进发布计划。</p>
+          <p>发布列车保证的是一套可信的节奏和取舍方式：尚未成熟的功能通常下车，不能接受的产品回归仍然可以让整班停下。它保护的是整个产品的稳定推进。</p>
+        </section>
+
+        <section id="quality-thresholds">
+          <h2><span class="section-number">06</span>质量判断，要同时看阈值与具体用户</h2>
+          <p>Search 案例提出的另一项原则是：没有完美的二进制。数十、数百位工程师不断加入变化，很难让所有可观察差异都在发布前完全消失。团队需要知道哪些指标必须满足什么条件，以及当前问题会给用户造成什么后果，才能作出一致的发布决定。</p>
+          <p>例如，一条线偏移两像素，看似是视觉小问题，却可能影响广告显示；某个颜色稍有变化，也可能损害视障用户的阅读体验。原书借这些例子提醒，严重程度来自实际影响，不能只按代码改动大小或缺陷标题判断。明确的关键指标与门槛，可以减少每次上线时重复争论，却仍需要有判断具体情境的负责人。</p>
+          <p>书中最能体现这一点的案例，涉及菲律宾一座岛上使用的一种方言。用户以这种方言搜索时，得到的不是结果，而是空白网页。团队调查使用者数量、故障是否稳定发生，以及当地用户是否使用 Google，最后把资料交给搜索业务的高级负责人。决定是延迟发布，先修好问题，尽管受影响群体很小。</p>
+          <p>总体指标可能因为这类用户占比低而变化很小，但对受影响者，核心服务已经不可用。放到发布判断里，这意味着需要同时保留总体健康信号与关键人群、关键流程的可见性，不能让平均值替代对具体故障的理解。</p>
+          <p>脚注把这一取舍与 SRE 的<strong>错误预算（error budget）</strong>联系起来：先理解可以接受多大程度的服务失误，以及近期已经消耗了多少，再调整速度与稳定性的权衡。错误预算为可靠性目标提供共同尺度；像空白搜索结果这样的具体问题，仍要结合服务承诺和用户影响判断。</p>
+          <aside class="key-point"><p class="key-point-label">核心观点</p><p>可接受的发布从清楚的质量条件开始，也要让指标背后的用户仍然可见。发布列车可以等待下一项功能，遇到不可接受的既有体验回归时，也应当能够停下来修复。</p></aside>
+        </section>
+
+        <section id="ship-what-is-used">
+          <h2><span class="section-number">07</span>只交付有用的部分，也尊重用户接收更新的成本</h2>
+          <p>发布能力变强以后，另一个问题会更突出：功能更容易进入产品，也更容易一直留在那里。客户端用户要为这些代码支付下载流量、存储空间和设备资源，开发团队则承受更慢的构建、更复杂的部署和更多边缘故障。只看新功能数量，会漏掉产品长期膨胀的成本。</p>
+          <p>原书主张把功能价值与分发成本放在一起观察。模块化支持动态、可配置的交付，让用户无需为了自己的设备和语言，接收所有其他设备架构与语言的资源；实验和实际使用数据则帮助团队判断，一项功能是否仍提供足以支持这些成本的收益。在 Google，权衡这些成本与收益常常意味着安排专门团队持续改善产品效率。</p>
+          <p>假设一款离线阅读应用支持许多语言，某些用户还需要大体积语音包。若每次更新都分发全部语音资源，每个用户都会承担自己用不到的成本。把语音包做成按需获取的模块，可以缩小基础更新，同时保留需要它的用户的完整能力。团队仍要决定首次下载、弱网与离线可用的行为，这些取舍应依据真实使用方式，不能只追求安装包最小。</p>
+          <p>这里还应区分“某个用户暂时用不到”与“产品应该删除”。无障碍能力、特定语言或低频但关键的恢复功能，可能只有较少用户使用，却有明确价值。结合上一节的岛屿案例，合理做法是研究怎样把相关能力可靠地送到需要它的人手里，再判断长期维护是否值得，而非按使用人数机械裁剪。</p>
+          <p>原书也正面承认频繁更新对客户端的干扰：用户可能需要付流量费，网络不总可用，有些系统更新还涉及重启。持续交付让团队能够随时产生可用版本，但实际分发频率应有意选择。每天产出可靠候选包、按用户合适的节奏分发，可以同时成立。工程上拥有更多选择，最终应让用户体验更好。</p>
+        </section>
+
+        <section id="representative-rollout">
+          <h2><span class="section-number">08</span>接受设备多样性，用代表性验证接近现实</h2>
+          <p>移动设备的型号、系统版本、语言、网络条件与用户设置相互组合，难以在实验室里穷尽。原书引述一位发布经理的认识转变：这种多样性是必须面对的事实。接受它以后，团队才能把资格验证从“覆盖所有组合以后再上线”，转向有依据的代表性测试与可控制的真实环境反馈。</p>
+          <p>代表性需要根据风险选择。以前面假设的阅读应用为例，低内存设备、主要系统版本、弱网和关键语言可能各自揭示不同问题。目标是让有限样本触及重要差异，再通过生产环境的分阶段放量继续获得实验室难以提供的信息；少量方便找到的高端设备，并不会自然成为代表性样本。</p>
+          <p><strong>分阶段放量（staged rollout）</strong>先向一部分用户分发更新，观察产品健康，再决定是否扩大。原书介绍 Google 应用使用测试轨道与逐步增加的流量，并可以组织不同国家的 QA 团队验证本地关键功能。测试轨道解决由谁先拿到版本，放量比例控制真实环境的暴露范围，指标则支持继续、暂停或修复的判断。</p>
+          <p>这个过程应当对“发现问题后怎么办”有明确安排。团队先定义崩溃、延迟、任务成功率等健康信号，准备判断基线和负责人，再开始分发；观察到问题时，能够停止扩大，关闭适用的新功能，或交付修复版本。不同恢复方式作用不同，提前理解它们比上线后临时寻找按钮可靠。</p>
+          <p>在客户端，停止放量不会让已经升级的设备回到旧版。以 Google Play 为例，按其当前的官方说明，暂停分阶段发布后，这个版本不再分发给更多用户，已收到的用户仍留在该版本。所以小范围放量、功能开关与可靠修复渠道需要配合：停止扩大控制后续暴露，已经发生的影响还需要单独处理。</p>
+          <p>原书把这类实践放在“左移”之下，可以理解为更早取得足以作出决定的证据。单元测试与持续集成尽量在交付前发现问题，代表性测试与早期放量则在全面部署以前发现真实环境中的问题。这里的“早”是相对于大范围影响而言的。</p>
+        </section>
+
+        <section id="deployment-ab-testing">
+          <h2><span class="section-number">09</span>连部署本身也做对照，分清更新与功能的影响</h2>
+          <p>原章有一个容易忽略的观察：对一些 Android 应用，即使没有产品功能变化，推送一次更新也可能显著改变用户或设备指标。因此，只比较新版本发布前后，或只看最早收到更新的人，并不能充分判断新版本究竟有没有改善体验。更新动作、用户构成与观察时点，也可能进入结果。</p>
+          <p>为处理这件事，Google 的一些大型应用连<strong>部署本身</strong>也做 A/B 对照。一组收到候选更新，另一组也经历更新，但收到的是保持旧功能的对照版本，原书把后者称为安慰剂（placebo）。两组同时向足够多、相似的用户展开，团队就能比较候选版本相对于“同样更新过的旧功能”表现如何。</p>
+          <p>图 24-3 从左到右读：两条路径都经历更新，区别集中在更新内容；右侧按照共同定义的口径收集结果。图中的随机分组，是笔记为解释可比性补上的前提。</p>
+          <figure class="concept-figure"><a href="../diagrams/exports/ch24-deployment-control.svg" target="_blank" rel="noopener"><img src="../diagrams/exports/ch24-deployment-control.svg" width="720" height="430" alt="同一时期的可比用户分为两组，对照组更新到旧功能重新发布的版本，实验组更新到候选版本，再用相同口径比较结果，避免把更新动作本身全部归因于新功能。"></a><figcaption>图 24-3：箭头表示分组、更新与测量的先后。对照组也要经历更新；两组比较提供的是已定义指标上的证据。点击<a href="../diagrams/exports/ch24-deployment-control.svg" target="_blank" rel="noopener">查看大图</a>。</figcaption></figure>
+          <p>用一组假设数字看差别：历史版本的某项任务成功率为 80%；本次同期实验中，对照更新组的一万次任务成功 7,600 次，候选组的一万次任务成功 7,700 次。候选组相对历史下降了 3 个百分点，但相对同期对照高了 1 个百分点。前后比较把多种变化混在一起，同期对照才更接近本次候选内容带来的增量。</p>
+          <p>实验判断仍要事先明确测什么、容许多大退化，以及需要怎样的观察证据。原书提出用自动指标管道，让人不必疲惫地盯着仪表盘做决定：一旦数据足以确认<strong>护栏指标（guardrail metrics）</strong>不受影响，就把发布推向更多流量。护栏指标是新体验不能突破的底线，例如不能明显增加崩溃或延迟。样本有限、关键故障稀少或指标缺失时，自动化也补不出不存在的信息；“没有观察到明显退化”，说明的只是已测量的人群、指标和时段。</p>
+          <p>这套双更新对照有成本，需要足够用户、稳定分组与可信测量，原书也承认它并不适用于每个应用。对用户较少的团队，书中推荐尽量让部署成为<strong>行为尽量不变的发布（change-neutral release）</strong>：新功能都受开关保护，放量期间检验的只是部署本身的稳定性，之后再分别开放新功能。即便开关关闭，公共依赖、初始化或构建变化仍可能影响产品，所以部署验证依然需要进行。</p>
+          <p>将二进制部署、功能开放和功能价值验证分开，团队就较容易解释每一阶段究竟学到了什么。它也连接了<a href="ch14.html">第十四章关于测试保真度的讨论</a>：越接近真实环境，得到的信息越贴近实际使用，同时越需要对暴露范围和结果解释负责。</p>
+        </section>
+
+        <section id="deployment-discipline">
+          <h2><span class="section-number">10</span>让纪律进入流程，把交付变成可持续的日常能力</h2>
+          <p>原书最后回到团队扩大后的工作方式。十个人可以轮流发布并随时沟通，几百个人却不能依赖每次把相关人都叫到一起。即使每天开始一次发布，完整放量也可能持续一周或更久；“每天有版本”和“某次版本很快覆盖全部用户”是两个不同时间尺度。团队需要知道用户实际处于哪些版本与配置，才能解释当前反馈。</p>
+          <p>Google Maps 的经验是，大多数功能都不应让整个版本等它。发布足够频繁时，一个功能错过列车的损失，通常小于所有就绪功能一起延期的损失，更小于把尚未成熟的功能推给用户的代价。功能作者对自己工作的热情很重要，但发布责任还包括保护既有体验，不让临时紧迫感越过共同质量条件。图 24-4 把这三种代价按行排开，并结合<a href="#release-train">发布列车</a>一节的截止点，标出每种处理的代价落在谁身上。</p>
+          <figure class="concept-figure"><a href="../diagrams/exports/ch24-missed-train.svg" target="_blank" rel="noopener"><img src="../diagrams/exports/ch24-missed-train.svg" width="720" height="424" alt="一个功能赶不上截止点时的三种处理：等下一班，本班按时出发，只有这个功能晚一班；整班等它，挑入后重新构建与测试，所有就绪功能和发布工程师一起承担延误；匆忙带上，未成熟的功能直接到达用户，损害既有体验。发布足够频繁时，代价从上到下递增。"></a><figcaption>图 24-4：每一行从左往右读：怎样处理、直接后果、承担代价的是谁。自上而下，代价从一个功能扩大到整班发布，再到用户；下一班越近、越可信，第一行的代价越小。点击<a href="../diagrams/exports/ch24-missed-train.svg" target="_blank" rel="noopener">查看大图</a>。</figcaption></figure>
+          <p>这种纪律需要提前放进架构和协作流程：用有清楚契约的接口隔离功能，持续执行适用测试，及早交流跨团队影响，明确进入版本的条件与发布决策责任。自动化执行重复步骤，工程师处理真正需要语义判断的异常。两者配合，发布经理才不必一边补操作记录，一边临场决定一个从未讨论过的风险。</p>
+          <p>配置也应成为正式工程产物。原章结尾提出在生产中可配置的二进制、进入版本控制的配置、预演验证，以及回退、前向修复和可靠补丁工具链。回退把可恢复部分带回已知状态，前向修复则交付一个新的纠正版本；具体采用哪种方式，要看兼容性和已经产生的影响。把这些路径事先做成可用工具，比只在文档中写“有问题就回滚”更接近真正的交付能力。</p>
+          <p>较小的团队可以从小处开始：先把构建与关键验证变成可重复步骤，把一次配置修改纳入记录，为一个重要功能建立有效开关，并让下一次发布的时间和准入条件可信。随后根据真正阻塞反馈的环节继续投入。衡量方向是：同类发布是否减少了人工协调，用户问题是否更快被发现，停止和修复是否更可靠。</p>
+          <p>贯穿本章的“更快、更安全、更便宜”，来自这整套能力共同降低每次变化的负担。代码及时集成，变化有边界，发布可预期，真实效果能够被判断，恢复路径也已经准备好。于是，团队既能更从容地交付一个值得开放的功能，也能更从容地让一个尚未准备好的功能等待下一班。</p>
+          <aside class="key-point"><p class="key-point-label">核心观点</p><p>持续交付的长期产物，是一条可重复、可观察、可恢复的用户反馈通路。即使最终选择较低的更新频率，建立这条通路所需的自动化、架构与团队纪律，仍然保有价值。</p></aside>
+        </section>
+
+        <details id="sources" class="source-note">
+          <summary>来源、小节对应、核查与整理说明</summary>
+          <p>依据《Software Engineering at Google》（2020）Abseil 官方公开英文 HTML 版<a href="https://abseil.io/resources/swe-book/html/ch24.html">第 24 章 Continuous Delivery</a>，Radha Narayan、Bobbi Jones、Sheri Shipe 与 David Owens 撰写、Lisa Carey 编辑；核查日期 2026-11-06。</p>
+          <ul>
+            <li>01—02：<a href="https://abseil.io/resources/swe-book/html/ch24.html#continuous_delivery-id00035">开篇</a>、<a href="https://abseil.io/resources/swe-book/html/ch24.html#idioms_of_continuous_delivery_at_google">Idioms of Continuous Delivery at Google</a>。原章列出 agility、automation、isolation、reliability、data-driven decision making、phased rollout 六项抓手；本文按交付过程展开。</li>
+            <li>02—03：<a href="https://abseil.io/resources/swe-book/html/ch24.html#velocity_is_a_team_sport_how_to_break_u">Velocity Is a Team Sport: How to Break Up a Deployment into Manageable Pieces</a>。图 24-1 依据原章对当时 YouTube 发布过程的描述（“a cycle begins to develop”）整理，两个切入点对应开篇所列的 automation，以及 agility 的小批量与 isolation 的模块化；原章没有给出这个案例后来改造的结果。</li>
+            <li>04：<a href="https://abseil.io/resources/swe-book/html/ch24.html#evaluating_changes_in_isolation_flag-gu">Evaluating Changes in Isolation: Flag-Guarding Features</a>，并联系结尾的配置版本控制与恢复工具。权限、初始化和数据兼容的边界为笔记补充。</li>
+            <li>05：<a href="https://abseil.io/resources/swe-book/html/ch24.html#striving_for_agility_setting_up_a_relea">Striving for Agility: Setting Up a Release Train</a>、<a href="https://abseil.io/resources/swe-book/html/ch24.html#meet_your_release_deadline">Meet Your Release Deadline</a>。Search 改进后的节奏是 every other day（隔天）；同节说规律发布让错过列车的人“几小时内”就能赶上下一班，是一般说法，不是 Search 当时的发布间隔。NBA 合同情境由原章以“情形通常是这样”引出，按典型情境转述。</li>
+            <li>06：<a href="https://abseil.io/resources/swe-book/html/ch24.html#no_binary_is_perfect">No Binary Is Perfect</a> 及<a href="https://abseil.io/resources/swe-book/html/ch24.html#ch01fn250">脚注 1</a>。原章没有给出菲律宾岛名、方言名或使用人数。</li>
+            <li>07：<a href="https://abseil.io/resources/swe-book/html/ch24.html#quality_and_user-focus_ship_only_what_g">Quality and User-Focus: Ship Only What Gets Used</a>。</li>
+            <li>08—09：<a href="https://abseil.io/resources/swe-book/html/ch24.html#shifting_left_making_data-driven_decisi">Shifting Left: Making Data-Driven Decisions Earlier</a>。原章说部署本身的 A/B 对照用于部分较大的应用。<a href="https://abseil.io/resources/swe-book/html/ch24.html#ch01fn251">脚注 2</a> 引用 Dan Siroker、Pete Koomen 的 <em>A/B Testing: The Most Powerful Way to Turn Clicks Into Customers</em>（Wiley，2013）。</li>
+            <li>10：<a href="https://abseil.io/resources/swe-book/html/ch24.html#changing_team_culture_building_discipli">Changing Team Culture: Building Discipline into Deployment</a>、<a href="https://abseil.io/resources/swe-book/html/ch24.html#conclusion-id00029">Conclusion</a> 与 <a href="https://abseil.io/resources/swe-book/html/ch24.html#tlsemicolondrs-id00130">TL;DRs</a>。图 24-4 的三行对应 Google Maps 对三种代价的比较，挑入需要重新构建与测试的细节来自 Meet Your Release Deadline。</li>
+          </ul>
+          <p>纠错与补充说明（外部资料核查日期均为 2026-11-06）：</p>
+          <ul>
+            <li>书籍作者纠错：原章开篇写 Martin Fowler “in his book Continuous Delivery” → <a href="https://www.informit.com/store/continuous-delivery-reliable-software-releases-through-9780321601919">出版方书目</a>与 <a href="https://martinfowler.com/books/continuousDelivery.html">Fowler 本人的书籍介绍</a>均列 Jez Humble、David Farley 为作者，出版方书目另列 Foreword by Martin Fowler → 《Continuous Delivery》（2010）的作者应为 Humble 与 Farley，Fowler 撰写序言。原章引用的那句关于尽早取得用户反馈的话，也见于 Fowler 的<a href="https://martinfowler.com/bliki/ContinuousDelivery.html">持续交付说明</a>。</li>
+            <li>术语区分：原章讨论 CD 的极限情形时，写的是每个变更通过 QA 管道后自动部署到生产 → 按 <a href="https://martinfowler.com/bliki/ContinuousDelivery.html">Fowler 的区分</a>，随时可发布的能力是持续交付（Continuous Delivery），每次通过都自动部署属于持续部署（Continuous Deployment）→ 正文区分两词，自动部署每个变更不是所有团队的必经终点。</li>
+            <li>测试轨道：原章称 Play Store 提供 unlimited testing tracks → 当前 <a href="https://support.google.com/googleplay/android-developer/answer/9845334?hl=en">Play Console 测试说明</a>描述内部、封闭与公开测试，可同时运行多个封闭测试与一个公开测试，另对测试者等设有具体限制 → 正文保留“用多条测试轨道组织验证”的思路，“无限”不宜当作当前的平台承诺。</li>
+            <li>暂停放量：<a href="https://support.google.com/googleplay/android-developer/answer/9859252?hl=en">Google Play 分阶段发布说明</a>写明，暂停只停止向更多用户分发，已更新的用户保留当前版本，放量比例也不会自动增加 → 第 09 节“数据足够时把发布推向更多流量”指原章所说团队自建的指标与自动化管道，不是 Play Console 的默认行为。</li>
+            <li>统计实验的作用：原章说自动化 A/B 发布能得到 “statistically significant results proving a release’s quality” → 实验只覆盖选定的人群、指标与观察期，“未发现退化”推不出“没有退化” → 正文把实验结果写成支持发布判断的证据，而非对整个版本质量的证明。</li>
+          </ul>
+          <p>阅读提示：第 09 节的 80%、76%、77% 都是假设数字。80% 是历史版本的任务成功率；76% 与 77% 分别是同期对照更新组与候选组的成功率（各一万次任务中成功 7,600 与 7,700 次）。候选组比历史低 3 个百分点、比同期对照高 1 个百分点；例子只演示两种比较口径的差别，不涉及统计显著性，也不构成发布结论。</p>
+          <p>报表产品、离线阅读应用与语音包是笔记假设的情境，发布成本的两类拆解与实验中的随机分组是笔记的解释；Google 的案例与数据均依据原章叙述。图示均为本笔记原创示意图；本文按交付过程重组原章，而非逐段翻译。</p>
+        </details>
+
+        <nav class="chapter-pagination" aria-label="章节翻页"><a class="page-link prev" href="ch23.html" rel="prev"><span class="page-label">← 上一章 · 第 23 章</span><span class="page-title">持续集成</span></a><a class="page-link next" href="ch25.html" rel="next"><span class="page-label">下一章 · 第 25 章 →</span><span class="page-title">计算即服务</span></a><a class="pagination-home" href="../index.html">书籍概览与目录</a></nav>
+      </article>
+    </div>
+  </main>
+  <footer class="site-footer"><div class="container footer-inner"><span>个人书架 / 中文读书笔记</span><a href="#main">回到顶部 ↑</a></div></footer>
+</body>
+</html>

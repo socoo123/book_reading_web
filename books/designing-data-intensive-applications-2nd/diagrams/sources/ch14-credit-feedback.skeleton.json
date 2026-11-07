@@ -1,0 +1,262 @@
+[
+  {
+    "type": "text",
+    "id": "title",
+    "x": 24,
+    "y": 20,
+    "text": "一次不幸，怎样被反馈循环延长",
+    "fontSize": 25,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "subtitle",
+    "x": 24,
+    "y": 66,
+    "text": "前提：雇主使用信用分筛选；外部冲击先造成还款困难。",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "rectangle",
+    "id": "payments",
+    "x": 24,
+    "y": 140,
+    "width": 240,
+    "height": 90,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.7,
+    "label": {
+      "text": "还款困难\n错过账单",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "score",
+    "x": 410,
+    "y": 140,
+    "width": 240,
+    "height": 90,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.7,
+    "label": {
+      "text": "信用分下降\n被标记为更高风险",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "jobs",
+    "x": 410,
+    "y": 350,
+    "width": 240,
+    "height": 90,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.7,
+    "label": {
+      "text": "就业机会减少\n雇主按信用筛选",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "income",
+    "x": 24,
+    "y": 350,
+    "width": 240,
+    "height": 90,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.7,
+    "label": {
+      "text": "收入更难恢复\n处境继续恶化",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "record",
+    "x": 274,
+    "y": 185,
+    "width": 126,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        126,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.7,
+    "strokeStyle": "solid",
+    "start": {
+      "id": "payments"
+    },
+    "end": {
+      "id": "score"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "screen",
+    "x": 530,
+    "y": 240,
+    "width": 0,
+    "height": 100,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        100
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.7,
+    "strokeStyle": "solid",
+    "start": {
+      "id": "score"
+    },
+    "end": {
+      "id": "jobs"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "earning",
+    "x": 400,
+    "y": 395,
+    "width": 126,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        -126,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.7,
+    "strokeStyle": "solid",
+    "start": {
+      "id": "jobs"
+    },
+    "end": {
+      "id": "income"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "feedback",
+    "x": 144,
+    "y": 340,
+    "width": 0,
+    "height": 100,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        -100
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.7,
+    "strokeStyle": "dashed",
+    "start": {
+      "id": "income"
+    },
+    "end": {
+      "id": "payments"
+    }
+  },
+  {
+    "type": "text",
+    "id": "record-label",
+    "x": 294,
+    "y": 150,
+    "text": "记入记录",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "text",
+    "id": "screen-label",
+    "x": 549,
+    "y": 279,
+    "text": "筛选",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "text",
+    "id": "earning-label",
+    "x": 294,
+    "y": 360,
+    "text": "影响收入",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "text",
+    "id": "feedback-label",
+    "x": 164,
+    "y": 265,
+    "text": "影响后续\n还款",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "text",
+    "id": "lesson",
+    "x": 24,
+    "y": 485,
+    "text": "后续数据也包含先前决策的影响。",
+    "fontSize": 20,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "boundary",
+    "x": 24,
+    "y": 524,
+    "text": "实线：本例影响路径　虚线：处境返回输入；不是普遍因果定律。",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  }
+]

@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="468" viewBox="0 0 720 468" role="img" aria-labelledby="title desc">
+  <title id="title">三个视图依托同一个领域主模型</title>
+  <desc id="desc">领域主模型分别投影为概念定义、关系快照和变化场景三个视图。它们关注不同信息，却共享邀请与联系关系等概念的含义，新增概念或修改规则时需要核对所有相关视图。</desc>
+  <!-- Original, editable hand-written SVG. The export is an identical web copy. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 16px; fill: var(--muted); }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.2; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .label { font-size: 21px; font-weight: 600; text-anchor: middle; }
+    .example { font-size: 18px; text-anchor: middle; }
+    .detail { font-size: 16px; text-anchor: middle; fill: var(--muted); }
+    .branch { fill: none; stroke: var(--line); stroke-width: 1.8; }
+    .arrow { fill: none; stroke: var(--line); stroke-width: 1.8; marker-end: url(#arrow); }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker></defs>
+  <rect width="720" height="468" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="30" y="38">视图选择不同信息，共同事实仍要一致</text>
+  <text class="sub" x="30" y="67">箭头表示选取与投影，不表示生成文档的先后步骤</text>
+
+  <rect class="focus" x="66" y="98" width="588" height="95" rx="7"/>
+  <text class="label" x="360" y="135">领域主模型：共同的类型、关系与行为</text>
+  <text class="detail" x="360" y="168">概念上包含已知事实，不要求写成一张总图</text>
+  <path class="branch" d="M360 202V224M132 224H588"/>
+  <path class="arrow" d="M132 224V258"/>
+  <path class="arrow" d="M360 224V258"/>
+  <path class="arrow" d="M588 224V258"/>
+
+  <rect class="node" x="30" y="270" width="204" height="126" rx="7"/>
+  <text class="label" x="132" y="306">概念定义</text>
+  <text class="example" x="132" y="342">邀请、联系关系</text>
+  <text class="detail" x="132" y="374">解释它们是什么</text>
+
+  <rect class="node" x="258" y="270" width="204" height="126" rx="7"/>
+  <text class="label" x="360" y="306">关系快照</text>
+  <text class="example" x="360" y="342">甲的邀请待乙处理</text>
+  <text class="detail" x="360" y="374">描述某一时刻的关系</text>
+
+  <rect class="node" x="486" y="270" width="204" height="126" rx="7"/>
+  <text class="label" x="588" y="306">变化场景</text>
+  <text class="example" x="588" y="342">邀请被拒绝</text>
+  <text class="detail" x="588" y="374">说明关系怎样变化</text>
+
+  <text class="sub" x="30" y="440">新增概念或修改规则时，核对所有相关视图。</text>
+</svg>

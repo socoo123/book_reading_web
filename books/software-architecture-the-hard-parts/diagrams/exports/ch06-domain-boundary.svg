@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="520" viewBox="0 0 720 520" role="img" aria-labelledby="title desc">
+  <title id="title">数据域内关系保留，跨域依赖改到服务层</title>
+  <desc id="desc">支付域内合同与账单的关系保留。原视图依赖客户域的客户表，迁移后由支付服务向客户服务请求姓名，两个服务分别访问本域数据。</desc>
+  <style>
+    :root{--surface:#fcfbf8;--text:#292824;--muted:#66645d;--line:#969187;--soft:#f0ece4;--accent:#386d74}
+    @media(prefers-color-scheme:dark){:root:not([data-theme='light']){--surface:#252524;--text:#e6e3dc;--muted:#b6b1a7;--line:#8c8982;--soft:#353534;--accent:#94c8cf}}
+    :root[data-theme='dark']{--surface:#252524;--text:#e6e3dc;--muted:#b6b1a7;--line:#8c8982;--soft:#353534;--accent:#94c8cf}
+    .bg{fill:var(--surface)}text{fill:var(--text);font-family:system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;font-size:18px}.heading{font-size:21px;font-weight:600}.small{font-size:15px;fill:var(--muted)}.domain{fill:none;stroke:var(--line);stroke-width:1.5}.box{fill:var(--soft);stroke:var(--line);stroke-width:1.4}.edge{fill:none;stroke:var(--accent);stroke-width:2}.request{fill:none;stroke:var(--accent);stroke-width:2;marker-end:url(#arrow)}.cross{stroke-dasharray:7 5}.arrow{fill:var(--accent)}
+  </style>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path class="arrow" d="M0 0 8 4 0 8Z"/></marker></defs>
+  <rect class="bg" width="720" height="520"/>
+  <text class="heading" x="28" y="36">保留内部关系，迁出跨域连接</text>
+  <text class="small" x="28" y="66">原路径：支付视图直接关联另一域的客户表</text>
+  <rect class="domain" x="28" y="82" width="390" height="160" rx="10"/><text x="46" y="110">Payment 支付域</text>
+  <rect class="domain" x="486" y="82" width="206" height="160" rx="10"/><text x="504" y="110">Customer 客户域</text>
+  <rect class="box" x="46" y="128" width="145" height="42" rx="6"/><text x="118" y="155" text-anchor="middle">Contract 合同</text>
+  <rect class="box" x="250" y="128" width="145" height="42" rx="6"/><text x="322" y="155" text-anchor="middle">Billing 账单</text>
+  <path class="edge" d="M191 149H250"/>
+  <rect class="box" x="99" y="187" width="280" height="37" rx="6"/><text x="239" y="212" text-anchor="middle">合同账单视图</text>
+  <path class="edge" d="M118 170V187M322 170V187"/>
+  <rect class="box" x="506" y="153" width="166" height="45" rx="6"/><text x="589" y="182" text-anchor="middle">Customer 客户</text>
+  <path class="edge cross" d="M379 205H452V175H506"/>
+  <text class="small" x="360" y="270" text-anchor="middle">实线：域内数据库关系　虚线：待迁出的跨域数据库依赖</text>
+  <text class="small" x="28" y="309">替代路径：支付服务请求客户姓名，各自只直接访问本域</text>
+  <rect class="box" x="62" y="330" width="222" height="52" rx="8"/><text x="173" y="362" text-anchor="middle">Payment 服务</text>
+  <rect class="box" x="436" y="330" width="222" height="52" rx="8"/><text x="547" y="362" text-anchor="middle">Customer 服务</text>
+  <path class="request" d="M284 356H436"/><text class="small" x="360" y="343" text-anchor="middle">按客户 ID 请求</text>
+  <path class="request" d="M173 382V424"/><path class="request" d="M547 382V424"/>
+  <rect class="domain" x="62" y="427" width="222" height="48" rx="8"/><text x="173" y="457" text-anchor="middle">合同 + 账单</text>
+  <rect class="domain" x="436" y="427" width="222" height="48" rx="8"/><text x="547" y="457" text-anchor="middle">客户数据</text>
+  <text class="small" x="360" y="503" text-anchor="middle">下方箭头：服务请求／直接数据访问，不代表共同事务</text>
+  <script><![CDATA[try { const t = localStorage.getItem('reading-notes-theme'); if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t); } catch {}]]></script>
+</svg>

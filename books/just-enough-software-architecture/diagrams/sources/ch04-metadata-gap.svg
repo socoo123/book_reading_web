@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="582" viewBox="0 0 720 582" role="img" aria-labelledby="title desc">
+  <title id="title">用 Prince 的实例发现元数据模型的关系缺口</title>
+  <desc id="desc">旧模型能分别保存 Prince 的 Little Red Corvette 与 Prince and the Revolution 的 Let's Go Crazy，却没有成员关系。增加个人与团体的区分以及 memberOf 关系后，Prince 属于该团体这一事实可以被保存。图是实例示意，不规定通用关系基数。</desc>
+  <!-- Original editable explanatory SVG; the export is an identical web copy. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 16px; fill: var(--muted); }
+    .panel { fill: none; stroke: var(--line); stroke-width: 1.1; }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.2; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .label { font-size: 18px; font-weight: 600; text-anchor: middle; }
+    .name { font-size: 17px; text-anchor: middle; }
+    .detail { font-size: 16px; fill: var(--muted); text-anchor: middle; }
+    .link { fill: none; stroke: var(--line); stroke-width: 1.6; }
+    .missing { fill: none; stroke: var(--accent); stroke-width: 1.6; stroke-dasharray: 5 5; }
+    .relation { fill: none; stroke: var(--accent); stroke-width: 1.8; marker-end: url(#arrow); }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--accent)"/></marker></defs>
+  <rect width="720" height="582" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="30" y="40">同一组实例，旧模型少了一种关系</text>
+  <text class="sub" x="30" y="70">比较表达能力，不是比较数据库事务</text>
+
+  <rect class="panel" x="30" y="102" width="660" height="218" rx="8"/>
+  <text class="sub" x="48" y="131">旧模型：可以分别存歌曲，不能保存成员关系</text>
+  <rect class="node" x="52" y="155" width="226" height="62" rx="6"/>
+  <text class="label" x="165" y="182">Prince</text>
+  <text class="detail" x="165" y="206">Artist</text>
+  <rect class="node" x="442" y="155" width="226" height="62" rx="6"/>
+  <text class="name" x="555" y="182">Prince and the Revolution</text>
+  <text class="detail" x="555" y="206">Artist</text>
+  <path class="missing" d="M286 186H434"/>
+  <rect x="316" y="167" width="88" height="38" fill="var(--bg)"/>
+  <text class="label" x="360" y="192">×</text>
+  <text class="detail" x="360" y="238">没有这种关联</text>
+  <path class="link" d="M165 217V252M555 217V252"/>
+  <rect class="node" x="52" y="252" width="226" height="45" rx="6"/>
+  <text class="name" x="165" y="281">Little Red Corvette</text>
+  <rect class="node" x="442" y="252" width="226" height="45" rx="6"/>
+  <text class="name" x="555" y="281">Let's Go Crazy</text>
+
+  <rect class="panel" x="30" y="346" width="660" height="170" rx="8"/>
+  <text class="sub" x="48" y="376">补足表达：同样的实例可以保存成员关系</text>
+  <rect class="focus" x="52" y="409" width="226" height="64" rx="6"/>
+  <text class="label" x="165" y="437">Prince</text>
+  <text class="detail" x="165" y="461">个人艺人</text>
+  <rect class="focus" x="442" y="409" width="226" height="64" rx="6"/>
+  <text class="name" x="555" y="437">Prince and the Revolution</text>
+  <text class="detail" x="555" y="461">团体艺人</text>
+  <path class="relation" d="M286 440H434"/>
+  <text class="detail" x="360" y="428">memberOf</text>
+  <text class="detail" x="360" y="468">成员 → 团体</text>
+  <text class="sub" x="30" y="548">实线：可保存的关系；上方虚线与叉号：缺少表达位置</text>
+  <text class="sub" x="30" y="574">只画实例，不规定通用基数；省略专辑与别名等其他关系</text>
+</svg>

@@ -1,0 +1,351 @@
+[
+  {
+    "type": "text",
+    "id": "title",
+    "x": 24,
+    "y": 18,
+    "text": "2PC 恢复：超时不能替代缺失的决定",
+    "fontSize": 25,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "subtitle",
+    "x": 24,
+    "y": 62,
+    "text": "时间向下；同一事务 T。以下是已持久决定 COMMIT 的历史。",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "text",
+    "id": "p-head",
+    "x": 50,
+    "y": 112,
+    "text": "参与者 P",
+    "fontSize": 21,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "c-head",
+    "x": 352,
+    "y": 112,
+    "text": "协调者 C",
+    "fontSize": 21,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "q-head",
+    "x": 652,
+    "y": 112,
+    "text": "参与者 Q",
+    "fontSize": 21,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "rectangle",
+    "id": "p-prepared",
+    "x": 24,
+    "y": 170,
+    "width": 192,
+    "height": 86,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "已 PREPARED\n已回复 YES",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "decision",
+    "x": 294,
+    "y": 170,
+    "width": 240,
+    "height": 86,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 3,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "持久日志\nT → COMMIT",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "q-commit",
+    "x": 614,
+    "y": 170,
+    "width": 192,
+    "height": 86,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "已收到决定\n完成 COMMIT",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "q-delivered",
+    "x": 540,
+    "y": 210,
+    "width": 68,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        68,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "arrow",
+    "id": "p-undelivered",
+    "x": 288,
+    "y": 210,
+    "width": 66,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        -66,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "dashed"
+  },
+  {
+    "type": "text",
+    "id": "notreceived",
+    "x": 218,
+    "y": 270,
+    "text": "未送达 P",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "arrow",
+    "id": "c-crash",
+    "x": 414,
+    "y": 262,
+    "width": 0,
+    "height": 52,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        52
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "rectangle",
+    "id": "crashed",
+    "x": 294,
+    "y": 320,
+    "width": 240,
+    "height": 80,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "C 崩溃",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "p-wait",
+    "x": 24,
+    "y": 320,
+    "width": 192,
+    "height": 148,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "dashed",
+    "label": {
+      "text": "P 仍然存疑\n保留修改和锁\n不能超时中止",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "text",
+    "id": "q-note",
+    "x": 610,
+    "y": 336,
+    "text": "Q 已提交，\n不会因 C 崩溃\n自动回滚。",
+    "fontSize": 19,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "arrow",
+    "id": "c-restart",
+    "x": 414,
+    "y": 406,
+    "width": 0,
+    "height": 78,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        78
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "rectangle",
+    "id": "recovery",
+    "x": 294,
+    "y": 490,
+    "width": 240,
+    "height": 94,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 3,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "恢复者读取原日志\n仍为 T → COMMIT",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "resend",
+    "x": 288,
+    "y": 540,
+    "width": 168,
+    "height": 78,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        -168,
+        0
+      ],
+      [
+        -168,
+        78
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "text",
+    "id": "resend-label",
+    "x": 24,
+    "y": 500,
+    "text": "重发原决定",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "rectangle",
+    "id": "p-complete",
+    "x": 24,
+    "y": 624,
+    "width": 192,
+    "height": 86,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "P 完成提交\n释放锁",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "text",
+    "id": "other-history",
+    "x": 286,
+    "y": 642,
+    "text": "若从未形成持久 COMMIT，\n完整恢复日志可支持中止；\n日志损坏不等于“从未提交”。",
+    "fontSize": 19,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "legend",
+    "x": 24,
+    "y": 758,
+    "text": "实线：已送达／恢复步骤　　虚线：未送达／等待状态",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  }
+]

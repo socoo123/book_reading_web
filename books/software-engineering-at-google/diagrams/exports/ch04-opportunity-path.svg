@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="420" viewBox="0 0 720 420" role="img" aria-labelledby="title desc">
+  <title id="title">只扩大招聘入口，人仍会在后面的环节离开</title>
+  <desc id="desc">从左到右，成员要经过招聘入口、任务分配、反馈与支持、晋升与留任四个环节。单一做法只修招聘入口。在后面三个环节中，得不到重要任务、缺少反馈与支持或晋升时被跳过的人，会沿虚线离开组织，刚积累的经验随之流失；入口扩大了，代表性仍难提升。</desc>
+  <!-- Original editable hand-written SVG; web export is an identical copy. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 15px; fill: var(--muted); }
+    .label { font-size: 18px; font-weight: 600; text-anchor: middle; }
+    .body { font-size: 16px; fill: var(--muted); text-anchor: middle; }
+    .tag { font-size: 16px; font-weight: 600; fill: var(--accent); text-anchor: middle; }
+    .side { font-size: 14px; fill: var(--muted); }
+    .note { font-size: 14px; fill: var(--muted); text-anchor: middle; }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.3; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .exit-box { fill: var(--box); stroke: var(--line); stroke-width: 1.3; stroke-dasharray: 6 5; }
+    .flow { fill: none; stroke: var(--line); stroke-width: 1.8; marker-end: url(#arrow); }
+    .exit { stroke-dasharray: 6 5; }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker></defs>
+  <rect width="720" height="420" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="28" y="40">只扩大招聘入口，为什么不够？</text>
+  <text class="sub" x="28" y="69">从左往右：一个人从被招聘到留下来，要经过的几个环节</text>
+
+  <rect class="focus" x="28" y="100" width="140" height="96" rx="7"/>
+  <text class="label" x="98" y="138">招聘入口</text>
+  <text class="body" x="98" y="170">候选人从哪里来</text>
+  <path class="flow" d="M174 148H196"/>
+  <rect class="node" x="204" y="100" width="140" height="96" rx="7"/>
+  <text class="label" x="274" y="138">任务分配</text>
+  <text class="body" x="274" y="170">谁拿到重要任务</text>
+  <path class="flow" d="M350 148H372"/>
+  <rect class="node" x="380" y="100" width="140" height="96" rx="7"/>
+  <text class="label" x="450" y="138">反馈与支持</text>
+  <text class="body" x="450" y="170">反馈是否及时</text>
+  <path class="flow" d="M526 148H548"/>
+  <rect class="node" x="556" y="100" width="140" height="96" rx="7"/>
+  <text class="label" x="626" y="138">晋升与留任</text>
+  <text class="body" x="626" y="170">能否继续发展</text>
+
+  <text class="tag" x="98" y="230">单一做法</text>
+  <text class="tag" x="98" y="254">只修这一环</text>
+
+  <path class="flow exit" d="M240 204V280"/>
+  <text class="side" x="250" y="248">得不到重要任务</text>
+  <path class="flow exit" d="M416 204V280"/>
+  <text class="side" x="426" y="248">缺少反馈与支持</text>
+  <path class="flow exit" d="M592 204V280"/>
+  <text class="side" x="602" y="248">晋升时被跳过</text>
+
+  <rect class="exit-box" x="204" y="290" width="492" height="76" rx="7"/>
+  <text class="label" x="450" y="322">离开组织，刚积累的经验随之流失</text>
+  <text class="body" x="450" y="350">入口扩大了，代表性仍难提升</text>
+
+  <text class="note" x="360" y="402">实线：沿路径前进　　虚线：缺少机会与支持时离开</text>
+</svg>

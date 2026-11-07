@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>第 11 章｜批处理 · DDIA 第二版 · 架构提升读书笔记</title>
+  <meta name="description" content="DDIA第二版第11章中文读书笔记：Unix管道、有界输入、存储与编排、shuffle与连接、SQL和DataFrame、失败重跑及派生数据原子发布。">
+  <link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+  <script src="../../../assets/theme.js"></script>
+  <script src="../../../assets/reader.js" defer></script>
+  <link rel="stylesheet" href="../../../assets/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header reader-header"><div class="container header-inner">
+    <a class="brand" href="../../../index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5.5C8.5 3.8 5.8 3.6 2.5 4.5v14c3.3-.9 6-.7 9.5 1 3.5-1.7 6.2-1.9 9.5-1v-14c-3.3-.9-6-.7-9.5 1Zm0 0v14"/></svg>书架</a>
+    <a class="reader-book-title" href="../index.html" lang="en">DDIA · Second Edition</a>
+    <div class="theme-control" role="group" aria-label="外观" hidden><button type="button" data-theme-value="system" title="跟随系统"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path class="fill" d="M12 4a8 8 0 0 1 0 16Z"/></svg><span class="sr-only">跟随系统</span></button><button type="button" data-theme-value="light" title="浅色"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.6"/><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21M5.6 5.6l1.6 1.6M16.8 16.8l1.6 1.6M5.6 18.4l1.6-1.6M16.8 7.2l1.6-1.6"/></svg><span class="sr-only">浅色</span></button><button type="button" data-theme-value="dark" title="深色"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.5 14.6A7.8 7.8 0 0 1 9.4 4.5a7.8 7.8 0 1 0 10.1 10.1Z"/></svg><span class="sr-only">深色</span></button></div>
+  </div></header>
+  <main id="main" class="container reader-container">
+    <nav class="breadcrumb" aria-label="当前位置"><ol><li><a href="../../../index.html">书架</a></li><li><a href="../index.html">书籍概览</a></li><li><a href="../guide.html">全书导航</a></li><li aria-current="page">第 11 章</li></ol></nav>
+    <div class="reading-layout">
+      <aside class="toc"><nav aria-label="本页目录"><h2>本页目录</h2><ul><li><a href="#bounded-reruns">01　有界输入，让“重新来一次”成为正常操作</a></li>
+<li><a href="#unix-pipeline">02　用八行日志，走完一次 Unix 管道</a></li>
+<li><a href="#working-set">03　排序与哈希聚合，真正比较的是工作集</a></li>
+<li><a href="#storage-compute">04　扩展到集群，先分清三种职责</a></li>
+<li><a href="#object-storage">05　对象存储改变了局部性，也改变了提交方法</a></li>
+<li><a href="#scheduling">06　资源调度：公平、利用率与完成时间会冲突</a></li>
+<li><a href="#workflows">07　工作流依赖，决定什么结果可以交给下游</a></li>
+<li><a href="#fault-recovery">08　任务失败以后，恢复的是结果而非执行次数</a></li>
+<li><a href="#mapreduce">09　MapReduce：把业务代码缩小为两种回调</a></li>
+<li><a href="#dataflow">10　数据流引擎：让系统看见整个计算图</a></li>
+<li><a href="#shuffle">11　Shuffle：让需要一起计算的数据相遇</a></li>
+<li><a href="#joins">12　排序合并连接：档案先到，事件就能逐条处理</a></li>
+<li><a href="#join-costs">13　连接策略：少搬数据，也要看内存和倾斜</a></li>
+<li><a href="#sql-dataframes">14　SQL 与 DataFrame，最终都要变成执行计划</a></li>
+<li><a href="#etl-analytics">15　ETL 与分析：同一份产物，支持不同节奏的使用</a></li>
+<li><a href="#machine-learning">16　机器学习：训练前后的大部分工作也是数据转换</a></li>
+<li><a href="#publish">17　把派生结果发布出去，才完成最后一段正确性</a></li>
+<li><a href="#conclusion">18　沿输入、移动、恢复与发布检查一条管道</a></li></ul><p class="toc-note"><a href="#sources">来源与核查</a> · <a href="../index.html">书籍概览</a></p></nav></aside>
+      <article class="article">
+        <header class="article-header"><p class="eyebrow">READING NOTES / CHAPTER 11</p><h1>第 11 章｜批处理</h1><p class="article-deck"><span lang="en">Batch Processing</span> · 把大规模计算组织成可以重跑、核对和发布的数据转换</p></header>
+        <p>网站响应一次点击，通常希望尽快返回；重新计算全部推荐、核对一天账目或准备训练语料，则需要遍历大量数据。后一类工作最重要的能力，不是让每条记录立即可见，而是用合理成本完成一份确定的数据集，并在机器故障或代码出错后重新得到可信结果。</p>
+<p>第二版按这个问题组织批处理：先从 Unix 管道理解转换，再区分存储、编排和计算，继而解释 MapReduce、现代数据流引擎、SQL 与 DataFrame，最后把输出送回真正服务用户的系统。MapReduce 是理解数据移动与容错的清楚模型；今天的批处理并不围绕它一种接口展开。</p>
+        <details class="mobile-toc"><summary>本页目录 · 18 个小节</summary><nav aria-label="移动端本页目录"><ul><li><a href="#bounded-reruns">01　有界输入，让“重新来一次”成为正常操作</a></li>
+<li><a href="#unix-pipeline">02　用八行日志，走完一次 Unix 管道</a></li>
+<li><a href="#working-set">03　排序与哈希聚合，真正比较的是工作集</a></li>
+<li><a href="#storage-compute">04　扩展到集群，先分清三种职责</a></li>
+<li><a href="#object-storage">05　对象存储改变了局部性，也改变了提交方法</a></li>
+<li><a href="#scheduling">06　资源调度：公平、利用率与完成时间会冲突</a></li>
+<li><a href="#workflows">07　工作流依赖，决定什么结果可以交给下游</a></li>
+<li><a href="#fault-recovery">08　任务失败以后，恢复的是结果而非执行次数</a></li>
+<li><a href="#mapreduce">09　MapReduce：把业务代码缩小为两种回调</a></li>
+<li><a href="#dataflow">10　数据流引擎：让系统看见整个计算图</a></li>
+<li><a href="#shuffle">11　Shuffle：让需要一起计算的数据相遇</a></li>
+<li><a href="#joins">12　排序合并连接：档案先到，事件就能逐条处理</a></li>
+<li><a href="#join-costs">13　连接策略：少搬数据，也要看内存和倾斜</a></li>
+<li><a href="#sql-dataframes">14　SQL 与 DataFrame，最终都要变成执行计划</a></li>
+<li><a href="#etl-analytics">15　ETL 与分析：同一份产物，支持不同节奏的使用</a></li>
+<li><a href="#machine-learning">16　机器学习：训练前后的大部分工作也是数据转换</a></li>
+<li><a href="#publish">17　把派生结果发布出去，才完成最后一段正确性</a></li>
+<li><a href="#conclusion">18　沿输入、移动、恢复与发布检查一条管道</a></li></ul><p><a href="#sources">来源、原书对应与核查</a></p></nav></details>
+        <section id="bounded-reruns">
+<h2><span class="section-number">01</span>有界输入，让“重新来一次”成为正常操作</h2>
+<p><strong>批处理作业（batch job）</strong>读取一份有界输入，计算并产生派生输出。有界意味着这次运行存在可以到达的输入终点，不要求所有记录都预装进内存，也不要求事先知道精确行数。一份封存的昨日访问日志是有界输入；持续增长、没有约定截止位点的日志则不是。</p>
+<p>原书强调两个配合的约定：输入只读，输出每次重新生成。假设昨天的销售报表把退款错误算成正收入，如果程序直接覆盖唯一账本，回滚代码并不会自动修复已经写错的金额；如果程序读取保留的交易快照，写到新的结果版本，就可以修正逻辑后重算。旧的可用报表还可以继续服务，直到新版本通过核对。这是原书所谓对人为错误的容错：让错误尽量留下可逆的结果。</p>
+<p><strong>笔记补充：可重跑不等于任何时候都能精确复现。</strong> 需要固定的不只是主输入文件，还包括用户维度表的版本、代码、配置和会影响结果的时间基准。若作业边扫描历史事件边查询“当前用户档案”，两次重跑可能得到不同答案。随机数、浮点归约顺序和模型训练也可能影响复现精度；应区分业务结果等价与每个字节相同。保留输入清单和转换版本，是把“可以重算”变成可操作承诺的一部分。</p>
+<p>不可变输入也使多种工作可以并行读取同一事实：一条管道做报表，另一条检查金额分布与前一天差异，第三条尝试新算法。派生数据可以重建，但重建仍要花时间和算力；源数据已删除、外部依赖已消失时，更不能说“丢了也没关系”。</p>
+<p>代价是新鲜度和重复工作。朴素的全量批处理即使输入只有一点变化，也会重新扫描整批；按分区增量处理可以减少工作，但必须正确处理迟到数据、旧分区更正和依赖变化。若每天调度一次，数据等待时间取决于到达时刻，还要加排队、计算与发布时间，并非固定“一天”。批处理常以吞吐量为主要指标，即单位时间处理多少数据；完成时限与交互式分析的响应时间仍然重要。</p>
+</section><section id="unix-pipeline">
+<h2><span class="section-number">02</span>用八行日志，走完一次 Unix 管道</h2>
+<p>原书案例是分析 NGINX 访问日志，找出访问最多的五个 URL。以下是缩小后的<strong>笔记假设数据</strong>：每条请求行格式相同，用户名为 <code>-</code>，没有畸形记录，第七个空白分隔字段就是请求路径。可直接在空目录运行，不需要 NGINX 服务。</p>
+<pre><code class="language-sh">cat &gt; access.log &lt;&lt;'EOF'
+127.0.0.1 - - [27/Jun/2025:17:55:01 +0000] &quot;GET / HTTP/1.1&quot; 200 10 &quot;-&quot; &quot;demo&quot;
+127.0.0.1 - - [27/Jun/2025:17:55:02 +0000] &quot;GET /book HTTP/1.1&quot; 200 10 &quot;-&quot; &quot;demo&quot;
+127.0.0.1 - - [27/Jun/2025:17:55:03 +0000] &quot;GET / HTTP/1.1&quot; 200 10 &quot;-&quot; &quot;demo&quot;
+127.0.0.1 - - [27/Jun/2025:17:55:04 +0000] &quot;GET /css/site.css HTTP/1.1&quot; 200 10 &quot;-&quot; &quot;demo&quot;
+127.0.0.1 - - [27/Jun/2025:17:55:05 +0000] &quot;GET /book HTTP/1.1&quot; 200 10 &quot;-&quot; &quot;demo&quot;
+127.0.0.1 - - [27/Jun/2025:17:55:06 +0000] &quot;GET / HTTP/1.1&quot; 200 10 &quot;-&quot; &quot;demo&quot;
+127.0.0.1 - - [27/Jun/2025:17:55:07 +0000] &quot;GET /about HTTP/1.1&quot; 200 10 &quot;-&quot; &quot;demo&quot;
+127.0.0.1 - - [27/Jun/2025:17:55:08 +0000] &quot;GET /book HTTP/1.1&quot; 200 10 &quot;-&quot; &quot;demo&quot;
+EOF
+export LC_ALL=C
+awk '{print $7}' access.log |
+  sort |
+  uniq -c |
+  sort -k1,1nr -k2,2 |
+  head -n 5
+</code></pre>
+<p>结果忽略行首填充空格为：<code>3 /</code>、<code>3 /book</code>、<code>1 /about</code>、<code>1 /css/site.css</code>。虽然要求前五名，只有四个不同路径，就输出四行。最后一次排序明确规定“次数降序、同次数按路径升序”，以便结果可重复核对；原书使用较简洁的 <code>sort -r -n</code>，本例只是增加了平局规则。</p>
+<p>第一步 <code>awk</code> 是投影：把每条复杂日志缩成我们需要的路径。第一遍 <code>sort</code> 按路径排列，得到三个连续的 <code>/</code>，再一个 <code>/about</code>，三个 <code>/book</code>，最后一个 CSS 路径。<code>uniq -c</code> 只比较<strong>相邻</strong>记录；省略排序，分散在不同位置的 <code>/</code> 会被计为多个小组。第二遍排序回答的是另一件事：路径的分组已经完成，现在要按次数排名。不能把这两次排序看作重复劳动。</p>
+<p>若只看页面，把第一步换成 <code>awk '$7 !~ /\.css$/ {print $7}' access.log</code>；若统计客户端地址，换成 <code>{print $1}</code>。这说明组合小程序的价值：输入输出接口不变，可以替换某一步。管道并不自动理解字段语义；带查询参数的 CSS 地址不会匹配上述结尾规则，实际日志格式变化也可能使第七字段失效。这里信任明确的小数据约定，不把示例冒充通用日志解析器。</p>
+<p>单机管道使用有限缓冲。下游来不及读取时，上游会等待，形成<strong>背压（backpressure）</strong>；这能限制缓冲增长，却不能让慢阶段变快。排序还需要看到足够输入才能输出正确结果，因此“使用管道”不意味着每个阶段都能立即产出最终答案。</p>
+</section><section id="working-set">
+<h2><span class="section-number">03</span>排序与哈希聚合，真正比较的是工作集</h2>
+<p>同样的统计也可以不用第一遍排序，直接用哈希表保存每个路径的计数。以下 Python 与前面的平局规则一致，读取同一个文件即可运行：</p>
+<pre><code class="language-python">from collections import Counter
+
+with open(&quot;access.log&quot;, encoding=&quot;utf-8&quot;) as source:
+    counts = Counter(line.split()[6] for line in source)
+for url, count in sorted(counts.items(), key=lambda item: (-item[1], item[0]))[:5]:
+    print(count, url)
+</code></pre>
+<p>设日志有 N 条，路径有 U 种。哈希计数的工作集大致随 U 及路径长度增长，期望计数时间为 O(N)，示例最后排序为 O(U log U)。一亿条记录都访问同一路径，计数表仍只需要一个条目；一亿条各不相同的路径，内存情况完全不同。<strong>工作集</strong>指需要频繁访问的活动数据量，不是输入文件大小的同义词。</p>
+<p>排序方案要处理 N 个路径，计算量通常更高，却能使用<strong>外部归并排序</strong>处理超出内存的数据：每次读入一块能够放下的记录，在内存排序，写成有序段；随后从若干有序段的头部选出最小项，顺序输出并推进相应文件。段太多时分多轮归并，不要求同时打开全部临时文件。这与<a href="ch04.html">第4章的有序段合并</a>共享顺序读写的优势。</p>
+<p>例如，假设排序缓冲最多容纳一百万条路径，一千万条输入先产生约十个有序段，之后合并。内存仍要容纳排序缓冲、归并缓冲和数据结构，磁盘还要放临时段；旧稿把管道内存写成“O(1)、几乎不占”会掩盖这些成本。合理说法是：可以用受控内存换取额外磁盘空间和 I/O。GNU <code>sort</code> 支持溢写与多核排序，本章实测只验证本机小数据功能，没有测量 GB 级吞吐。</p>
+<p>哈希表装得下时，哈希聚合很有吸引力；装不下时，可以使用会分区、溢写的引擎，而不必在“纯内存 Python”与“排序”之间二选一。也不能预先断言瓶颈必定是磁盘：压缩、字符串比较、临时空间、网络和输出大小都可能限制速度。先估不同键数量与记录宽度，再查看实际执行，才有依据决定是否需要集群。</p>
+</section><section id="storage-compute">
+<h2><span class="section-number">04</span>扩展到集群，先分清三种职责</h2>
+<p>原书把分布式批处理类比为分布式操作系统。单机有文件系统、进程调度和通过管道协作的程序；集群也需要保存数据、分配资源、执行转换。把三者混在“一个大数据平台”里，会使故障定位和成本判断失去边界。</p>
+<p><strong>存储层</strong>回答输入与输出存在哪里、节点坏了是否仍能读取；<strong>计算层</strong>回答如何扫描、过滤、连接和聚合；<strong>编排层</strong>回答何时启动、在哪台机器运行、依赖是否满足。工作流编排和单个作业的资源调度又是两个尺度。一个 SQL 查询可以由 Spark 执行，使用 Kubernetes 分配机器，读写对象存储，并由 Airflow 安排每日运行；这些角色也可以集成在托管服务里。</p>
+<figure class="concept-figure"><a href="../diagrams/exports/ch11-layers.svg" target="_blank" rel="noopener"><img alt="工作流按依赖提交作业，资源调度向计算任务分配资源；计算任务从只读输入读数据并写新版本输出。虚线为调度控制，实线为数据读写。" src="../diagrams/exports/ch11-layers.svg" width="818" height="758.7" loading="lazy"></a><figcaption>图 11-1：先看实线的数据路径，再看虚线的运行控制；存储成功、任务成功和整条工作流完成是不同状态。本图按原书印刷457—465页重构。点击<a href="../diagrams/exports/ch11-layers.svg" target="_blank" rel="noopener">查看大图</a>。</figcaption></figure>
+<p><strong>分布式文件系统（DFS）</strong>把大文件切成块，分散到数据节点。HDFS 的 NameNode 管目录、权限和块位置等元数据，DataNode 保存实际块并提供读取接口。数据节点的操作系统页缓存会缓存热数据，因此“数据在远端磁盘”不意味着每次都发生物理读盘。元数据服务需要可用性与规模设计，集中式逻辑视图也不等于只能有一个无备份进程。</p>
+<p>HDFS 常用大块来减少元数据和定位开销。沿用原书同单位算例，900 MB按128 MB分块，得到7个满块和1个4 MB尾块；尾块并不因为逻辑块大小而必须占满128 MB。分布式逻辑块与本地磁盘扇区、文件系统块不是同一级单位。原书列举的块大小只是实现选择，不应推成“所有对象存储都有4 MB块”的接口保证。</p>
+<p>这种架构把存储分散在各自带盘的节点上，原书将其与传统NAS／SAN集中存储设备作对照；不能仅凭使用NFS协议就判断内部一定是单机。NFS、FUSE与S3兼容接口帮助不同工具接入存储，但接口兼容程度、性能和一致性仍须分别确认。数据块和元数据各自分布，也不代表批引擎必须自己实现文件系统。</p>
+<p>复制把同一块放到多个节点，既能承受某些节点损坏，也让计算有更多可就近读取的位置。纠删码则用数据片加校验片降低冗余开销，代价包括编码、恢复所需的计算和网络。<strong>笔记算例</strong>：Reed–Solomon 编码按10份数据加4份校验组织，理想编码模型下存储为原数据的1.4倍，任意丢失4片仍能恢复；4份完整副本最多承受其中3份丢失，不能说两者容错数相同。真实可用性还取决于片如何分布到故障域。</p>
+</section><section id="object-storage">
+<h2><span class="section-number">05</span>对象存储改变了局部性，也改变了提交方法</h2>
+<p>对象存储通常用桶与键寻址，例如 <code>s3://example-bucket/logs/day=2025-06-27/part-0</code>。键中的斜杠可以组织前缀，但一般对象命名空间里的“文件夹”不是传统目录；列举前缀也不等于取得某次运行的完整、不可变输入清单。清单、对象版本或表快照把“这次究竟读哪些文件”固定下来，才能支撑重跑。</p>
+<p>常见接口是整体写入对象、按键读取，必要时做范围读取。整体替换对象与对已打开文件任意就地改写不同。部分产品提供追加、层级命名空间或特殊重命名能力，FUSE 也能把对象接口包装成文件路径；但接口像文件系统，并不会自动补齐文件锁、原子目录操作和所有一致性语义。</p>
+<p>HDFS 可以把任务放到持有输入副本的节点，减少网络读；托管对象存储通常采用<strong>存算分离</strong>，计算节点通过网络读取。后者失去一部分数据局部性，却允许磁盘容量和 CPU、内存分别扩缩：作业结束可以释放计算资源，数据继续保存。是否划算取决于扫描频率、缓存命中、网络与请求费用，不能只以“云网络很快”忽略传输代价。</p>
+<p>最需要谨慎移植的是“写临时目录，再重命名为正式目录”。对通用 S3 桶，把前缀下每个对象复制后删除，不构成整个数据集的原子切换；读者可能看见一部分新文件。原书印刷461页把对象存储重命名一概写成非原子，范围也过宽：<strong>截至2026-11-07，AWS 官方文档明确 S3 Express One Zone 的目录桶支持同桶单对象 <code>RenameObject</code> 原子重命名。</strong> 这个例外仍不是任意桶、任意多对象目录事务。</p>
+<p>更普遍的办法是保留不可变数据文件，通过可靠元数据提交发布新文件集合。以 Iceberg 为例，快照描述完整表状态，提交原子地替换当前表元数据引用；读者先选定快照，再按其文件清单读取。并发提交要检测冲突并按规则重试，单有一个 JSON 文件并不自动得到事务。对象级版本历史也不等于跨对象一致快照；历史文件与快照被清理后，时间旅行和回滚能力随之受限。发布机制将在本章末尾继续展开。</p>
+</section><section id="scheduling">
+<h2><span class="section-number">06</span>资源调度：公平、利用率与完成时间会冲突</h2>
+<p>批处理框架提交作业时，需要说明代码位置、输入输出、任务数、每个任务的 CPU、内存和磁盘需求，以及 GPU 等硬件要求。集群中的任务执行器负责取得代码、启动和监控进程，上报心跳、任务结果与资源使用；资源管理组件维护集群视图；调度器据此选择任务在哪些节点运行。YARN 的 NodeManager 与 Kubernetes 的 kubelet 是原书给出的执行器例子，具体控制流程和术语并不完全相同。</p>
+<p>资源声明决定的是可行性，调度策略还要决定先后。原书设想五台机器共有160个 CPU 核，两个作业各有100个可并行的一核任务。如果任务彼此独立，可以各运行80个，随后补跑余下20个；也可以先给第一个100核，同时让第二个使用剩余60核。后者并不是群组调度：只有当一组协同任务要求一起得到足够资源才能推进时，整体分配才成为必要条件。</p>
+<p><strong>群组调度（gang scheduling）</strong>适合必须同步协作的工作。若一个作业必须取得100核才启动，第二个可能要等第一组释放资源，暂时留下60核未被该作业使用。若允许多个作业各自占住部分资源、等待剩余部分，就可能形成互等；若完全不预留，刚空出的核又不断被别的工作占走，大作业可能长期饥饿。抢占低优先级任务能腾出空间，但被取消的计算要重做。</p>
+<p>多维资源让问题更难：总计还有很多 CPU，不代表某台机器同时有足够内存和指定 GPU。实际调度使用优先级、队列配额、主导资源公平和装箱等启发式，争取可接受的公平与利用率，不是每次求全局最优。原书提到的 NP-hard 是复杂调度优化问题的性质，不能推广为所有简单任务排列都同样困难。</p>
+<p>资源限制还不能包办安全隔离。原书印刷462页及旧稿将 cgroups 与防止越权读数据连在一起，容易误导：cgroups 主要控制、统计 CPU、内存等资源；文件权限、身份鉴别、命名空间与其他安全机制才共同约束数据访问。应用控制器可以协助安排特定作业，但 Kubernetes operator 也不是 YARN ApplicationMaster 的严格同义物。理解职责比机械对照产品名称更可靠。</p>
+</section><section id="workflows">
+<h2><span class="section-number">07</span>工作流依赖，决定什么结果可以交给下游</h2>
+<p><strong>工作流（workflow）</strong>把多个作业组织成有向无环图（DAG）。例如原始事件清洗后，一路生成用户维度，一路生成活动事实；两者成功后才做连接，再分别供报表和训练数据消费。这里的边表示数据依赖，不是“先写在代码前面的语句”。</p>
+<p>原书给出三种拆分理由。一个团队生产的数据会被多个团队消费，需要明确可共享的产物；Spark 结果可能交给 Trino 等另一工具继续处理；相邻阶段也可能需要不同分片键，比如先按用户连接，再按 URL 聚合。现代引擎可以把第三类步骤放进同一个计算图，不一定每次都要拆成独立调度的作业。</p>
+<p>作业间常通过 DFS 或对象存储<strong>物化（materialize）</strong>结果：先完整写出，再启动消费者。这样两边不必同时运行，消费者失败后可以重用已完成上游，也容易检查中间数据。代价是持久化读写、复制和等待。直接流水线则把记录通过内存或网络交给下游，减少中间存储；下游慢会产生背压，某处故障也可能要求连同上游一起重算。物化和流水线各自定义不同的恢复边界。</p>
+<p>资源调度器通常不了解“今天的报表应同时读今天的事件与指定版本用户表”。Airflow、Dagster、Prefect 等工作流工具处理作业依赖、时间安排、重试与状态展示；计算引擎处理作业内的阶段与任务。工具之间会有职责重叠，但不能把“进程退出码为零”直接等同“业务数据质量正确”。</p>
+<p><strong>笔记失败路径</strong>：清洗作业成功，用户维度生成失败。连接作业应等待，而不是拿昨天维度悄悄补齐；修复字段缺失后，只重跑受影响分支和下游，已经确认可复用的独立产物保留。若重新生成上游快照，则依赖旧快照的结果也要重新考虑。重跑哪一段，依赖的是数据版本关系，不能只看 DAG 方框是不是绿色。</p>
+<p>这与<a href="ch05.html">第5章的持久化执行</a>有联系，但重点不同：持久化执行常协调包含 RPC 的业务步骤，本章工作流主要把数据集转换成数据集。两者都可以重试，外部副作用也都不会因“有工作流引擎”而自动恰好一次。</p>
+</section><section id="fault-recovery">
+<h2><span class="section-number">08</span>任务失败以后，恢复的是结果而非执行次数</h2>
+<p>大作业任务多、运行久，遇到单个任务失败并不罕见。除了硬件故障和网络中断，调度器也可能主动抢占任务。可中断的低价算力能降低成本，但只有当恢复浪费、排队和完成时限仍可接受时才有收益，不能把“重跑就行”理解成没有代价。</p>
+<p>可重跑模型把失败处理局部化。假设100个任务中有99个已经产生合格结果，第100个写到一半崩溃：它的未完成产物不应算作正式结果；框架在另一节点启动新的执行尝试，成功后选择这一尝试的输出。若旧进程其实没有死、只是网络断开，两个尝试都可能执行。系统需要以任务尝试隔离和提交协议避免把两份结果都纳入输出。</p>
+<p>因此，<strong>任务可能执行多次，提交结果应等价于一次成功执行</strong>。这不意味着任意输出目录在运行期间都完全不可见，也不意味着失败必定不留下临时对象。原书印刷480页的全有或全无，应放在框架管理的结果与正确提交器、存储语义及读者遵守发布协议的边界内理解。直接列举文件的读者，未必自动服从这份边界。</p>
+<p>MapReduce 的作业间结果通常写入持久存储，某个作业失败可从前一个完整产物开始；同一作业内的 mapper 中间输出却常在本地盘，节点丢失可能需要重跑 mapper。Spark 记录数据的<strong>计算血缘（lineage）</strong>：某个分片来自哪些输入、应用了哪些变换。缓存分片丢失后沿依赖重算；如果它需要一个已丢失的 shuffle 输出，还要回溯到相应上游。缓存和血缘并非“不物化任何数据”，而是避免把每一阶段都强制写成多副本持久文件。</p>
+<p>这里需要修正原书印刷466页的一项概括：它用“Flink 定期检查点”对照 Spark 重算。<strong>Flink 2.1 的 DataStream <code>BATCH</code> 模式不使用检查点恢复，而是回溯到仍可用的中间结果，重启失败任务或必要前驱；<code>STREAMING</code> 模式才使用检查点机制。</strong> 同一个引擎支持批流，不等于两个执行模式有相同恢复方式。选择中间物化、血缘或检查点，实质是在平时保存成本与出错后重算范围之间取舍。</p>
+</section><section id="mapreduce">
+<h2><span class="section-number">09</span>MapReduce：把业务代码缩小为两种回调</h2>
+<p>MapReduce 将日志统计拆成四步：输入格式解析器读出记录；mapper 为每条记录产生零个或多个键值对；框架按键分片、排序和分组；reducer 对同一键的一组值计算结果。日志例子可以令 mapper 输出 <code>(URL, 1)</code>，reducer 对这些1求和。过滤器输出零条，拆词器输出多条，都符合这个接口。</p>
+<p>一个 map task 处理一个逻辑输入切片，它不必等于一个物理文件；大文件可以有多个切片，小文件也可能被合并处理，具体取决于输入格式和可切分性。reduce task 数则决定输出侧的并行度，不要求与 map task 数相等。一个 reduce task 可以处理很多不同键，“每个键调用一次 reducer”不等于“每个键启动一个进程”。</p>
+<p>reducer 接收的是值迭代器，而不是要求一次装入全部同键值的数组。计数时只需一个累计变量，输入再多也不必保存每一行。若业务函数自行把所有值转成列表，这个内存优势就会消失。函数式思路鼓励结果只依赖显式输入、不修改共享外部状态，从而让框架自由并行与重试；实际 API 并不会阻止开发者调用外部数据库或读取当前时间，正确性前提仍由代码承担。</p>
+<p>URL计数之后，还要按次数排名。经典 MapReduce 可再运行一个作业，把第一次输出转成按次数处理的输入；现代引擎通常把这些步骤编入一个计划，并可能选择更便宜的 Top-K 算法。模型表达同一个答案，并不要求物理执行永远照搬两次完整排序。</p>
+<p>MapReduce 的限制主要是固定的 map—分组—reduce 结构，以及复杂计算拆成多个作业带来的反复物化和启动成本。也要避免旧稿中的反向夸张：Hadoop 允许零个 reducer 的 map-only 作业，这种纯过滤输出无需排序；排序是有 reduce 的经典路径的重要部分，不是任何 MapReduce 作业都不能绕过的步骤。</p>
+</section><section id="dataflow">
+<h2><span class="section-number">10</span>数据流引擎：让系统看见整个计算图</h2>
+<p><strong>数据流引擎（dataflow engine）</strong>把过滤、投影、连接、分组等算子和数据依赖放进一张图。这里的算子是处理数据的操作，任务则是运行时调度单位，两者不一定一一对应。连续执行“取出 URL—过滤 CSS—规范化路径”时，三步都只依赖当前记录，也不改变数据归属，便可以融合为一个任务，减少编码、复制和调度开销。</p>
+<p>需要按用户连接时，引擎才在合适位置重新分发数据；如果某一步只需哈希查找，就不必为了遵循统一模板先排序。整个图还让引擎知道谁消费谁的输出，有机会把相邻任务安排在同一机器、复用进程和缓存，并让能流水线处理的算子尽早开始。Spark、Flink 与云数据仓库各有实现方式，不能由“dataflow”推断它们拥有完全相同的调度或存储机制。</p>
+<p>这些优化没有消除依赖。计算最终总计，仍必须处理完相关输入；排序合并连接可能需要先完成上游 shuffle 的某些阶段；批模式也可能主动物化 shuffle 结果来减少同时占用的资源。原书所谓把整个工作流当作一个作业，是相对多个独立 MapReduce 子作业的建模优势，不意味着 Airflow 跨多个团队与工具的全部工作流都被自动融合。</p>
+<p>设清洗后同一数据分别供三次分析使用，缓存一次可能省下重复扫描；若只用一次，保存巨大缓存反而挤占其他算子的内存。中间结果保存得越少，平时 I/O 往往越少，丢失后可能回溯越远。长血缘也可通过持久化检查点截断。合理选择取决于复用程度、重算代价和故障率，而不是“内存永远优于磁盘”。</p>
+<p>旧稿将这些因素归为“Spark 必然快一个数量级，根本原因就是血缘”，证据不足。血缘为减少复制创造条件，算子融合、查询优化、数据布局与进程复用也会影响速度；最终收益仍取决于工作负载。本章保留机制解释，不承诺未经测量的固定倍数。</p>
+</section><section id="shuffle">
+<h2><span class="section-number">11</span>Shuffle：让需要一起计算的数据相遇</h2>
+<p><strong>Shuffle</strong>在这里指跨并行任务重新组织数据，并不是随机洗牌。经典 MapReduce 的路径把按键重新分片与分片内排序结合起来：对每个输出键计算目标 reducer，例如 <code>hash(key) mod R</code>。同一个键无论来自哪个 mapper，都必须到同一个 reducer；不同键可以落到同一 reducer，不影响正确分组。</p>
+<p>原书图11-1用三个 mapper、三个 reducer 表示所有去向。为了看清动作，下图只展开 reducer 2 的入边，另外两个去向省略。<code>m1,r2</code> 表示 mapper 1 中属于 reducer 2 的那一段数据，首先是一个逻辑分区名称。</p>
+<figure class="concept-figure"><a href="../diagrams/exports/ch11-shuffle.svg" target="_blank" rel="noopener"><img alt="三个mapper各自形成给r2的有序分区，r2拉取三份数据并归并，得到同键相邻的迭代器；其余reducer路径省略。" src="../diagrams/exports/ch11-shuffle.svg" width="913" height="703.7" loading="lazy"></a><figcaption>图 11-2：箭头表示数据传送，右侧排序只在 r2 内成立。原书图11-1的全连接关系在这里拆成一个接收者的局部视图。点击<a href="../diagrams/exports/ch11-shuffle.svg" target="_blank" rel="noopener">查看大图</a>。</figcaption></figure>
+<p>正常过程有三个关键动作。首先 mapper 在内存缓冲中按目标分区与键组织记录，缓冲不足就溢写有序段，再归并。其次，完成的 map 输出可被 reducer 拉取；拉取与归并能够交错，不必等所有 mapper 全结束才开始传输。最后，reducer 收齐自己所需的各份输出后，得到同键相邻的输入，逐键调用业务函数，将结果写成输出分片。</p>
+<p>假设只看 r2：M1 给出 <code>(A,1),(C,1)</code>，M2 给出 <code>(A,1),(B,1)</code>，M3 给出 <code>(B,1),(C,1)</code>。归并后是 A、A、B、B、C、C，求和得到三个计数2。这里只是假设 A、B、C 都归 r2 的教学数据；全局可能还有其他键。<strong>哈希分片后的每个 reducer 输入有序，不意味着依次拼接各 reducer 文件就是全局有序。</strong> 若要全局顺序，需要范围边界或额外归并；reducer 自己改写输出键后，其输出也不自动保持原输入顺序。</p>
+<p>还应修正两处简化。原书印刷471页把每个 <code>m_i,r_j</code> 画作独立文件，便于理解数据归属；Hadoop 3.4.2 官方教程说明，map端溢写段最终会合并成一个文件，因此不能据 M×R 个逻辑区段直接断言有 M×R 个物理文件。另一方面，现代引擎的 shuffle 可以服务哈希连接、重分布等操作，不保证记录有序；“shuffle 必然分布式排序”只适用于这里的排序型路径。</p>
+<p>Shuffle 常常昂贵，因为它增加编码、网络传输、缓冲、溢写和合并。最有效的优化经常发生在它之前：先过滤不需要的行、丢弃不用的列、局部聚合可合并的计数。计算平均数时，应传局部的“总和、个数”再合并，不能对各分片平均数直接取平均。外部 shuffle 服务还能把数据生命周期与计算进程分开，但它增加的保存与复制保证需要按实现确认。</p>
+</section><section id="joins">
+<h2><span class="section-number">12</span>排序合并连接：档案先到，事件就能逐条处理</h2>
+<p>原书图11-2、11-3的案例是把用户活动事件与用户档案连接起来：事件包含用户ID、页面等，档案包含出生日期。想分析不同年龄的读者访问哪些页面，就需要把两类记录按用户ID配对。事件是星型模式中的事实，用户档案是维度；这与<a href="ch03.html">第3章的数据模型</a>对应。</p>
+<p>下面沿用原书关系、使用<strong>笔记假设小数据</strong>。用户104的出生日期为1989-01-30，用户103为1947-12-18。事件为104访问 <code>/x</code> 和 <code>/z</code>，103访问 <code>/x</code>。两侧都以用户ID重新分片，再安排排序键 <code>(user_id, type, event_time)</code>，其中档案类型排序在事件前。分片与分组仍只依据 <code>user_id</code>，不能把完整复合键分别哈希，否则同一个人的档案和事件可能被拆开。</p>
+<p><strong>二级排序（secondary sort）</strong>就是利用组内的额外排序规则。处理104时，先取得出生日期保存到一个变量，再逐条读事件，输出 <code>(/x,1989-01-30)</code> 和 <code>(/z,1989-01-30)</code>。处理完104即可丢弃这份档案，转向下一个用户。大量数据已在 shuffle 中相遇，连接循环不再逐行访问远端用户数据库。</p>
+<figure class="concept-figure"><a href="../diagrams/exports/ch11-join.svg" target="_blank" rel="noopener"><img alt="同一用户104的档案先于两条事件进入连接算子，算子只保留一份档案并为每个事件附上出生日期；下一阶段改按URL分组。" src="../diagrams/exports/ch11-join.svg" width="943" height="678.7" loading="lazy"></a><figcaption>图 11-3：从左到右读一个用户组。排序、分组和分片键承担不同职责；“一份档案内存”依赖一用户一档案的前提。点击<a href="../diagrams/exports/ch11-join.svg" target="_blank" rel="noopener">查看大图</a>。</figcaption></figure>
+<p>这就是本例的<strong>排序合并连接（sort-merge join）</strong>：两侧的同键记录按排序归到一起，顺序配对。它节省内存的结论需要一对多前提。若档案存在重复版本、每个键两侧都有许多记录，就要决定是历史有效版本匹配还是多对多连接；后者可能产生很大的笛卡尔配对结果，无法靠“只存一个变量”普遍解决。没有档案的事件，在内连接中被丢弃，在左连接中应保留并填空，业务口径必须写清。</p>
+<p>下一步按 URL 统计年龄组，要重新以 URL 分片。假设统一在2025-06-27计算整岁，104是36岁、103是77岁；采用“40岁以下／40岁及以上”两组，则 <code>/x</code> 两组各1次，<code>/z</code> 低年龄组1次。年龄基准若改成每条事件发生时，答案可能不同，这是应显式固定的输入条件。原书保留出生日期到后续聚合的做法，也避免把年龄计算过早绑定到作业运行当天。</p>
+</section><section id="join-costs">
+<h2><span class="section-number">13</span>连接策略：少搬数据，也要看内存和倾斜</h2>
+<p>本节是对原书排序合并案例的<strong>笔记补充</strong>，以 Spark 4.0.1 官方执行策略说明为核查依据。连接的核心问题是：匹配记录怎样到达同一个计算位置，以及到达后怎样配对。数据移动策略和本地连接算法是两层选择，不应把所有策略排成互斥的单一分类。</p>
+<p><strong>广播连接（broadcast join）</strong>适合一侧足够小。把完整小表分发到每个参与连接的工作进程，通常建立哈希表；每个进程扫描自己那份大表，在本地查匹配项。它避免把大表按连接键重新洗牌，却不是没有网络。若小表为 B 字节、需要 P 份接收副本，分发量数量级是 P×B；树形广播可以改变链路压力，不会让所有接收者合计只收到一份数据。</p>
+<p>假设过滤后的用户表只有20 MB，分发到50个接收者，合计接收量约1 GB，相比重新分发1 TB事件表可能划算。若实际小表变成2 GB，合计就约100 GB，且每个进程还要承受解码、哈希结构和并发任务的内存开销。压缩文件大小不是内存哈希表大小。广播不一定最快，也不适用于所有连接类型；过时统计可能让原本可行的策略导致内存不足。</p>
+<p><strong>共分片连接（co-partitioned join）</strong>利用已有布局：两表以兼容的键、哈希或范围规则分片，匹配记录已经落在相应分片，可以成对读取。只有分片数相同还不够，哈希函数、键编码与边界都要相容，引擎还必须识别这项布局。它可能省去重新分发，却不保证两侧文件在同一物理机器，也不保证分片内已经排序。Spark 的 Storage Partition Join 示例正是去掉 <code>Exchange</code> 而保留 <code>Sort</code>；仍可在本地使用排序合并连接。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>布局与策略</th>
+<th>主要收益</th>
+<th>需要支付或确认的代价</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>两侧重分片后排序合并</td>
+<td>不要求整表进入单机内存，适合大表</td>
+<td>网络、排序、溢写，以及同键重复匹配的输出量</td>
+</tr>
+<tr>
+<td>小表广播后本地哈希连接</td>
+<td>大表保留现有分布</td>
+<td>每个接收者存小表，广播总量随接收者数增长</td>
+</tr>
+<tr>
+<td>已有兼容布局的共分片连接</td>
+<td>避免重新按连接键分发</td>
+<td>前期维护布局，仍有读存储、局部排序或哈希成本</td>
+</tr>
+<tr>
+<td>重分片后的哈希连接</td>
+<td>可省去排序</td>
+<td>每片构建侧的哈希表必须可处理，必要时分批或溢写</td>
+</tr>
+</tbody>
+</table></div>
+<p>还有<a href="ch07.html">第7章的倾斜</a>：总数据均匀分片，不代表同一热键能均匀分散。一个机器人用户贡献40%的事件，按用户ID连接就可能让一个任务承担大部分工作；增加 reducer 数不会把这个键自动拆开。一对多连接可把热用户的事件分成若干带盐子键，并把该用户的一份档案复制到每个子键，从而并行连接；不能两侧随意加不同盐，否则匹配会丢失。</p>
+<p>盐化、拆分倾斜分片和复制匹配侧都有额外成本。多对多热点还可能是结果本身巨大，而不是路由错误。优化器可以根据统计和运行时观测调整策略，Spark AQE 也支持倾斜分片拆分，但自动优化不能替业务决定重复档案是否应当配对。先核对连接基数和键分布，再谈增加机器。</p>
+</section><section id="sql-dataframes">
+<h2><span class="section-number">14</span>SQL 与 DataFrame，最终都要变成执行计划</h2>
+<p>手写 mapper 和 reducer 会让开发者承担许多与业务问题无关的细节。SQL 说明需要什么结果，引擎将查询解析成逻辑操作，再选择实际的扫描、连接、交换与聚合算子。成本优化器利用行数、不同键数量、列宽与分布统计，尝试先过滤、只读必要列、调整连接顺序，并选择广播、哈希或排序路径。</p>
+<p>沿用日志例子，假设 <code>logs</code> 表有字符串列 <code>url</code>，逻辑查询为：</p>
+<pre><code class="language-sql">SELECT url, COUNT(*) AS cnt
+FROM logs
+GROUP BY url
+ORDER BY cnt DESC, url ASC
+LIMIT 5;
+</code></pre>
+<p>相应的 Spark DataFrame 表达如下；<code>logs</code> 同样是已有输入。本段展示 API 对应关系，不是完整集群部署程序。</p>
+<pre><code class="language-python">from pyspark.sql import functions as F
+
+top_urls = (
+    logs.groupBy(&quot;url&quot;)
+        .agg(F.count(&quot;*&quot;).alias(&quot;cnt&quot;))
+        .orderBy(F.desc(&quot;cnt&quot;), F.asc(&quot;url&quot;))
+        .limit(5)
+)
+top_urls.show()  # action：请求结果，触发实际执行
+</code></pre>
+<p>两种写法可以进入相同的查询优化体系。引擎可能先在各分片局部计数，再交换局部总数；取前五名也可能先做局部 Top-K 再合并。因此不能看见 <code>GROUP BY</code> 与 <code>ORDER BY</code>，就认定必定执行两次完整全局排序。要判断物理代价，应查看执行计划和运行指标，特别是 <code>Exchange</code>、排序、构建侧大小与溢写，而不是只数 API 调用。</p>
+<p><strong>DataFrame</strong>是按列组织的表状数据及其操作接口。Pandas 的普通操作通常立即执行；Spark 则通常先构建惰性计划，遇到 action 才真正计算。惰性使引擎能够联合优化多个步骤，但不意味着“任何方法调用都绝不读数据”，模式推断和元数据获取就可能发生较早。Pandas 也有向量化等优化，旧稿的“优化：无”并不准确。</p>
+<p>本地 DataFrame 常有可用的索引和稳定行位置，分布式 DataFrame 通常不承诺隐含顺序。按位置取某行、把整表 <code>collect</code> 回客户端，可能改变成本甚至耗尽内存；需要顺序时显式排序，需要大规模结果时写出分片数据。Arrow 提供通用列式内存表示，帮助不同执行端交换数据，但格式统一并不会自动消除传输。</p>
+<p>第二版也强调批处理与云数仓趋同：批框架采用 SQL、Parquet 和优化执行，云数仓采用分布式调度、shuffle、容错与 DataFrame 接口。迭代图算法、多模态转换和复杂训练可能更适合程序化计算，但不是“SQL 原理上表达不了”。选型要同时看计算资源、数据搬运、运维和开发成本；不能无条件说自建 Spark 比数仓便宜。</p>
+</section><section id="etl-analytics">
+<h2><span class="section-number">15</span>ETL 与分析：同一份产物，支持不同节奏的使用</h2>
+<p><strong>提取—转换—加载（ETL）</strong>把运营型系统的数据带到下游，转换字段、清洗记录并形成分析结构；先加载后转换的 ELT 改变执行位置，仍需处理来源、版本与依赖。过滤、选列和格式转换常能逐记录独立并行，连接、去重与分组则需要重新聚集相关数据。把整个 ETL 都称作“加机器就线性加速”，会忽略后一类成本。</p>
+<p>原书给了朴素而重要的排错例子：转换需要某字段，上游文件却没有这个字段。保留输入产物后，可以直接查看失败数据，判断是上游模式变化还是下游逻辑过时，修复后重跑。这比在大量在线更新已经生效后推测当时输入更容易。对暂时连接故障，有限重试可能有效；确定性的字段错误则会反复失败，应让依赖停止并暴露原因。</p>
+<p>组织层面，数据契约、数据网格等实践尝试让各团队发布可供他人使用的数据，而不把所有管道都压到一个团队。对本章最有用的落点是：提供者说明字段、主键、时间口径和更新节奏，消费者知道什么变化会影响自己的结果。一个“成功生成”的文件如果单位从分变成元，计算框架仍可能顺利执行；契约和结果核对处理的是调度器看不见的语义。</p>
+<p>分析有两种节奏。<strong>预聚合</strong>定时按地区、日期等维度算好汇总，把工作提前做完，以更低查询成本服务报表；代价是刷新延迟以及可回答问题受预设维度限制。<strong>即席查询</strong>围绕临时问题反复探索，例如先发现某天转化率异常，再按客户端细分；这类用户虽然使用批计算引擎，仍在意每轮响应时间。</p>
+<p>湖仓架构把文件保存在 DFS 或对象存储，用开放表格式表达文件属于哪个快照、列是什么类型，再由目录服务和查询引擎提供表访问。它不是“对象存储本身变成关系数据库”，也不能将 Parquet、Iceberg 和查询引擎当成同一层。ETL 与分析查询可以共享执行平台和 SQL 接口，但资源竞争仍需安排：重算全历史数据不应无限挤占日常分析所需容量。</p>
+</section><section id="machine-learning">
+<h2><span class="section-number">16</span>机器学习：训练前后的大部分工作也是数据转换</h2>
+<p>原书把机器学习批处理分成三类。<strong>特征工程</strong>把原始记录过滤、连接并转成模型可用的表示；<strong>模型训练</strong>以训练集为输入、模型权重为输出；<strong>批量推理</strong>把模型应用到大量数据，产生预测或评估结果。它们都需要版本关系：一份预测来自哪个模型，模型使用哪份特征和训练数据，不能只保存一个名叫 <code>latest</code> 的文件。</p>
+<p>以<strong>笔记假设</strong>的推荐训练为例，先从历史活动生成每个用户过去七天的浏览统计，再连接商品属性，最后训练模型。特征窗口必须对应要预测的时点；若预测昨日购买却把今日购买结果也算进特征，离线指标可能很好，实际上是使用了未来信息。保存不可变快照有助于复现，却不能自动保证训练语义正确。</p>
+<p>图算法也适合批量迭代。原书介绍<strong>整体同步并行（BSP）</strong>及 Pregel 模型：每一轮中，顶点处理上一轮收到的信息、更新局部状态并给邻居发送消息；经过同步屏障后，下一轮消费这些消息。比如最短路传播中，已知距离改善的顶点把候选距离发给邻居，直到再无改善。这里是笔记解释机制，不是在运行完整 Pregel 系统。同步轮次使迭代关系清楚，也带来等待慢任务和反复交换边信息的代价。</p>
+<p>LLM 语料准备延续同一思路：从网页提取正文，修复损坏文本，过滤低质量或无关内容，去重，再做适合模型的编码。提取通常可以按文档并行；跨文档去重可能需要比较、重分片或索引；处理长文档和短文档的成本也不均匀。Ray、Kubeflow、Flyte 等是原书列出的相关工具，不应因它们都用于 ML，就认为负责相同的调度与计算层次。</p>
+<p>原书印刷479页把 tokenization 简写为“拆成词”，随后与 embedding 连写，需要校正：token 可能是子词、字节或字符片段，tokenizer 通常输出 token ID；embedding 是将 ID 等输入映射到向量的另一阶段。常见语言模型训练会在模型内计算并学习嵌入，并不要求预处理管道先为所有词保存固定向量。此处依据 Hugging Face 分词文档区分术语，没有把模型内部计算当作固定离线步骤。</p>
+<p>Notebook 便于探索和查看中间结果，但手工执行过的单元顺序可能与屏幕排列不同。将实验移成定期作业时，应明确输入、参数和执行顺序。训练里的随机性、并行归约和依赖版本仍可能影响重复结果；批处理提供重建基础，并不承诺所有机器学习运行天然逐位确定。</p>
+</section><section id="publish">
+<h2><span class="section-number">17</span>把派生结果发布出去，才完成最后一段正确性</h2>
+<p>推荐列表、搜索索引、预计算报表最终需要在线服务读取。最直接的写法是在每个任务里调用生产数据库客户端，逐行更新。这会把三个问题同时引入：每条记录的网络请求降低吞吐；大量并行任务可能挤占线上数据库容量；任务重试和部分失败变成外部可见副作用。批处理输出可重算，不代表已经扣款、发信或覆盖的外部状态能随之撤回。</p>
+<p><strong>笔记失败路径</strong>：任务先把用户104的推荐分数“增加10”，服务端已经成功，但确认丢失；任务重试后又增加10，结果成为20。换成同一版本、同一主键的确定性覆盖，可能使重复写幂等；仍要处理旧作业晚到、部分用户已更新而其他用户没更新的问题。<a href="ch08.html#idempotent-consumer">第8章的同事务去重</a>可以解释一部分重复效果，整个数据集的一致发布则是另一份责任。</p>
+<p>原书提出用 Kafka 等日志流作为交接层：批结果顺序写入，消费者按可承受速率导入在线系统，多种下游可以各自消费同一份输出，还可以建立访问边界。缓冲使瞬时产出和消费速率解耦，但持续生产快于消费时，积压仍会增长。加入 Kafka 也不会自动获得全有或全无，原书对此明确作了保留。</p>
+<p>可以把发布分成“构建新版本—确认完整—切换引用”。下面是<strong>笔记教学协议</strong>，用于说明责任，不指定某产品的完整实现：</p>
+<ol>
+<li>为本轮选择不可复用的版本 V18，记录固定输入与代码版本；在线读者仍使用 V17。</li>
+<li>将成功任务的输出导入 V18 的隔离空间，按版本与稳定记录键处理重复投递。失败尝试的输出不混入已确认集合。</li>
+<li>收集全部预期分片的完成信息，核对文件清单、数量或校验摘要；流式交接还要确认消费者已经应用到各输入分片的结束位点。</li>
+<li>只有 V18 完整且通过业务核对后，才以受协调的原子元数据操作把当前引用从 V17 改为 V18。一次查询固定一个版本，避免先读新目录、后读旧分片。</li>
+<li>保留 V17 到旧读者退出并满足回滚保留期，再清理；若 V18 构建失败，继续服务 V17，修复并用隔离的新尝试重建。</li>
+</ol>
+<figure class="concept-figure"><a href="../diagrams/exports/ch11-publish.svg" target="_blank" rel="noopener"><img alt="V18数据先进入不可见暂存区；发布者核对全部分片及消费结束位点后，才把当前引用从V17切到V18。构建失败时仍读V17。" src="../diagrams/exports/ch11-publish.svg" width="803" height="768.7" loading="lazy"></a><figcaption>图 11-4：实线表示数据访问（导入或读取），虚线表示完成证据与发布控制。“收到完成通知”和“所有数据已经应用”必须经过同一完整性判断。点击<a href="../diagrams/exports/ch11-publish.svg" target="_blank" rel="noopener">查看大图</a>。</figcaption></figure>
+<p>为什么完成通知本身不够？若数据跨两个日志分片发送，消费者可能先看到控制消息，另一分片却还没有读完；此时切换仍会发布半成品。通知应关联明确的版本及结束边界，消费者验证后再宣布就绪。发布者切换成功却丢失响应，也应通过读取当前版本解析结果，不能盲目用旧状态覆盖后来的更新。多个下游各自原子切换，还不等于所有系统同时原子切换。</p>
+<p>另一条路径是批量构建数据库文件，再用专门工具导入，例如原书提到 RocksDB 的 SST 导入、TiDB Lightning 等。它避免逐条经过通用在线写入路径，常适合初始化和全量重建；持续增量更新则可以结合日志传播。全量基线与增量之间必须有对应位点，否则重建期间的更新可能遗漏或重复，<a href="ch12.html#snapshot-handoff">第12章</a>会继续讨论这类交接。</p>
+<p>因此，旧稿“走 Kafka、绝不直写生产库”的铁律过强。有些小规模导入可以借助限速、幂等写、事务或版本暂存安全完成；关键是解释容量、重试和可见性，而不是指定唯一产品。批处理最有价值的边界，是<strong>允许内部尝试重来，却只把已经完整确认的派生版本交给读者</strong>。</p>
+</section><section id="conclusion">
+<h2><span class="section-number">18</span>沿输入、移动、恢复与发布检查一条管道</h2>
+<p>本章的机制可以沿四个问题串起来：本次输入的边界和版本是什么；需要共同计算的记录如何相遇；任务失败后能从哪里恢复；完整结果通过什么动作对读者可见。Unix 排序计数、分布式 shuffle、SQL 优化和版本发布，分别回答这条链上的不同问题。</p>
+<p>如果只有几个 GB 的数据、单机已能按时完成，集群可能只增加调度和传输成本；如果连接数据大、键倾斜严重，增加任务也未必缩短尾部时间；如果输出已经产生不可撤回的外部副作用，再强的血缘重算也不能替代端到端幂等。先识别哪一层限制了正确性或成本，才知道需要改变布局、增加资源，还是补上发布协议。</p>
+<p>批处理之所以便于推理，很大程度上来自输入终点：最终可以说“这一份已经处理完”。<a href="ch12.html">第12章《流处理》</a>移除这个终点，转而持续处理变化。分片、数据流、重试与外部副作用的问题仍在；时间、状态和“当前结果算不算完整”则需要新的表达。</p>
+</section>
+        <details id="sources" class="source-note"><summary>来源、原书对应与核查</summary><h3>版本与阅读范围</h3>
+<ul>
+<li>Martin Kleppmann、Chris Riccomini，<em>Designing Data-Intensive Applications, Second Edition</em>，O’Reilly，February 2026，ISBN978-1-098-11906-5。本站中文术语，不依据已出版中文译本。</li>
+<li>第11章完整阅读范围：PDF475—510／印刷451—486；正文至印刷482页，之后为参考文献。正文PDF页序＝印刷页＋24。参考文献清单已读，不等于逐篇通读全部论文。</li>
+<li>01对应Introduction 451—453；02—03对应Unix Tools、Simple Log Analysis、Chain of Commands、Sorting Versus In-Memory Aggregation 454—457；04—05对应Distributed Filesystems、Object Stores 457—461；06—08对应Distributed Job Orchestration、Resource allocation、Scheduling workflows、Handling faults 461—466。</li>
+<li>09—11对应MapReduce、Dataflow Engines、Shuffling Data 466—471；12对应Joins and Grouping 471—473；13为连接策略补充；14对应Query Languages、Batch Processing and Cloud Data Warehouses Converge、DataFrames 473—475；15—17对应Batch Use Cases、ETL、Analytics、Machine Learning、Serving Derived Data 476—481；18对应Summary 481—482。</li>
+<li>实际回看原PDF图11-1（印刷470／PDF494）、图11-2（472／496）、图11-3（473／497）。本章无独立编号数学公式；块大小和教学连接算例另做复算。另回看印刷461、466、479、480等涉及纠错的原页，确认不是文本提取误差。</li>
+</ul>
+<h3>补充资料与适用版本</h3>
+<p>以下资料核查日期为<strong>2026-11-07</strong>，仅用于列明的机制与边界，不宣称本地运行过对应集群。</p>
+<ul>
+<li><a href="https://hadoop.apache.org/docs/r3.4.2/hadoop-mapreduce-client/hadoop-mapreduce-client-core/MapReduceTutorial.html">Hadoop 3.4.2 MapReduce Tutorial</a>：InputSplit、Mapper／Reducer、二级排序、map-only、map端溢写合并与OutputCommitter。</li>
+<li><a href="https://spark.apache.org/docs/4.0.1/sql-performance-tuning.html">Spark 4.0.1 SQL Performance Tuning</a>：统计、广播与shuffle hash连接、AQE倾斜处理、Storage Partition Join；后者示例去掉Exchange仍保留Sort。</li>
+<li><a href="https://nightlies.apache.org/flink/flink-docs-release-2.1/docs/dev/datastream/execution_mode/">Flink 2.1 DataStream Execution Mode</a>：BATCH与STREAMING的调度、物化、恢复和检查点区别。按明确版本核查，不冒称所有Flink历史版本或所有API完全相同。</li>
+<li><a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/directory-buckets-objects-rename.html">Amazon S3：Renaming objects in directory buckets</a>：S3 Express One Zone同一目录桶内的单对象原子RenameObject，不能扩大到通用桶多对象事务。</li>
+<li><a href="https://iceberg.apache.org/docs/1.10.0/reliability/">Apache Iceberg 1.10.0 Reliability</a>：不可变快照、元数据引用原子替换、乐观并发与重试。该页关于旧S3最终一致性的历史表述未作为现行一致性依据。</li>
+<li><a href="https://huggingface.co/docs/transformers/main/tokenizer_summary">Hugging Face Transformers：Tokenization algorithms</a>：子词、字符和字节级分词，token不等同自然语言词。</li>
+<li><a href="https://docs.kernel.org/admin-guide/cgroup-v2.html">Linux kernel：Control Group v2</a>：资源组织与控制；权限控制不能仅归于cgroups。</li>
+</ul>
+<h3>纠错与范围限定</h3>
+<ul>
+<li><strong>原书印刷461页“对象存储重命名非原子” → 产品范围过宽 →</strong> 保留通用S3复制删除的局限，并补充Express One Zone目录桶单对象原子重命名例外；不宣称目录级事务。</li>
+<li><strong>原书印刷462页及旧稿“cgroups防止未授权数据访问” → 混合资源控制与安全隔离职责 →</strong> cgroups主要限制和统计资源，权限、身份及其他隔离机制共同控制数据访问。</li>
+<li><strong>原书印刷466页及旧稿“Flink靠周期检查点恢复” → 未区分执行模式 →</strong> 按Flink2.1官方文档，BATCH回溯可用中间结果，不使用检查点；STREAMING使用检查点。</li>
+<li><strong>原书印刷471页及旧稿“M×R文件” → 把逻辑分区图当作必然物理文件数 →</strong> Hadoop3.4.2会合并map溢写段成一个文件；图中m_i,r_j用于说明数据归属。</li>
+<li><strong>原书shuffle有序的表述被旧稿推广到所有引擎 → 分布式分发不自动有序，哈希分片也不建立全局顺序 →</strong> 区分经典排序型shuffle、分片内输入有序与全局结果顺序。</li>
+<li><strong>原书印刷479页“tokenization拆成词”并连写embedding → 术语过度简写 →</strong> tokenizer拆token并编码ID，embedding是另一步骤，不必作为固定离线输出。</li>
+<li><strong>原书印刷480页全有或全无／旧稿“task各跑一次” → 执行次数与正式结果混淆，提交边界被省略 →</strong> 允许多次尝试；一次逻辑效果依赖输出提交器和发布协议，外部副作用另行处理。</li>
+<li><strong>旧稿“排序O(1)内存、RS(10,4)等同4副本、广播只传一次且最快、共分片无内存限制、排序合并是唯一大表选择” → 内存与故障模型、数据移动及本地算法前提不成立 →</strong> 分别在03、04、13给出缓冲／临时盘、1.4倍冗余与丢片数、P×B广播量、布局兼容和哈希连接修正。</li>
+<li><strong>旧稿固定性能倍数、必然全量重算、固定一天延迟、Kafka唯一正确路径 → 把常见设计写成无条件规律 →</strong> 保留工作负载、增量依赖、调度等待与提交范围；不迁移产品速查、面试题及固定倍数承诺。</li>
+</ul>
+<h3>示例与验证边界</h3>
+<p>8行访问日志、Python计数、年龄组、广播量、丢片数与版本V17／V18均为笔记假设。Unix与Python示例实际运行，SQL以SQLite小表交叉核对；排序合并、广播、共分片与热键拆分用同一小数据教学模型核对结果。PySpark代码只展示对应API，未启动Spark、Flink、Kafka、Hadoop或云服务；恢复与发布检查是确定性模型，不是实际集群故障、吞吐或协议证明。</p></details>
+        <nav class="chapter-pagination" aria-label="章节翻页"><a class="page-link prev" href="ch10.html" rel="prev"><span class="page-label">← 上一章 · 第 10 章</span><span class="page-title">一致性与共识</span></a><a class="page-link next" href="ch12.html" rel="next"><span class="page-label">下一章 · 第 12 章 →</span><span class="page-title">流处理</span></a><a class="pagination-home" href="../index.html">书籍概览与目录</a><a class="pagination-home" href="../guide.html">全书专题导航</a></nav>
+      </article>
+    </div>
+  </main>
+  <footer class="site-footer"><div class="container footer-inner"><span>个人书架 / 中文读书笔记</span><a href="#main">回到顶部 ↑</a></div></footer>
+</body>
+</html>

@@ -1,0 +1,319 @@
+[
+  {
+    "type": "text",
+    "id": "title",
+    "x": 24,
+    "y": 18,
+    "text": "同一窗口可以先给结果，再接受迟到更正",
+    "fontSize": 25,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "subtitle",
+    "x": 24,
+    "y": 62,
+    "text": "笔记假设：[10:00, 10:01)；清理界限 W = 10:03。",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "arrow",
+    "id": "time",
+    "x": 24,
+    "y": 140,
+    "width": 760,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        760,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "text",
+    "id": "time-label",
+    "x": 24,
+    "y": 104,
+    "text": "处理先后 →",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "rectangle",
+    "id": "on-time",
+    "x": 24,
+    "y": 194,
+    "width": 162,
+    "height": 154,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "先到两条\n事件时间\n10:00:10\n10:00:40",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "first",
+    "x": 224,
+    "y": 194,
+    "width": 162,
+    "height": 154,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "W = 10:01\n首次输出\n计数 2",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "late",
+    "x": 424,
+    "y": 194,
+    "width": 162,
+    "height": 154,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "清理前迟到\n事件时间\n10:00:25\n计数改为 3",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "clean",
+    "x": 624,
+    "y": 194,
+    "width": 162,
+    "height": 154,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "W = 10:03\n清理状态\n之后不再改",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "step1",
+    "x": 192,
+    "y": 270,
+    "width": 26,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        26,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "arrow",
+    "id": "step2",
+    "x": 392,
+    "y": 270,
+    "width": 26,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        26,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "arrow",
+    "id": "step3",
+    "x": 592,
+    "y": 270,
+    "width": 26,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        26,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "rectangle",
+    "id": "output",
+    "x": 224,
+    "y": 420,
+    "width": 362,
+    "height": 110,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "同一个窗口键 K\nK → 2，再更新为 K → 3",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "emit1",
+    "x": 305,
+    "y": 354,
+    "width": 0,
+    "height": 60,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        60
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "arrow",
+    "id": "emit2",
+    "x": 505,
+    "y": 354,
+    "width": 0,
+    "height": 60,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        60
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "rectangle",
+    "id": "too-late",
+    "x": 624,
+    "y": 420,
+    "width": 162,
+    "height": 110,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "更晚的旧事件\n旁路或丢弃",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "side",
+    "x": 705,
+    "y": 354,
+    "width": 0,
+    "height": 60,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        60
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "text",
+    "id": "not-add",
+    "x": 24,
+    "y": 584,
+    "text": "下游必须理解“替换／撤回”：最终是 3，不是 2 + 3 = 5。",
+    "fontSize": 20,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "legend",
+    "x": 24,
+    "y": 640,
+    "text": "W 是事件时间进度判断；图中清理时间是教学约定，非产品默认。\n事件标签是发生时间；横轴只表示本次运行的处理次序。",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  }
+]

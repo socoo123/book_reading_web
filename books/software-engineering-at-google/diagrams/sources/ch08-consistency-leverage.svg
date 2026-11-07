@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="390" viewBox="0 0 720 390" role="img" aria-labelledby="title desc">
+  <title id="title">一致性怎样支持阅读、工具与协作</title>
+  <desc id="desc">从上向下读，统一的命名、结构和排版分别支持阅读者识别熟悉模式、维护工具执行批量检查与修改，以及工程师带着可迁移习惯跨项目协作。箭头表示同一套约定被不同工作反复使用，收益随维护次数累积。</desc>
+  <!-- Original, editable hand-written SVG. The export is an identical web copy. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 15px; fill: var(--muted); }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.2; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .label { font-size: 18px; font-weight: 600; text-anchor: middle; }
+    .body { font-size: 16px; text-anchor: middle; fill: var(--muted); }
+    .arrow { fill: none; stroke: var(--line); stroke-width: 1.8; marker-end: url(#arrow); }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker></defs>
+  <rect width="720" height="390" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="28" y="39">共同约定，形成三种可复用的能力</text>
+  <text class="sub" x="28" y="67">箭头：同一套约定被不同工作重复使用</text>
+  <rect class="focus" x="154" y="92" width="412" height="60" rx="7"/>
+  <text class="label" x="360" y="129">统一的命名、结构与排版</text>
+  <path class="arrow" d="M240 152V183H130V203"/>
+  <path class="arrow" d="M360 152V203"/>
+  <path class="arrow" d="M480 152V183H590V203"/>
+  <rect class="node" x="24" y="211" width="212" height="120" rx="7"/>
+  <text class="label" x="130" y="242">阅读者</text>
+  <text class="body" x="130" y="271">熟悉的命名与模式</text>
+  <text class="body" x="130" y="298">少一次重新辨认</text>
+  <rect class="node" x="254" y="211" width="212" height="120" rx="7"/>
+  <text class="label" x="360" y="242">维护工具</text>
+  <text class="body" x="360" y="271">统一的结构与排版</text>
+  <text class="body" x="360" y="298">支持批量检查与修改</text>
+  <rect class="node" x="484" y="211" width="212" height="120" rx="7"/>
+  <text class="label" x="590" y="242">跨项目协作</text>
+  <text class="body" x="590" y="271">可迁移的开发习惯</text>
+  <text class="body" x="590" y="298">减少接手与切换负担</text>
+  <text class="sub" x="28" y="369">维护次数增加时，人与工具都能继续复用这笔投入。</text>
+</svg>

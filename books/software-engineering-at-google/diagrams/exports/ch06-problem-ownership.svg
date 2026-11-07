@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="420" viewBox="0 0 720 420" role="img" aria-labelledby="title desc">
+  <title id="title">围绕搜索延迟的问题分工</title>
+  <desc id="desc">共同问题是长期控制搜索延迟，向下分为缓解症状与减少成因。前者优化代码和执行路径，后者改善度量、分析工具、教育和文档。两类工作各有负责人，实线表示问题分工，外侧虚线表示进展与新信息返回整体判断，随后可调整范围与投入。</desc>
+  <!-- Original, editable hand-written SVG. The export is an identical web copy. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 15px; fill: var(--muted); }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.2; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .label { font-size: 18px; font-weight: 600; text-anchor: middle; }
+    .body { font-size: 16px; text-anchor: middle; fill: var(--muted); }
+    .arrow { fill: none; stroke: var(--line); stroke-width: 1.8; marker-end: url(#arrow); }
+    .feedback { fill: none; stroke: var(--accent); stroke-width: 1.8; stroke-dasharray: 6 5; marker-end: url(#feedback-arrow); }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker>
+    <marker id="feedback-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--accent)"/></marker>
+  </defs>
+  <rect width="720" height="420" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="28" y="39">把长期问题交给团队，而非固定某个解法</text>
+  <text class="sub" x="28" y="67">实线：问题分工　　虚线：进展与新信息返回整体判断</text>
+  <rect class="focus" x="156" y="90" width="408" height="56" rx="7"/>
+  <text class="label" x="360" y="125">共同问题：长期控制搜索延迟</text>
+  <path class="arrow" d="M280 146V179H186V202"/>
+  <path class="arrow" d="M440 146V179H534V202"/>
+  <rect class="node" x="36" y="210" width="300" height="108" rx="7"/>
+  <text class="label" x="186" y="240">缓解症状</text>
+  <text class="body" x="186" y="267">优化代码与执行路径</text>
+  <text class="body" x="186" y="292">让已经变慢的部分加速</text>
+  <rect class="node" x="384" y="210" width="300" height="108" rx="7"/>
+  <text class="label" x="534" y="240">减少成因</text>
+  <text class="body" x="534" y="267">改善度量、分析工具</text>
+  <text class="body" x="534" y="292">补齐开发者教育与文档</text>
+  <path class="feedback" d="M186 318V355H16V118H148"/>
+  <path class="feedback" d="M534 318V355H704V118H572"/>
+  <text class="body" x="360" y="359">反馈后调整范围与投入</text>
+  <text class="sub" x="28" y="403">各有负责人持续推进；具体项目和团队边界可随问题变化。</text>
+</svg>

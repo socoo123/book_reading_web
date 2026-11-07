@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="402" viewBox="0 0 720 402" role="img" aria-labelledby="title desc">
+  <title id="title">三类评审责任，可以由重合的角色承担</title>
+  <desc id="desc">从上到下，正确性与理解产生来自另一位工程师的 LGTM，模块责任与语言规范分别需要负责人和 Readability 批准。三类责任共同形成提交条件；它们可以由同一个评审者覆盖。作者若已具备负责人和语言资格，仍需他人的 LGTM。</desc>
+  <!-- Original editable hand-written SVG; the export is an identical web copy. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 15px; fill: var(--muted); }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.2; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .label { font-size: 18px; font-weight: 600; text-anchor: middle; }
+    .body { font-size: 16px; fill: var(--muted); text-anchor: middle; }
+    .arrow { fill: none; stroke: var(--line); stroke-width: 1.8; marker-end: url(#arrow); }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker></defs>
+  <rect width="720" height="402" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="28" y="39">先覆盖责任，再安排合适的人</text>
+  <text class="sub" x="28" y="68">箭头：共同形成提交条件　　方框：责任，不是三张选票</text>
+  <rect class="node" x="24" y="100" width="212" height="112" rx="7"/>
+  <text class="label" x="130" y="132">正确性与理解</text>
+  <text class="body" x="130" y="162">同伴给出 LGTM</text>
+  <text class="body" x="130" y="190">必须来自作者之外</text>
+  <rect class="node" x="254" y="100" width="212" height="112" rx="7"/>
+  <text class="label" x="360" y="132">模块维护责任</text>
+  <text class="body" x="360" y="162">代码负责人批准</text>
+  <text class="body" x="360" y="190">适合这个模块吗</text>
+  <rect class="node" x="484" y="100" width="212" height="112" rx="7"/>
+  <text class="label" x="590" y="132">语言规范与惯用法</text>
+  <text class="body" x="590" y="162">Readability 批准</text>
+  <text class="body" x="590" y="190">符合共同实践吗</text>
+  <path class="arrow" d="M130 212V244H300V268"/>
+  <path class="arrow" d="M360 212V268"/>
+  <path class="arrow" d="M590 212V244H420V268"/>
+  <rect class="focus" x="156" y="276" width="408" height="58" rx="7"/>
+  <text class="label" x="360" y="312">所需批准齐备，并处理评审意见</text>
+  <text class="body" x="360" y="365">同一位评审者可以覆盖三类责任</text>
+  <text class="sub" x="28" y="390">作者已有后两项资格时，仍需另一人的 LGTM。</text>
+</svg>

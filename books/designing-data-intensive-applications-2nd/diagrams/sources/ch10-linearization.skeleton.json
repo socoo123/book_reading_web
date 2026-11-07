@@ -1,0 +1,516 @@
+[
+  {
+    "type": "text",
+    "id": "title",
+    "x": 24,
+    "y": 18,
+    "text": "线性化：区间可以重叠，解释不能互相矛盾",
+    "fontSize": 25,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "subtitle",
+    "x": 24,
+    "y": 62,
+    "text": "初值 x = 0，只有 W 写入 1；时间向右，数值为假设。",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "arrow",
+    "id": "time",
+    "x": 150,
+    "y": 140,
+    "width": 640,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        640,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "text",
+    "id": "time-label",
+    "x": 150,
+    "y": 108,
+    "text": "时间",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "line",
+    "id": "tick2",
+    "x": 270,
+    "y": 135,
+    "width": 0,
+    "height": 10,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        10
+      ]
+    ],
+    "strokeColor": "#66645d",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "text",
+    "id": "number2",
+    "x": 263,
+    "y": 108,
+    "text": "2",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "line",
+    "id": "tick3",
+    "x": 330,
+    "y": 135,
+    "width": 0,
+    "height": 10,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        10
+      ]
+    ],
+    "strokeColor": "#66645d",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "text",
+    "id": "number3",
+    "x": 323,
+    "y": 108,
+    "text": "3",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "line",
+    "id": "tick4",
+    "x": 390,
+    "y": 135,
+    "width": 0,
+    "height": 10,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        10
+      ]
+    ],
+    "strokeColor": "#66645d",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "text",
+    "id": "number4",
+    "x": 383,
+    "y": 108,
+    "text": "4",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "line",
+    "id": "tick5",
+    "x": 450,
+    "y": 135,
+    "width": 0,
+    "height": 10,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        10
+      ]
+    ],
+    "strokeColor": "#66645d",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "text",
+    "id": "number5",
+    "x": 443,
+    "y": 108,
+    "text": "5",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "line",
+    "id": "tick6",
+    "x": 510,
+    "y": 135,
+    "width": 0,
+    "height": 10,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        10
+      ]
+    ],
+    "strokeColor": "#66645d",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "text",
+    "id": "number6",
+    "x": 503,
+    "y": 108,
+    "text": "6",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "line",
+    "id": "tick10",
+    "x": 750,
+    "y": 135,
+    "width": 0,
+    "height": 10,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        10
+      ]
+    ],
+    "strokeColor": "#66645d",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "text",
+    "id": "number10",
+    "x": 743,
+    "y": 108,
+    "text": "10",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "w-label",
+    "x": 24,
+    "y": 203,
+    "text": "W：写入 1",
+    "fontSize": 21,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "rectangle",
+    "id": "w",
+    "x": 270,
+    "y": 194,
+    "width": 480,
+    "height": 42,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "line",
+    "id": "w-point",
+    "x": 342,
+    "y": 185,
+    "width": 0,
+    "height": 60,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        60
+      ]
+    ],
+    "strokeColor": "#66645d",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "text",
+    "id": "w-end",
+    "x": 588,
+    "y": 249,
+    "text": "10：写才返回",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "a-label",
+    "x": 24,
+    "y": 300,
+    "text": "A：读到 1",
+    "fontSize": 21,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "rectangle",
+    "id": "a",
+    "x": 330,
+    "y": 290,
+    "width": 60,
+    "height": 42,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "line",
+    "id": "a-point",
+    "x": 360,
+    "y": 281,
+    "width": 0,
+    "height": 60,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        60
+      ]
+    ],
+    "strokeColor": "#66645d",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "text",
+    "id": "a-note",
+    "x": 422,
+    "y": 300,
+    "text": "A 返回时，W 必须已生效",
+    "fontSize": 19,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "b-label",
+    "x": 24,
+    "y": 397,
+    "text": "B：若读到 0",
+    "fontSize": 21,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "rectangle",
+    "id": "b",
+    "x": 450,
+    "y": 386,
+    "width": 60,
+    "height": 42,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "dashed"
+  },
+  {
+    "type": "line",
+    "id": "b-point",
+    "x": 480,
+    "y": 377,
+    "width": 0,
+    "height": 60,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        60
+      ]
+    ],
+    "strokeColor": "#66645d",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "text",
+    "id": "b-note",
+    "x": 542,
+    "y": 397,
+    "text": "无法解释！",
+    "fontSize": 21,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "rectangle",
+    "id": "order-w",
+    "x": 150,
+    "y": 498,
+    "width": 150,
+    "height": 72,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "W 生效",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "order-a",
+    "x": 390,
+    "y": 498,
+    "width": 150,
+    "height": 72,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "A 读到 1",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "order-b",
+    "x": 630,
+    "y": 498,
+    "width": 150,
+    "height": 72,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "B 必须读 1",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "wa",
+    "x": 306,
+    "y": 534,
+    "width": 78,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        78,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "arrow",
+    "id": "ab",
+    "x": 546,
+    "y": 534,
+    "width": 78,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        78,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "text",
+    "id": "forced",
+    "x": 24,
+    "y": 608,
+    "text": "横条：调用—返回区间　短竖线：候选线性化点\n箭头：读结果与实时先后强制的顺序；B 返回 0 时不存在合法排法。",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  }
+]

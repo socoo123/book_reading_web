@@ -1,0 +1,215 @@
+[
+  {
+    "type": "text",
+    "id": "title",
+    "x": 24,
+    "y": 18,
+    "text": "安全读取：资格、提交知识、应用进度缺一不可",
+    "fontSize": 25,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "subtitle",
+    "x": 24,
+    "y": 62,
+    "text": "无租约的 Raft ReadIndex 路径；箭头表示完成条件的依赖。",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "rectangle",
+    "id": "term",
+    "x": 24,
+    "y": 126,
+    "width": 452,
+    "height": 100,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "① 新主建立当前任期提交依据\n常用方式：提交当前任期空操作",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "text",
+    "id": "term-note",
+    "x": 514,
+    "y": 146,
+    "text": "通常每任期建立一次，\n不是每次读都写空操作。",
+    "fontSize": 19,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "arrow",
+    "id": "to-confirm",
+    "x": 250,
+    "y": 232,
+    "width": 0,
+    "height": 54,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        54
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "rectangle",
+    "id": "confirm",
+    "x": 24,
+    "y": 292,
+    "width": 452,
+    "height": 120,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "② 为当前读记录安全读位置\n等待与该读匹配的多数派确认\n得到可使用的 readIndex",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "text",
+    "id": "isolated",
+    "x": 514,
+    "y": 316,
+    "text": "隔离旧主：拿不到确认\n→ 不能凭“我是主”返回",
+    "fontSize": 19,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "arrow",
+    "id": "to-apply",
+    "x": 250,
+    "y": 418,
+    "width": 0,
+    "height": 54,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        54
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "rectangle",
+    "id": "apply",
+    "x": 24,
+    "y": 478,
+    "width": 452,
+    "height": 100,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "③ 等待本地状态机追上\nappliedIndex ≥ readIndex",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "text",
+    "id": "lagging",
+    "x": 514,
+    "y": 496,
+    "text": "日志到 50，应用到 48：\n→ 仍须等条目 49、50 执行",
+    "fontSize": 19,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "arrow",
+    "id": "to-read",
+    "x": 250,
+    "y": 584,
+    "width": 0,
+    "height": 54,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        54
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "rectangle",
+    "id": "return",
+    "x": 24,
+    "y": 644,
+    "width": 452,
+    "height": 76,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "读取状态机，然后返回",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "text",
+    "id": "follower",
+    "x": 514,
+    "y": 652,
+    "text": "从节点也可取得安全读位置，\n等自己应用完成后服务读。",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "legend",
+    "x": 24,
+    "y": 764,
+    "text": "租约读可摊销资格确认，但必须另外证明时间与租约假设。",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  }
+]

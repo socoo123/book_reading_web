@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="370" viewBox="0 0 720 370" role="img" aria-labelledby="title desc">
+  <title id="title">传入与传出耦合的方向</title>
+  <desc id="desc">两个包依赖 TicketAssign，TicketAssign 依赖三个外部包，按包去重后 Ca 等于二，Ce 等于三。箭头从使用方指向被依赖方。</desc>
+  <style>
+    :root{--surface:#fcfbf8;--text:#292824;--muted:#66645d;--line:#969187;--soft:#f0ece4;--accent:#386d74}
+    @media(prefers-color-scheme:dark){:root:not([data-theme='light']){--surface:#252524;--text:#e6e3dc;--muted:#b6b1a7;--line:#8c8982;--soft:#353534;--accent:#94c8cf}}
+    :root[data-theme='dark']{--surface:#252524;--text:#e6e3dc;--muted:#b6b1a7;--line:#8c8982;--soft:#353534;--accent:#94c8cf}
+    .bg{fill:var(--surface)}text{fill:var(--text);font-family:system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;font-size:17px}.heading{font-size:21px;font-weight:600}.small{font-size:15px;fill:var(--muted)}.box{fill:var(--soft);stroke:var(--line);stroke-width:1.5}.core{fill:var(--surface);stroke:var(--accent);stroke-width:2}.edge{fill:none;stroke:var(--accent);stroke-width:2;marker-end:url(#arrow)}.arrow{fill:var(--accent)}
+  </style>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path class="arrow" d="M0 0 8 4 0 8Z"/></marker></defs>
+  <rect class="bg" width="720" height="370"/>
+  <text class="heading" x="30" y="38">先确定箭头方向，再数不同的外部包</text>
+  <text class="small" x="30" y="66">假设包关系 · 箭头：使用方 → 被依赖方</text>
+  <rect class="box" x="30" y="117" width="155" height="54" rx="9"/><text x="107" y="150" text-anchor="middle">工单入口包</text>
+  <rect class="box" x="30" y="227" width="155" height="54" rx="9"/><text x="107" y="260" text-anchor="middle">重分派任务包</text>
+  <rect class="core" x="275" y="165" width="170" height="68" rx="10"/><text x="360" y="193" text-anchor="middle">TicketAssign</text><text class="small" x="360" y="217" text-anchor="middle">被分析的包</text>
+  <rect class="box" x="535" y="97" width="155" height="54" rx="9"/><text x="612" y="130" text-anchor="middle">专家资料包</text>
+  <rect class="box" x="535" y="172" width="155" height="54" rx="9"/><text x="612" y="205" text-anchor="middle">区域规则包</text>
+  <rect class="box" x="535" y="247" width="155" height="54" rx="9"/><text x="612" y="280" text-anchor="middle">分派存储包</text>
+  <path class="edge" d="M185 144 266 183"/><path class="edge" d="M185 254 266 215"/>
+  <path class="edge" d="M445 180 526 125"/><path class="edge" d="M445 199H526"/><path class="edge" d="M445 218 526 273"/>
+  <text x="222" y="103" text-anchor="middle">Ca = 2</text><text x="487" y="80" text-anchor="middle">Ce = 3</text>
+  <text class="small" x="360" y="340" text-anchor="middle">I = 3 / (2 + 3) = 0.6；重复引用同一个包不重复计数</text>
+  <script><![CDATA[try { const t = localStorage.getItem('reading-notes-theme'); if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t); } catch {}]]></script>
+</svg>

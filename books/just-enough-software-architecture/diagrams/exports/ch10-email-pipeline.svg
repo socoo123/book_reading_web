@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="604" viewBox="0 0 720 604" role="img" aria-labelledby="title desc">
+  <title id="title">邮件应答系统的数据流</title>
+  <desc id="desc">来信经过输入清理、内容标注、MUX 分发，进入一组特征分析组件，经 deMUX 汇合后交给分类器，再转人工或自动答复。方框为处理组件，实线箭头为管道数据流，不能据此断言线程已并发启动。</desc>
+  <!-- Original editable SVG, reorganized from Fairbanks Figure 10.7. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 17px; fill: var(--muted); }
+    .box { fill: var(--box); stroke: var(--line); stroke-width: 1.2; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .label { font-size: 21px; font-weight: 600; text-anchor: middle; }
+    .detail { font-size: 17px; text-anchor: middle; fill: var(--muted); }
+    .arrow { fill: none; stroke: var(--line); stroke-width: 1.8; marker-end: url(#arrow); }
+    .endpoint { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker></defs>
+  <rect width="720" height="604" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="28" y="38">先辨认数据路径，再核查执行机制</text>
+  <text class="sub" x="28" y="67">箭头：管道数据流　　方框：处理组件</text>
+  <text class="detail" x="108" y="101">来信 ↓</text>
+  <rect class="box" x="28" y="116" width="160" height="74" rx="7"/>
+  <text class="label" x="108" y="147">输入清理</text>
+  <text class="detail" x="108" y="174">去除 HTML 等标记</text>
+  <path class="arrow" d="M190 153H246"/>
+  <rect class="box" x="250" y="116" width="160" height="74" rx="7"/>
+  <text class="label" x="330" y="147">内容标注</text>
+  <text class="detail" x="330" y="174">识别结构与实体</text>
+  <path class="arrow" d="M412 153H468"/>
+  <rect class="box" x="472" y="116" width="220" height="74" rx="7"/>
+  <text class="label" x="582" y="147">分发 MUX</text>
+  <text class="detail" x="582" y="174">交给多个分析环节</text>
+  <path class="arrow" d="M582 192V216H185V248"/>
+  <path class="arrow" d="M582 216V248"/>
+  <rect class="focus" x="75" y="252" width="220" height="74" rx="7"/>
+  <text class="label" x="185" y="284">特征分析 1</text>
+  <text class="detail" x="185" y="310">识别重要信息</text>
+  <text class="label" x="360" y="292">…</text>
+  <rect class="focus" x="472" y="252" width="220" height="74" rx="7"/>
+  <text class="label" x="582" y="284">特征分析 N</text>
+  <text class="detail" x="582" y="310">可有较重计算</text>
+  <path class="arrow" d="M185 328V354H360V380"/>
+  <path class="arrow" d="M582 328V354H360"/>
+  <rect class="box" x="250" y="384" width="220" height="64" rx="7"/>
+  <text class="label" x="360" y="423">结果汇合 deMUX</text>
+  <path class="arrow" d="M360 450V480"/>
+  <rect class="box" x="250" y="484" width="220" height="64" rx="7"/>
+  <text class="label" x="360" y="523">分类判定</text>
+  <path class="arrow" d="M248 516H202"/>
+  <rect class="endpoint" x="28" y="489" width="170" height="54" rx="25"/>
+  <text class="label" x="113" y="523">转人工</text>
+  <path class="arrow" d="M472 516H518"/>
+  <rect class="endpoint" x="522" y="489" width="170" height="54" rx="25"/>
+  <text class="label" x="607" y="523">自动答复</text>
+  <text class="sub" x="28" y="584">分发／汇合实现与线程启动，不能只由连线推断。</text>
+</svg>

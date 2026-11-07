@@ -1,0 +1,279 @@
+[
+  {
+    "type": "text",
+    "id": "title",
+    "x": 20,
+    "y": 10,
+    "text": "全局索引：先取 ID，再按 ID 取记录",
+    "fontSize": 25,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "sub",
+    "x": 20,
+    "y": 52,
+    "text": "索引按词项分片；记录按车辆 ID 分片。框表示逻辑边界。",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "rectangle",
+    "id": "i0",
+    "x": 20,
+    "y": 115,
+    "width": 340,
+    "height": 100,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "索引片 I0\ncolor:red → [101, 501]",
+      "fontSize": 20,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "i1",
+    "x": 430,
+    "y": 115,
+    "width": 340,
+    "height": 100,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeStyle": "dashed",
+    "label": {
+      "text": "索引片 I1（本次不查）\nmake:Honda → [202, 501]",
+      "fontSize": 19,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "query",
+    "x": 265,
+    "y": 355,
+    "width": 250,
+    "height": 90,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "查询方\n先定位词项，再定位 ID",
+      "fontSize": 20,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "term",
+    "x": 295,
+    "y": 350,
+    "width": 195,
+    "height": 130,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        -195,
+        -130
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid",
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "query"
+    },
+    "end": {
+      "id": "i0"
+    }
+  },
+  {
+    "type": "text",
+    "id": "termlabel",
+    "x": 30,
+    "y": 280,
+    "text": "① 查 color:red",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "arrow",
+    "id": "ids",
+    "x": 285,
+    "y": 220,
+    "width": 105,
+    "height": 130,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        105,
+        130
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "dashed",
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "i0"
+    },
+    "end": {
+      "id": "query"
+    }
+  },
+  {
+    "type": "text",
+    "id": "idslabel",
+    "x": 350,
+    "y": 280,
+    "text": "得到 [101, 501]",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "rectangle",
+    "id": "d0",
+    "x": 20,
+    "y": 600,
+    "width": 340,
+    "height": 100,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "数据片 D0\n101：红色 Ford（原记录）",
+      "fontSize": 19,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "d1",
+    "x": 430,
+    "y": 600,
+    "width": 340,
+    "height": 100,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "数据片 D1\n501：红色 Honda（原记录）",
+      "fontSize": 19,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "fetch0",
+    "x": 300,
+    "y": 450,
+    "width": 165,
+    "height": 145,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        -165,
+        145
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid",
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "query"
+    },
+    "end": {
+      "id": "d0"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "fetch1",
+    "x": 480,
+    "y": 450,
+    "width": 165,
+    "height": 145,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        165,
+        145
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid",
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "query"
+    },
+    "end": {
+      "id": "d1"
+    }
+  },
+  {
+    "type": "text",
+    "id": "fetch0label",
+    "x": 65,
+    "y": 515,
+    "text": "② 按 ID 取 101",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "fetch1label",
+    "x": 620,
+    "y": 500,
+    "text": "② 按 ID 取 501",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "legend",
+    "x": 20,
+    "y": 750,
+    "text": "实线：请求　虚线：ID 响应；原记录响应省略。取记录仍可能跨片。",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  }
+]

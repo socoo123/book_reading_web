@@ -1,0 +1,15 @@
+[
+  {"type":"text","id":"title","x":24,"y":20,"text":"混合时间线：两路候选，在读取时汇合","fontSize":25,"fontFamily":2,"strokeColor":"#292824"},
+  {"type":"text","id":"subtitle","x":24,"y":62,"text":"上路提前计算；下路读取时计算。箭头表示数据流向。","fontSize":17,"fontFamily":2,"strokeColor":"#66645d"},
+  {"type":"rectangle","id":"ordinary","x":24,"y":124,"width":190,"height":84,"strokeColor":"#386d74","backgroundColor":"#f0ece4","fillStyle":"solid","roughness":1,"label":{"text":"普通账号帖子\n（已保存）","fontSize":21,"fontFamily":2,"strokeColor":"#292824"}},
+  {"type":"rectangle","id":"materialized","x":270,"y":124,"width":200,"height":84,"strokeColor":"#386d74","backgroundColor":"#f0ece4","fillStyle":"solid","roughness":1,"label":{"text":"提前投递\n小林的物化时间线","fontSize":20,"fontFamily":2,"strokeColor":"#292824"}},
+  {"type":"rectangle","id":"celebrity","x":24,"y":300,"width":190,"height":84,"strokeColor":"#386d74","backgroundColor":"#f0ece4","fillStyle":"solid","roughness":1,"label":{"text":"高粉丝账号帖子\n（已保存）","fontSize":21,"fontFamily":2,"strokeColor":"#292824"}},
+  {"type":"rectangle","id":"recent","x":270,"y":300,"width":200,"height":84,"strokeColor":"#386d74","backgroundColor":"#f0ece4","fillStyle":"solid","roughness":1,"label":{"text":"读时另取近期帖\n只取小林关注的","fontSize":20,"fontFamily":2,"strokeColor":"#292824"}},
+  {"type":"rectangle","id":"merge","x":540,"y":208,"width":170,"height":96,"strokeColor":"#386d74","backgroundColor":"#f0ece4","fillStyle":"solid","roughness":1,"label":{"text":"小林读首页\n合并两路、排序","fontSize":20,"fontFamily":2,"strokeColor":"#292824"}},
+  {"type":"arrow","id":"push","x":221,"y":166,"width":42,"height":0,"points":[[0,0],[42,0]],"strokeColor":"#386d74","roughness":1,"start":{"id":"ordinary"},"end":{"id":"materialized"}},
+  {"type":"arrow","id":"pull","x":221,"y":342,"width":42,"height":0,"points":[[0,0],[42,0]],"strokeColor":"#386d74","roughness":1,"start":{"id":"celebrity"},"end":{"id":"recent"}},
+  {"type":"arrow","id":"upper-merge","x":477,"y":166,"width":56,"height":65,"points":[[0,0],[56,65]],"strokeColor":"#386d74","roughness":1,"start":{"id":"materialized"},"end":{"id":"merge"}},
+  {"type":"arrow","id":"lower-merge","x":477,"y":342,"width":56,"height":-61,"points":[[0,0],[56,-61]],"strokeColor":"#386d74","roughness":1,"start":{"id":"recent"},"end":{"id":"merge"}},
+  {"type":"text","id":"result","x":24,"y":432,"text":"避免为高粉丝账号的每条帖立即更新上亿份首页。","fontSize":19,"fontFamily":2,"strokeColor":"#292824"},
+  {"type":"text","id":"boundary","x":24,"y":470,"text":"候选帖子仍需满足当前用户的关注与可见性规则。","fontSize":17,"fontFamily":2,"strokeColor":"#66645d"}
+]

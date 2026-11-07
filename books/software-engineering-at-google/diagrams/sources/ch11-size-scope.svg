@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="498" viewBox="0 0 720 498" role="img" aria-labelledby="title desc">
+  <title id="title">测试大小与测试范围是两个维度</title>
+  <desc id="desc">列区分局部行为和组合行为，行区分小型和中型。小型测试既可验证金额计算，也可在替换外部存储后验证导出接口逻辑；中型测试既可启动真实浏览器验证一条日期组件路径，也可验证本机服务与数据库的协作。列按相对范围作比较，组合行为包含组件集成，不专指端到端。这里只展示交叉示例，省略大型测试。</desc>
+  <!-- Original editable hand-written SVG; the web export is an identical copy. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 15px; fill: var(--muted); }
+    .axis { font-size: 18px; font-weight: 600; text-anchor: middle; }
+    .small { font-size: 14px; fill: var(--muted); text-anchor: middle; }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.2; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .label { font-size: 19px; font-weight: 600; text-anchor: middle; }
+    .body { font-size: 16px; text-anchor: middle; fill: var(--muted); }
+    .detail { font-size: 15px; text-anchor: middle; fill: var(--muted); }
+  </style>
+  <!-- Image mode inherits the page's color scheme; standalone mode reads its saved choice. -->
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <rect width="720" height="498" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="28" y="39">大小看运行边界，范围看验证目标</text>
+  <text class="sub" x="28" y="67">两条轴可以交叉；下面四格为示意例子</text>
+  <text class="axis" x="276" y="113">局部行为：聚焦一条规则</text>
+  <text class="axis" x="559" y="113">组合行为：跨多个组件</text>
+  <text class="axis" x="78" y="185">小型测试</text>
+  <text class="small" x="78" y="211">单进程</text>
+  <text class="small" x="78" y="234">无磁盘／网络</text>
+  <rect class="node" x="144" y="140" width="264" height="124" rx="7"/>
+  <text class="label" x="276" y="178">金额计算</text>
+  <text class="body" x="276" y="209">校验一个计算规则</text>
+  <text class="detail" x="276" y="238">内存内运行</text>
+  <rect class="focus" x="422" y="140" width="274" height="124" rx="7"/>
+  <text class="label" x="559" y="178">导出接口完整逻辑</text>
+  <text class="body" x="559" y="209">解析、校验与业务处理</text>
+  <text class="detail" x="559" y="238">外部存储由测试替身替代</text>
+  <text class="axis" x="78" y="333">中型测试</text>
+  <text class="small" x="78" y="359">单台机器</text>
+  <rect class="focus" x="144" y="288" width="264" height="124" rx="7"/>
+  <text class="label" x="276" y="326">日期选择组件</text>
+  <text class="body" x="276" y="357">只验证一个交互路径</text>
+  <text class="detail" x="276" y="386">启动本机真实浏览器</text>
+  <rect class="node" x="422" y="288" width="274" height="124" rx="7"/>
+  <text class="label" x="559" y="326">本机服务与数据库</text>
+  <text class="body" x="559" y="357">验证两个组件的协作</text>
+  <text class="detail" x="559" y="386">真实进程，只访问 localhost</text>
+  <text class="sub" x="28" y="454">列：验证多少行为　　行：在哪里、用什么资源运行</text>
+  <text class="sub" x="28" y="481">这里只展示小型／中型的交叉情形，省略大型测试。</text>
+</svg>

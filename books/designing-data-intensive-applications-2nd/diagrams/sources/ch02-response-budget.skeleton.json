@@ -1,0 +1,17 @@
+[
+  {"type":"text","id":"title","x":24,"y":20,"text":"处理只用 5 ms，客户端却等了 80 ms","fontSize":25,"fontFamily":2,"strokeColor":"#292824"},
+  {"type":"text","id":"subtitle","x":24,"y":62,"text":"笔记假设：阶段没有重叠；时间向右，框宽不表示时长。","fontSize":17,"fontFamily":2,"strokeColor":"#66645d"},
+  {"type":"rectangle","id":"outbound","x":24,"y":130,"width":116,"height":88,"strokeColor":"#66645d","backgroundColor":"#f0ece4","fillStyle":"solid","roughness":1,"label":{"text":"去程网络\n10 ms","fontSize":20,"fontFamily":2,"strokeColor":"#292824"}},
+  {"type":"rectangle","id":"queue","x":166,"y":130,"width":116,"height":88,"strokeColor":"#66645d","backgroundColor":"#f0ece4","fillStyle":"solid","roughness":1,"label":{"text":"等待处理\n50 ms","fontSize":20,"fontFamily":2,"strokeColor":"#292824"}},
+  {"type":"rectangle","id":"service","x":308,"y":130,"width":116,"height":88,"strokeColor":"#386d74","strokeWidth":3,"backgroundColor":"#f0ece4","fillStyle":"solid","roughness":1,"label":{"text":"实际处理\n5 ms","fontSize":20,"fontFamily":2,"strokeColor":"#292824"}},
+  {"type":"rectangle","id":"sendqueue","x":450,"y":130,"width":116,"height":88,"strokeColor":"#66645d","backgroundColor":"#f0ece4","fillStyle":"solid","roughness":1,"label":{"text":"发送排队\n5 ms","fontSize":20,"fontFamily":2,"strokeColor":"#292824"}},
+  {"type":"rectangle","id":"inbound","x":592,"y":130,"width":116,"height":88,"strokeColor":"#66645d","backgroundColor":"#f0ece4","fillStyle":"solid","roughness":1,"label":{"text":"回程网络\n10 ms","fontSize":20,"fontFamily":2,"strokeColor":"#292824"}},
+  {"type":"arrow","id":"one","x":145,"y":174,"width":16,"height":0,"points":[[0,0],[16,0]],"strokeColor":"#66645d","roughness":0,"start":{"id":"outbound"},"end":{"id":"queue"}},
+  {"type":"arrow","id":"two","x":287,"y":174,"width":16,"height":0,"points":[[0,0],[16,0]],"strokeColor":"#66645d","roughness":0,"start":{"id":"queue"},"end":{"id":"service"}},
+  {"type":"arrow","id":"three","x":429,"y":174,"width":16,"height":0,"points":[[0,0],[16,0]],"strokeColor":"#66645d","roughness":0,"start":{"id":"service"},"end":{"id":"sendqueue"}},
+  {"type":"arrow","id":"four","x":571,"y":174,"width":16,"height":0,"points":[[0,0],[16,0]],"strokeColor":"#66645d","roughness":0,"start":{"id":"sendqueue"},"end":{"id":"inbound"}},
+  {"type":"text","id":"service-label","x":308,"y":240,"text":"↑ 服务时间","fontSize":19,"fontFamily":2,"strokeColor":"#386d74"},
+  {"type":"arrow","id":"total","x":24,"y":308,"width":684,"height":0,"points":[[0,0],[684,0]],"strokeColor":"#292824","roughness":0,"startArrowhead":"bar","endArrowhead":"bar"},
+  {"type":"text","id":"total-label","x":178,"y":330,"text":"客户端响应时间：10 + 50 + 5 + 5 + 10 = 80 ms","fontSize":19,"fontFamily":2,"strokeColor":"#292824"},
+  {"type":"text","id":"boundary","x":24,"y":390,"text":"可以相加单次串行阶段的耗时；不能这样相加各阶段的 p99。","fontSize":17,"fontFamily":2,"strokeColor":"#66645d"}
+]

@@ -1,0 +1,246 @@
+[
+  {
+    "type": "text",
+    "id": "title",
+    "x": 24,
+    "y": 18,
+    "text": "写偏斜：两个局部正确决定，共同出错",
+    "fontSize": 25,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "subtitle",
+    "x": 24,
+    "y": 62,
+    "text": "规则：同一班次至少一人在岗。初始甲、乙都在岗。",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "rectangle",
+    "id": "scope",
+    "x": 24,
+    "y": 118,
+    "width": 752,
+    "height": 212,
+    "strokeColor": "#386d74",
+    "backgroundColor": "transparent",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "dashed",
+    "label": {
+      "text": "",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "text",
+    "id": "scope-label",
+    "x": 44,
+    "y": 136,
+    "text": "规则与读取都涉及两行",
+    "fontSize": 19,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "rectangle",
+    "id": "aread",
+    "x": 52,
+    "y": 190,
+    "width": 300,
+    "height": 106,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "T甲读：甲在、乙在\n人数 2 → 可以离岗",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "bread",
+    "x": 448,
+    "y": 190,
+    "width": 300,
+    "height": 106,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "T乙读：甲在、乙在\n人数 2 → 可以离岗",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "astep",
+    "x": 202,
+    "y": 302,
+    "width": 0,
+    "height": 72,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        72
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "arrow",
+    "id": "bstep",
+    "x": 598,
+    "y": 302,
+    "width": 0,
+    "height": 72,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        72
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "rectangle",
+    "id": "awrite",
+    "x": 52,
+    "y": 380,
+    "width": 300,
+    "height": 108,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "T甲：只改甲行\n甲离岗，然后提交",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "bwrite",
+    "x": 448,
+    "y": 380,
+    "width": 300,
+    "height": 108,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "T乙：只改乙行\n乙离岗，然后提交",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "aend",
+    "x": 202,
+    "y": 494,
+    "width": 160,
+    "height": 74,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        160,
+        74
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "arrow",
+    "id": "bend",
+    "x": 598,
+    "y": 494,
+    "width": 160,
+    "height": 74,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        -160,
+        74
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "rectangle",
+    "id": "result",
+    "x": 122,
+    "y": 574,
+    "width": 556,
+    "height": 90,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "最终：甲不在、乙不在\n写集合不同，却违反“至少一人”",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "text",
+    "id": "note",
+    "x": 24,
+    "y": 706,
+    "text": "任何合法串行次序都会让后执行者看到只剩一人，从而拒绝离岗。",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  }
+]

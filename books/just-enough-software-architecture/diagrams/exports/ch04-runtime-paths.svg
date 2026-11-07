@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="644" viewBox="0 0 720 644" role="img" aria-labelledby="title desc">
+  <title id="title">家庭媒体播放器的控制路径与媒体路径</title>
+  <desc id="desc">上方控制路径由命令输入经播放器核心到渲染播放，暂停完成状态返回核心；下方媒体由本地文件或网络进入缓冲，再通过同机共享内存供渲染播放取用，最终输出到电视和音响。重复的渲染播放节点是同一组件。P 表示独立进程，虚线框标明同机的软件范围。</desc>
+  <!-- Original editable explanatory SVG; the export is an identical web copy. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 16px; fill: var(--muted); }
+    .lane { font-size: 18px; font-weight: 600; fill: var(--accent); }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.2; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .outside { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+    .boundary { fill: none; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 4 5; }
+    .label { font-size: 18px; font-weight: 600; text-anchor: middle; }
+    .detail { font-size: 16px; fill: var(--muted); text-anchor: middle; }
+    .arrow { fill: none; stroke: var(--line); stroke-width: 1.7; marker-end: url(#arrow); }
+    .return { fill: none; stroke: var(--accent); stroke-width: 1.7; marker-end: url(#accent-arrow); }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker>
+    <marker id="accent-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--accent)"/></marker>
+  </defs>
+  <rect width="720" height="644" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="30" y="40">同一台播放器，两种不同的交互</text>
+  <text class="sub" x="30" y="70">所选运行时路径；不是完整装配，也不是源代码模块图</text>
+
+  <text class="lane" x="30" y="112">控制路径 · 命令和状态</text>
+  <rect class="boundary" x="22" y="130" width="676" height="190" rx="8"/>
+  <text class="sub" x="40" y="157">用户按键进入；下列三个组件部署在同一台机器</text>
+  <rect class="node" x="42" y="182" width="176" height="76" rx="7"/>
+  <text class="label" x="130" y="211">命令输入</text>
+  <text class="detail" x="130" y="240">P · 识别设备动作</text>
+  <rect class="node" x="272" y="182" width="176" height="76" rx="7"/>
+  <text class="label" x="360" y="211">播放器核心</text>
+  <text class="detail" x="360" y="240">P · 解释应用意图</text>
+  <rect class="focus" x="502" y="182" width="176" height="76" rx="7"/>
+  <text class="label" x="590" y="211">渲染／播放</text>
+  <text class="detail" x="590" y="240">P · 实际执行暂停</text>
+  <path class="arrow" d="M226 218H264"/>
+  <text class="detail" x="245" y="199">事件</text>
+  <path class="arrow" d="M456 218H494"/>
+  <text class="detail" x="475" y="199">命令</text>
+  <path class="return" d="M590 266V292H360V266"/>
+  <rect x="423" y="278" width="104" height="24" fill="var(--bg)"/>
+  <text class="detail" x="475" y="295">暂停完成</text>
+
+  <text class="lane" x="30" y="358">媒体路径 · 持续的数据流</text>
+  <rect class="boundary" x="260" y="376" width="438" height="126" rx="8"/>
+  <text class="sub" x="280" y="401">共享内存的两端必须同机</text>
+  <rect class="outside" x="42" y="420" width="176" height="66" rx="7"/>
+  <text class="label" x="130" y="447">本地文件／网络</text>
+  <text class="detail" x="130" y="472">媒体来源</text>
+  <rect class="node" x="272" y="420" width="176" height="66" rx="7"/>
+  <text class="label" x="360" y="447">媒体缓冲</text>
+  <text class="detail" x="360" y="472">P · RAM 缓冲</text>
+  <rect class="focus" x="502" y="420" width="176" height="66" rx="7"/>
+  <text class="label" x="590" y="447">渲染／播放</text>
+  <text class="detail" x="590" y="472">P · 同上方组件</text>
+  <path class="arrow" d="M226 453H264"/>
+  <text class="detail" x="245" y="435">读取</text>
+  <path class="arrow" d="M456 453H494"/>
+  <text class="detail" x="475" y="437">共享</text>
+  <text class="detail" x="475" y="479">内存</text>
+  <path class="arrow" d="M590 510V546"/>
+  <rect class="outside" x="502" y="554" width="176" height="52" rx="7"/>
+  <text class="label" x="590" y="586">电视／音响</text>
+  <text class="sub" x="30" y="571">P：独立进程；不表示独立线程</text>
+  <text class="sub" x="30" y="601">箭头：所选消息或媒体的流向</text>
+  <text class="sub" x="30" y="629">虚线框：同机软件范围；电视与音响在软件之外</text>
+</svg>

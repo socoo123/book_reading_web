@@ -1,0 +1,289 @@
+[
+  {
+    "type": "text",
+    "id": "title",
+    "x": 20,
+    "y": 10,
+    "text": "发布 V18：先完整，再切换",
+    "fontSize": 26,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "sub",
+    "x": 20,
+    "y": 55,
+    "text": "笔记教学协议；实线为数据访问，虚线为完成证据与发布控制。",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "rectangle",
+    "id": "build",
+    "x": 20,
+    "y": 125,
+    "width": 235,
+    "height": 100,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.5,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "批任务／导入器\n输出带版本 V18",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "staging",
+    "x": 435,
+    "y": 125,
+    "width": 340,
+    "height": 100,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.5,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "V18 暂存空间\n对在线查询不可见",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "load",
+    "x": 260,
+    "y": 175,
+    "width": 170,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        170,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid",
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "build"
+    },
+    "end": {
+      "id": "staging"
+    }
+  },
+  {
+    "type": "text",
+    "id": "load-label",
+    "x": 300,
+    "y": 140,
+    "text": "文件或日志",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "rectangle",
+    "id": "gate",
+    "x": 435,
+    "y": 330,
+    "width": 340,
+    "height": 125,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.5,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "完整性屏障\n全部预期分片已完成\n消费位点／清单已核对",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "ready",
+    "x": 605,
+    "y": 230,
+    "width": 0,
+    "height": 95,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        95
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "dashed",
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "staging"
+    },
+    "end": {
+      "id": "gate"
+    }
+  },
+  {
+    "type": "text",
+    "id": "ready-label",
+    "x": 635,
+    "y": 265,
+    "text": "提交完成证据",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "failure",
+    "x": 20,
+    "y": 340,
+    "text": "构建失败或数据未齐：\n继续服务 V17。\n收到完成通知，不等于\n已经应用所有分片。",
+    "fontSize": 19,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "rectangle",
+    "id": "pointer",
+    "x": 435,
+    "y": 565,
+    "width": 340,
+    "height": 95,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.5,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "当前版本引用\nV17 → V18（原子切换）",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "commit",
+    "x": 605,
+    "y": 460,
+    "width": 0,
+    "height": 100,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        100
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "dashed",
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "gate"
+    },
+    "end": {
+      "id": "pointer"
+    }
+  },
+  {
+    "type": "text",
+    "id": "commit-label",
+    "x": 635,
+    "y": 495,
+    "text": "核对通过才切换",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "rectangle",
+    "id": "reader",
+    "x": 20,
+    "y": 565,
+    "width": 235,
+    "height": 95,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.5,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "在线读者\n每次查询固定一个版本",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "select",
+    "x": 260,
+    "y": 612,
+    "width": 170,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        170,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid",
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "reader"
+    },
+    "end": {
+      "id": "pointer"
+    }
+  },
+  {
+    "type": "text",
+    "id": "select-label",
+    "x": 300,
+    "y": 580,
+    "text": "选择版本",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "legend",
+    "x": 20,
+    "y": 710,
+    "text": "V17 在旧读者退出且回滚保留期结束后清理；不是多个系统共同事务。",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  }
+]

@@ -1,0 +1,236 @@
+[
+  {
+    "type": "text",
+    "id": "title",
+    "x": 20,
+    "y": 20,
+    "text": "成功响应等待哪条复制路径？",
+    "fontSize": 25,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "sub",
+    "x": 20,
+    "y": 62,
+    "text": "单次写 W；从上向下读依赖顺序，不表示实际耗时。",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "rectangle",
+    "id": "leader",
+    "x": 250,
+    "y": 120,
+    "width": 240,
+    "height": 75,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.7,
+    "strokeWidth": 1.5,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "L 接收并保存 W",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "f1",
+    "x": 20,
+    "y": 290,
+    "width": 300,
+    "height": 85,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.7,
+    "strokeWidth": 1.5,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "F1 完成约定确认",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "f2",
+    "x": 430,
+    "y": 290,
+    "width": 300,
+    "height": 85,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.7,
+    "strokeWidth": 1.5,
+    "strokeStyle": "dashed",
+    "label": {
+      "text": "F2 稍后完成复制",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "reply",
+    "x": 20,
+    "y": 465,
+    "width": 300,
+    "height": 75,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.7,
+    "strokeWidth": 1.5,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "L 回复客户端：成功",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "to-f1",
+    "x": 285,
+    "y": 200,
+    "width": 95,
+    "height": 84,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        -95,
+        84
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid",
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "leader"
+    },
+    "end": {
+      "id": "f1"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "to-f2",
+    "x": 455,
+    "y": 200,
+    "width": 105,
+    "height": 84,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        105,
+        84
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "dashed",
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "leader"
+    },
+    "end": {
+      "id": "f2"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "to-reply",
+    "x": 170,
+    "y": 381,
+    "width": 0,
+    "height": 78,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        78
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid",
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "f1"
+    },
+    "end": {
+      "id": "reply"
+    }
+  },
+  {
+    "type": "text",
+    "id": "sync",
+    "x": 35,
+    "y": 222,
+    "text": "同步：必须等待",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "async",
+    "x": 535,
+    "y": 222,
+    "text": "异步：本次不等",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "ack",
+    "x": 190,
+    "y": 410,
+    "text": "收到 F1 确认后",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "text",
+    "id": "f2note",
+    "x": 430,
+    "y": 440,
+    "text": "此时 F2 仍可能落后\n不等待 ≠ 永远不传播",
+    "fontSize": 19,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "text",
+    "id": "legend",
+    "x": 20,
+    "y": 587,
+    "text": "确认层次另行约定：收到 / 可靠保存 / 查询可见。",
+    "fontSize": 19,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  }
+]

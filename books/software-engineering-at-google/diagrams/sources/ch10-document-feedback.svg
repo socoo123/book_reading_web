@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="402" viewBox="0 0 720 402" role="img" aria-labelledby="title desc">
+  <title id="title">让文档问题进入可维护的反馈闭环</title>
+  <desc id="desc">沿箭头顺时针阅读：读者遇到阻碍后提交缺陷，责任人同步修订代码与说明，变更经过评审，更新权威文档，读者继续使用。箭头表示工作交接；读者无须先知道如何修复问题。</desc>
+  <!-- Original editable hand-written SVG; the web export is an identical copy. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 15px; fill: var(--muted); }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.2; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .label { font-size: 18px; font-weight: 600; text-anchor: middle; }
+    .body { font-size: 15px; text-anchor: middle; fill: var(--muted); }
+    .arrow { fill: none; stroke: var(--line); stroke-width: 1.8; marker-end: url(#arrow); }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker></defs>
+  <rect width="720" height="402" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="28" y="39">把使用中的阻碍，送回维护流程</text>
+  <text class="sub" x="28" y="67">沿箭头顺时针阅读；箭头表示工作交接</text>
+  <rect class="node" x="28" y="105" width="190" height="88" rx="7"/>
+  <text class="label" x="123" y="141">读者遇到阻碍</text>
+  <text class="body" x="123" y="170">记录步骤与实际结果</text>
+  <path class="arrow" d="M218 149H257"/>
+  <rect class="focus" x="265" y="105" width="190" height="88" rx="7"/>
+  <text class="label" x="360" y="141">提交缺陷</text>
+  <text class="body" x="360" y="170">附环境与预期</text>
+  <path class="arrow" d="M455 149H494"/>
+  <rect class="node" x="502" y="105" width="190" height="88" rx="7"/>
+  <text class="label" x="597" y="141">责任人修订</text>
+  <text class="body" x="597" y="170">同步代码与说明</text>
+  <path class="arrow" d="M597 193V253"/>
+  <rect class="node" x="502" y="261" width="190" height="88" rx="7"/>
+  <text class="label" x="597" y="297">评审变更</text>
+  <text class="body" x="597" y="326">确认准确、清楚</text>
+  <path class="arrow" d="M502 305H463"/>
+  <rect class="focus" x="265" y="261" width="190" height="88" rx="7"/>
+  <text class="label" x="360" y="297">更新权威文档</text>
+  <text class="body" x="360" y="326">稳定入口指向此处</text>
+  <path class="arrow" d="M265 305H226"/>
+  <rect class="node" x="28" y="261" width="190" height="88" rx="7"/>
+  <text class="label" x="123" y="297">读者继续使用</text>
+  <text class="body" x="123" y="326">验证路径是否可用</text>
+  <path class="arrow" d="M123 261V201"/>
+  <text class="sub" x="28" y="385">读者提供可观察的现象；维护者负责判断原因与修订。</text>
+</svg>

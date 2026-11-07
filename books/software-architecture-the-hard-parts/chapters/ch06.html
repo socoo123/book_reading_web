@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>第 6 章｜拆分运营数据 · Software Architecture: The Hard Parts · 架构提升读书笔记</title>
+  <meta name="description" content="数据拆分与聚合的驱动力、按数据域渐进迁移的五步过程、八类数据库的取舍，以及 Sysops 客户调查从关系表到单聚合文档的决策。">
+  <link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+  <script src="../../../assets/theme.js"></script>
+  <script src="../../../assets/reader.js" defer></script>
+  <link rel="stylesheet" href="../../../assets/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header reader-header"><div class="container header-inner">
+    <a class="brand" href="../../../index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5.5C8.5 3.8 5.8 3.6 2.5 4.5v14c3.3-.9 6-.7 9.5 1 3.5-1.7 6.2-1.9 9.5-1v-14c-3.3-.9-6-.7-9.5 1Zm0 0v14"/></svg>书架</a>
+    <a class="reader-book-title" href="../index.html" lang="en">Software Architecture: The Hard Parts</a>
+    <div class="theme-control" role="group" aria-label="外观" hidden><button type="button" data-theme-value="system" title="跟随系统"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path class="fill" d="M12 4a8 8 0 0 1 0 16Z"/></svg><span class="sr-only">跟随系统</span></button><button type="button" data-theme-value="light" title="浅色"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.6"/><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21M5.6 5.6l1.6 1.6M16.8 16.8l1.6 1.6M5.6 18.4l1.6-1.6M16.8 7.2l1.6-1.6"/></svg><span class="sr-only">浅色</span></button><button type="button" data-theme-value="dark" title="深色"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.5 14.6A7.8 7.8 0 0 1 9.4 4.5a7.8 7.8 0 1 0 10.1 10.1Z"/></svg><span class="sr-only">深色</span></button></div>
+  </div></header>
+  <main id="main" class="container reader-container">
+    <nav class="breadcrumb" aria-label="当前位置"><ol><li><a href="../../../index.html">书架</a></li><li><a href="../index.html">书籍概览</a></li><li aria-current="page">第 6 章</li></ol></nav>
+    <div class="reading-layout">
+      <aside class="toc"><nav aria-label="本页目录"><h2>本页目录</h2><ul><li><a href="#why-data-boundaries">01　代码独立部署以后，数据边界仍要单独论证</a></li>
+<li><a href="#change-control">02　变更控制：把表结构变成边界内部的知识</a></li>
+<li><a href="#connection-budget">03　连接管理：预算必须乘上实例数</a></li>
+<li><a href="#operational-drivers">04　扩展、容错与量子：拆的是共同受限的范围</a></li>
+<li><a href="#integration-forces">05　关系与事务：数据库正在承担的责任不能丢掉</a></li>
+<li><a href="#sysops-justification">06　Sysops Squad：用证据说明为什么需要拆库</a></li>
+<li><a href="#data-domains">07　数据域：给紧密协作的表留一个共同住所</a></li>
+<li><a href="#view-refactoring">08　拆一个视图：不再跨库 join，仍须完成业务结果</a></li>
+<li><a href="#steps-one-two">09　第一、二步：先识别归属，再用 schema 表达</a></li>
+<li><a href="#step-three">10　第三步：把集成点从数据库移到服务</a></li>
+<li><a href="#steps-four-five">11　第四、五步：复制数据与切换权威写入点</a></li>
+<li><a href="#database-choice">12　选数据库：先描述工作负载，再比较类型</a></li>
+<li><a href="#relational-key-value">13　关系型与键值：查询灵活性和已知键访问的不同重心</a></li>
+<li><a href="#document-model">14　文档：让常用读取单位贴近业务对象</a></li>
+<li><a href="#wide-column-graph">15　列族与图：一个围绕分区访问，一个围绕关系遍历</a></li>
+<li><a href="#newsql-cloud-time">16　NewSQL、云原生与时序：三种不同的分类角度</a></li>
+<li><a href="#survey-choice">17　Sysops 的客户调查：先确认业务痛点，再选聚合形状</a></li>
+<li><a href="#survey-decision">18　最终选择：用有限重复换取变化与渲染的简单</a></li></ul><p class="toc-note"><a href="../index.html">← 书籍概览</a></p></nav></aside>
+      <article class="article">
+        <header class="article-header"><p class="eyebrow">READING NOTES / CHAPTER 06</p><h1>第 6 章｜拆分运营数据</h1><p class="article-deck"><span lang="en">Pulling Apart Operational Data</span> · 先确定数据责任，再移动物理存储</p></header>
+        <p>应用拆成独立部署的服务以后，数据库仍可能把它们拴在一起：一次列名调整要求多队共同发布，报表占满连接让客户无法提交工单，一个数据库停机又使所有服务同时失效。反过来，数据库也在替应用承担关联查询、引用完整性与事务提交；把它拆开，就必须说明这些责任由谁接手。</p>
+<p>本章沿着这条矛盾前进：先比较拆分与聚合的驱动力，再以数据域为中间单位完成五步迁移，最后讨论不同数据模型怎样支持不同业务。贯穿案例 Sysops Squad 是原书虚构系统。这里的<strong>运营数据（operational data）</strong>是客户、合同、支付、工单等支撑业务运行的数据，不是机器运维指标；分析数据的整体组织留到第 14 章。</p>
+        <details class="mobile-toc"><summary>本页目录 · 18 个小节</summary><nav aria-label="移动端本页目录"><ul><li><a href="#why-data-boundaries">01　代码独立部署以后，数据边界仍要单独论证</a></li>
+<li><a href="#change-control">02　变更控制：把表结构变成边界内部的知识</a></li>
+<li><a href="#connection-budget">03　连接管理：预算必须乘上实例数</a></li>
+<li><a href="#operational-drivers">04　扩展、容错与量子：拆的是共同受限的范围</a></li>
+<li><a href="#integration-forces">05　关系与事务：数据库正在承担的责任不能丢掉</a></li>
+<li><a href="#sysops-justification">06　Sysops Squad：用证据说明为什么需要拆库</a></li>
+<li><a href="#data-domains">07　数据域：给紧密协作的表留一个共同住所</a></li>
+<li><a href="#view-refactoring">08　拆一个视图：不再跨库 join，仍须完成业务结果</a></li>
+<li><a href="#steps-one-two">09　第一、二步：先识别归属，再用 schema 表达</a></li>
+<li><a href="#step-three">10　第三步：把集成点从数据库移到服务</a></li>
+<li><a href="#steps-four-five">11　第四、五步：复制数据与切换权威写入点</a></li>
+<li><a href="#database-choice">12　选数据库：先描述工作负载，再比较类型</a></li>
+<li><a href="#relational-key-value">13　关系型与键值：查询灵活性和已知键访问的不同重心</a></li>
+<li><a href="#document-model">14　文档：让常用读取单位贴近业务对象</a></li>
+<li><a href="#wide-column-graph">15　列族与图：一个围绕分区访问，一个围绕关系遍历</a></li>
+<li><a href="#newsql-cloud-time">16　NewSQL、云原生与时序：三种不同的分类角度</a></li>
+<li><a href="#survey-choice">17　Sysops 的客户调查：先确认业务痛点，再选聚合形状</a></li>
+<li><a href="#survey-decision">18　最终选择：用有限重复换取变化与渲染的简单</a></li></ul></nav></details>
+        <section id="why-data-boundaries">
+<h2><span class="section-number">01</span>代码独立部署以后，数据边界仍要单独论证</h2>
+<p><a href="ch04.html">第 4 章</a>确定了基于组件的分解路线，第 5 章将组件组织成领域服务。本章开场以领域服务已经分别部署为背景，Addison 与 DBA Devon 想继续拆库，数据架构师 Dana 却要求先解释必要性。她的顾虑有依据：数据往往比执行它的代码更长寿，迁移错误可能直接影响业务资产；现有外键、视图和存储过程还承担了真实工作。</p>
+<p>作者把推动拆开的力量称为 <strong>data disintegrators（数据拆分驱动力）</strong>，把推动保留在一起的力量称为 <strong>data integrators（数据聚合驱动力）</strong>。前者包括变更控制、连接管理、可扩展性、容错、架构量子与数据库类型优化；后者集中在数据关系和数据库事务。它们不是投票表：六项支持拆分，并不自动胜过两项支持聚合。一个必须全成或全败的业务约束，可能比几个潜在收益更有决定性。</p>
+<p>这里有三个层次需要分开。<strong>数据域（data domain）</strong>是围绕某个业务责任、经常一起使用的一组表及相关对象；<strong>schema（模式）</strong>在本章迁移语境中是数据库组织表、视图、函数等对象的逻辑命名空间；<strong>数据库服务器</strong>则承载存储、连接、资源与故障范围。数据域属于架构模型，schema 属于数据库实现，独立服务器属于部署安排。先给表换命名空间，不等于已经隔离访问；隔离访问以后，也不等于已经分开容量与故障域。</p>
+<p>这也解释了为什么作者保留“基于服务的架构”作为可行状态：粗粒度领域服务可以暂时共享数据库。是否继续拆，应由当前数据耦合造成的损失决定，而不是因为已经拆服务，就机械要求一服务一库。</p>
+</section>
+        <section id="change-control">
+<h2><span class="section-number">02</span>变更控制：把表结构变成边界内部的知识</h2>
+<p>共享表最直接的耦合是破坏性变更。删除列、重命名表、改变类型，可能让多个服务中的 SQL 同时失效。团队不仅要找到所有调用方，还要协调修改、测试、部署与数据库迁移；漏掉一个低频服务，它可能直到生产中执行该查询时才暴露错误。增加字段通常较容易兼容，但“通常”仍以旧代码不会依赖位置、完整字段集合等行为为前提。</p>
+<p>本章的解决方向是让服务只直接访问所属数据域，将其他域的内部表结构藏在服务契约之后。原书图 6-4、6-5 中，C 需要 D 的数据，就向 D 请求，而不直接连接 D 的表。这里“拥有数据”主要按写入责任讨论；只读使用并不自动赋予所有权，但只读 SQL 同样会形成对表结构的依赖。</p>
+<p>原书用愿望清单说明这种抽象：数据库把到期日保存为 <code>EXPIRATION_DT</code>，对外契约用 <code>exp_dt</code> 表达。内部列名或存储类型变化时，所属服务负责转换，外部服务未必需要一起修改。如果业务取消到期机制，服务可以先维持旧契约，再安排契约演进，从而把数据库变更与调用方升级分成两个时间点。</p>
+<p>需要保留一个语义条件。原书建议用零或很远的日期表示“不再到期”，这只有在消费者理解该约定时才兼容。若调用方把零解释成 1970 年，就会把“不到期”判断为“早已过期”。<strong>接口结构不变，不代表业务含义不变。</strong> 数据库抽象减少的是对物理表示的依赖，不能掩盖业务语义的改变。</p>
+<p>因此，收益来自“责任明确且契约能够演进”，不只来自网络中多了一层 API。如果服务把整张表原样序列化出去，字段变化仍可能直接传给消费者；如果每次读取都必须同步访问另一个服务，运行延迟和故障依赖也会增加。拆开静态结构后，仍需沿<a href="ch02.html">第 2 章</a>的方法分析动态耦合。</p>
+</section>
+        <section id="connection-budget">
+<h2><span class="section-number">03</span>连接管理：预算必须乘上实例数</h2>
+<p>单体通常由应用或应用服务器持有一个连接池；拆成服务后，连接池往往随每个服务实例一起出现。原书的起点是单体使用 200 个连接，改成 50 个服务，每个实例连接池上限为 10，每个服务至少两个实例。即使请求量没有增长，潜在连接总量也变成 <code>50 × 2 × 10 = 1,000</code>。</p>
+<aside class="notice correction"><p><strong>算术纠正。</strong> 印刷页 139 随后说，一半服务扩至平均五个实例后，共需 1,700 个连接 → 回看 PDF 原页，数字确实如此，但按其前提应为 <code>25 × 5 × 10 + 25 × 2 × 10 = 1,750</code> → 本文采用 1,750。这是按原书给定条件复算发现的问题，不是出版社已确认的勘误，也不是提取错误。</p></aside>
+<p>连接池上限与实际同时占用还要区分。上限表示潜在申请额度，连接池可能按需建立连接；实际占用取决于负载、查询时长与连接释放情况。不能把所有池上限之和当成始终发生的实测值，但容量规划也不能忽略全部实例同时接近峰值的可能。连接等待、请求超时和熔断，是需要调查的信号，不足以单独证明数据库连接已耗尽；慢查询、长事务或连接泄漏也可能让池内可用连接迟迟不能归还。</p>
+<p>作者建议先分配配额，再持续观察使用峰值与等待情况。原书表 6-1—6-3 中，数据库预算为 100，A—E 最初各得 20。A 只用到 5，B、D 却有等待，于是从 A 各挪 5 给 B、D；B 仍等待，再从 A、E 各挪 2 给 B。最终配额为 8、29、20、25、18，总和仍为 100。不是增加总预算，而是将闲置余量给真正需要它的地方。</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="本节数据整理表"><table>
+<thead>
+<tr>
+<th scope="col">服务</th>
+<th scope="col">最终单实例配额</th>
+<th scope="col">观测最大使用量</th>
+<th scope="col">扩容后实例数</th>
+<th scope="col">按原峰值估算的需求</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A</td>
+<td>8</td>
+<td>5</td>
+<td>2</td>
+<td>10</td>
+</tr>
+<tr>
+<td>B</td>
+<td>29</td>
+<td>27</td>
+<td>3</td>
+<td>81</td>
+</tr>
+<tr>
+<td>C</td>
+<td>20</td>
+<td>15</td>
+<td>3</td>
+<td>45</td>
+</tr>
+<tr>
+<td>D</td>
+<td>25</td>
+<td>25</td>
+<td>2</td>
+<td>50</td>
+</tr>
+<tr>
+<td>E</td>
+<td>18</td>
+<td>14</td>
+<td>4</td>
+<td>56</td>
+</tr>
+<tr>
+<td>合计</td>
+<td>100</td>
+<td>86</td>
+<td>14</td>
+<td>242</td>
+</tr>
+</tbody>
+</table></div>
+<p>这张表保留原书表 6-4 的数字，但将最后一列明确称为<strong>需求估算</strong>。数据库若硬性限制为 100，就不可能已经成功建立并同时使用 242 个连接；超出的申请只能等待或失败。原表的作用是暴露预算超额，而不是报告真实超限运行。</p>
+<p>同样的配额扩到 14 个实例后，潜在上限实际为 <code>8×2 + 29×3 + 20×3 + 25×2 + 18×4 = 285</code>。这说明“每种服务的配额相加等于 100”不是全局治理：预算应按实例数量汇总，或明确实现全服务共享的总配额。持续适应度检查可以观察各实例使用量、等待与剩余额度；配置外置有助于调整，但不要求为了这件事引入机器学习。</p>
+</section>
+        <section id="operational-drivers">
+<h2><span class="section-number">04</span>扩展、容错与量子：拆的是共同受限的范围</h2>
+<p>连接数只是数据库压力的一种。增加服务副本，还会把吞吐、CPU、存储 I/O、锁竞争与缓存需求集中到共享数据库上。应用层能横向扩展，不表示整个请求路径已经能扩展。将数据按域分开，可以让工单库与调查库分别获得容量、索引和维护安排；但如果大部分负载始终落在同一热点域，拆掉其他域也不会让热点凭空消失。</p>
+<p>容错讨论关注的是故障传播范围。共享数据库即使有高可用副本，也可能因共同的维护、错误变更或资源耗尽而使许多服务受影响。原书图 6-9、6-10 对比了全体服务依赖一库与部分服务各有数据域的情况：拆开以后，一个库故障可以只影响使用它的服务，而不是全站。</p>
+<p>这个收益有前提。若工单创建仍同步等待调查服务成功，调查数据库停机仍可能沿调用链影响工单；若各数据库放在同一台故障主机上，基础设施共同风险也依然存在。因此应分别说清“数据模型的变更范围”“资源与故障范围”“工作流的同步依赖”，不要把它们都压成“已解耦”。</p>
+<p>架构量子把这种分析接到不同架构特性上。原书设想 A、B 需要不同于 C、D、E 的伸缩或可用性目标，却共用同一应用数据库；单独给 A、B 画一个边框不能兑现独立性。数据责任和部署依赖一起拆开后，才有条件形成不同量子。这里沿用第 2 章的限定：共享同一厂商或同一种数据库产品，不足以机械判定一个量子；要看实际共享契约与运行依赖。</p>
+<p>最后一个驱动力是数据库类型优化：不同域可以采用不同存储模型。例如整份调查问卷常一起读取，文档模型可能减少拼装；关系遍历密集的数据可能适合图模型。原书页 146 以国家代码等键值参考数据为例，认为键值库更合适；笔记将其限定为候选优化，关系表完全能够表达键值映射，少量稳定参考数据并不天然值得增加一种数据库。收益须超过迁移、备份、监控和团队学习成本。</p>
+</section>
+        <section id="integration-forces">
+<h2><span class="section-number">05</span>关系与事务：数据库正在承担的责任不能丢掉</h2>
+<p>外键不只是图上的连线。它可以阻止写入不存在的引用，阻止删除仍被依赖的记录，或按规则处理关联删除。视图把多表关联集中为可复用的查询；触发器与存储过程可能把一个表的变化接到另一个表。即使没有显式外键，工单与状态历史也可能具有必须一起理解的逻辑关系。拆分前要知道这些关系承担什么，而不是只统计有多少条。</p>
+<p>本章的数据域方法保留域内关系，只处理跨域依赖。原书页 147 为强调困难，先用“删除所有外键和视图”的激烈说法描述一服务一库；页 148 的图 6-14 随即明确，留在同一边界内的外键可以保留。准确结论是：<strong>要独立迁移的边界不能继续依赖另一域的内部数据库对象；同一域内部无需为拆分而拆分。</strong></p>
+<p>数据库事务是另一种聚合理由。假设创建一条支付记录和更新对应账单状态必须一起生效，若两张表由同一服务、同一数据库事务管理，失败时可以整体回滚。若强行将它们交给不同服务各自提交，可能出现支付已登记、账单仍未更新。此时业务要么接受可追踪的中间状态并安排恢复，要么选择保留共同事务边界，要么另行采用满足要求的分布式事务机制。</p>
+<aside class="notice correction"><p><strong>原书适用边界澄清。</strong> 页 148—149 把“拆到不同 schema 或数据库”与“失去单个事务”并列 → 图 6-16 实际同时引入了远程服务调用和各自数据库写入；schema 本身只是命名空间。PostgreSQL 官方文档明确，同一数据库中有权限即可跨 schema 访问，并可在一个事务块中组织多条语句 → 应把原因说成“不同服务各自控制提交，原来的本地事务不再自动覆盖全流程”，不能说“改 schema 就必然不能事务或外键”。数据库对跨库能力的支持也因产品而异。</p></aside>
+<p>数据聚合因此不是拒绝现代架构，而是在保护某个有价值的本地保证。合并紧密数据域会减少独立变化空间，却可能使事务和关联更直接。相反，若保留某条跨域外键导致调查修改总要协调工单发布，拆开又可能更有价值。合理粒度来自这两种成本的比较。</p>
+</section>
+        <section id="sysops-justification">
+<h2><span class="section-number">06</span>Sysops Squad：用证据说明为什么需要拆库</h2>
+<p>在本章“Justifying Database Decomposition”中，Addison 与 Devon 带着日志和连接估算再次找 Dana。第一个证据是报表与工单的资源争用：复杂运营报表并行执行查询，占用大量数据库连接，工单查询进入等待并超时。问题不是简单归咎于“报表写得差”或“工单访问有错”，而是两种工作负载共同争用同一预算。</p>
+<p>Dana 因此接受独立报表数据库可能改善问题，但继续追问为什么非报表数据也要拆。这是很重要的一步：一个局部证据只能支持相应范围的决定，不能替所有拆分背书。团队随后展示按预计服务数、实例数、HTTP 流量和产品负责人 Parker 提供的增长预期计算的连接需求，估计还需额外 2,000 个连接，当前单库无法承担。2,000 是虚构案例的规划结论，原书没有完整计算底表，不能替它补造服务数量或负载实测。</p>
+<p>第三项理由是故障隔离：调查数据库维护或崩溃时，核心工单功能应继续可用。服务拆开而数据库仍是共同依赖，无法完整达到这个目标。团队同时承诺按域隔离直接数据访问，避免让每个服务都连接多个数据库或 schema，再把原来的共享结构搬到更多机器上。</p>
+<p>Dana 最终认可拆分的业务与运行依据，但担心现有大量外键和视图无法处理。Devon 的回答不是全部删除，而是先形成数据域，保留域内依赖，逐步移动跨域集成。这段故事批准了分解方向；它没有证明新的连接预算、可用性目标已在迁移后达成，也没有在这里规定报表数据如何同步。后者属于后续分析数据设计。</p>
+</section>
+        <section id="data-domains">
+<h2><span class="section-number">07</span>数据域：给紧密协作的表留一个共同住所</h2>
+<p>一个数据域包括经常在有限业务范围内共同使用的表，以及服务这些表的视图、外键、触发器和其他数据库代码。它可以比单表大，也可以被多个紧密相关的服务共同使用。原书图 6-21—6-24 都让 A、B 共享 SchemaAB，说明五步过程不是把所有系统硬压成“一服务一张表一台机器”。</p>
+<p>Sysops Squad 的表 6-5 提出六个数据域，覆盖第一章的 24 张表。下表按域重组，表名沿用本章的小写写法。</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="本节数据整理表"><table>
+<thead>
+<tr>
+<th scope="col">拟定数据域</th>
+<th scope="col">所含表</th>
+<th scope="col">共同职责</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Customer／客户</td>
+<td><code>customer</code>、<code>customer_notification</code></td>
+<td>客户实体及通知偏好</td>
+</tr>
+<tr>
+<td>Survey／客户调查</td>
+<td><code>survey</code>、<code>question</code>、<code>survey_administered</code>、<code>survey_question</code>、<code>survey_response</code></td>
+<td>问卷定义、安排与回答</td>
+</tr>
+<tr>
+<td>Payment／支付</td>
+<td><code>billing</code>、<code>contract</code>、<code>payment_method</code>、<code>payment</code></td>
+<td>支持合同、账单、支付方式与支付记录</td>
+</tr>
+<tr>
+<td>Profile／资料</td>
+<td><code>sysops_user</code>、<code>profile</code>、<code>expert_profile</code>、<code>expertise</code>、<code>location</code></td>
+<td>用户、专家技能与地点等资料</td>
+</tr>
+<tr>
+<td>Knowledge Base／知识库</td>
+<td><code>article</code>、<code>tag</code>、<code>keyword</code>、<code>article_tag</code>、<code>article_keyword</code></td>
+<td>文章及分类检索关系</td>
+</tr>
+<tr>
+<td>Ticketing／工单</td>
+<td><code>ticket</code>、<code>ticket_type</code>、<code>ticket_history</code></td>
+<td>工单实体、类型与历史</td>
+</tr>
+</tbody>
+</table></div>
+<p>这里有两个容易误读的地方。第一，<code>contract</code> 在本章提案里属于 Payment，并不是仅凭“客户购买合同”就放入 Customer。领域归属要结合经常一起操作的行为。第二，Reporting 没出现在这六个运营数据域中，不表示报表需求被删除；表格在整理原有运营表的责任，没有在此新增一个完整分析模型。</p>
+<p>六域是本章的拟定边界，不是全书已经冻结的数据归属。作者明确允许在发现过强关系时合并数据域；第 9 章还会细化多服务写入与数据所有权问题。数据域与 schema 通常一对一，但一个更宽的数据域也可能涵盖多个 schema，不能只凭命名空间数量判断业务边界数量。</p>
+<figure class="concept-figure"><a href="../diagrams/exports/ch06-domain-boundary.svg" target="_blank" rel="noopener"><img src="../diagrams/exports/ch06-domain-boundary.svg" width="720" height="520" alt="支付域内部的合同与账单关系保留；原视图依赖客户表的跨域连接被替换为支付服务向客户服务请求姓名。"></a><figcaption>图 6-1：原创数据域边界图。框表示业务责任范围，域内实线表示可保留的数据库关系，虚线表示待迁出的跨域数据库依赖；下方箭头是替代后的服务请求，不是分布式事务保证。先看保留哪些关系，再看哪条关系移到服务层。点击<a href="../diagrams/exports/ch06-domain-boundary.svg">查看大图</a>。</figcaption></figure>
+</section>
+        <section id="view-refactoring">
+<h2><span class="section-number">08</span>拆一个视图：不再跨库 join，仍须完成业务结果</h2>
+<p>原书用 <code>payment.v_customer_contract</code> 演示跨域依赖。原视图将 Payment 域的 <code>contract</code>、<code>billing</code> 与 Customer 域的 <code>customer</code> 关联，返回客户 ID、姓名、合同起始日期、期限、账单日期与金额，并以 <code>contract.auto_renewal = 0</code> 筛选。它说明一个看似属于支付域的视图，也可能偷偷依赖另一个域的表。</p>
+<aside class="notice correction"><p><strong>出版社已确认的标题勘误。</strong> 印刷 155／PDF 173 页的例 6-1、6-2 都把标题写成查询客户“开放工单” → 原页代码没有 Ticket 表，实际关联的是合同、账单和客户；O’Reilly 勘误页已确认并说明修改了标题 → 应理解为“带跨域客户关联的合同支付视图”及“移除客户跨域关联后的合同支付视图”，不是工单查询。<code>auto_renewal = 0</code> 也不应被解释为工单尚未关闭。</p></aside>
+<p>重构后的视图保留 Payment 内的合同与账单 join，移除 <code>customer.customer</code> 及 <code>customer_name</code>。原例 6-2 从 <code>billing.customer_id</code> 取客户标识；随后 Payment 服务向 Customer 服务取得姓名。这里没有复制完整 SQL，因为原章未提供可执行的建表与约束定义，不能擅自证明账单、合同与客户 ID 的全部一致性条件。</p>
+<p>用笔记自己的过程表达，原先是“数据库一次关联 → 返回完整行”，现在是“Payment 读取本域合同账单 → 取得客户 ID → Customer 提供姓名 → 应用组合结果”。关联责任从数据库转移到了服务层，姓名的内部存储变化因而不再直接破坏 Payment 的 SQL。</p>
+<p>这个变化同时产生新代价。多条账单若逐条请求客户姓名，会增加往返次数；可以按所需客户集合进行批量请求，但那是另一个契约选择。读取账单后客户改名，随后取得的姓名也未必对应同一时点。若业务要求历史账单姓名，应明确历史快照语义，而不是把“获取当前姓名”误当作原视图结果的无条件等价替代。这些是笔记据原例展开的边界分析，不是 Sysops 已选定的实现。</p>
+</section>
+        <section id="steps-one-two">
+<h2><span class="section-number">09</span>第一、二步：先识别归属，再用 schema 表达</h2>
+<p><strong>第一步是分析数据库并建立数据域。</strong> 起点中，各服务可以直接读写所需的任意表。架构师与数据库团队一起辨认哪些表和数据库对象常共同使用、哪些事务跨表、哪些视图跨领域，先形成候选分组。此时改变的是对责任的认识，不需要立即移动数据，也没有承诺已经切断访问。</p>
+<p><strong>第二步是把表分配到数据域，并移入对应 schema。</strong> 原书以将 <code>sysops.billing</code> 转入 <code>payment</code> 为例，使用 SQL Server 风格的 <code>ALTER SCHEMA ... TRANSFER ...</code>。重要动作是给归属一个可观察的实现位置，而不是把该语法当成跨数据库产品通用迁移命令。若分析发现两个候选域无法承受关系与事务被割裂的代价，可以把它们合并为更宽的数据域。</p>
+<p>第二步结束时，仍在同一个数据库服务器里，跨 schema 查询或旧访问路径可能尚未清理。原书允许临时创建 <strong>synonym（同义词）</strong>，为别的 schema 中的对象提供本地别名，让调用代码逐步整理。Microsoft 官方文档确认，同义词只是基对象的另一个名字，访问时操作的仍是原对象；它不是数据复制，也不是服务隔离。</p>
+<p>原书印刷页 158 的示例还存在命名不一致：创建的是 <code>ticketing.sysops_user</code>，后面查询却使用 <code>ticket.sysops_user</code>。回看原页可确认这不是文本提取问题；若将示例改成可执行 SQL，应统一为实际创建的 schema 名。本文保留意图解释，不将这个不一致片段当作能直接运行的脚本。</p>
+<p>因此，这个阶段的完成标志是“归属已明确并反映到对象组织中”，不是“所有直接跨域访问都消失”。在支持的数据库中，同一连接跨这些 schema 的事务仍可能成立。把第二步误认为完成拆库，会让暂时的别名和跨域视图永久留在系统里。</p>
+</section>
+        <section id="step-three">
+<h2><span class="section-number">10</span>第三步：把集成点从数据库移到服务</h2>
+<p><strong>第三步是分离各数据域的连接与访问权限。</strong> 作者称它最困难，因为此时要改变真实运行路径：服务只直接读写本域对象，依赖其他域时通过拥有该域的服务访问；临时同义词移除，跨域视图、触发器、函数和存储过程中的协作也要改写。只是把默认 schema 换掉，不足以完成此步；服务仍持有跨域权限并实际使用它时，边界就仍然可穿透。</p>
+<p>原书图 6-22 的关键变化是 C → D，而不是 C → SchemaD。C 对 D 的请求建立了一个需要管理的新契约，同时使 D 的内部表结构可以独立演进。A、B 仍共同访问 SchemaAB，它们在这个数据域内部继续承担共同变化的约束。数据域拥有者可以是一个服务，也可以是此处明确聚合的一组服务，不能把图中五个服务误算成五个完全独立数据库。</p>
+<p><strong>事务边界在这里需要重新检查。</strong> 若一个原始事务更新 C、D 两域，现在 C 提交自己的事务再调用 D，D 失败不会自动回滚 C；即使两个 schema 暂时仍在同一台服务器上，也已经有两个服务控制的提交过程。要解决的正是业务是否允许中间状态、谁负责恢复，而不是等待第四步搬机器后才考虑这个问题。</p>
+<p>域内的外键、视图与本地事务仍可保留。原书在本步缺点中概括“数据库无法维护引用完整性”，应限定为<strong>跨域引用</strong>失去原先集中式数据库约束；不是所有域内约束一起失效。另一项代价是跨域大量数据读取可能变慢，因为原来在数据库内部完成的集合操作变成了服务交互。边界拆得过细，会让业务大部分时间都在搬运中间结果。</p>
+<p>本步完成后的收益，是跨域表结构不再成为直接访问契约；它也为将来更换数据库类型创造条件。但当前仍共享数据库服务器，连接预算、机器资源与维护故障的共同范围还在。逻辑访问隔离与物理运行隔离，是两个不同里程碑。</p>
+</section>
+        <section id="steps-four-five">
+<h2><span class="section-number">11</span>第四、五步：复制数据与切换权威写入点</h2>
+<p><strong>第四步是将 schema 移到独立数据库服务器。</strong> 前面已把跨域协作改到服务层，因此现在可以围绕某个数据域搬迁，而不必同时追着所有外部 SQL 修改。作者给出两条路径：备份恢复，以及复制。备份恢复通常需要停机窗口，确保备份后没有遗漏的新写入，再在新服务器恢复和切换；实现较直接，代价是相应域暂停服务。</p>
+<p>复制路线则先创建目标数据库，将初始数据及后续变化持续同步过去。原书图 6-23 中，服务仍连接旧库，C、D、E 的 schema 正向新库复制；“目标库里已有数据”不等于“目标库已承接业务”。这条路径可以降低迁移停机，但需要更多复制配置和协调。</p>
+<p>原书把复制概括为“避免停机”，实际应读作具备降低乃至避免业务停机的条件，而不是复制功能自动提供零停机。笔记补充的关键原因是：持续有新写入时，仅知道两边都存在相同表不够，还要知道复制追到了哪一个写入位置、切换时谁继续接收写入，以及如何避免两边同时成为不受控的权威来源。</p>
+<p><strong>第五步才是切换服务连接并退出旧路径。</strong> 在目标数据追平且切换条件满足后，使服务连接新服务器，停用旧连接，最终移除旧 schema。原书将“切换后清理旧库”放在终态；实际操作应先确认新路径承担正确读写、迁移数据完整，再结束对旧库的依赖，而不是一改连接串就立即删除恢复依据。这里说明的是切换顺序的必要含义，未替案例编造具体复制产品或自动回滚方案。</p>
+<p>迁移期间尤其不要把复制当成双库事务。若旧库是写入来源、目标库是复制副本，复制延迟只表示目标尚未追平；若切换后新库已经接受了额外写入，再把连接指回旧库，旧库未必包含这些变化。回退是否可行，取决于新写入如何处理，不由“还有旧数据库”自动保证。</p>
+<figure class="concept-figure"><a href="../diagrams/exports/ch06-five-steps.svg" target="_blank" rel="noopener"><img src="../diagrams/exports/ch06-five-steps.svg" width="720" height="700" alt="五步依次为识别数据域、分 schema、隔离直接访问、复制到独立服务器、切换连接并退出旧库。第三步改变跨域访问和提交责任，第五步完成物理运行隔离。"></a><figcaption>图 6-2：原创五步里程碑图。向下箭头表示迁移推进；每行分别说明数据位置、服务访问与事务含义。第四步画的是复制路径，备份恢复是正文说明的另一方案。按顺序读可看出，业务边界先于服务器搬迁形成。点击<a href="../diagrams/exports/ch06-five-steps.svg">查看大图</a>。</figcaption></figure>
+<p>最终状态可按域分别优化容量与可用性，也为多种数据库并存打开空间。原图的 SchemaAB 仍由 A、B 共享，C、D 之间的服务调用也仍存在；五步过程实现的是明确边界和受控迁移，不是消除所有耦合。</p>
+</section>
+        <section id="database-choice">
+<h2><span class="section-number">12</span>选数据库：先描述工作负载，再比较类型</h2>
+<p>作者比较数据库时使用七个观察维度：学习成本、建模便利性、扩展与吞吐、可用性与分区容忍、一致性、语言／成熟度／SQL／社区支持，以及读写偏向。原书图 6-25—6-33 的星级是 2021 年背景下的定性概括，不是统一基准测试。本笔记保留比较维度而不把星数转成选型总分，尤其不把“支持 ACID”“副本较多”“高可用”混成同一种保证。</p>
+<p>先描述几个具体问题，选择才有意义：常见请求是已知 ID 读取整个对象，还是按多个条件筛选？数据是否总按同一组一起修改？是否频繁跨对象做关联？写入增长主要来自追加事件，还是不断修改少量热点？读到稍旧的数据会影响展示，还是会破坏业务约束？这些条件决定模型与访问路径，比“系统总数据量很大”更有辨别力。</p>
+<p>原书特别介绍<strong>面向聚合（aggregate orientation）</strong>：把经常一起使用的一组数据组织成整体，便于一起读取、写入和分布到集群节点。例如一份调查问卷及其全部问题，可以成为一个文档聚合。这样会减少 join 与应用拼装，但选错边界后再拆开不容易，跨聚合统计和查询也可能更复杂。这里的聚合是数据模型单位，不等于本章更粗的数据域，也不必等于单个服务。</p>
+<p><strong>分片（sharding）</strong>则是在不同节点之间水平分配数据，例如按客户 ID 将不同客户的记录放到不同位置。它与把 Payment、Survey 这些不同业务责任拆开不是同一操作：一个数据域可以有多个分片，多个域也可能暂时共享服务器。分片键若把所有热点集中到一个节点，拥有多个节点仍无法得到期待的吞吐。</p>
+<p>此外，“无 schema”通常只是数据库不强制每条记录具有完全相同字段。应用依旧依赖字段名、类型和含义，还可能同时读到多个历史版本。关系模式把约束集中表达，文档模式把更多演进责任交给模型与消费者；不是一种需要设计，另一种不需要。</p>
+</section>
+        <section id="relational-key-value">
+<h2><span class="section-number">13</span>关系型与键值：查询灵活性和已知键访问的不同重心</h2>
+<p><strong>关系数据库</strong>用表、键、约束与关联表达业务事实。对于合同、账单、支付这样既有约束又需要多种读取视角的数据，它的价值在于同一写入模型之上可以建立不同查询，数据库承担一部分事务、并发和引用完整性工作。成熟的 SQL、工具与团队经验也降低采用成本。这些优势不是“所有并发问题已解决”；隔离级别、约束设计和事务范围仍然需要按业务正确设置。</p>
+<p>作者认为传统关系库通常依赖纵向扩容，部署复制与切换较复杂。这是在比较典型实现，并不是“关系模型永远不能横向扩展”的定理；本章后面 NewSQL 本身就把关系语义与分布式存储结合起来。相反，也不能因为有 SQL 接口，就认定某产品的隔离、外键、扩展与容错和原数据库完全相同。</p>
+<p><strong>键值数据库</strong>把已知键映射到一个值。最简单的模型是 <code>get(key)</code>、<code>put(key, value)</code> 与删除；应用知道如何解释值，数据库不必为值内部建立复杂关系。会话、偏好或按订单 ID 取完整对象，是容易理解的候选场景。聚合若恰好符合访问单位，查询路径很直接；若随后频繁要求“按值内任意条件筛出所有对象”，就可能需要额外索引、扫描或另一种读模型。</p>
+<p>原书把“只能按键查询、没有 where/order by”作为键值模型介绍，又列出 DynamoDB 等具体产品。<strong>模型简化不能直接当成产品限制。</strong> 2026-11-06 核对 AWS 文档，DynamoDB 的 Query 可以指定分区键并用排序键条件进一步限制结果；因此不能用原书的最小接口描述，断言该产品仅支持单个精确键 get。产品能力应逐项核对，持久化、读一致性和索引范围也不能仅由“键值”二字推出。</p>
+<p>这两种选择的分歧不是“复杂对简单”，而是把灵活性放在哪里。关系库让数据库理解更多结构，以支持多种查询和约束；最小键值模型让访问单位很明确，把值的解释和跨对象组合更多交给应用。少量参考代码表若本来已在关系库中，通常应先验证实际瓶颈，再决定增加新数据库是否值得。</p>
+</section>
+        <section id="document-model">
+<h2><span class="section-number">14</span>文档：让常用读取单位贴近业务对象</h2>
+<p><strong>文档数据库</strong>以 JSON、XML 等层次结构表达对象，与最小键值模型的关键差别是数据库理解文档内部属性，可以围绕这些属性建立索引和查询。一个问卷文档可以直接包含标题、描述、问题与选项，应用获取它后不必先从许多表拼出层次结构。这对于文档结构经常变化、读取又常以整个对象为单位的业务具有吸引力。</p>
+<p>文档内部能查询，不意味着任意结构都同样高效。嵌入太多不断增长的数据会扩大读取和更新范围；为许多属性建立索引会增加写入工作。数据量增长到需要分片时，仍须决定按什么键分布、哪些查询跨分片，以及热点在哪里。文档结构的灵活性与物理访问成本是两回事。</p>
+<p>原书页 169 说一些文档数据库开始支持集合内 ACID 事务。<strong>时代与产品范围澄清：</strong> 不能把它读成当下文档数据库的统一事务上限。2026-11-06 核对 MongoDB 官方文档，支持的多文档事务可跨集合、数据库和分片，实际语义仍受 read/write concern 等设置约束。拥有这项能力，也不表示跨独立服务的普通 HTTP 调用自动加入同一事务。</p>
+<p>对建模更持久的启发是：先让常见业务操作在合理大小的聚合内完成，再决定何处值得支付跨聚合协作成本。如果同一问题必须在多份问卷中复用，嵌入与引用就会有不同代价；这是章末案例真正需要分析的选择，不能仅凭“选择文档库”就跳过。</p>
+</section>
+        <section id="wide-column-graph">
+<h2><span class="section-number">15</span>列族与图：一个围绕分区访问，一个围绕关系遍历</h2>
+<p><strong>列族／宽列数据库（column family / wide-column）</strong>按行键或分区键组织相关数据，适合围绕预先理解的访问方式分布大规模读写。原书介绍 Cassandra、Scylla 等，并强调提交日志、内存表和 SSTable 等机制对高写入量场景的价值。建模的难点是决定哪些数据要落在同一分区、怎样按常用条件读取，以及是否值得为不同查询保存多份表示。</p>
+<p>这里应区分宽列模型与分析系统常说的“按列物理存储”。原书在列族段落中也使用 columnar 一词，容易让两者混同；本笔记用“列族／宽列”表示这里的分区与行列建模方式，不据此推断所有列式分析引擎都具有相同事务和查询限制。</p>
+<p>副本与一致性级别也需按产品解释。原书页 170 将复制因子三概括为默认，页 171 将 <code>ANY</code> 与 <code>ALL</code> 放在一致性比较中。核对 Cassandra 官方文档，复制因子是按 keyspace 和复制策略配置的；<code>ALL</code> 等待所有<strong>相关副本</strong>，不是集群所有节点，<code>ANY</code> 只用于写入，甚至可由协调节点保存 hint 后确认。它们不能直接翻译成“任意一个节点就是数据已经永久安全”或“所有 NoSQL 都有同一菜单”。</p>
+<p><strong>图数据库</strong>把实体表示为节点，把关系作为显式边，并允许关系具有类型、方向和属性。适合的问题不是“数据之间存在关系”——几乎所有业务数据都存在关系——而是经常需要沿多层关系探索。例如从某位专家沿“创建”“使用”关系找到知识库文章，再沿文章关联找其他专家，遍历本身就是主要查询工作。</p>
+<p>图模型使关系成为一等对象，却也要求团队认真定义方向和类型。原书图 6-29 的工单与客户用 <code>TICKET_CREATED</code> 相连；查询必须清楚从哪端出发、沿哪个方向走。边的名称不能独自替代方向约定。复杂图的切分也可能让遍历跨许多节点，因此不能假定图查询快就等于任意分布式写入和跨分片遍历都快。</p>
+<p>作者强调图数据库的学习与建模成本、关系类型变更成本，并指出一些产品支持 ACID。正确用法是把“常见路径如何查询、关系怎样变化、需要什么事务范围”一起比较。原书页 171 的“All NoSQL databases”都面向聚合概括过宽；本章紧接着介绍的图模型，恰好提醒我们，不能强行用固定聚合边界解释所有 NoSQL 数据库。</p>
+</section>
+        <section id="newsql-cloud-time">
+<h2><span class="section-number">16</span>NewSQL、云原生与时序：三种不同的分类角度</h2>
+<p><strong>NewSQL</strong>在本章指结合关系模型、SQL 与 ACID，并面向分布式扩展的一类数据库。它希望保留熟悉的查询和事务接口，同时由数据库处理分片、复制与节点分布。对于确实需要横向扩展、又希望保留关系事务语义的工作负载，这是有价值的候选方向。</p>
+<p>代价在于事务和查询跨节点后仍需通信与协调。分片键、数据所在地区以及跨地域延迟会影响表现；强事务保证并不免除这些成本。原书把协议兼容进一步说成“没有任何兼容问题”，应收窄为：兼容某种线协议有助于复用驱动，但不能据此推导所有 SQL、扩展、隔离行为和执行计划都等价。迁移是否直接，仍要对实际使用的能力作判断。</p>
+<p><strong>云原生数据库</strong>是部署与运维交付角度，不是与关系型、文档型互斥的数据模型。作者把 Snowflake、Redshift、Datomic 等放在这一节，强调托管、弹性资源和较低前期投入，同时也指出它们的模型和工作负载差异很大：有的偏数据仓库，有的用不同的数据事实模型。不能因为都在云上，就将分析仓库当作工单事务库的等价替代。</p>
+<p>托管减少部分机器维护责任，但没有代替数据建模、权限、成本和容量决策。原书页 176 说 Redshift 运行在单可用区、要用多个集群增加可用性，是需要按时间理解的能力描述。2026-11-06 核对 AWS 官方文档，Redshift 的符合条件的预置 RG 或 RA3 集群已有 Multi-AZ 部署，通过单一端点使用两个可用区的计算资源。本文只据此说明原概括不能作为永久限制，不将其延伸为所有配置都有相同保证。</p>
+<p><strong>时序数据库</strong>则围绕带时间戳的数据及时间窗口查询优化。原书以工单随时间的变化为例：记录何时发生哪种状态变化，再查询一个时间段内的趋势。把 <code>ticket_status</code> 与 <code>ticket_id</code> 分开表达，比把二者拼成一个需要解析的标签更容易明确查询含义。</p>
+<p>时序工作负载常有大量追加写入，以及按时间窗口聚合、保留与降采样的需求。原书将其概括为 append-only 和偏读，应读作典型使用形态，不是所有时序产品都禁止更新删除、只擅长读的定义。同样，写入时间与业务事件发生时间可能不同，不能假定数据库自动附加的接收时间就能替代业务时间。选型仍要说明迟到数据、时间精度和查询窗口的要求。</p>
+<p>这三类不处于同一分类维度：一个数据库可以同时提供关系模型、时序扩展与云托管形式。先明确业务需要，再比较具体能力，才不会把分类标签误当成互斥菜单。</p>
+</section>
+        <section id="survey-choice">
+<h2><span class="section-number">17</span>Sysops 的客户调查：先确认业务痛点，再选聚合形状</h2>
+<p>章末的数据域已经形成，Devon 认为 Survey 适合改用 JSON 文档，UI 开发者 Skyler 也希望减少关系数据拼装；Dana 起初坚持关系表一直能用，不愿仅为前端方便增加数据库团队的负担。Addison 把讨论带回产品负责人 Parker，才确认更重要的事实：问卷频繁变化，增加或调整问题常要耗费几天，市场部门甚至因预期成本和挫折而不再提出某些改动。</p>
+<p>于是理由从“开发者喜欢 JSON”变成“调查变化速度正在限制业务”。原书将技术选型视为此案例的关键原因；笔记仍保留因果边界：关系数据库并不普遍导致问卷变化慢，表结构、服务契约和 UI 拼装方式都可能影响交付。在本案例既有实现与痛点下，团队认为改用文档模型能减少这些阻力，Dana 因而同意继续。</p>
+<p>接下来不是立即搬数据，而是比较两种聚合。<strong>单聚合方案</strong>把问卷元数据和全部问题嵌在一个文档中，按问卷 ID 取得文档就能获得渲染所需结构。<strong>多聚合方案</strong>让问卷只保存问题 ID 与顺序，问题作为独立文档；多份问卷可以引用同一个问题，公共修改更集中，但读取与渲染需要再组合。</p>
+<p>原书图 6-34—6-35 将问卷定义简化为 Survey、Question 的一对多关系，图 6-36—6-37 则对比嵌入与引用。它们不是对前面五张 Survey 域表的完整目标映射：发放记录和回答如何迁移，没有在这些图中展开。不能从两张主表示意中推断 <code>survey_response</code> 等已被删除或已合并到同一文档。</p>
+<figure class="concept-figure"><a href="../diagrams/exports/ch06-survey-aggregates.svg" target="_blank" rel="noopener"><img src="../diagrams/exports/ch06-survey-aggregates.svg" width="720" height="480" alt="嵌入方案中两份问卷各保存题目 Q 的副本，读取集中但公共题修改需改多处；引用方案中两份问卷指向独立题目 Q，公共修改集中但读取需组装。"></a><figcaption>图 6-3：根据原书两种候选方案绘制的原创对比图。框内包含表示文档内嵌，实线箭头表示按 ID 引用，不表示事务或 HTTP 协议。先看读取需要到达几个文档，再看公共题变化会落在哪些文档。问卷甲、乙与 Q 是笔记简化符号。点击<a href="../diagrams/exports/ch06-survey-aggregates.svg">查看大图</a>。</figcaption></figure>
+<p>下面是笔记自拟的最小单聚合 JSON，用于解释结构，不是原书代码逐字复制。以数组保存选项、用数字表示顺序，也避免将原书展示用的 <code>#</code> 注释放入严格 JSON；此例未指定数据库产品或完整验证规则。</p>
+<pre><code class="language-json">{
+  &quot;survey_id&quot;: &quot;service-feedback&quot;,
+  &quot;questions&quot;: [
+    {
+      &quot;question_id&quot;: &quot;resolved&quot;,
+      &quot;text&quot;: &quot;问题是否已经解决？&quot;,
+      &quot;answer_type&quot;: &quot;boolean&quot;,
+      &quot;options&quot;: [true, false],
+      &quot;order&quot;: 1
+    },
+    {
+      &quot;question_id&quot;: &quot;rating&quot;,
+      &quot;text&quot;: &quot;请为本次服务评分&quot;,
+      &quot;answer_type&quot;: &quot;choice&quot;,
+      &quot;options&quot;: [1, 2, 3, 4, 5],
+      &quot;order&quot;: 2
+    }
+  ]
+}
+</code></pre>
+<p>若改成引用方案，<code>questions</code> 只留下 <code>question_id</code> 与 <code>order</code>，题干、类型与选项移到独立题目文档中。顺序属于“某题在某份问卷里的位置”，因此即使共享题目，也仍放在问卷引用处。原书例 6-4 正是这种区分，不应把同一题在所有问卷中的显示顺序强行绑定。</p>
+</section>
+        <section id="survey-decision">
+<h2><span class="section-number">18</span>最终选择：用有限重复换取变化与渲染的简单</h2>
+<p>Devon 更喜欢多聚合，以减少重复问题；Skyler 更喜欢单聚合，因为主要复杂度和修改困难在 UI。Addison 补充了决定性的规模条件：只有五种问卷，对应五类产品，常见变化是增加或删除问题。共享题库带来的集中维护收益，尚不足以抵消每次读取与渲染的组合成本。</p>
+<p>团队最终选择<strong>文档数据库加单聚合问卷</strong>。这是以少量数据重复换取更直接的读取、修改与渲染，而不是宣布“重复永远没关系”。若未来有数千份问卷、必须集中控制公共题目版本，比较结果可能改变；这个未来情境是笔记解释，不是原书已经发生的需求。</p>
+<p>Addison 为此记录 ADR。背景是客户完成支持服务后收到五类问卷之一，现有关系存储难以满足市场部门对灵活性和及时性的要求；决定是改用文档数据库，以简化 UI 并改善变化响应；接受的后果是公共问题修改可能需要更新多份文档，而且从关系库迁入文档库时，调查功能需要暂停。这里并未承诺第五步的复制路线能让这次异构模型迁移零停机。</p>
+<p>原书 ADR 背景把服务工作写成“由客户完成”，与第 1 章流程及本页前文不一致；应理解为专家完成维修或安装后，客户再填写问卷。本文按完整业务语境说明这一明显措辞问题，不把它列为出版社已确认勘误。</p>
+<p>本章结束时，可以确认的是：团队已建立拆库理由并形成数据域，调查域的文档化与单聚合方向已获决定，同时接受重复更新与迁移停机。原书没有提供数据库品牌定案、迁移后的性能数字、全量表映射或新的客户满意度结果。下一章<a href="ch07.html">服务粒度</a>将继续判断哪些功能值得分开、哪些需要聚合；本章给它的约束是，服务边界必须同时尊重数据责任和业务事务。</p>
+<p>把整章连起来，关键不是把数据库数量尽可能增加，而是让每个边界具有可解释的目的：先知道哪些变更、负载与故障值得隔离，再决定哪些关系和事务应留在内部；先在服务与数据访问上建立责任，再迁移物理位置；最后用业务操作方式选择数据模型。每次拆分都在把旧机制承担的工作交给某个新机制，只有把这项交接讲清楚，独立性才是实际能力。</p>
+</section>
+        <details id="sources" class="source-note"><summary>来源、原书对应与核查说明</summary><p>依据 Neal Ford、Mark Richards、Pramod Sadalage、Zhamak Dehghani，<em>Software Architecture: The Hard Parts — Modern Trade-Off Analysis for Distributed Architectures</em>，O’Reilly 英文第一版 October 2021，First Release 2021-09-23，版权 2022，ISBN 978-1-492-08689-5。通读第 6 章印刷 131—184／PDF 149—202；先读前言、第 1、2 章已完成笔记与第 4 章 ADR。中文标题与术语为本站译法。外部核查日期：2026-11-06。</p>
+<ul>
+<li>01—02：章首、Data Decomposition Drivers、Data Disintegrators / Change control，印刷 131—138／PDF 149—156，原图 6-1—6-5。愿望清单仅重述契约与表结构分离的意义，零值语义条件为笔记澄清。</li>
+<li>03：Connection management、Scalability，印刷 138—143／PDF 156—161，表 6-1—6-4、图 6-6—6-8。实际读取印刷 139—142 的渲染页，复算 1,000、1,750、100、242、285；242 是按扩容后的需求估算，不是硬上限 100 下的实测并发连接。</li>
+<li>04—05：Fault tolerance、Architectural quantum、Database type optimization、Data Integrators，印刷 143—149／PDF 161—167，图 6-9—6-16。实际回看印刷 149／PDF 167 的两幅事务图；跨 schema 与跨服务事务的区别在正文澄清。</li>
+<li>06：Sysops Squad Saga: Justifying Database Decomposition，印刷 150—151／PDF 168—169。2,000 个额外连接为虚构案例规划值，未补造底表；故事日期按原书叙事保留，不按章序重排时间线。</li>
+<li>07—08：Decomposing Monolithic Data，印刷 151—155／PDF 169—173，表 6-5、图 6-17—6-19、例 6-1／6-2。实际回看印刷 152、154、155，确认 24 表六域、域内／跨域关系及合同支付 SQL；图 6-1 为原创重组，并非原书图号。</li>
+<li>09—11：五个 Step 小节，印刷 156—161／PDF 174—179，原图 6-20—6-24。实际回看印刷 157—161，确认第二步仍有跨 schema 依赖、第三步 C 调 D、第四步仍连旧库并复制、第五步切换；A、B 始终共享 SchemaAB。同义词命名不一致来自原页；复制切换的权威写入与回退边界是笔记解释。</li>
+<li>12—16：Selecting a Database Type 及八类数据库小节，印刷 161—179／PDF 179—197，原图 6-25—6-33、表 6-6。保留论证与比较维度，不复刻定性星级或过时产品名录；关系、键值、文档、宽列、图、NewSQL、云原生、时序按适用模型展开。宽列与分析列存区分、协议兼容不等于完整兼容为笔记范围澄清。</li>
+<li>17—18：Sysops Squad Saga: Polyglot Databases 及 ADR，印刷 179—184／PDF 197—202。实际回看印刷 181—184，核对图 6-34—6-37、例 6-3／6-4、五种问卷、单聚合选择、重复更新和停机后果。原图只简化问卷定义，未给五张 Survey 域表的完整迁移映射；JSON 是笔记自拟结构例，已作严格 JSON 解析验证。</li>
+</ul>
+<p>额外核查依据：</p>
+<ul>
+<li><a href="https://www.oreilly.com/catalog/errata.csp?isbn=9781492086895">O’Reilly 已确认勘误</a>：印刷 155，例 6-1／6-2 的合同支付标题，页面记录修正日期 2022-08-26。连接算术、同义词拼写及其他技术澄清没有冒称出版社裁定。</li>
+<li>PostgreSQL 18：<a href="https://www.postgresql.org/docs/18/ddl-schemas.html">Schemas</a>、<a href="https://www.postgresql.org/docs/18/tutorial-transactions.html">Transactions</a>：schema 是同一数据库内的命名空间，有权限即可跨 schema 访问；事务块组织多条语句。用于纠正“拆 schema 自动失去事务”的过度概括，不推导各产品具有完全相同的跨库能力。</li>
+<li>Microsoft：<a href="https://learn.microsoft.com/en-us/sql/relational-databases/synonyms/synonyms-database-engine?view=sql-server-ver17">Synonyms (Database Engine)</a>：别名指向基对象，读写仍作用于基对象，不等于消除跨域耦合。</li>
+<li>AWS：<a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Query.html">Querying tables in DynamoDB</a>：分区键与可选排序键条件，限定原书对键值产品能力的宽泛说法。</li>
+<li>MongoDB：<a href="https://www.mongodb.com/docs/manual/core/transactions/">Transactions</a>：多文档事务可跨集合、数据库、分片，具体保证需结合 read/write concern，不把 2021 概括当永久上限。</li>
+<li>Apache Cassandra：<a href="https://cassandra.apache.org/doc/latest/cassandra/architecture/dynamo.html">Dynamo architecture</a>，Replication Strategy 与 Tunable Consistency：复制因子配置、相关副本、ANY 仅用于写入且可保存 hint；不把所有节点确认或三副本当通用规则。</li>
+<li>AWS：<a href="https://docs.aws.amazon.com/redshift/latest/mgmt/managing-cluster-multi-az.html">Redshift Multi-AZ deployment</a>：符合条件的预置集群可跨两个可用区部署，更新原书单可用区概括的适用时间范围。</li>
+</ul>
+<p>三幅图均为原创 SVG，图源位于 <code>diagrams/sources/ch06-*</code>，网页副本位于 <code>diagrams/exports/ch06-*</code>，内容相同。支付失败情境、批量姓名读取与时间一致性分析、迁移切换边界、未来问卷规模变化及最小 JSON 为笔记解释或明确假设，不是原书额外案例结果。本文没有执行真实数据库迁移或基准测试。</p></details>
+        <nav class="chapter-pagination" aria-label="章节翻页"><a class="page-link prev" href="ch05.html" rel="prev"><span class="page-label">← 上一章 · 第 5 章</span><span class="page-title">基于组件的分解模式</span></a><a class="page-link next" href="ch07.html" rel="next"><span class="page-label">下一章 · 第 7 章 →</span><span class="page-title">服务粒度</span></a><a class="pagination-home" href="../index.html">书籍概览与目录</a></nav>
+        <p class="source-note"><a href="../guide.html">全书导航：术语、案例与来源</a></p>
+      </article>
+    </div>
+  </main>
+  <footer class="site-footer"><div class="container footer-inner"><span>个人书架 / 中文读书笔记</span><a href="#main">回到顶部 ↑</a></div></footer>
+</body>
+</html>

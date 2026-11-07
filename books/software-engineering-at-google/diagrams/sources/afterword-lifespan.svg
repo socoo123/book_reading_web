@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="420" viewBox="0 0 720 420" role="img" aria-labelledby="title desc">
+  <title id="title">代码库预期生命周期中的两个时间尺度</title>
+  <desc id="desc">横轴是代码库的预期生命周期，从首次运行成功开始。之后产品方向、技术平台、底层库和操作系统的变化陆续到来，每次都需要团队响应。下方短条表示眼前的问题，方案今天要有效；长条覆盖整个预期生命周期，表示可持续性要求每次变化到来时系统仍能调整。</desc>
+  <!-- Original editable hand-written SVG; web export is an identical copy. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 15px; fill: var(--muted); }
+    .label { font-size: 18px; font-weight: 600; text-anchor: middle; }
+    .body { font-size: 16px; fill: var(--muted); }
+    .note { font-size: 14px; fill: var(--muted); text-anchor: middle; }
+    .end { text-anchor: end; }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.3; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .flow { fill: none; stroke: var(--line); stroke-width: 1.8; marker-end: url(#arrow); }
+    .change { stroke-dasharray: 5 5; }
+    .point { fill: var(--focus); stroke: var(--accent); stroke-width: 1.6; }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker></defs>
+  <rect width="720" height="420" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="28" y="40">首次运行成功，只是生命周期中的一个时刻</text>
+  <text class="sub" x="28" y="69">横轴是代码库的预期生命周期；下方两条横条是方案要兼顾的两个时间尺度</text>
+
+  <text class="note" x="437" y="100">陆续到来的变化（原文列举的几类，位置仅示意）</text>
+  <rect class="focus" x="35" y="112" width="136" height="44" rx="7"/>
+  <text class="label" x="103" y="140">首次运行成功</text>
+  <rect class="node" x="198" y="112" width="104" height="44" rx="7"/>
+  <text class="label" x="250" y="140">产品方向</text>
+  <rect class="node" x="323" y="112" width="104" height="44" rx="7"/>
+  <text class="label" x="375" y="140">技术平台</text>
+  <rect class="node" x="448" y="112" width="104" height="44" rx="7"/>
+  <text class="label" x="500" y="140">底层库</text>
+  <rect class="node" x="573" y="112" width="104" height="44" rx="7"/>
+  <text class="label" x="625" y="140">操作系统</text>
+
+  <path class="flow" d="M103 160V187"/>
+  <path class="flow change" d="M250 160V186"/>
+  <path class="flow change" d="M375 160V186"/>
+  <path class="flow change" d="M500 160V186"/>
+  <path class="flow change" d="M625 160V186"/>
+
+  <path class="flow" d="M103 196H692"/>
+  <text class="note end" x="692" y="186">时间</text>
+  <circle class="point" cx="103" cy="196" r="6"/>
+  <path class="point" d="M250 189 257 196 250 203 243 196Z"/>
+  <path class="point" d="M375 189 382 196 375 203 368 196Z"/>
+  <path class="point" d="M500 189 507 196 500 203 493 196Z"/>
+  <path class="point" d="M625 189 632 196 625 203 618 196Z"/>
+  <text class="note" x="250" y="224">需要响应</text>
+  <text class="note" x="375" y="224">需要响应</text>
+  <text class="note" x="500" y="224">需要响应</text>
+  <text class="note" x="625" y="224">需要响应</text>
+
+  <text class="note" x="64" y="265">尺度一</text>
+  <rect class="node" x="103" y="240" width="124" height="40" rx="6"/>
+  <text class="label" x="165" y="266">眼前的问题</text>
+  <text class="body" x="241" y="266">方案今天要有效</text>
+
+  <text class="note" x="64" y="336">尺度二</text>
+  <rect class="focus" x="103" y="300" width="589" height="62" rx="7"/>
+  <text class="label" x="398" y="327">预期生命周期：每次变化到来时仍能调整</text>
+  <text class="note" x="398" y="351">可持续性（sustainability）要覆盖的是这一整段</text>
+
+  <text class="note" x="360" y="398">实线：首次运行与时间推进　　虚线：外部变化到来</text>
+</svg>

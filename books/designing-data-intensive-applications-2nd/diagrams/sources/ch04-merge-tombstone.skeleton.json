@@ -1,0 +1,192 @@
+[
+  {
+    "type": "text",
+    "id": "title",
+    "x": 24,
+    "y": 18,
+    "text": "局部合并：删除标记仍有工作要做",
+    "fontSize": 25,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "subtitle",
+    "x": 24,
+    "y": 60,
+    "text": "S0 最旧，S2 最新；† 表示删除。本例不保留历史快照。",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "rectangle",
+    "id": "old",
+    "x": 24,
+    "y": 116,
+    "width": 210,
+    "height": 108,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.7,
+    "strokeStyle": "dashed",
+    "label": {
+      "text": "S0（未参与）\nb = 2",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "mid",
+    "x": 292,
+    "y": 116,
+    "width": 210,
+    "height": 108,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.7,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "S1\na=1，b=4，d=6",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "new",
+    "x": 550,
+    "y": 116,
+    "width": 210,
+    "height": 108,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.7,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "S2\nb=†，c=5",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "text",
+    "id": "outside",
+    "x": 24,
+    "y": 263,
+    "text": "更旧的 b 仍在这里。\n虚线框表示它不参加\n这一次压缩合并。",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "rectangle",
+    "id": "result",
+    "x": 316,
+    "y": 334,
+    "width": 420,
+    "height": 100,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.7,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "合并输出\na=1，b=†，c=5，d=6",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "midmerge",
+    "x": 397,
+    "y": 230,
+    "width": 50,
+    "height": 98,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        50,
+        98
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.6,
+    "strokeStyle": "solid",
+    "start": {
+      "id": "mid"
+    },
+    "end": {
+      "id": "result"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "newmerge",
+    "x": 655,
+    "y": 230,
+    "width": 50,
+    "height": 98,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        -50,
+        98
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.6,
+    "strokeStyle": "solid",
+    "start": {
+      "id": "new"
+    },
+    "end": {
+      "id": "result"
+    }
+  },
+  {
+    "type": "text",
+    "id": "pick",
+    "x": 452,
+    "y": 269,
+    "text": "同键保留较新版本",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "text",
+    "id": "risk",
+    "x": 24,
+    "y": 484,
+    "text": "若输出不保留 †，读取可能继续命中 S0 的 b=2，让旧值复活。",
+    "fontSize": 19,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "rule",
+    "x": 24,
+    "y": 524,
+    "text": "只有确认旧版本已处理、且无需保留历史状态，才能移除墓碑。",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  }
+]

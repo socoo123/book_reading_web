@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>第 5 章｜基于组件的分解模式 · Software Architecture: The Hard Parts · 架构提升读书笔记</title>
+  <meta name="description" content="沿六种组件分解模式理解尺寸计算、共同能力、展平、依赖分析、组件领域与领域服务，追踪 Sysops 演进并核查架构适应度函数的边界。">
+  <link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+  <script src="../../../assets/theme.js"></script>
+  <script src="../../../assets/reader.js" defer></script>
+  <link rel="stylesheet" href="../../../assets/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header reader-header"><div class="container header-inner">
+    <a class="brand" href="../../../index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5.5C8.5 3.8 5.8 3.6 2.5 4.5v14c3.3-.9 6-.7 9.5 1 3.5-1.7 6.2-1.9 9.5-1v-14c-3.3-.9-6-.7-9.5 1Zm0 0v14"/></svg>书架</a>
+    <a class="reader-book-title" href="../index.html" lang="en">Software Architecture: The Hard Parts</a>
+    <div class="theme-control" role="group" aria-label="外观" hidden><button type="button" data-theme-value="system" title="跟随系统"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path class="fill" d="M12 4a8 8 0 0 1 0 16Z"/></svg><span class="sr-only">跟随系统</span></button><button type="button" data-theme-value="light" title="浅色"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.6"/><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21M5.6 5.6l1.6 1.6M16.8 16.8l1.6 1.6M5.6 18.4l1.6-1.6M16.8 7.2l1.6-1.6"/></svg><span class="sr-only">浅色</span></button><button type="button" data-theme-value="dark" title="深色"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.5 14.6A7.8 7.8 0 0 1 9.4 4.5a7.8 7.8 0 1 0 10.1 10.1Z"/></svg><span class="sr-only">深色</span></button></div>
+  </div></header>
+  <main id="main" class="container reader-container">
+    <nav class="breadcrumb" aria-label="当前位置"><ol><li><a href="../../../index.html">书架</a></li><li><a href="../index.html">书籍概览</a></li><li aria-current="page">第 5 章</li></ol></nav>
+    <div class="reading-layout">
+      <aside class="toc"><nav aria-label="本页目录"><h2>本页目录</h2><ul>
+        <li><a href="#six-patterns">01　六种模式如何接成一条迁移路径</a></li>
+        <li><a href="#component-inventory">02　组件尺寸：先固定统计对象，再解释数字</a></li>
+        <li><a href="#size-governance">03　占比与标准差：把异常变成调查入口</a></li>
+        <li><a href="#reporting-resize">04　Sysops 的第一刀：报表按功能拆开，共享处理留下明确位置</a></li>
+        <li><a href="#gather-common">05　汇集共同领域能力：去掉重复，也看清新的集中点</a></li>
+        <li><a href="#flatten-definition">06　展平不是缩短所有路径，而是消除重叠的代码归属</a></li>
+        <li><a href="#flatten-sysops">07　同一条展平规则，在工单与调查上产生相反的重构方向</a></li>
+        <li><a href="#dependency-model">08　依赖分析：从类之间的引用，提升到组件之间的连接</a></li>
+        <li><a href="#sysops-dependencies">09　过滤共享库，改变的是观察视角，不是依赖事实</a></li>
+        <li><a href="#component-domains">10　创建组件领域：让业务分组进入命名空间</a></li>
+        <li><a href="#fitness-boundaries">11　架构适应度函数：守住声明过的规则，而非证明领域正确</a></li>
+        <li><a href="#domain-services">12　创建领域服务：直到这里，才真正跨过进程边界</a></li>
+        <li><a href="#chapter-outcome">13　把本章结果读成一条有依据的决策链</a></li>
+      </ul><p class="toc-note"><a href="../index.html">← 书籍概览</a></p></nav></aside>
+      <article class="article">
+        <header class="article-header"><p class="eyebrow">READING NOTES / CHAPTER 05</p><h1>第 5 章｜基于组件的分解模式</h1><p class="article-deck"><span lang="en">Component-Based Decomposition Patterns</span> · 先整理代码边界，再移动部署边界</p></header>
+        <p><a href="ch04.html">第 4 章</a>里，Sysops Squad 已经选择基于组件的分解：现有代码有可以辨认的组件，共享实现又较多，适合在共同代码库中逐步整理。现在的问题变成了怎样开始、每次重构留下什么，以及日常需求继续进入时，怎样避免刚整理好的结构再次混乱。</p>
+        <p>本章用六种相互衔接的模式回答这些问题。它们不是六种任选其一的服务拆分法，而是一条从组件盘点到领域服务的工作路径。Sysops Squad 是原书虚构案例；下面既跟踪其具体演进，也解释度量和自动检查究竟能证明什么。组件仍指代码组织单元，服务才是分别部署的可执行体。</p>
+        <details class="mobile-toc"><summary>本页目录 · 13 个小节</summary><nav aria-label="移动端本页目录"><ul>
+          <li><a href="#six-patterns">01　六种模式如何接成一条迁移路径</a></li>
+          <li><a href="#component-inventory">02　组件尺寸：先固定统计对象，再解释数字</a></li>
+          <li><a href="#size-governance">03　占比与标准差：把异常变成调查入口</a></li>
+          <li><a href="#reporting-resize">04　Sysops 的第一刀：报表按功能拆开，共享处理留下明确位置</a></li>
+          <li><a href="#gather-common">05　汇集共同领域能力：去掉重复，也看清新的集中点</a></li>
+          <li><a href="#flatten-definition">06　展平不是缩短所有路径，而是消除重叠的代码归属</a></li>
+          <li><a href="#flatten-sysops">07　同一条展平规则，在工单与调查上产生相反的重构方向</a></li>
+          <li><a href="#dependency-model">08　依赖分析：从类之间的引用，提升到组件之间的连接</a></li>
+          <li><a href="#sysops-dependencies">09　过滤共享库，改变的是观察视角，不是依赖事实</a></li>
+          <li><a href="#component-domains">10　创建组件领域：让业务分组进入命名空间</a></li>
+          <li><a href="#fitness-boundaries">11　架构适应度函数：守住声明过的规则，而非证明领域正确</a></li>
+          <li><a href="#domain-services">12　创建领域服务：直到这里，才真正跨过进程边界</a></li>
+          <li><a href="#chapter-outcome">13　把本章结果读成一条有依据的决策链</a></li>
+        </ul></nav></details>
+
+        <section id="six-patterns"><h2><span class="section-number">01</span>六种模式如何接成一条迁移路径</h2>
+          <p>作者建议，初次整理单体时依次应用六种模式；迁移期间有新功能或结构变化，再按需要单独重用。顺序的意义在于让后一项工作建立在较可靠的输入上，而不是要求一次性停掉业务开发，完成一份永不变化的大设计。</p>
+          <p>第一步是<strong>识别组件并确定尺寸（Identify and Size Components）</strong>：先知道有哪些积木，哪些积木过大、职责不明。第二步是<strong>汇集共同领域组件（Gather Common Domain Components）</strong>：找出散落在不同地方、实际重复的业务能力，避免未来拆出好几个几乎一样的服务。第三步是<strong>展平组件（Flatten Components）</strong>：消除“父目录既装代码、又包含其他组件”的归属歧义，使每份代码都落到清楚的组件里。</p>
+          <p>接着是<strong>确定组件依赖（Determine Component Dependencies）</strong>。此时组件清单已经比较可信，才能判断连接有多密、哪里值得重构，以及迁移大致需要多少工作。第五步<strong>创建组件领域（Create Component Domains）</strong>，把相关组件组合成较粗的逻辑领域，并让命名空间表达这种归属。第六步<strong>创建领域服务（Create Domain Services）</strong>，才把整理过的领域移到分别部署的服务里。</p>
+          <figure class="concept-figure"><a href="../diagrams/exports/ch05-roadmap.svg" target="_blank" rel="noopener"><img src="../diagrams/exports/ch05-roadmap.svg" width="720" height="500" alt="六步从识别与定尺寸、汇集共同能力、展平组件、分析依赖、形成组件领域，到提取领域服务；前五步主要在单体内整理，最后一步改变部署边界。"></a><figcaption>图 5-1：原创路线图，依据原书图 5-1 重组。实线箭头表示首次应用的工作顺序，虚线框区分单体内的结构整理与独立部署；不是运行调用图。迁移期间可返回相关步骤维护结构。点击<a href="../diagrams/exports/ch05-roadmap.svg" target="_blank" rel="noopener">查看大图</a>。</figcaption></figure>
+          <p>先盘点再分析依赖，可以避免把一个巨大 Reporting 包当成不可再分的黑盒；先整理领域再提取服务，可以减少刚搬出去就发现漏了一批组件的返工。这里也保留了选择空间：并不是每个组件都成为服务，也不是所有领域服务最终都必须继续拆成微服务。</p>
+          <p>为了让结构调整进入正常开发流程，作者使用<strong>架构故事（architecture story）</strong>记录重构任务。它交代结构为什么要变、服务于什么业务或架构特性，例如“拆开不同类别的报表，使其职责和迁移边界更清楚”。它不同于用户故事中的新功能，也不只是没有目标的代码清理。原书把它与通常可延后清理的技术债故事作区分；这是本书的工作分类，不表示现实中的技术债一定不紧急。</p>
+          <p>架构故事安排改变，架构适应度函数持续观察改变是否被保持。二者连起来，才使迁移成为一条能够推进、也能够发现退化的路径。</p>
+        </section>
+
+        <section id="component-inventory"><h2><span class="section-number">02</span>组件尺寸：先固定统计对象，再解释数字</h2>
+          <p>识别组件不只是扫描目录名。清单至少要包含可解释的组件名称、对应命名空间、语句数、全系统占比和文件数。名称应能说明职责：Billing History 比含混的 Manager 更容易让人判断哪些代码属于它。命名空间则使架构图中的方框能够回到真实代码位置。</p>
+          <p>作者倾向于用<strong>语句数（statements）</strong>衡量尺寸，而不是文件数、类数或代码行数。原因是开发者可以把同一处理过程写成一个大类或很多小类，也可以改变换行和格式；语句数相对接近代码实际做了多少处理。但它仍只是规模的代理指标，不等于业务复杂度、圈复杂度、运行成本或修改风险。一个计算密集的表达式可能很短，一段大量字段映射则可能很长。</p>
+          <p>设组件 i 的语句数为 Sᵢ，同一统计范围内应用的总语句数为 T，则其百分比为：</p>
+          <pre><code>Pᵢ = 100 × Sᵢ / T</code></pre>
+          <p>比较的前提是分子、分母采用相同规则。若只数生产源代码，二者都应排除测试和生成代码；若组件按命名空间划分，就不要让一个文件同时被父目录和子目录递归计数。特别是在尚未展平之前，<code>ss.ticket</code> 的自有代码与 <code>ss.ticket.assign</code> 的代码应分开归属，否则既会夸大组件尺寸，也会使占比总和失真。未归属代码应单独显示，不能悄悄从分母消失。</p>
+          <p>语句识别也不能简化为数分号或换行。原书用这些符号帮助理解 statement，但字符串、注释、复合语句和语言语法都会影响结果；实际应使用同一工具的语言解析口径，再按组件聚合。这里关注的是可重复的相对比较，不是让不同语言的语句数具备完全相同的业务含义。</p>
+          <p>文件数仍有辅助价值。原书假设一个组件有 18,409 条语句却只有两个文件，提示内部类结构可能过于集中；这不直接决定该组件应拆成几个服务。<strong>组件尺寸是寻找职责边界的线索，职责边界才是重构的理由。</strong> 作者明确说，如果大组件中找不到清楚的子领域，就可以暂时保留，而不是为使图表整齐而均分代码。</p>
+        </section>
+
+        <section id="size-governance"><h2><span class="section-number">03</span>占比与标准差：把异常变成调查入口</h2>
+          <p>原书给了三种尺寸治理方式。第一种比较上一次与本次组件清单，提醒新增或删除的组件。它守住的是架构库存；命名空间重命名也会表现为一次删除和一次新增，不能自动解释成增加了业务能力。示例 5-1 会更新存储清单并发送提醒，因此它首先是变化通知机制，不是自动批准新组件的决策程序。</p>
+          <p>第二种设定占比阈值。组件只有十个时，30% 可能足以抓出明显的大块；有五十个组件时，10% 就可能值得注意。这两个数都是原书示例，不是通用合格线。占比还受其他组件变化影响：某组件一行没改，应用删掉其他代码后，它的占比也会升高。报警要同时给出语句数和统计范围，才能判断实际发生了什么。</p>
+          <p>第三种用均值与标准差发现离群尺寸。原书印刷页 88 的公式采用分母 N−1，即<strong>样本标准差</strong>；页 89 的伪代码也采用同一口径。令 N 为组件数、xᵢ 为第 i 个组件的语句数：</p>
+          <pre><code>均值 μ = Σxᵢ / N
+样本标准差 s = √[Σ(xᵢ − μ)² / (N − 1)]
+离均值的标准差倍数 zᵢ = |xᵢ − μ| / s</code></pre>
+          <p>本地提取文本丢失了根号等排版信息；回看印刷 88—89／PDF 106—107，原书确实有根号，不能把方差当标准差。若将当前全部组件看作总体，也可另用分母 N 的总体标准差，但必须固定并注明口径，不能拿两种结果共用未经调整的基线。以下计算沿用原书 N−1。</p>
+          <p>作者在说明中提出尺寸通常落在均值附近一至两个标准差内，示例 5-3 却用 <code>z &gt; 3</code> 报警。前者是期望的均衡程度，后者是宽松的异常阈值，并非同一条规则。示例还取了绝对值，所以足够小的组件也可能报警，不是只检查超大组件；若只关心大块，应使用 <code>xᵢ &gt; μ + k·s</code> 这样的单侧条件。</p>
+          <p>这套算法需要两个必要边界：N 小于 2 时不能计算样本标准差；s 为 0 时所有尺寸相同，不应再除以零。代码规模往往偏斜，巨大组件本身还会拉高均值和标准差，因此“未超过三倍”不证明职责合适，“超过三倍”也不证明必须拆。这里不是正态分布检验，更不能把报警概率解释为某种质量置信度。</p>
+          <p>以原书表 5-2 的全部 18 个组件复算，总计 82,931 条语句，μ 约为 4,607.28，s 约为 6,085.01。Reporting 有 27,765 条语句，占比约 33.48%，z 约为 3.806，因此会触发示例中的三倍标准差规则。这些均值、标准差和 z 是本笔记根据原表复算的数值，不是书中已经报告的测量结论。</p>
+        </section>
+
+        <section id="reporting-resize"><h2><span class="section-number">04</span>Sysops 的第一刀：报表按功能拆开，共享处理留下明确位置</h2>
+          <p>11 月 2 日，Addison 盘点 Sysops Squad，发现除 Reporting 外，各组件大体处于相近范围。原表将 Reporting 占比显示为整数 33%，它拥有 162 个文件、27,765 条语句。这个数字说明值得深入调查；真正支持拆分的发现，是内部包含三类目的不同的报告。</p>
+          <p>工单报表关注工单分布、每日／每周／每月数量和解决时长；专家报表关注专家利用率和分布；财务报表关注维修成本、专家成本与利润。与此同时，三者共享计算工具、查询、报表分发和数据格式化等处理。如果只按三类报告切开并各复制一份公共处理，组件会变小，却埋下多份共享实现的维护负担。</p>
+          <p>Addison 因此创建架构故事，由开发者 Sydney 把原组件整理为三个业务报表组件和一个 Reporting Shared 组件。下面是原表 5-3 的四个结果，占比列由本笔记按相同总量复算，保留两位小数。</p>
+          <div class="table-scroll" tabindex="0" role="region" aria-label="报表拆分后的尺寸"><table><thead><tr><th scope="col">新组件</th><th scope="col">命名空间</th><th scope="col">语句数</th><th scope="col">文件数</th><th scope="col">占全应用比例</th></tr></thead><tbody>
+            <tr><td>报表共享处理</td><td><code>ss.reporting.shared</code></td><td>5,309</td><td>20</td><td>6.40%</td></tr>
+            <tr><td>工单报表</td><td><code>ss.reporting.tickets</code></td><td>6,955</td><td>58</td><td>8.39%</td></tr>
+            <tr><td>专家报表</td><td><code>ss.reporting.experts</code></td><td>7,734</td><td>48</td><td>9.33%</td></tr>
+            <tr><td>财务报表</td><td><code>ss.reporting.financial</code></td><td>7,767</td><td>36</td><td>9.37%</td></tr>
+          </tbody></table></div>
+          <p>四项语句数相加仍为 27,765，文件数相加仍为 162；表中整体规模没有减少，改变的是代码归属。组件清单也从 18 项变为 21 项。这说明尺寸治理不是删掉三分之一的业务，而是让不同处理目的成为能够分别讨论的结构单元。</p>
+          <aside class="notice correction"><p>原表 5-3 把 5,309 条语句的 Reporting Shared 写作 7%。按原书给定总量复算约为 6.40%，通常四舍五入到整数应为 6%；其他三项约为 8%、9%、9%。这是一处局部数值不一致，本笔记保留原始语句数并明确使用复算占比，不将 7% 当成精确比例，也不据此改变案例决策。</p></aside>
+          <p>完成以后，<code>ss.reporting</code> 这个名字仍存在，但只作为组织下属组件的子领域，不再有一个与三个子组件重叠的 Reporting 组件。这一点很重要：<strong>命名空间存在，不意味着它在组件清单里仍应占一行。</strong> 到这里，所有代码仍在单体里；团队还没有因为拆出了三个报表包，就部署三个报表服务。</p>
+        </section>
+
+        <section id="gather-common"><h2><span class="section-number">05</span>汇集共同领域能力：去掉重复，也看清新的集中点</h2>
+          <p>尺寸整理之后，第二种模式寻找跨组件重复的<strong>领域功能</strong>。本书把它与日志、指标、安全等<strong>基础设施功能</strong>区分：前者参与特定业务处理、通常由部分流程共享，后者提供广泛的运行支持。这是识别职责的线索，不是按“使用者数量”机械分类；同一个通知或校验名称，可能承载业务规则，也可能只是技术工具。</p>
+          <p>原书举例，如果不同组件都依赖 <code>SMTPConnection</code>，可能有邮件通知处理散落在多处；如果几个命名空间都以 <code>.audit</code> 结尾，也值得检查它们是否都在记录谁执行了什么动作。这里应继续看语义：消息选择、接收者规则和业务政策是否确实相同？仅仅都发送邮件，不能自动证明应将所有上下文合并。</p>
+          <p>11 月 5 日，Addison 找到三个通知组件：Customer Notification 负责一般客户通知，Ticket Notify 告知客户专家正在前来，Survey Notify 发送客户调查邮件。团队不仅看到了名字相近，也确认实现十分相似，因此考虑汇集为 <code>ss.notification</code>。Austen 担心的是：消除重复是否同时制造了一个依赖集中点？</p>
+          <div class="table-scroll" tabindex="0" role="region" aria-label="通知合并前后的传入耦合"><table><thead><tr><th scope="col">合并前的组件</th><th scope="col">传入耦合 Ca</th><th scope="col">原书列出的使用方</th></tr></thead><tbody>
+            <tr><td>Customer Notification</td><td>2</td><td>Billing Payment、Support Contract</td></tr>
+            <tr><td>Ticket Notify</td><td>2</td><td>Ticket、Ticket Route</td></tr>
+            <tr><td>Survey Notify</td><td>1</td><td>Survey</td></tr>
+            <tr><td>合并后的 Notification</td><td>5</td><td>上述五个不同组件</td></tr>
+          </tbody></table></div>
+          <p>这里按<strong>不同组件</strong>去重计数，不按调用次数或类数计数。原书表 5-5、5-6 中三个使用方集合互不重叠，所以合并前的 2+2+1 与合并后的 5 相等。一般情况下合并后的 Ca 应是使用方集合并集的大小；若同一组件原来依赖两个通知组件，不能重复加两次。</p>
+          <p>总连接数没有增加，不等于影响范围没有变化。以前只改问卷通知实现，直接受影响的是调查路径；现在共同实现发生不兼容变化，五个使用方都可能需要关心。反过来，一个共有缺陷也可以集中修复，而不必维护三份近似实现。原书的决定是：两位架构师接受这个集中程度，用减少重复换取一个明确的共享点，而不是声称合并完全没有代价。</p>
+          <p>Sydney 随后依据架构故事移走三份旧组件中的代码，形成 Notification；组件数量从 21 变成 19。这个阶段只决定了共同功能的代码归属，并没有规定必须部署成一个共享服务。共享库与共享服务的取舍属于第 8 章；先汇集，能够让未来选择针对一份清楚的能力作出。</p>
+          <p>这一模式的自动检查尤其需要克制。示例 5-4 按命名空间末段找同名项，只能产生候选：<code>.notify</code> 与 <code>.notification</code> 反而不会精确匹配，<code>.validate</code> 同名又未必同义。原伪代码仅把后遇到的重复项加入结果，实际提醒最好按末段分组，列全相关组件。排除清单应记录具体已审查关系；仅排除一个常见单词，会同时隐藏未来新增的不同情况。</p>
+          <p>示例 5-5 声称寻找跨组件共同使用的类，但其 <code>get_source_files(component)</code> 若只是“该组件拥有的文件”，遍历交集并不能找到谁引用同一个类：一个文件本来只归属一个组件。要实现文字所述目标，输入必须改为每个组件<strong>实际引用的类标识集合</strong>，并反向汇总使用方。查相同文件名、查复制代码、查共同依赖是三件不同的事；这个示例不能在未定义辅助函数语义时被当成完整实现。即使找到了共同依赖，是否为可汇集的领域能力仍需人工解释。</p>
+        </section>
+
+        <section id="flatten-definition"><h2><span class="section-number">06</span>展平不是缩短所有路径，而是消除重叠的代码归属</h2>
+          <p>第三种模式给组件增加了一条明确约定：<strong>组件位于命名空间／目录树的叶节点；有子节点的命名空间只做领域或子领域容器，不直接存放实现代码。</strong> 这里“根命名空间”指任何被继续扩展的节点，不只是整棵树最顶端的 <code>ss</code>。所谓“孤儿类（orphaned classes）”，就是直接落在这些非叶节点中的代码。</p>
+          <p>例如 <code>ss.survey</code> 自己有五个类，下面又有含七个类的 <code>ss.survey.templates</code>。如果 Survey 既指父级的五个类，又指包含模板的整体，计算尺寸、画依赖、决定提取范围时就容易使用不同边界。原书将这类父级代码称为孤儿，并不是说它没有包声明、无人维护或不会运行，而是它不符合本章选定的组件归属模型。</p>
+          <p>有两种合法调整方向。若调查问卷和模板实际上是一个简单能力，可以把模板代码并回 <code>ss.survey</code>，删除原模板子节点，使 Survey 成为叶节点。若父级处理确有不同职责，则把父级代码移到新的叶节点，例如 <code>.create</code> 和 <code>.process</code>，保留 <code>.templates</code>；此时 <code>ss.survey</code> 只代表子领域。</p>
+          <figure class="concept-figure"><a href="../diagrams/exports/ch05-flatten.svg" target="_blank" rel="noopener"><img src="../diagrams/exports/ch05-flatten.svg" width="720" height="510" alt="左侧原结构中父级 survey 和子级 templates 都装代码；右侧两种选择分别将模板合入 survey，或把父级代码移到 create 和 process，保留 templates，使代码只在叶节点。"></a><figcaption>图 5-2：原创结构示意，依据原书图 5-6—5-10。连线只表示命名空间包含关系；“有代码／无代码”直接标注归属。两种结果是候选方案，不是必须连续执行的步骤；右下方案为原书解释性例子，并非 Sysops 最终的调查组件决定。点击<a href="../diagrams/exports/ch05-flatten.svg" target="_blank" rel="noopener">查看大图</a>。</figcaption></figure>
+          <p>若父级还有接口、抽象类和工具等共享代码，也要给它一个明确的叶节点，例如 <code>.shared</code> 或 <code>.sharedcode</code>。共享不意味着无归属。作者建议选择一致、可辨认且不与现有业务名冲突的后缀，便于统计共享组件数量和共享代码占比。原书假设共享代码占到 45%，会提示未来的库依赖可能很重；45% 不是无法迁移的硬阈值，库数量也不能仅凭后缀数量一一推算。</p>
+          <p>展平并不要求所有组件拥有相同的目录深度。<code>ss.customer.profile</code> 与 <code>ss.customer.billing.payment</code> 可以同时是叶组件，<code>.billing</code> 仍然是清楚的子领域。该模式追求的是“哪份代码属于哪个组件”无歧义，而不是让所有包都只剩两段。它也不宣称层次化模块在所有语言和架构里都是坏设计；这是为本条迁移路径选择的一种便于统计和治理的组织约定。</p>
+        </section>
+
+        <section id="flatten-sysops"><h2><span class="section-number">07</span>同一条展平规则，在工单与调查上产生相反的重构方向</h2>
+          <p>11 月 10 日，Addison 检查合并通知后的清单，找到 <code>ss.ticket</code> 与 <code>ss.survey</code> 两处父子混合。工单父级有 45 个文件、7,009 条语句；分派和投递已经分别位于 <code>.assign</code> 与 <code>.route</code>。把它们都合并回工单父级，形式上能够展平，却会把复杂且经常变化的分派功能重新揉进一个大组件。</p>
+          <p>与 Sydney 分析后，团队选择另一方向：保留分派和投递，把父级 45 个类对应的三类处理移到新的叶组件。<code>ss.ticket.maintenance</code> 负责创建、更新、取消等工单维护；<code>ss.ticket.completion</code> 负责完成工单并启动客户调查；<code>ss.ticket.shared</code> 容纳共同代码和工具。于是 <code>ss.ticket</code> 成为子领域，下面是五个明确组件。</p>
+          <p>原表 5-10 标题说“原 Ticket 拆成三个新组件”，表里却列了五行。这不意味着五个都是新增：前三项 Shared、Maintenance、Completion 是新增，Assign 与 Route 是保留的已有组件。该变化让清单增加两项，而不是四项。</p>
+          <p>调查问卷的情况相反。它较简单、变化少；原模板包的作者 Skyler 也确认，没有必须保持分离的理由。团队因此把 <code>ss.survey.templates</code> 的七个类合并进含五个类的 <code>ss.survey</code>，得到一个含十二个类的调查组件，不再保留模板子组件。沿原表语句数相加是 3,876，但原书没有提供这次重构后完整的重新测量表，不能把该加总当成新的实测报告。</p>
+          <p>工单拆开、调查合并，看起来方向相反，实际遵循同一个目标：根据复杂度、变化方式和职责，使代码属于清楚的组件。整理后的清单共 20 个组件，所有组件均处于叶节点。这样，下一步分析依赖时，才不会同时把父组件与其子组件作为重叠节点计算。</p>
+          <p>示例 5-6 的治理意图很直接：某个命名空间如果有后代节点，又直接含源代码，就报告孤儿类。实现时需要建立完整命名空间前缀，而不只是比较一个裸单词；检查的是该节点<strong>直接</strong>拥有的代码，而不是递归包含子目录代码。原伪代码写作 <code>NOT last_node(component_node_list)</code>，没有明确与当前 node 比较，不能照字面当作可执行条件；其意图应落实为“当前节点不是叶节点”。这个检查能维持结构规则，却不能替团队选择该向上合并还是向下拆开。</p>
+        </section>
+
+        <section id="dependency-model"><h2><span class="section-number">08</span>依赖分析：从类之间的引用，提升到组件之间的连接</h2>
+          <p>第四种模式回答迁移是否可行、工作量大致多大、需要以重构还是重写为主。它观察的是<strong>组件间</strong>依赖：一个组件内的类使用另一组件内的类，才形成跨组件连接。同一组件内部可能仍需改善，但不属于这张依赖图的计数范围。</p>
+          <p>若 Survey 调用 Notification，箭头为 <code>Survey → Notification</code>：对 Survey 是传出耦合 Ce，对 Notification 是传入耦合 Ca。沿用<a href="ch04.html">第 4 章</a>对口径的要求，本章数不同的外部组件，而不是把每个方法调用都计一次。总耦合 <code>Ct = Ca + Ce</code>；如果 A 与 B 双向依赖，B 会分别贡献 A 的一个传入和一个传出，因此 Ct 并不等于“不分方向的不同邻居数”。</p>
+          <p>原书用高尔夫球、篮球和客机比喻三种工作量：连接很少时，通常可以主要搬动已有代码；一部分很密、一部分较松时，可能需要重构与局部重写结合；密集纠缠时，直接拆分代价可能高得不值得。它是帮助沟通数量级的经验图解，不是从连线数自动得出工期或“必须全量重写”的算法。数据库、测试能力和行为复杂度仍然会改变结论。</p>
+          <p>分析还会揭示可重构的集中点。原书假设组件 A 有 20 个使用方，其中 14 个只用一小块功能；如果两组使用方和职责可以清楚分开，就可以形成 Ca 为 14 的 A1 与 Ca 为 6 的 A2。这样不是抹掉了 20 条需要，而是使大部分实现不再承受全部外部契约。这个数字成立的前提是使用方确实按例子分开，并且拆分没有新增未计入的 A1/A2 依赖；不能将其当成所有拆分都会降低总耦合的定律。</p>
+          <p>原书示例 5-8 建议总耦合超过 15 时提醒，但其伪代码在每个源文件循环中覆盖 <code>total_count</code>，没有给出组件级聚合与去重，循环后可能只剩最后一个文件的结果。PDF 原页也存在这一写法，并非提取导致。下面是本笔记澄清计数意图的伪代码，不是作者原实现，也不是可直接运行的扫描器：</p>
+          <pre><code>E = 空集合
+对每条已解析的类依赖 (u → v)：
+    A = u 所属组件
+    B = v 所属组件
+    若 A、B 均在分析范围内，且 A ≠ B：
+        E 加入 (A, B)                 # 相同组件对只保留一次
+
+对每个组件 A：
+    incoming = {B | (B, A) 属于 E}
+    outgoing = {B | (A, B) 属于 E}
+    Ca = incoming 的元素数
+    Ce = outgoing 的元素数
+    若 Ca + Ce &gt; 选定阈值：报告 A、Ca、Ce 和对应依赖</code></pre>
+          <p>它要求已经有可信的“类→组件”映射以及静态依赖输入。假设 A 的十个方法都使用 B，Ce 仍为 1；若 B 也使用 A，A 的 Ca 为 1、Ct 为 2。这能验证去重和方向，却不会发现未建模的反射、配置调用、共享数据库或运行时协作。因此，组件依赖图只是第 2 章更广泛静态／动态耦合分析的一层。</p>
+        </section>
+
+        <section id="sysops-dependencies"><h2><span class="section-number">09</span>过滤共享库，改变的是观察视角，不是依赖事实</h2>
+          <p>11 月 15 日，Addison 用 IDE 插件生成 Sysops 的组件依赖图，最初觉得连接很多。进一步分析发现，Notification 的集中依赖符合共享能力的角色；工单和报表内部的大量连线，则有不少指向各自的 Shared 组件，那里主要是接口、辅助类和实体类等编译期引用。</p>
+          <p>原书图 5-16 到图 5-17 的具体动作，是过滤 Ticket Shared 与 Reporting Shared 这两个预计以共享库承载的组件及其连接。<strong>Notification 没有一起删掉。</strong> 它虽然同样具有“共享”性质，却承担业务处理；不能看到 shared 一词就把所有公共组件从风险视图里排除。</p>
+          <p>过滤后的核心功能连接较少，Addison 与 Austen 因而判断，大多数组件相对自包含，Sysops 适合继续走分布式迁移路线。这个判断结合了依赖类型：不是每条编译时类型引用都必然变成一次远程服务调用，所以不能把未分类的全部连线直接当作未来服务调用图。</p>
+          <p>但共享库依赖仍然存在。一个实体类或接口的变化，可能要求多个使用方升级、重新测试甚至协调发布；若把共享库从图里隐藏后就忘记它，仍会低估迁移负担。本笔记建议把原完整图与过滤后的功能图并存，分别解释构建／变更关系和候选运行协作。这是对原书分析方式的边界补充，不是故事里已经实施的新工具。</p>
+          <p>原书后期两幅图为无向连线示意，Notification 的连线也没有完整复现早期表 5-5／5-6 的五个使用方。它们不能被当作同一时刻、同一口径下可逐边核对的完整依赖清单；本笔记的合并计数依据明确列出使用方的两张表，后期图只用于解释过滤前后的视角，不补造每条边的方向或变更原因。</p>
+          <p>本阶段形成的是继续迁移的可行性判断，还不是最终服务粒度，也没有证明共享数据库已解耦。前面的整理让“哪些代码相关”变清楚，接下来要让“哪些业务责任适合放在一起”同样清楚。</p>
+        </section>
+
+        <section id="component-domains"><h2><span class="section-number">10</span>创建组件领域：让业务分组进入命名空间</h2>
+          <p>第五种模式把一组相关组件放进<strong>组件领域（component domain）</strong>。组件是构件，领域是候选服务范围；二者常是一对多关系。命名空间提供可执行的归属表达，例如 <code>ss.customer.billing.payment.<wbr>MonthlyBilling</code> 中，<code>customer</code> 是领域，<code>billing</code> 是子领域，<code>payment</code> 是组件，<code>MonthlyBilling</code> 才是类。</p>
+          <p>领域不是仅凭已有目录自动推出来的。11 月 18 日，Addison、Austen 与产品负责人 Parker 一起讨论，确定五组。业务协作的作用在于解释哪些功能共同服务一个目的；如果有组件无处安放，应该继续讨论分组，而不是为了凑齐五个框随意塞进去。</p>
+          <div class="table-scroll" tabindex="0" role="region" aria-label="Sysops 五个组件领域"><table><thead><tr><th scope="col">组件领域</th><th scope="col">归入的组件</th><th scope="col">命名空间前缀</th></tr></thead><tbody>
+            <tr><td>工单 Ticketing</td><td>工单共享、维护、完成、分派、投递；客户调查；知识库维护与搜索，共 8 项</td><td><code>ss.ticket</code></td></tr>
+            <tr><td>客户 Customer</td><td>客户资料、计费支付、账单历史、支持合同，共 4 项</td><td><code>ss.customer</code></td></tr>
+            <tr><td>报表 Reporting</td><td>共享报表处理、工单报表、专家报表、财务报表，共 4 项</td><td><code>ss.reporting</code></td></tr>
+            <tr><td>管理 Admin</td><td>专家资料、内部用户维护，共 2 项</td><td><code>ss.admin</code></td></tr>
+            <tr><td>共享 Shared</td><td>登录、通知，共 2 项</td><td><code>ss.shared</code></td></tr>
+          </tbody></table></div>
+          <p>这些数字由原书表 5-12、5-15—5-18 交叉整理，总计仍为 20 个组件。Shared 是本次方案的逻辑分组；不能因为称为“领域”，就推定它已经构成一个经过完整领域驱动设计论证的限界上下文。</p>
+          <p>落地的工作是实际重构命名空间。知识库维护从 <code>ss.kb.maintenance</code> 变为 <code>ss.ticket.kb.maintenance</code>，搜索采用相同前缀；调查从 <code>ss.survey</code> 变为 <code>ss.ticket.survey</code>。已有工单五组件保持名称。这样，调查虽然面向客户，却按本次业务责任划到工单领域，因为它属于维修完成后的反馈流程。</p>
+          <p>客户侧把 <code>ss.billing.payment</code> 与 <code>ss.billing.history</code> 分别移到 <code>ss.customer.billing.payment</code>、<code>ss.customer.billing.history</code>，支持合同移到 <code>ss.customer.supportcontract</code>，客户资料保持 <code>ss.customer.profile</code>。报表四组件此前已经位于 <code>ss.reporting</code> 之下，无需再调整。</p>
+          <p>管理侧把专家资料改为 <code>ss.admin.experts</code>，而不是保留多余的 <code>expert.profile</code> 子层次；用户维护成为 <code>ss.admin.users</code>。共享侧将登录和通知分别放入 <code>ss.shared.login</code>、<code>ss.shared.notification</code>。这个过程既调整路径，也更新代码引用；只改架构图上的框名，并不算完成了模式。</p>
+          <aside class="notice correction"><p>这里有两处原书自身的不一致，已回看原页。印刷页 125 的过渡句说把 billing 和 survey 放入 Customer → 同页表 5-15 明确把 Survey 放入 Ticket，表 5-16 列的则是 Billing、Customer Profile 和 Support Contract → 本笔记按详细表格和页 123 的五领域说明，将该句的 survey 视为笔误，客户领域包含支持合同。印刷页 126 的表 5-18 将 Login 目标写成 <code>aa.shared.login</code> → 全章应用前缀及对应共享领域都是 <code>ss</code> → 本笔记采用 <code>ss.shared.login</code>，明确记录修正，不把它当成新应用命名空间。</p></aside>
+        </section>
+
+        <section id="fitness-boundaries"><h2><span class="section-number">11</span>架构适应度函数：守住声明过的规则，而非证明领域正确</h2>
+          <p>到这里，适合自动化的事情已经比较明确：发现组件清单变化，发现尺寸离群，提醒可能重复的领域能力，检查父节点是否又出现代码，限制组件依赖，以及约束领域归属。但不同检查提供的证据不同。共享功能候选需要人工解释；清楚的包位置和禁止引用关系，则可以给出直接违规反馈。</p>
+          <p>原书示例 5-9 用 ArchUnit 表达“工单维护不应访问专家资料”，核心方法是 <code>accessClassesThat()</code>。按官方指南和 API 说明，它匹配字段访问、方法与构造器调用这类访问关系，<strong>并不等价于所有类型依赖</strong>。假设工单维护只声明一个专家类型字段、继承某类型或使用其注解，却没有对应成员访问，不能靠这一条规则宣称已经禁止所有依赖；更广的静态依赖意图应选 <code>dependOnClassesThat()</code>，并确认导入范围和具体规则。</p>
+          <p>这也不是说后一种规则能观察整个系统。ArchUnit 分析导入的 Java 字节码，不能仅凭包关系证明数据库访问、反射路径或远程调用符合领域边界。<code>myClasses</code> 包含哪些生产类、怎样处理第三方库、是否遗漏调用者，都会影响检查范围。第 1 章所说“在这些输入下没有发现这一类违规”，在这里尤其适用。</p>
+          <p>领域治理又是另一层。示例 5-10 允许类位于 ticket、customer 或 admin 包树，用的是多个 <code>orShould()</code>，含义是每个受检类落在其中之一；它不要求三个领域一定存在，不检查类的职责是否放对，也不禁止跨领域调用。它只是三个领域的通用示例，不能原样拿来验证 Sysops 的五领域结果，否则 Reporting 和 Shared 会被误报。</p>
+          <p>服务提取之后，示例 5-11 要求工单服务的受检类位于 <code>..ss.ticket..</code>。这可以发现误放进来的包，却不能防止开发者把无关业务也改名放到 ticket 下。并且 <code>..</code> 匹配任意数量的包段，<code>..ss.ticket..</code> 表示包路径中包含这一段，不是严格的“从字符串 ss.ticket 开始”。若约束的是确定应用根下的命名空间，应在规则中使用真实完整前缀，并限制受检类范围。</p>
+          <p>同样，类都位于 ticket 包树，不意味着根节点无代码；要维持展平约定，还得同时运行非叶节点检查。归属检查、依赖检查和业务内聚判断互相补充，不能互相代替。它们也不验证客户调查邮件真的送达、工单分派真的正确或服务具有故障隔离能力。</p>
+          <p>作者让大部分适应度函数进入 CI/CD，并以提醒架构师为常见反馈。它们的价值是让局部维护引起的结构变化及时可见。实际是警告还是失败，应对应规则的意图；不能把原书的 <code>send_alert</code> 自动描述为已经阻断发布，也不能声称展示了伪代码就已经在 Sysops 代码库执行过。</p>
+        </section>
+
+        <section id="domain-services"><h2><span class="section-number">12</span>创建领域服务：直到这里，才真正跨过进程边界</h2>
+          <p>第六种模式把已经整理好的组件领域提取为<strong>领域服务（domain service）</strong>：这是包含某个领域完整能力的粗粒度、分别部署的可执行单元。前五步改善的是单体内部结构；这一步需要创建新的项目或构建范围，并让原来访问本地功能的用户界面改为远程访问。</p>
+          <p>原书将基于服务的架构作为第一站：统一 UI 访问几个粗粒度领域服务，基本拓扑允许它们继续共享单体数据库。这样，团队可以先理解和验证各领域的行为，再决定哪些领域值得进一步细化，而不必一开始同时承担细粒度服务、数据库拆分、分布式事务和复杂工作流的全部负担。</p>
+          <figure class="concept-figure"><a href="../diagrams/exports/ch05-extract-domain.svg" target="_blank" rel="noopener"><img src="../diagrams/exports/ch05-extract-domain.svg" width="720" height="450" alt="左侧单体包含已整理的报表领域和其他领域；右侧报表成为独立服务，其他领域暂留单体，用户界面开始远程访问报表。两边仍连接同一数据库，逻辑归属、部署边界与数据边界分别标明。"></a><figcaption>图 5-3：原创阶段示意，依据原书图 5-20、5-21。中间箭头表示一次提取；右侧实线箭头表示 UI 远程访问和数据依赖，不表示完整调用链或事务。共享数据库说明本次先改变部署边界，数据独立性仍待处理。点击<a href="../diagrams/exports/ch05-extract-domain.svg" target="_blank" rel="noopener">查看大图</a>。</figcaption></figure>
+          <p>图中的 Reporting 提取用于说明机制，不是原书公布的实际首个迁移对象。原书特别提醒，在应用这个模式前先完成所有组件领域的识别与对齐：若工单服务已搬走，后来才发现调查组件其实也属于工单，就要再次修改服务范围和调用路径。先做完整的逻辑分组，可以减少这种可预见的来回搬动；这不意味着逻辑分组从此不能修正。</p>
+          <p>11 月 23 日的故事中，Addison、Austen 与开发团队共同安排分阶段迁移，逐步搬动组件，最终到达图 5-22 所示的五个分别部署的领域服务：Customer、Admin、Shared、Ticket、Reporting。Ticket 包含调查和知识库；Shared 包含登录与通知；Reporting 内仍包含四个报表组件。原书没有给出各服务上线的精确先后、迁移耗时或性能提升实测，不应自行补出这些结果。</p>
+          <p>这一终点比组件分包前进了一大步，但不能直接等同于五个独立架构量子。共享数据库、共同 UI、共享代码契约及运行时同步协作，仍可能收紧独立性。第 2 章的量子定义要求把这些依赖一起考虑。图 5-22 本身没有画数据库，也不意味着数据库已经消失或已经分离；本章基本拓扑与总结仍把数据分解留给第 6 章。</p>
+          <p>新的部署边界也带来实质变化：过去的本地调用变成远程交互，故障、延迟和发布需要分别管理。这里是笔记根据边界变化作出的工程解释，不是本章已经实现的全部可靠性方案。它同样说明，先做粗粒度领域服务是在控制一次改变的范围，而不是把分布式系统的代价取消。</p>
+        </section>
+
+        <section id="chapter-outcome"><h2><span class="section-number">13</span>把本章结果读成一条有依据的决策链</h2>
+          <p>Sysops 的输入，是已经批准采用组件分解路线的单体：组件可辨认，但报表过大、通知重复、父子组件混杂，服务范围尚未确定。它没有跳过这些问题直接为每个包创建一个进程，而是先改善代码归属，再判断依赖与业务分组。</p>
+          <p>报表从一块变成四个组件，通知从三份汇集成一份；工单向下拆出叶组件，调查向上合并成叶组件。这里同时有拆和合，目标始终是清楚而可维护的职责，不是增加组件数量。18→21→19→20 的清单变化，只记录这些结构操作，不能被解释为迁移成效的分数。</p>
+          <p>随后，团队区分了核心功能连接与共享类型引用，判断迁移可继续；与产品负责人形成五个领域，重构命名空间，再推进到五个分别部署的领域服务。候选方案始终能对应具体理由：复杂、常变的分派保持分离；简单、少变的调查与模板合并；相似通知接受集中点；相关业务先聚合为粗服务。</p>
+          <p>本章留下的核心能力，是一套可观察的迁移过程：每次重构有明确目的、结果有可回到代码的清单、结构规则有适应度函数维护，语义与取舍仍由团队结合业务判断。后续第 6 章将拆分运营数据，第 7 章再分析服务粒度；那时，哪些边界需要进一步拆开、哪些关系反而要求聚合，才有更扎实的输入。</p>
+        </section>
+
+        <details id="sources" class="source-note"><summary>来源、原书对应与核查说明</summary>
+          <p>依据 Neal Ford、Mark Richards、Pramod Sadalage、Zhamak Dehghani，<cite lang="en">Software Architecture: The Hard Parts — Modern Trade-Off Analysis for Distributed Architectures</cite>，O’Reilly 英文第一版 October 2021（First Release 2021-09-23，版权 2022），ISBN 978-1-492-08689-5。通读第 5 章印刷 81—130／PDF 页序 99—148；先读前言及已完成第 1、2、4 章的案例、定义与分解决策。中文标题及术语为本站译法。核查日期：2026-11-06。</p>
+          <ul>
+            <li>01：章首路线、Architecture Stories，印刷 81—84／PDF 99—102，原图 5-1。首次顺序应用与迁移期间单独重用依据页 82。</li>
+            <li>02—04：Identify and Size Components Pattern，印刷 84—93／PDF 102—111；表 5-1—5-3、图 5-2—5-3、示例 5-1—5-3。回看公式原页确认根号与 N−1；18 项语句合计、Reporting 拆分守恒、占比与标准差均已复算。原表 5-3 的 7% 与 5,309／82,931 不一致在正文明确记录。</li>
+            <li>05：Gather Common Domain Components Pattern，印刷 94—101／PDF 112—119；表 5-4—5-7、图 5-4—5-5、示例 5-4—5-5。通知合并前后 Ca 以表 5-5、5-6 的明确使用方为准；候选查找的语义、文件归属与引用关系区别为笔记技术审读。</li>
+            <li>06—07：Flatten Components Pattern，印刷 101—111／PDF 119—129；图 5-6—5-12、表 5-8—5-12、示例 5-6。工单三个新增与两个保留、调查模板合并均按原表及案例；“孤儿”仅在本章组件约定下定义。</li>
+            <li>08—09：Determine Component Dependencies Pattern，印刷 111—120／PDF 129—138；图 5-13—5-17、示例 5-7—5-9。Ca/Ce/Ct 按不同组件计数；修正伪代码按组件边去重的过程为本笔记解释。后期无向图与早期通知计数表不完全一致，保留各自用途，不拼成一份虚构的完整调用图。</li>
+            <li>10—11：Create Component Domains Pattern，印刷 120—126／PDF 138—144；图 5-18—5-19、表 5-13—5-18、示例 5-10。页 125 的 survey 归属过渡句、页 126 的 <code>aa.shared.login</code> 均已对照 PDF 原页，并依详细表和前后说明记录修正；未冒称出版社已确认勘误。</li>
+            <li>11—13：Create Domain Services Pattern、Summary，印刷 126—130／PDF 144—148；原图 5-20—5-22、示例 5-11。一般提取示意与 Sysops 最终五服务结果分开说明；未将共享数据库拓扑写成数据迁移已经完成。</li>
+          </ul>
+          <p>实际渲染并阅读的 PDF 页序：101、106、107、108、111、114、117、121、122、123、124、125、127、128、135、136、137、138、142、143、144、145、146、147、148。分别用于路线、公式／尺寸表、伪代码、通知计数、展平关系、依赖过滤、领域归属与服务提取核对；其余页已通读提取文本，未声称逐页图像核验。</p>
+          <p>额外技术核查使用 <a href="https://www.archunit.org/userguide/html/000_Index.html">ArchUnit 官方指南</a>的 Importing Classes、Package Dependency Checks、Core API、Composing Class Rules 与 Package Identifiers，以及 <a href="https://github.com/TNG/ArchUnit/blob/main/archunit/src/main/java/com/tngtech/archunit/lang/syntax/elements/ClassesShould.java">ClassesShould 官方 API 源码</a>，2026-11-06：确认字节码与导入范围、<code>accessClassesThat()</code>／<code>dependOnClassesThat()</code> 的检测差异、<code>..</code> 包匹配语义及包含规则的边界。正文不提供声称已在 Sysops 源码运行的 Java 测试，也没有真实案例代码可供执行。</p>
+          <p>三幅图均为本笔记原创 SVG，与原书图号独立；可编辑源为 <code>diagrams/sources/ch05-*</code>，网页副本为 <code>diagrams/exports/ch05-*</code>，内容一致。数字推导、伪代码澄清和边界解释均与原书叙事区分；案例故事日期沿原章保留，不据其推算迁移工期。</p>
+        </details>
+        <nav class="chapter-pagination" aria-label="章节翻页"><a class="page-link prev" href="ch04.html" rel="prev"><span class="page-label">← 上一章 · 第 4 章</span><span class="page-title">架构分解</span></a><a class="page-link next" href="ch06.html" rel="next"><span class="page-label">下一章 · 第 6 章 →</span><span class="page-title">拆分运营数据</span></a><a class="pagination-home" href="../index.html">书籍概览与目录</a></nav>
+        <p class="source-note"><a href="../guide.html">全书导航：术语、案例与来源</a></p>
+      </article>
+    </div>
+  </main>
+  <footer class="site-footer"><div class="container footer-inner"><span>个人书架 / 中文读书笔记</span><a href="#main">回到顶部 ↑</a></div></footer>
+</body>
+</html>

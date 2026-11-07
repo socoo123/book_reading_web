@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="536" viewBox="0 0 720 536" role="img" aria-labelledby="title desc">
+  <title id="title">领域、设计与代码模型的规范结构</title>
+  <desc id="desc">上方领域模型描述相关世界中的事实，中间设计模型记录系统的部分设计承诺，下方代码模型达到实现的具体程度。设计指向领域的箭头是指称关系，代码指向设计的箭头主要是精化关系。排列表示抽象程度，不是开发阶段。</desc>
+  <!-- Original, editable hand-written SVG. The export is an identical web copy. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 16px; fill: var(--muted); }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.2; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .label { font-size: 21px; font-weight: 600; text-anchor: middle; }
+    .detail { font-size: 16px; text-anchor: middle; fill: var(--muted); }
+    .relation { font-size: 17px; }
+    .arrow { fill: none; stroke: var(--line); stroke-width: 1.8; stroke-dasharray: 5 4; marker-end: url(#arrow); }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker></defs>
+  <rect width="720" height="536" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="30" y="38">把事实放在合适的抽象层次</text>
+  <text class="sub" x="30" y="67">三类模型可以在开发中反复往返，不是三个流水线阶段</text>
+
+  <rect class="node" x="36" y="94" width="648" height="94" rx="7"/>
+  <text class="label" x="138" y="132">领域模型</text>
+  <text class="detail" x="138" y="160">较抽象</text>
+  <text class="detail" x="442" y="130">相关世界中的概念、关系与行为</text>
+  <text class="detail" x="442" y="158">相对持久的领域事实</text>
+  <path class="arrow" d="M116 226V198"/>
+  <text class="relation" x="180" y="217">指称关系：所选概念的语义对应</text>
+
+  <rect class="focus" x="36" y="234" width="648" height="94" rx="7"/>
+  <text class="label" x="138" y="286">设计模型</text>
+  <text class="detail" x="442" y="270">系统的职责、接口、机制与约束</text>
+  <text class="detail" x="442" y="300">部分设计承诺；含边界／内部模型</text>
+  <path class="arrow" d="M116 366V338"/>
+  <text class="relation" x="180" y="357">精化关系：结构更具体，承诺应保留</text>
+
+  <rect class="node" x="36" y="374" width="648" height="94" rx="7"/>
+  <text class="label" x="138" y="412">代码模型</text>
+  <text class="detail" x="138" y="440">较具体</text>
+  <text class="detail" x="442" y="410">源代码，或处于同等具体程度的模型</text>
+  <text class="detail" x="442" y="438">补齐执行所需的具体决定</text>
+
+  <text class="sub" x="30" y="509">结构多可精化；设计约束不会自动得到编程语言的保证。</text>
+</svg>

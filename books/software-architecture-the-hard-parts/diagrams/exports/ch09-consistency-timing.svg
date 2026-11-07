@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="550" viewBox="0 0 720 550" role="img" aria-labelledby="title desc">
+  <title id="title">响应用户与全部数据完成协调，是不同的时点</title>
+  <desc id="desc">后台同步在一秒后响应，晚间批次才协调；请求内编排等全部完成后在两秒时响应；事件模式一秒后响应，合同和计费并行处理，全部完成时间未给定。时间为原书示意，非测量值。</desc>
+  <style>
+    :root{--surface:#fcfbf8;--text:#292824;--muted:#66645d;--line:#969187;--soft:#f0ece4;--accent:#386d74}
+    @media(prefers-color-scheme:dark){:root:not([data-theme='light']){--surface:#252524;--text:#e6e3dc;--muted:#b6b1a7;--line:#8c8982;--soft:#353534;--accent:#94c8cf}}
+    :root[data-theme='dark']{--surface:#252524;--text:#e6e3dc;--muted:#b6b1a7;--line:#8c8982;--soft:#353534;--accent:#94c8cf}
+    .bg{fill:var(--surface)}text{fill:var(--text);font-family:system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;font-size:17px}.heading{font-size:21px;font-weight:600}.small{font-size:14px;fill:var(--muted)}.box{fill:var(--soft);stroke:var(--line);stroke-width:1.5}.result{fill:var(--surface);stroke:var(--accent);stroke-width:2}.edge{fill:none;stroke:var(--accent);stroke-width:2;marker-end:url(#arrow)}.later{stroke-dasharray:6 5}.arrow{fill:var(--accent)}.divider{stroke:var(--line);stroke-width:1}
+  </style>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path class="arrow" d="M0 0 8 4 0 8Z"/></marker></defs>
+  <rect class="bg" width="720" height="550"/>
+  <text class="heading" x="28" y="36">同一次取消订阅，三种完成节奏</text>
+  <text class="small" x="28" y="63">原书示意时间 · 非等比例时间轴 · “目标”需各步骤成功</text>
+  <text x="28" y="100">① 后台同步</text>
+  <rect class="box" x="28" y="118" width="172" height="64" rx="9"/><text x="114" y="143" text-anchor="middle">11:23:00</text><text class="small" x="114" y="166" text-anchor="middle">取消请求</text>
+  <path class="edge" d="M200 150H247"/>
+  <rect class="result" x="254" y="118" width="185" height="64" rx="9"/><text x="346" y="143" text-anchor="middle">11:23:01 响应</text><text class="small" x="346" y="166" text-anchor="middle">仅资料侧已处理</text>
+  <path class="edge later" d="M439 150H486"/>
+  <rect class="box" x="493" y="118" width="199" height="64" rx="9"/><text x="592" y="143" text-anchor="middle">23:00 启动批次</text><text class="small" x="592" y="166" text-anchor="middle">目标：协调合同／计费</text>
+  <path class="divider" d="M28 211H692"/>
+  <text x="28" y="245">② 请求内编排</text>
+  <rect class="box" x="28" y="263" width="172" height="64" rx="9"/><text x="114" y="288" text-anchor="middle">11:23:00</text><text class="small" x="114" y="311" text-anchor="middle">先处理资料</text>
+  <path class="edge" d="M200 295H247"/>
+  <rect class="box" x="254" y="263" width="185" height="64" rx="9"/><text x="346" y="288" text-anchor="middle">11:23:01</text><text class="small" x="346" y="311" text-anchor="middle">合同／计费并行处理</text>
+  <path class="edge" d="M439 295H486"/>
+  <rect class="result" x="493" y="263" width="199" height="64" rx="9"/><text x="592" y="288" text-anchor="middle">11:23:02 响应</text><text class="small" x="592" y="311" text-anchor="middle">收到全部完成确认</text>
+  <path class="divider" d="M28 356H692"/>
+  <text x="28" y="390">③ 基于事件</text>
+  <rect class="box" x="28" y="408" width="172" height="64" rx="9"/><text x="114" y="433" text-anchor="middle">11:23:00</text><text class="small" x="114" y="456" text-anchor="middle">取消请求</text>
+  <path class="edge" d="M200 440H247"/>
+  <rect class="result" x="254" y="408" width="185" height="64" rx="9"/><text x="346" y="433" text-anchor="middle">11:23:01 响应</text><text class="small" x="346" y="456" text-anchor="middle">资料处理并发布事件</text>
+  <path class="edge later" d="M439 440H486"/>
+  <rect class="box" x="493" y="408" width="199" height="64" rx="9"/><text x="592" y="433" text-anchor="middle">订阅者各自处理</text><text class="small" x="592" y="456" text-anchor="middle">目标：合同／计费收敛</text>
+  <text class="small" x="28" y="513">实线：请求内推进 · 虚线：响应不等待的后续工作</text>
+  <text class="small" x="28" y="535">事件可以很快处理，但原书没有给出全部完成的保证时刻。</text>
+  <script><![CDATA[try { const t = localStorage.getItem('reading-notes-theme'); if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t); } catch {}]]></script>
+</svg>

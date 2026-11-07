@@ -1,0 +1,260 @@
+[
+  {
+    "type": "text",
+    "id": "title",
+    "x": 24,
+    "y": 18,
+    "text": "客户端也是需要恢复的小订阅者",
+    "fontSize": 25,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "subtitle",
+    "x": 24,
+    "y": 60,
+    "text": "先取得一致初态，再接增量；断线之后按保存的游标补读。",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "rectangle",
+    "id": "snapshot",
+    "x": 24,
+    "y": 130,
+    "width": 230,
+    "height": 82,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "label": {
+      "text": "服务端快照\n对应游标 40",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "initial",
+    "x": 540,
+    "y": 130,
+    "width": 220,
+    "height": 82,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "label": {
+      "text": "客户端初始化\n本地状态 @40",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "init",
+    "x": 260,
+    "y": 171,
+    "width": 274,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        274,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "strokeStyle": "solid",
+    "roughness": 0.6,
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "snapshot"
+    },
+    "end": {
+      "id": "initial"
+    }
+  },
+  {
+    "type": "text",
+    "id": "initlabel",
+    "x": 320,
+    "y": 135,
+    "text": "① 初始化读",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "rectangle",
+    "id": "log",
+    "x": 24,
+    "y": 280,
+    "width": 230,
+    "height": 82,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "label": {
+      "text": "订阅事件流\n41 → 42 → 43 …",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "local",
+    "x": 540,
+    "y": 280,
+    "width": 220,
+    "height": 82,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "label": {
+      "text": "状态与游标一致保存\n已应用到 42",
+      "fontSize": 19,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "push",
+    "x": 260,
+    "y": 321,
+    "width": 274,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        274,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "strokeStyle": "dashed",
+    "roughness": 0.6,
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "log"
+    },
+    "end": {
+      "id": "local"
+    }
+  },
+  {
+    "type": "text",
+    "id": "pushlabel",
+    "x": 297,
+    "y": 278,
+    "text": "② 推送 41、42",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "arrow",
+    "id": "localapply",
+    "x": 650,
+    "y": 218,
+    "width": 0,
+    "height": 56,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        56
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "strokeStyle": "solid",
+    "roughness": 0.6,
+    "endArrowhead": "arrow",
+    "start": {
+      "id": "initial"
+    },
+    "end": {
+      "id": "local"
+    }
+  },
+  {
+    "type": "text",
+    "id": "disconnect",
+    "x": 540,
+    "y": 394,
+    "text": "离线：本地仍可阅读",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "arrow",
+    "id": "resume",
+    "x": 534,
+    "y": 450,
+    "width": 274,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        -274,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "strokeStyle": "dashed",
+    "roughness": 0.6,
+    "endArrowhead": "arrow"
+  },
+  {
+    "type": "text",
+    "id": "resumelabel",
+    "x": 278,
+    "y": 413,
+    "text": "③ 重连：携带游标 42",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "text",
+    "id": "replay",
+    "x": 24,
+    "y": 433,
+    "text": "从 43 补读",
+    "fontSize": 20,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "bottom",
+    "x": 24,
+    "y": 510,
+    "text": "游标过期 → 重新取得快照并衔接增量；长连接本身不保证重放。",
+    "fontSize": 18,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  }
+]

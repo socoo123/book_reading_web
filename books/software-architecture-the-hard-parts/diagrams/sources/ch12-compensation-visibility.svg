@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="480" viewBox="0 0 720 480" role="img" aria-labelledby="title desc">
+<title id="title">补偿不能撤回已发生的观察</title>
+<desc id="desc">工单完成已提交，分析侧随后读取，调查失败后工单可补偿，但分析侧已观察的事实不会自动撤回。</desc>
+<style>
+:root{--surface:#fcfbf8;--text:#292824;--muted:#66645d;--line:#969187;--soft:#f0ece4;--accent:#386d74}
+@media(prefers-color-scheme:dark){:root:not([data-theme='light']){--surface:#252524;--text:#e6e3dc;--muted:#b6b1a7;--line:#8c8982;--soft:#353534;--accent:#94c8cf}}
+:root[data-theme='dark']{--surface:#252524;--text:#e6e3dc;--muted:#b6b1a7;--line:#8c8982;--soft:#353534;--accent:#94c8cf}
+.bg{fill:var(--surface)}text{fill:var(--text);font:17px system-ui,-apple-system,"PingFang SC",sans-serif}.title{font-size:22px;font-weight:600}.small{font-size:15px;fill:var(--muted)}.box{fill:var(--soft);stroke:var(--line);stroke-width:1.5}.edge{fill:none;stroke:var(--accent);stroke-width:2;marker-end:url(#arrow)}.arrow{fill:var(--accent)}
+</style>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path class="arrow" d="M0 0 8 4 0 8Z"/></marker></defs>
+<rect class="bg" width="720" height="480"/>
+<text class="title" x="28" y="38">补偿是新提交，不是撤回历史</text>
+<text class="small" x="28" y="65">向下读时间；横向箭头表示完成事实传到分析侧</text>
+<text x="140" y="109">工单与调查主路径</text><text x="475" y="109">分析侧</text>
+<rect class="box" x="80" y="132" width="270" height="65" rx="10"/><text x="100" y="158">① 工单标为完成并提交</text><text class="small" x="100" y="182">本地事务结束，数据已可见</text>
+<rect class="box" x="435" y="210" width="257" height="65" rx="10"/><text x="455" y="236">② 分析已处理完成事件</text><text class="small" x="455" y="260">可能继续触发下游动作</text>
+<path class="edge" d="M350 165H394V242H426"/>
+<rect class="box" x="80" y="286" width="270" height="54" rx="10"/><text x="100" y="319">③ 调查发送失败</text>
+<path class="edge" d="M215 197V277"/>
+<rect class="box" x="80" y="378" width="270" height="66" rx="10"/><text x="100" y="405">④ 补偿改回“处理中”</text><text class="small" x="100" y="429">这是另一笔本地提交</text>
+<path class="edge" d="M215 340V369"/>
+<path d="M565 275V379" fill="none" stroke="var(--line)" stroke-width="2" stroke-dasharray="6 5"/>
+<text x="435" y="405">已发生的观察仍存在</text><text class="small" x="435" y="431">需要另行修正，未必可逆</text>
+<script><![CDATA[try { const t=localStorage.getItem('reading-notes-theme'); if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t); } catch {}]]></script>
+</svg>

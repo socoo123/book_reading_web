@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="464" viewBox="0 0 720 464" role="img" aria-labelledby="title desc">
+  <title id="title">同一条弃用警告，送到谁面前才有用</title>
+  <desc id="desc">左右两栏对照两种警告去向。左栏：库 A 依赖库 B，库 B 依赖库 C，C 产生的弃用警告随构建上浮，出现在 A 的构建里；A 的维护者没有直接调用，无从下手，警告越积越多，被当作噪声。右栏：作者在新改动中新增一处旧接口调用，提交评审时工具只标出这一行，并附替代方案与迁移说明，作者当场改用新接口，同时满足可行动性与相关性。实线箭头表示依赖或处理顺序，虚线箭头表示警告传到的位置。</desc>
+  <!-- Original editable hand-written SVG; web export is an identical copy. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 15px; fill: var(--muted); }
+    .stage { font-size: 17px; font-weight: 600; text-anchor: middle; }
+    .label { font-size: 17px; font-weight: 600; text-anchor: middle; }
+    .body { font-size: 16px; fill: var(--muted); text-anchor: middle; }
+    .result { font-size: 16px; font-weight: 600; text-anchor: middle; }
+    .note { font-size: 14px; fill: var(--muted); text-anchor: middle; }
+    .panel { fill: none; stroke: var(--line); stroke-width: 1; }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.3; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .flow { fill: none; stroke: var(--line); stroke-width: 1.8; marker-end: url(#arrow); }
+    .warn { stroke-dasharray: 6 4; }
+    .divider { stroke: var(--line); stroke-width: 1; }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker></defs>
+  <rect width="720" height="464" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="24" y="38">同一条弃用警告，送到谁面前才有用</text>
+  <text class="sub" x="24" y="66">左栏警告随依赖链上浮；右栏只在正在修改的代码上提示</text>
+
+  <rect class="panel" x="24" y="94" width="312" height="320" rx="8"/>
+  <text class="stage" x="180" y="125">传递上浮的警告</text>
+  <rect class="node" x="44" y="146" width="150" height="44" rx="6"/>
+  <text class="label" x="119" y="174">库 A（构建中）</text>
+  <path class="flow" d="M119 190V214"/>
+  <text class="note" x="150" y="207">依赖</text>
+  <rect class="node" x="44" y="222" width="150" height="44" rx="6"/>
+  <text class="label" x="119" y="250">库 B</text>
+  <path class="flow" d="M119 266V290"/>
+  <text class="note" x="150" y="283">依赖</text>
+  <rect class="node" x="44" y="298" width="150" height="44" rx="6"/>
+  <text class="label" x="119" y="326">库 C（产生警告）</text>
+  <path class="flow warn" d="M194 320H236V168H202"/>
+  <text class="note" x="286" y="226">C 的警告</text>
+  <text class="note" x="286" y="246">出现在</text>
+  <text class="note" x="286" y="266">A 的构建里</text>
+  <path class="divider" d="M44 356H316"/>
+  <text class="result" x="180" y="380">A 的维护者无从下手</text>
+  <text class="note" x="180" y="402">警告越积越多，被当作噪声</text>
+
+  <rect class="panel" x="384" y="94" width="312" height="320" rx="8"/>
+  <text class="stage" x="540" y="125">定向提示的警告</text>
+  <rect class="node" x="424" y="146" width="232" height="44" rx="6"/>
+  <text class="label" x="540" y="174">作者新增一处旧接口调用</text>
+  <path class="flow" d="M540 190V206"/>
+  <text class="note" x="600" y="205">提交评审</text>
+  <rect class="focus" x="424" y="214" width="232" height="60" rx="6"/>
+  <text class="label" x="540" y="239">评审时只标出这一行</text>
+  <text class="body" x="540" y="263">附替代方案与迁移说明</text>
+  <path class="flow" d="M540 274V290"/>
+  <rect class="focus" x="424" y="298" width="232" height="44" rx="6"/>
+  <text class="label" x="540" y="326">作者当场改用新接口</text>
+  <path class="divider" d="M404 356H676"/>
+  <text class="result" x="540" y="380">作者能改，也正在改这段代码</text>
+  <text class="note" x="540" y="402">同时满足可行动性与相关性</text>
+
+  <text class="note" x="360" y="446">实线箭头：依赖或处理顺序　　虚线箭头：警告传到的位置</text>
+</svg>

@@ -1,0 +1,307 @@
+[
+  {
+    "type": "text",
+    "id": "title",
+    "x": 24,
+    "y": 18,
+    "text": "读偏斜：一次提交，两次观察",
+    "fontSize": 25,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "subtitle",
+    "x": 24,
+    "y": 62,
+    "text": "时间向下；每次查询只读已提交值，合起来却不是同一时刻。",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  },
+  {
+    "type": "text",
+    "id": "reader",
+    "x": 48,
+    "y": 108,
+    "text": "读取事务",
+    "fontSize": 21,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "text",
+    "id": "database",
+    "x": 470,
+    "y": 108,
+    "text": "数据库状态",
+    "fontSize": 21,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "rectangle",
+    "id": "read1",
+    "x": 48,
+    "y": 158,
+    "width": 246,
+    "height": 92,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "① 读账户 1\n得到 500",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "before",
+    "x": 470,
+    "y": 158,
+    "width": 300,
+    "height": 92,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "账户 1 = 500\n账户 2 = 500",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "query1",
+    "x": 300,
+    "y": 204,
+    "width": 164,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        164,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "text",
+    "id": "q1label",
+    "x": 324,
+    "y": 174,
+    "text": "命中旧状态",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "rectangle",
+    "id": "transfer",
+    "x": 470,
+    "y": 298,
+    "width": 300,
+    "height": 156,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 3,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "同一个转账事务\n账户 1 → 600\n账户 2 → 400\n② 整体 COMMIT",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "advance1",
+    "x": 620,
+    "y": 256,
+    "width": 0,
+    "height": 36,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        36
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "line",
+    "id": "readtimeline",
+    "x": 26,
+    "y": 256,
+    "width": 0,
+    "height": 240,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        240
+      ]
+    ],
+    "strokeColor": "#66645d",
+    "roughness": 0.5,
+    "strokeStyle": "dashed"
+  },
+  {
+    "type": "text",
+    "id": "gap",
+    "x": 42,
+    "y": 348,
+    "text": "两次查询之间，\n转账已经完成",
+    "fontSize": 20,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "rectangle",
+    "id": "read2",
+    "x": 48,
+    "y": 504,
+    "width": 246,
+    "height": 92,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "③ 读账户 2\n得到 400",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "after",
+    "x": 470,
+    "y": 504,
+    "width": 300,
+    "height": 92,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "账户 1 = 600\n账户 2 = 400",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "advance2",
+    "x": 620,
+    "y": 460,
+    "width": 0,
+    "height": 38,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        38
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "arrow",
+    "id": "query2",
+    "x": 300,
+    "y": 550,
+    "width": 164,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        164,
+        0
+      ]
+    ],
+    "strokeColor": "#386d74",
+    "roughness": 0.5,
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "text",
+    "id": "q2label",
+    "x": 324,
+    "y": 520,
+    "text": "命中新状态",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#292824"
+  },
+  {
+    "type": "rectangle",
+    "id": "mixed",
+    "x": 48,
+    "y": 650,
+    "width": 722,
+    "height": 80,
+    "strokeColor": "#386d74",
+    "backgroundColor": "#f0ece4",
+    "fillStyle": "solid",
+    "roughness": 0.6,
+    "strokeWidth": 1,
+    "strokeStyle": "solid",
+    "label": {
+      "text": "读者：500 + 400 = 900\n实际提交前后：总额始终为 1000",
+      "fontSize": 21,
+      "fontFamily": 2,
+      "strokeColor": "#292824"
+    }
+  },
+  {
+    "type": "text",
+    "id": "legend",
+    "x": 24,
+    "y": 764,
+    "text": "粗框：一个事务的整体提交　　横箭头：本次查询命中的状态",
+    "fontSize": 17,
+    "fontFamily": 2,
+    "strokeColor": "#66645d"
+  }
+]

@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="660" viewBox="0 0 720 660" role="img" aria-labelledby="title desc">
+  <title id="title">三种缓存拓扑：读路径与复制路径</title>
+  <desc id="desc">独立本地缓存不互相同步；外置缓存需要远程读取；本章复制缓存将共享字段保存在各服务内部，由权威拥有者发布更新，读取者只读本地副本。实线表示读取，虚线表示复制。</desc>
+  <style>
+    :root{--surface:#fcfbf8;--text:#292824;--muted:#66645d;--line:#969187;--soft:#f0ece4;--accent:#386d74}
+    @media(prefers-color-scheme:dark){:root:not([data-theme='light']){--surface:#252524;--text:#e6e3dc;--muted:#b6b1a7;--line:#8c8982;--soft:#353534;--accent:#94c8cf}}
+    :root[data-theme='dark']{--surface:#252524;--text:#e6e3dc;--muted:#b6b1a7;--line:#8c8982;--soft:#353534;--accent:#94c8cf}
+    .bg{fill:var(--surface)}text{fill:var(--text);font-family:system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;font-size:17px}.heading{font-size:21px;font-weight:600}.small{font-size:15px;fill:var(--muted)}.box{fill:var(--soft);stroke:var(--line);stroke-width:1.5}.core{fill:var(--surface);stroke:var(--accent);stroke-width:1.5}.edge{fill:none;stroke:var(--accent);stroke-width:2;marker-end:url(#arrow)}.replica{stroke-dasharray:6 5}.arrow{fill:var(--accent)}.rule{stroke:var(--line);stroke-width:1}
+  </style>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path class="arrow" d="M0 0 8 4 0 8Z"/></marker></defs>
+  <rect class="bg" width="720" height="660"/>
+  <text class="heading" x="28" y="36">缓存放在哪里，决定每次读取经过哪里</text>
+  <text class="small" x="28" y="63">实线 → 业务读取　　虚线 ⇢ 后台复制　　大框 = 服务边界</text>
+  <text x="28" y="101">① 独立本地缓存：无副本间同步</text>
+  <rect class="box" x="55" y="119" width="220" height="113" rx="10"/>
+  <rect class="box" x="445" y="119" width="220" height="113" rx="10"/>
+  <text x="165" y="145" text-anchor="middle">服务 A</text><text x="555" y="145" text-anchor="middle">服务 B</text>
+  <path class="edge" d="M165 151V176"/><path class="edge" d="M555 151V176"/>
+  <rect class="core" x="75" y="184" width="180" height="34" rx="5"/><text x="165" y="207" text-anchor="middle">自己的缓存</text>
+  <rect class="core" x="465" y="184" width="180" height="34" rx="5"/><text x="555" y="207" text-anchor="middle">自己的缓存</text>
+  <text class="small" x="360" y="190" text-anchor="middle">互不传播</text>
+  <path class="rule" d="M28 254H692"/>
+  <text x="28" y="284">② 外置分布式缓存：共享数据，读取仍跨网</text>
+  <rect class="box" x="55" y="306" width="180" height="48" rx="8"/><text x="145" y="337" text-anchor="middle">服务 A</text>
+  <rect class="box" x="485" y="306" width="180" height="48" rx="8"/><text x="575" y="337" text-anchor="middle">服务 B</text>
+  <rect class="core" x="250" y="380" width="220" height="56" rx="8"/><text x="360" y="405" text-anchor="middle">外部缓存节点／集群</text><text class="small" x="360" y="426" text-anchor="middle">在线依赖仍存在</text>
+  <path class="edge" d="M145 354V408H241"/><path class="edge" d="M575 354V408H479"/>
+  <text class="small" x="360" y="341" text-anchor="middle">远程读取</text>
+  <path class="rule" d="M28 458H692"/>
+  <text x="28" y="488">③ 本章复制缓存：本地读取，变化在后台传播</text>
+  <rect class="box" x="55" y="510" width="220" height="113" rx="10"/>
+  <rect class="box" x="445" y="510" width="220" height="113" rx="10"/>
+  <text x="165" y="536" text-anchor="middle">拥有者服务</text><text x="555" y="536" text-anchor="middle">读取者服务</text>
+  <path class="edge" d="M165 543V568"/><path class="edge" d="M555 543V568"/>
+  <rect class="core" x="75" y="576" width="180" height="34" rx="5"/><text x="165" y="599" text-anchor="middle">共享字段缓存</text>
+  <rect class="core" x="465" y="576" width="180" height="34" rx="5"/><text x="555" y="599" text-anchor="middle">只读副本</text>
+  <path class="edge replica" d="M275 593H436"/><text class="small" x="360" y="573" text-anchor="middle">异步复制</text>
+  <text class="small" x="360" y="647" text-anchor="middle">缓存位置 ≠ 写所有权；本地副本仍可能暂时陈旧</text>
+  <script><![CDATA[try { const t = localStorage.getItem('reading-notes-theme'); if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t); } catch {}]]></script>
+</svg>

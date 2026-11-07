@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="384" viewBox="0 0 720 384" role="img" aria-labelledby="title desc">
+  <title id="title">在依赖边界替换实现，保留内部真实协作</title>
+  <desc id="desc">实线从业务入口经业务规则指向存储接口。存储接口是可替换接缝，虚线分别指向生产装配的真实存储和测试装配的内存伪实现；两种装配各选其一，不同时连接。</desc>
+  <!-- Original editable hand-written SVG; the export is an identical web copy. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { color-scheme: dark; --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    :root[data-theme='light'] { color-scheme: light; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 15px; fill: var(--muted); }
+    .node { fill: var(--box); stroke: var(--line); stroke-width: 1.2; }
+    .focus { fill: var(--focus); stroke: var(--accent); stroke-width: 1.4; }
+    .label { font-size: 19px; font-weight: 600; text-anchor: middle; }
+    .body { font-size: 16px; text-anchor: middle; fill: var(--muted); }
+    .arrow { fill: none; stroke: var(--line); stroke-width: 1.8; marker-end: url(#arrow); }
+    .assembly { fill: none; stroke: var(--accent); stroke-width: 1.7; stroke-dasharray: 6 5; marker-end: url(#assembly-arrow); }
+  </style>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker>
+    <marker id="assembly-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--accent)"/></marker>
+  </defs>
+  <rect width="720" height="384" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="28" y="39">替换困难的边界，保留真实业务协作</text>
+  <text class="sub" x="28" y="67">同一业务对象图，只在存储边界改变装配</text>
+  <rect class="node" x="28" y="104" width="168" height="82" rx="7"/>
+  <text class="label" x="112" y="140">业务入口</text>
+  <text class="body" x="112" y="166">真实实现</text>
+  <path class="arrow" d="M204 145H244"/>
+  <rect class="node" x="252" y="104" width="168" height="82" rx="7"/>
+  <text class="label" x="336" y="140">业务规则</text>
+  <text class="body" x="336" y="166">真实实现</text>
+  <path class="arrow" d="M428 145H468"/>
+  <rect class="focus" x="476" y="104" width="216" height="82" rx="7"/>
+  <text class="label" x="584" y="140">存储接口</text>
+  <text class="body" x="584" y="166">允许替换的接缝</text>
+  <path class="assembly" d="M584 194V212H442V246"/>
+  <path class="assembly" d="M584 212H620V246"/>
+  <rect x="393" y="221" width="98" height="22" fill="var(--bg)"/>
+  <rect x="571" y="221" width="98" height="22" fill="var(--bg)"/>
+  <text class="body" x="442" y="237">生产装配</text>
+  <text class="body" x="620" y="237">测试装配</text>
+  <rect class="node" x="366" y="254" width="152" height="82" rx="7"/>
+  <text class="label" x="442" y="288">真实存储</text>
+  <text class="body" x="442" y="316">磁盘／远端服务</text>
+  <rect class="focus" x="546" y="254" width="148" height="82" rx="7"/>
+  <text class="label" x="620" y="288">内存伪实现</text>
+  <text class="body" x="620" y="316">保留接口契约</text>
+  <rect class="node" x="28" y="244" width="280" height="92" rx="7"/>
+  <text class="label" x="168" y="281">保留真实的输入输出</text>
+  <text class="body" x="168" y="309">不必给每个业务类都造替身</text>
+  <text class="sub" x="28" y="368">实线：业务调用　　虚线：不同环境的装配选择，各选其一</text>
+  <script><![CDATA[
+    (() => {
+      const syncTheme = () => {
+        try {
+          const saved = localStorage.getItem('reading-notes-theme');
+          document.documentElement.dataset.theme = ['light', 'dark'].includes(saved) ? saved : 'system';
+        } catch {}
+      };
+      syncTheme();
+      window.addEventListener('storage', syncTheme);
+    })();
+  ]]></script>
+</svg>

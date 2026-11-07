@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="505" viewBox="0 0 720 505" role="img" aria-labelledby="title desc">
+  <title id="title">参与者不变，注意力随交接变化</title>
+  <desc id="desc">原创假设流程。小林发出请求后等待阿岚和值班同事；两人反馈后等待小林；小林修改并请求复看后等待两位评审者；两人确认后等待小林提交。每行左侧是已发生事件，右侧是注意力集合，横箭头表示交接，向下箭头表示时间。这不是工具的固定状态机。</desc>
+  <!-- Original editable hand-written SVG; web export is an identical copy. -->
+  <style>
+    :root { color-scheme: light dark; --bg: #fcfbf8; --text: #292824; --muted: #655f55; --line: #81786a; --box: #efede7; --focus: #f3e9d9; --accent: #9a4d32; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; } }
+    :root[data-theme='dark'] { --bg: #252524; --text: #e6e3dc; --muted: #b9b3a8; --line: #a49b8c; --box: #30302c; --focus: #383027; --accent: #e0a98d; }
+    text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .heading { font-size: 22px; font-weight: 600; }
+    .sub { font-size: 15px; fill: var(--muted); }
+    .label { font-size: 18px; font-weight: 600; }
+    .body { font-size: 16px; fill: var(--muted); }
+    .center { text-anchor: middle; }
+    .event { fill: var(--box); stroke: var(--line); stroke-width: 1.3; }
+    .attention { fill: var(--focus); stroke: var(--accent); stroke-width: 1.3; }
+    .flow { fill: none; stroke: var(--line); stroke-width: 1.8; marker-end: url(#arrow); }
+  </style>
+  <script><![CDATA[
+    try {
+      const theme = localStorage.getItem('reading-notes-theme');
+      if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+    } catch {}
+  ]]></script>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="var(--line)"/></marker></defs>
+  <rect width="720" height="505" rx="10" fill="var(--bg)"/>
+  <text class="heading" x="28" y="40">参与者不变，下一步行动者会变</text>
+  <text class="sub" x="28" y="69">假设小林请阿岚和值班同事共同评审</text>
+  <text class="sub" x="28" y="101">已发生的事件</text>
+  <text class="sub" x="437" y="101">注意力集合：接下来等谁</text>
+  <rect class="event" x="28" y="117" width="350" height="60" rx="7"/>
+  <text class="label" x="45" y="143">1　小林发出评审请求</text>
+  <text class="body" x="45" y="165">两位评审者可以并行阅读</text>
+  <path class="flow" d="M386 147H428"/>
+  <rect class="attention" x="437" y="117" width="255" height="60" rx="7"/>
+  <text class="label center" x="564" y="143">阿岚、值班同事</text>
+  <text class="body center" x="564" y="165">阅读并给出反馈</text>
+  <path class="flow" d="M203 181V199"/>
+  <rect class="event" x="28" y="205" width="350" height="60" rx="7"/>
+  <text class="label" x="45" y="231">2　两人都已给出修改意见</text>
+  <text class="body" x="45" y="253">这一轮反馈已发布</text>
+  <path class="flow" d="M386 235H428"/>
+  <rect class="attention" x="437" y="205" width="255" height="60" rx="7"/>
+  <text class="label center" x="564" y="231">小林</text>
+  <text class="body center" x="564" y="253">修改代码并回应</text>
+  <path class="flow" d="M203 269V287"/>
+  <rect class="event" x="28" y="293" width="350" height="60" rx="7"/>
+  <text class="label" x="45" y="319">3　小林修改并请求复看</text>
+  <text class="body" x="45" y="341">上传新快照，说明处理结果</text>
+  <path class="flow" d="M386 323H428"/>
+  <rect class="attention" x="437" y="293" width="255" height="60" rx="7"/>
+  <text class="label center" x="564" y="319">阿岚、值班同事</text>
+  <text class="body center" x="564" y="341">检查回应与最新变化</text>
+  <path class="flow" d="M203 357V375"/>
+  <rect class="event" x="28" y="381" width="350" height="60" rx="7"/>
+  <text class="label" x="45" y="407">4　两人确认，评审条件齐备</text>
+  <text class="body" x="45" y="429">接下来由作者继续提交</text>
+  <path class="flow" d="M386 411H428"/>
+  <rect class="attention" x="437" y="381" width="255" height="60" rx="7"/>
+  <text class="label center" x="564" y="407">小林</text>
+  <text class="body center" x="564" y="429">发起提交及其检查</text>
+  <text class="sub" x="28" y="480">横箭头表示交接，纵箭头表示时间；这里只画一种可能的安排。</text>
+</svg>

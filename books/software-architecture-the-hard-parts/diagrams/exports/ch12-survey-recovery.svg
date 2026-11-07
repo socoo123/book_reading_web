@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="440" viewBox="0 0 720 440" role="img" aria-labelledby="title desc">
+<title id="title">维修完成与调查发送分开追踪</title>
+<desc id="desc">COMPLETED发送调查成功后进入CLOSED；发送失败进入NO_SURVEY，后台重试或人工修复，成功后才进入CLOSED。</desc>
+<style>
+:root{--surface:#fcfbf8;--text:#292824;--muted:#66645d;--line:#969187;--soft:#f0ece4;--accent:#386d74}
+@media(prefers-color-scheme:dark){:root:not([data-theme='light']){--surface:#252524;--text:#e6e3dc;--muted:#b6b1a7;--line:#8c8982;--soft:#353534;--accent:#94c8cf}}
+:root[data-theme='dark']{--surface:#252524;--text:#e6e3dc;--muted:#b6b1a7;--line:#8c8982;--soft:#353534;--accent:#94c8cf}
+.bg{fill:var(--surface)}text{fill:var(--text);font:17px system-ui,-apple-system,"PingFang SC",sans-serif}.title{font-size:22px;font-weight:600}.small{font-size:15px;fill:var(--muted)}.box{fill:var(--soft);stroke:var(--line);stroke-width:1.5}.edge{fill:none;stroke:var(--accent);stroke-width:2;marker-end:url(#arrow)}.arrow{fill:var(--accent)}.dashed{stroke-dasharray:6 5}
+</style>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path class="arrow" d="M0 0 8 4 0 8Z"/></marker></defs>
+<rect class="bg" width="720" height="440"/>
+<text class="title" x="28" y="38">调查失败，不抹去维修完成事实</text><text class="small" x="28" y="65">实线为成功推进，虚线为失败与修复；箭头文字是条件</text>
+<rect class="box" x="45" y="112" width="225" height="75" rx="12"/><text x="157" y="142" text-anchor="middle">COMPLETED</text><text class="small" x="157" y="168" text-anchor="middle">维修完成，待发调查</text>
+<rect class="box" x="455" y="112" width="220" height="75" rx="12"/><text x="565" y="142" text-anchor="middle">CLOSED</text><text class="small" x="565" y="168" text-anchor="middle">调查已发，Saga 结束</text>
+<path class="edge" d="M270 149H446"/><text class="small" x="360" y="132" text-anchor="middle">调查发送成功</text>
+<rect class="box" x="45" y="286" width="225" height="75" rx="12"/><text x="157" y="316" text-anchor="middle">NO_SURVEY</text><text class="small" x="157" y="342" text-anchor="middle">调查尚未发出</text>
+<path class="edge dashed" d="M157 187V277"/><text class="small" x="172" y="235">调查不可用／发送失败</text>
+<path class="edge" d="M270 323H565V196"/><text class="small" x="430" y="307" text-anchor="middle">后台重试／修复后发送成功</text>
+<path class="edge dashed" d="M45 323H24V397H145"/>
+<text class="small" x="157" y="402">持续失败：保留待办，交管理员／主管修复</text>
+<script><![CDATA[try { const t=localStorage.getItem('reading-notes-theme'); if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t); } catch {}]]></script>
+</svg>
