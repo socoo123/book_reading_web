@@ -116,20 +116,9 @@ main { padding-block: 40px 96px; }
 .button.primary:hover { border-color: var(--accent); background: var(--accent); color: var(--bg); }
 .button-row { display: flex; flex-wrap: wrap; gap: 12px; margin: 28px 0 0; }
 
-/* Note covers: one object per book, drawn in CSS and scaled from --cover-w. */
-.book-cover { --cover-w: 200px; --cover-bg: #e9dfcb; --cover-ink: #34312b; --cover-sub: rgba(52, 49, 43, .66); --cover-art: #a65b3c; --cover-rule: rgba(52, 49, 43, .28); position: relative; display: flex; flex-direction: column; flex-shrink: 0; width: var(--cover-w); height: calc(var(--cover-w) * 1.4); overflow: hidden; padding: 2.3em 1.9em 1.7em 2.5em; border-radius: .2em .55em .55em .2em; font-size: calc(var(--cover-w) / 20); background: linear-gradient(100deg, rgba(255, 255, 255, .09), rgba(255, 255, 255, 0) 42%), var(--cover-bg); color: var(--cover-ink); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .07), .3em .3em 0 -.1em var(--page-edge), 0 1.8em 2.8em -1.4em var(--shadow), 0 .4em 1em -.4em var(--shadow); text-align: left; transition: transform .25s ease; }
-.book-cover::before { content: ''; position: absolute; inset: 0 auto 0 0; width: 1.1em; background: linear-gradient(90deg, rgba(0, 0, 0, .26), rgba(0, 0, 0, .08) 62%, rgba(255, 255, 255, .16) 90%, rgba(255, 255, 255, 0)); }
-.cover-swe { --cover-bg: #213547; --cover-ink: #f2eadb; --cover-sub: rgba(242, 234, 219, .62); --cover-art: #d6976f; --cover-rule: rgba(242, 234, 219, .24); }
-.cover-jesa { --cover-bg: #3b5143; --cover-ink: #f1eadb; --cover-sub: rgba(241, 234, 219, .62); --cover-art: #e1c07d; --cover-rule: rgba(241, 234, 219, .24); }
-.cover-hard-parts { --cover-bg: #624448; --cover-ink: #f5ecdf; --cover-sub: rgba(245, 236, 223, .72); --cover-art: #e4b68f; --cover-rule: rgba(245, 236, 223, .28); }
-.cover-ddia2 { --cover-bg: #304e5b; --cover-ink: #f4edde; --cover-sub: rgba(244, 237, 222, .72); --cover-art: #b4d4cc; --cover-rule: rgba(244, 237, 222, .28); }
-.cover-kicker { position: relative; color: var(--cover-sub); font-size: .82em; letter-spacing: .18em; }
-.cover-title { position: relative; z-index: 1; margin-top: .7em; font-family: var(--font-latin); font-size: 2.55em; line-height: 1.12; letter-spacing: -.02em; font-weight: 400; }
-.cover-title span { display: block; }
-.cover-ddia2 .cover-title { font-size: 2em; }
-.cover-title em { font-style: italic; }
-.cover-art { position: absolute; right: -1.2em; bottom: 3.7em; width: 13.5em; height: 10em; fill: none; stroke: var(--cover-art); stroke-width: 1.1; }
-.cover-footer { position: relative; display: flex; justify-content: space-between; gap: .8em; margin-top: auto; padding-top: .9em; border-top: 1px solid var(--cover-rule); color: var(--cover-sub); font-size: .82em; letter-spacing: .1em; }
+/* Original covers retain their proportions at each responsive size. */
+.book-cover { --cover-w: 200px; flex-shrink: 0; align-self: start; width: var(--cover-w); max-width: 100%; overflow: hidden; border-radius: 2px 4px 4px 2px; font-size: calc(var(--cover-w) / 20); background: #fff; box-shadow: .3em .3em 0 -.1em var(--page-edge), 0 1.8em 2.8em -1.4em var(--shadow), 0 .4em 1em -.4em var(--shadow); transition: transform .25s ease; }
+.book-cover img { display: block; width: 100%; height: auto; }
 
 /* Shelf. */
 .library { min-height: calc(100svh - 150px); }
