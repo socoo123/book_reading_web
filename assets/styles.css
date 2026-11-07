@@ -142,6 +142,7 @@ main { padding-block: 40px 96px; }
 .shelf-book:hover h2 a { color: var(--accent); }
 .shelf-author { margin: 0; color: var(--muted); font-size: 13px; }
 .shelf-desc { grid-area: desc; margin: 16px 0 20px; font-size: 14px; line-height: 1.85; }
+.shelf-desc a { position: relative; z-index: 2; }
 .shelf-progress { grid-area: progress; align-self: end; }
 .progress-track { height: 4px; overflow: hidden; border-radius: 999px; background: var(--soft); }
 .progress-track span { display: block; width: var(--progress); height: 100%; border-radius: inherit; background: var(--accent); }
