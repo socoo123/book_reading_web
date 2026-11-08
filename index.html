@@ -7,7 +7,7 @@
   <title>架构提升读书笔记</title>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <script src="assets/theme.js"></script>
-  <link rel="stylesheet" href="assets/styles.css?v=original-covers-1">
+  <link rel="stylesheet" href="assets/styles.css?v=shelf-list-1">
 </head>
 <body>
   <a class="skip-link" href="#main">跳到主要内容</a>
@@ -27,34 +27,20 @@
       <p class="library-count"><strong>04</strong>本书</p>
     </section>
     <section class="shelf" aria-label="书籍">
+      <!-- 按加入书架的顺序倒序排列；新增书籍放在最前，BOOK 编号继续递增。 -->
       <article class="shelf-book">
         <div class="book-cover">
-          <img src="assets/covers/software-engineering-at-google.jpg" alt="Software Engineering at Google 英文原版封面" width="600" height="787">
+          <img src="assets/covers/designing-data-intensive-applications-2nd.jpg" alt="Designing Data-Intensive Applications 英文第二版封面" width="600" height="787">
         </div>
         <div class="shelf-head">
-          <p class="shelf-kicker" lang="en">BOOK 001 · O’REILLY · 2020</p>
-          <h2 lang="en"><a href="books/software-engineering-at-google/index.html?v=original-covers-1">Software Engineering at Google</a></h2>
-          <p class="shelf-author" lang="en">Titus Winters, Tom Manshreck, Hyrum Wright</p>
+          <p class="shelf-kicker" lang="en">BOOK 004 · O’REILLY · 2026</p>
+          <h2 lang="en"><a href="books/designing-data-intensive-applications-2nd/index.html?v=original-covers-1">Designing Data-Intensive Applications</a></h2>
+          <p class="shelf-author" lang="en">Martin Kleppmann, Chris Riccomini</p>
         </div>
-        <p class="shelf-desc">从时间、团队规模和工程权衡出发，理解如何让代码在长期演进中持续有用。</p>
+        <p class="shelf-desc">沿数据的读写与故障路径，理解架构、存储、演化、复制、分片和事务的机制与取舍。依据英文第二版，附<a href="books/designing-data-intensive-applications-2nd/guide.html">全书路线、术语与纠错导航</a>。</p>
         <div class="shelf-progress">
           <div class="progress-track" aria-hidden="true"><span style="--progress: 100%"></span></div>
-          <p class="book-state"><span>五个部分 · 25 章＋后记</span><span>26 / 26</span></p>
-        </div>
-      </article>
-      <article class="shelf-book">
-        <div class="book-cover">
-          <img src="assets/covers/just-enough-software-architecture.jpg" alt="Just Enough Software Architecture 英文原版封面" width="768" height="1024">
-        </div>
-        <div class="shelf-head">
-          <p class="shelf-kicker" lang="en">BOOK 002 · MARSHALL &amp; BRAINERD · 2010</p>
-          <h2 lang="en"><a href="books/just-enough-software-architecture/index.html?v=original-covers-1">Just Enough Software Architecture</a></h2>
-          <p class="shelf-author" lang="en">George Fairbanks</p>
-        </div>
-        <p class="shelf-desc">以失败风险决定设计投入，再用模型、抽象与约束理解系统、分析取舍。</p>
-        <div class="shelf-progress">
-          <div class="progress-track" aria-hidden="true"><span style="--progress: 100%"></span></div>
-          <p class="book-state"><span>风险驱动与架构建模 · 已收录 16 章</span><span>16 / 16</span></p>
+          <p class="book-state"><span>英文第二版 · 14 章与专题导航已收录</span><span>14 / 14</span></p>
         </div>
       </article>
       <article class="shelf-book">
@@ -74,17 +60,32 @@
       </article>
       <article class="shelf-book">
         <div class="book-cover">
-          <img src="assets/covers/designing-data-intensive-applications-2nd.jpg" alt="Designing Data-Intensive Applications 英文第二版封面" width="600" height="787" loading="lazy">
+          <img src="assets/covers/just-enough-software-architecture.jpg" alt="Just Enough Software Architecture 英文原版封面" width="768" height="1024" loading="lazy">
         </div>
         <div class="shelf-head">
-          <p class="shelf-kicker" lang="en">BOOK 004 · O’REILLY · 2026</p>
-          <h2 lang="en"><a href="books/designing-data-intensive-applications-2nd/index.html?v=original-covers-1">Designing Data-Intensive Applications</a></h2>
-          <p class="shelf-author" lang="en">Martin Kleppmann, Chris Riccomini</p>
+          <p class="shelf-kicker" lang="en">BOOK 002 · MARSHALL &amp; BRAINERD · 2010</p>
+          <h2 lang="en"><a href="books/just-enough-software-architecture/index.html?v=original-covers-1">Just Enough Software Architecture</a></h2>
+          <p class="shelf-author" lang="en">George Fairbanks</p>
         </div>
-        <p class="shelf-desc">沿数据的读写与故障路径，理解架构、存储、演化、复制、分片和事务的机制与取舍。依据英文第二版，附<a href="books/designing-data-intensive-applications-2nd/guide.html">全书路线、术语与纠错导航</a>。</p>
+        <p class="shelf-desc">以失败风险决定设计投入，再用模型、抽象与约束理解系统、分析取舍。</p>
         <div class="shelf-progress">
           <div class="progress-track" aria-hidden="true"><span style="--progress: 100%"></span></div>
-          <p class="book-state"><span>英文第二版 · 14 章与专题导航已收录</span><span>14 / 14</span></p>
+          <p class="book-state"><span>风险驱动与架构建模 · 已收录 16 章</span><span>16 / 16</span></p>
+        </div>
+      </article>
+      <article class="shelf-book">
+        <div class="book-cover">
+          <img src="assets/covers/software-engineering-at-google.jpg" alt="Software Engineering at Google 英文原版封面" width="600" height="787" loading="lazy">
+        </div>
+        <div class="shelf-head">
+          <p class="shelf-kicker" lang="en">BOOK 001 · O’REILLY · 2020</p>
+          <h2 lang="en"><a href="books/software-engineering-at-google/index.html?v=original-covers-1">Software Engineering at Google</a></h2>
+          <p class="shelf-author" lang="en">Titus Winters, Tom Manshreck, Hyrum Wright</p>
+        </div>
+        <p class="shelf-desc">从时间、团队规模和工程权衡出发，理解如何让代码在长期演进中持续有用。</p>
+        <div class="shelf-progress">
+          <div class="progress-track" aria-hidden="true"><span style="--progress: 100%"></span></div>
+          <p class="book-state"><span>五个部分 · 25 章＋后记</span><span>26 / 26</span></p>
         </div>
       </article>
     </section>

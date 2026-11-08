@@ -2,6 +2,8 @@
 
 当前接入 **4 本书**，正文沿用 16px。在线阅读：<https://socoo123.github.io/book_reading_web/>。
 
+首页书架每本书独占一行，按加入顺序倒序展示。新增书籍时，将卡片放在 `index.html` 的 `.shelf` 最前面，BOOK 编号继续递增，并更新书籍总数。
+
 **当前任务：第四本《Designing Data-Intensive Applications》英文第二版（2026），第5轮全书整合已完成、待验收。** [概览与目录](books/designing-data-intensive-applications-2nd/index.html)开放全部14章；[全书导航](books/designing-data-intensive-applications-2nd/guide.html)提供五条路线、术语、保证范围、案例、来源及纠错。正文保留250节、64幅章节图及原有深度，另有1幅概览图；前四轮待验收状态保留。完整安排见 [`PLAN.md`](PLAN.md)，最终交接见 [`CONTINUE.md`](CONTINUE.md)。
 
 **第5轮已停止，无后台写作任务。** 主Agent GPT-6 Astra（`openai/gpt-6-astra`）独立完成，档位未由环境暴露；未调用子Agent、未续用前四轮会话。当前等待用户验收。原书固定路径：`/Users/zy/ai_learn/ddia_2nd/Designing_Data_Intensive_Applications_2nd_Edition.pdf`（673页，正文PDF页序＝印刷页码＋24）。

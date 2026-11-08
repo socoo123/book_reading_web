@@ -127,7 +127,7 @@ main { padding-block: 40px 96px; }
 .library-lead { max-width: 33em; margin: 14px 0 0; color: var(--muted); font-size: 15px; line-height: 1.9; }
 .library-count { display: flex; align-items: baseline; gap: 8px; margin: 0; color: var(--muted); font-size: 13px; }
 .library-count strong { color: var(--text); font-family: var(--font-latin); font-size: 42px; font-weight: 400; line-height: 1; }
-.shelf { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 440px), 1fr)); gap: 24px; margin-top: 40px; }
+.shelf { display: grid; grid-template-columns: minmax(0, 1fr); gap: 24px; margin-top: 40px; }
 .shelf-book { position: relative; display: grid; grid-template-columns: auto minmax(0, 1fr); grid-template-rows: auto auto 1fr; grid-template-areas: 'cover head' 'cover desc' 'cover progress'; column-gap: 30px; padding: 30px 30px 28px; border: 1px solid var(--line); border-radius: 18px; background: var(--surface); transition: border-color .2s ease, box-shadow .2s ease; }
 .shelf-book:hover { border-color: var(--line-strong); box-shadow: var(--lift); }
 .shelf-book .book-cover { --cover-w: 148px; grid-area: cover; }
